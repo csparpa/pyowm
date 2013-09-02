@@ -33,7 +33,7 @@ TBD
 
 Support
 -------
-Usage examples are available here.
+Usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/docs/usage-examples.md).
 Technical documentation is available here.
 
 License
