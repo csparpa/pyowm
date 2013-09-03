@@ -3,15 +3,14 @@ OWM: class
 Fields
 ------
 + APIkey: string
-+ location: Location
 
 Methods
 -------
-+ getLocation: Location
-+ setLocation: void
 + getAPIkey: string
 + setAPIkey: void
-+ currentWeather: Weather
++ currentWeather: ???
++ 3hForecast: Forecast
++ dailyForecast: Forecast
 
 
 Location: class
@@ -25,11 +24,44 @@ Fields
 Methods
 -------
 + getName: string
-+ setName: void
 + getCoordinates: dict
-+ setCoordinates: void
 + getID: string
-+ setID: void
+
+
+Observation: class
+==================
+Fields
+------
++ receptionTime: int
++ location: Location
++ weather: Weather
+
+Methods
+-------
++ getReceptionTime: int
++ getLocation: Location
++ getWeather: Weather
++ dumpJSON: string
++ dumpXML: string
+
+Forecast: class
+===============
+
+Fields
+------
++ type: string
++ receptionTime: int
++ location: Location
++ items: list
+
+Methods
+-------
++ getType: string
++ getReceptionTime: int
++ getLocation: Location
++ getItems: list
++ dumpJSON: string
++ dumpXML: string
 
 
 Weather: class
@@ -39,17 +71,15 @@ Fields
 ------
 + base: string
 + referenceTime: int
-+ location: Location
-+ ephemeris: Ephemeris
-+ clouds: dict
++ sunset: int
++ sunrise: int
++ clouds: int
 + rain: dict
 + snow: dict
 + wind:dict
 + humidity: int
 + pressure: float
-+ temperature: float
-+ minTemperature: float
-+ maxTemperature: float
++ temperature: dict
 + status: string
 + detailedStatus: string
 + weatherCode: int
@@ -57,37 +87,20 @@ Fields
 
 Methods
 -------
-+ getClouds: dict
++ getClouds: int
 + getRain: dict
 + getSnow: dict
 + getWind: dict
 + getHumidity: int
 + getPressure: float
-+ getTemperature: float
-+ getMaxTemperature: float
-+ getMinTemperature: float
++ getTemperature: dict
 + getStatus: string
 + getDetailedStatus: string
 + getWeatherCode: int
 + getIconName: string
-+ getIconURL: string
 + getLocation: Location
 + getReferenceTime: int/string
-+ getEphemeris: Ephemeris
-+ update: void
++ getSunset: int
++ getSunrise: int
 + dumpJSON: string
-+ dumpXML: string 
-
-
-Ephemeris: class
-================
-
-Fields
-------
-+ sunrise: int
-+ sunset: int
-
-Methods
--------
-+ getSunrise: int/string
-+ getSunset: int/string
++ dumpXML: string

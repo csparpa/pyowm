@@ -42,7 +42,7 @@ Features
     #http://api.openweathermap.org/data/2.5/forecast?q=London
     #search 3h forecast for London for the next 5 days
     owm.3hForecast('London')
-
+    
     #http://api.openweathermap.org/data/2.5/forecast/daily?q=London
     #search daily forecast for London for the next 14 days (defaults to: limit=None)
     owm.dailyForecast('London')
@@ -167,8 +167,6 @@ JSON responses
     
 TODOs
 -----
-1. Fix usage-examples.md
-2. Consider if it's possible to merge owm.3hForecast and owm.dailyForecast into one single function
-3. remove unit of measure and language configurations
-4. pay attention to the cnt "incoherent behaviour"
-5. Provide utilities for human-friendly OWM data handling
+1. Fix usage-examples.md (remove unit of measure and language configurations)
+2. pay attention to the cnt "incoherent behaviour"
+3. Provide utilities for human-friendly OWM data handling
