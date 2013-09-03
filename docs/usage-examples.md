@@ -119,9 +119,9 @@ Access weather data using the following methods:
     >>> w.getMaxTemperature(unit='fahrenheit')
 
     # Get minimum temperature
-    >>> w.getMaxTemperature()                              # Similar as above
-    >>> w.getMaxTemperature(unit='celsius')
-    >>> w.getMaxTemperature(unit='fahrenheit')
+    >>> w.getMinTemperature()                              # Similar as above
+    >>> w.getMinTemperature(unit='celsius')
+    >>> w.getMinTemperature(unit='fahrenheit')
 
     >>> w.getStatus()                                      # Get weather short status
     'Clouds'
