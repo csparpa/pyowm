@@ -5,7 +5,7 @@ Import the PyOWM library
 ------------------------
 As simple as:
 
-    >>> from pyowm import OWM
+    >>> from pyowm import owm
 
 Create global OWM object
 ------------------------

@@ -28,6 +28,9 @@ Methods
 + getName: string
 + getCoordinates: dict
 + getID: string
++ dumpJSON: string
++ dumpXML: string
++ print
 
 
 Observation: class

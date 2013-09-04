@@ -14,7 +14,7 @@ For the moment, PyOWM only supports _version 2.5_ of the OWM API.
 
 Code snippet
 ------------
-    from pyowm import OWM
+    from pyowm import owm
 
     owm = OWM('your-API-key')
     
