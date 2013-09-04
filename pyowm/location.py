@@ -11,9 +11,11 @@ class Location(object):
     """
     
     def __init__(self, name, coordinates, ID):
+	assert type(name) is str, "'name' must be an string"
         self.name = name
         assert type(coordinates) is dict ,"'coordinates' must be a dict" 
         self.coordinates = coordinates
+        assert type(ID) is int, "'ID' must be an int"
         self.ID = ID
         
     def getName(self):
