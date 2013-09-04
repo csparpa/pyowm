@@ -32,7 +32,7 @@ its geographic coordinates (lon/lat):
     obs = owm.observation(-0.107331,51.503614)           # Lon/lat
 
 A _Observation_ object will be returned, containing weather info about the first
-matching location to the toponym/coordinates you provided. So be precise when
+location matching the toponym/coordinates you provided. So be precise when
 specifying locations!
     
     
@@ -73,7 +73,13 @@ _Observation_ objects encapsulate two useful objects: a _Weather_ object that
 contains the weather-related data and a _Location_ object that describes the
 location for which the weather data are provided.
 
-You can retrieve the _Weather_ object:
+If you want to know when the weather observation data have been queried, just
+issue:
+
+    >>> obs.getReceptionTime()                             # UNIX GMT time
+
+
+You can retrieve the _Weather_ object like this:
 
     >>> w = obs.getWeather()
 
@@ -136,7 +142,6 @@ from the following methods:
     <Location><name>Palermo</name><coordinates><lon>13.35976</lon><lat>38.115822</lat>
     </coordinates><ID>2523920</ID></Location>...</weather>
 
-    
 As said, _Observation_ objects also contain a _Location_ objects with info about
 the weather location:
 

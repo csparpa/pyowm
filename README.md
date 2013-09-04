@@ -15,11 +15,16 @@ For the moment, PyOWM only supports _version 2.5_ of the OWM API.
 Code snippet
 ------------
     from pyowm import OWM
+
+    owm = OWM('your-API-key')
     
-    APIkey = 'your-API-key'
-    owm = OWM(APIkey)
-    
-    # TBD
+    #Search for current weather in London, UK
+    obs = owm.observation('London,uk')
+    w = obs.getWeather()
+    w.getDetailedStatus()
+    'Light rain'
+    w.getWind()['speed']
+    3.08
 
 Install
 -------
@@ -28,7 +33,8 @@ TBD
 Support
 -------
 Usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/docs/usage-examples.md).
-Library object API and technical documentation are available here.
+
+Library object API and technical documentation are available _here_.
 
 License
 -------
