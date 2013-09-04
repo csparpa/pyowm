@@ -8,7 +8,9 @@ Methods
 -------
 + getAPIkey: string
 + setAPIkey: void
-+ currentWeather: ???
++ observation: Observation
++ findObservationsByName: list of Observations
++ findObservationsByCoords: list of Observations
 + 3hForecast: Forecast
 + dailyForecast: Forecast
 
@@ -52,14 +54,14 @@ Fields
 + type: string
 + receptionTime: int
 + location: Location
-+ items: list
++ items: list of Weather objs
 
 Methods
 -------
 + getType: string
 + getReceptionTime: int
 + getLocation: Location
-+ getItems: list
++ getItems: list of Weather objs
 + dumpJSON: string
 + dumpXML: string
 
@@ -99,7 +101,7 @@ Methods
 + getWeatherCode: int
 + getIconName: string
 + getLocation: Location
-+ getReferenceTime: int/string
++ getReferenceTime: int
 + getSunset: int
 + getSunrise: int
 + dumpJSON: string

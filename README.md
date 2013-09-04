@@ -6,26 +6,20 @@ Introduction
 ------------
 PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
 
-It allows quick and easy consumption of OWM weather and forecast data from Python applications.
+It allows quick and easy consumption of OWM weather data (either observations 
+and forecast) from Python applications via a simple object model.
 
-For the moment, PyOWM only supports version 2.5 of the OWM API.
+For the moment, PyOWM only supports _version 2.5_ of the OWM API.
 
 
 Code snippet
 ------------
-    from pyowm import OWM, Location
+    from pyowm import OWM
     
-    location = Location('London')
     APIkey = 'your-API-key'
+    owm = OWM(APIkey)
     
-    owm = OWM(location, APIkey)
-    
-    # Query for current weather in London
-    w = owm.currentWeather()
-    w.getDetailedStatus()
-    'Clear'
-    w.getTemperature(unit='celsius')
-    23
+    # TBD
 
 Install
 -------
@@ -34,7 +28,7 @@ TBD
 Support
 -------
 Usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/docs/usage-examples.md).
-Technical documentation is available here.
+Library object API and technical documentation are available here.
 
 License
 -------

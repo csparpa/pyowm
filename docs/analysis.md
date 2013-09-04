@@ -3,35 +3,38 @@ Features
 
     owm = OWM(APIkey)
 
-    # *** Current weather for a location (each list contains Weather objects) ***
+    # *** Current weather for a single location ***
 
-    #http://api.openweathermap.org/data/2.5/find?q=London&type=accurate&cnt=0
-    #search for the first matching city (defaults to search='accurate', limit=1)
-    list = owm.currentWeather('London')
+    #http://api.openweathermap.org/data/2.5/weather?q=London,uk
+    #retrieves the current weather for London,uk
+    obs = owm.observation('London,uk')
+    
+    #http://api.openweathermap.org/data/2.5/weather?lat=57&lon=-2.15
+    #retrieves the current weather for lat=57,lon=-2.15
+    obs = owm.observation(57,2.15)
+    
+    
+    # *** Current weather for multiple locations ***
 
     #http://api.openweathermap.org/data/2.5/find?q=London&type=accurate
-    #search for all the cities that are named 'London'
-    list = owm.currentWeather('London',search='accurate',limit=None)
+    #search for all the cities that are named 'London' (defaults to limit=None)
+    list_of_obs = owm.findObservationsByName('London',search='accurate')
 
     #http://api.openweathermap.org/data/2.5/find?q=London&type=accurate&cnt=2
     #search for the first 3 cities that are named 'London'
-    list = owm.currentWeather('London',search='accurate',limit=3)
+    list_of_obs = owm.findObservationsByName('London',search='accurate',limit=3)
 
     #http://api.openweathermap.org/data/2.5/find?q=London&type=like&cnt=4
     #search for the first 5 cities that contain the word 'London' in their name
-    list = owm.currentWeather('London',search='like',limit=5)
+    list_of_obs = owm.findObservationsByName('London',search='like',limit=5)
 
     #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15&cnt=1
-    #search for the weather at the first matching location at the specified coords (defaults to limit=1)
-    list = owm.currentWeather({'lon':-2.15,'lat':57})
+    #search for the weather at the first matching location at the specified coords (defaults to limit=None)
+    list_of_obs = owm.findObservationsByCoords({'lon':-2.15,'lat':57})
 
     #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15&cnt=3
     #search for the weather at the first 3 matching locations for the specified coords
-    list = owm.currentWeather({'lon':-2.15,'lat':57}, limit=3)
-    
-    #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15
-    #search for the weather at all matching locations for the specified coords
-    list = owm.currentWeather({'lon':-2.15,'lat':57}, limit=None)
+    list_of_obs = owm.findObservationsByCoords({'lon':-2.15,'lat':57}, limit=3)
 
 
     # *** Weather forecasts for a location ***
@@ -41,15 +44,15 @@ Features
     
     #http://api.openweathermap.org/data/2.5/forecast?q=London
     #search 3h forecast for London for the next 5 days
-    owm.3hForecast('London')
+    forecast = owm.3hForecast('London')
     
     #http://api.openweathermap.org/data/2.5/forecast/daily?q=London
     #search daily forecast for London for the next 14 days (defaults to: limit=None)
-    owm.dailyForecast('London')
+    forecast = owm.dailyForecast('London')
 
     #http://api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=3
     #search daily forecast for London for the next 3 days
-    owm.dailyForecast('London',limit=3)
+    forecast = owm.dailyForecast('London',limit=3)
 
 
 JSON responses
@@ -163,10 +166,3 @@ JSON responses
         ...],
       "message" : 0.031
     }
-
-    
-TODOs
------
-1. Fix usage-examples.md (remove unit of measure and language configurations)
-2. pay attention to the cnt "incoherent behaviour"
-3. Provide utilities for human-friendly OWM data handling
