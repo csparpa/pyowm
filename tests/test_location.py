@@ -86,8 +86,7 @@ class Test(unittest.TestCase):
         
 
     def test_toXML(self):
-        expectedOutput = """<Location><name>%s</name><coordinates><lon>%s</lon>
-            <lat>%s</lat></coordinates><ID>%s</ID></Location>""" % (self.testName,
+        expectedOutput = """<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat></coordinates><ID>%s</ID></Location>""" % (self.testName,
                                                                     self.testLon,
                                                                     self.testLat,
                                                                     self.testID)
