@@ -1,5 +1,6 @@
 *.pyc
 *.py~
-./bin
-./dist
-./pyowm.egg-info
+build/*
+bin/*
+dist/*
+pyowm.egg-info/*

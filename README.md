@@ -28,7 +28,11 @@ Code snippet
 
 Install
 -------
+You need _setuptools_ installed:
+
     python setup.py install
+
+Read [here](https://pypi.python.org/pypi/setuptools) how to install setuptools
 
 Support
 -------
