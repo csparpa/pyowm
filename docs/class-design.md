@@ -20,17 +20,18 @@ Location: class
 Fields
 ------
 + name: string
-+ coordinates: dict
-+ ID: string
++ lon: int
++ lat: int
++ ID: int
 
 Methods
 -------
 + getName: string
-+ getCoordinates: dict
++ getLon: int
++ getLat: int
 + getID: string
-+ dumpJSON: string
-+ dumpXML: string
-+ print
++ toJSON: string
++ toXML: string
 
 
 Observation: class
@@ -46,8 +47,8 @@ Methods
 + getReceptionTime: int
 + getLocation: Location
 + getWeather: Weather
-+ dumpJSON: string
-+ dumpXML: string
++ toJSON: string
++ toXML: string
 
 Forecast: class
 ===============
@@ -65,8 +66,8 @@ Methods
 + getReceptionTime: int
 + getLocation: Location
 + getItems: list of Weather objs
-+ dumpJSON: string
-+ dumpXML: string
++ toJSON: string
++ toXML: string
 
 
 Weather: class
@@ -107,5 +108,5 @@ Methods
 + getReferenceTime: int
 + getSunset: int
 + getSunrise: int
-+ dumpJSON: string
-+ dumpXML: string
++ toJSON: string
++ toXML: string

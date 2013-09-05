@@ -148,8 +148,10 @@ the weather location:
     >>> l = obs.getLocation()
     >>> l.getName()
     'London'
-    >>> l.getCoordinates()
-    {'lon':-0.107331,'lat':51.503614}
+    >>> l.getLon()
+    -0.107331
+    >>> l.getLat()
+    51.503614
     >>> l.getID()
     2643743
 
