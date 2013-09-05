@@ -28,7 +28,7 @@ Code snippet
 
 Install
 -------
-TBD
+    python setup.py install
 
 Support
 -------
