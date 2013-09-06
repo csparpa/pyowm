@@ -1,7 +1,8 @@
 Features
 ========
 
-    owm = OWM(APIkey)
+    from pyowm import OWM
+    owm = OWM(API_key)
 
     # *** Current weather for a single location ***
 
@@ -18,23 +19,23 @@ Features
 
     #http://api.openweathermap.org/data/2.5/find?q=London&type=accurate
     #search for all the cities that are named 'London' (defaults to limit=None)
-    list_of_obs = owm.findObservationsByName('London',search='accurate')
+    list_of_obs = owm.find_observations_by_name('London',search='accurate')
 
     #http://api.openweathermap.org/data/2.5/find?q=London&type=accurate&cnt=2
     #search for the first 3 cities that are named 'London'
-    list_of_obs = owm.findObservationsByName('London',search='accurate',limit=3)
+    list_of_obs = owm.find_observations_by_name('London',search='accurate',limit=3)
 
     #http://api.openweathermap.org/data/2.5/find?q=London&type=like&cnt=4
     #search for the first 5 cities that contain the word 'London' in their name
-    list_of_obs = owm.findObservationsByName('London',search='like',limit=5)
+    list_of_obs = owm.find_observations_by_name('London',search='like',limit=5)
 
     #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15&cnt=1
     #search for the weather at the first matching location at the specified coords (defaults to limit=None)
-    list_of_obs = owm.findObservationsByCoords({'lon':-2.15,'lat':57})
+    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57})
 
     #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15&cnt=3
     #search for the weather at the first 3 matching locations for the specified coords
-    list_of_obs = owm.findObservationsByCoords({'lon':-2.15,'lat':57}, limit=3)
+    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57}, limit=3)
 
 
     # *** Weather forecasts for a location ***
@@ -44,15 +45,15 @@ Features
     
     #http://api.openweathermap.org/data/2.5/forecast?q=London
     #search 3h forecast for London for the next 5 days
-    forecast = owm.3hForecast('London')
+    forecast = owm.three_hours_forecast('London')
     
     #http://api.openweathermap.org/data/2.5/forecast/daily?q=London
     #search daily forecast for London for the next 14 days (defaults to: limit=None)
-    forecast = owm.dailyForecast('London')
+    forecast = owm.daily_forecast('London')
 
     #http://api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=3
     #search daily forecast for London for the next 3 days
-    forecast = owm.dailyForecast('London',limit=3)
+    forecast = owm.daily_forecast('London',limit=3)
 
 
 JSON responses

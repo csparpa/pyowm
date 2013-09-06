@@ -2,17 +2,17 @@ OWM: class
 ==========
 Fields
 ------
-+ APIkey: string
++ API_key: string
 
 Methods
 -------
-+ getAPIkey: string
-+ setAPIkey: void
++ get_API_key: string
++ set_API_key: void
 + observation: Observation
-+ findObservationsByName: list of Observations
-+ findObservationsByCoords: list of Observations
-+ 3hForecast: Forecast
-+ dailyForecast: Forecast
++ find_observations_by_name: list of Observations
++ find_observations_by_coords: list of Observations
++ three_hours_forecast: Forecast
++ daily_forecast: Forecast
 
 
 Location: class
@@ -26,29 +26,29 @@ Fields
 
 Methods
 -------
-+ getName: string
-+ getLon: int
-+ getLat: int
-+ getID: string
-+ toJSON: string
-+ toXML: string
++ get_name: string
++ get_lon: int
++ get_lat: int
++ get_ID: string
++ to_JSON: string
++ to_XML: string
 
 
 Observation: class
 ==================
 Fields
 ------
-+ receptionTime: int
++ reception_time: long
 + location: Location
 + weather: Weather
 
 Methods
 -------
-+ getReceptionTime: int
-+ getLocation: Location
-+ getWeather: Weather
-+ toJSON: string
-+ toXML: string
++ get_reception_time: long
++ get_location: Location
++ get_weather: Weather
++ to_JSON: string
++ to_XML: string
 
 Forecast: class
 ===============
@@ -56,18 +56,18 @@ Forecast: class
 Fields
 ------
 + type: string
-+ receptionTime: int
++ reception_time: long
 + location: Location
 + items: list of Weather objs
 
 Methods
 -------
-+ getType: string
-+ getReceptionTime: int
-+ getLocation: Location
-+ getItems: list of Weather objs
-+ toJSON: string
-+ toXML: string
++ get_type: string
++ get_reception_time: long
++ get_location: Location
++ get_items: list of Weather objs
++ to_JSON: string
++ to_XML: string
 
 
 Weather: class
@@ -75,38 +75,37 @@ Weather: class
 
 Fields
 ------
-+ base: string
-+ referenceTime: int
-+ sunset: int
-+ sunrise: int
++ reference_time: long
++ sunset: long
++ sunrise: long
 + clouds: int
 + rain: dict
 + snow: dict
 + wind:dict
 + humidity: int
-+ pressure: float
++ pressure: dict
 + temperature: dict
 + status: string
-+ detailedStatus: string
-+ weatherCode: int
-+ iconName: string
++ detailed_status: string
++ weather_code: int
++ weather_icon_name: string
 
 Methods
 -------
-+ getClouds: int
-+ getRain: dict
-+ getSnow: dict
-+ getWind: dict
-+ getHumidity: int
-+ getPressure: float
-+ getTemperature: dict
-+ getStatus: string
-+ getDetailedStatus: string
-+ getWeatherCode: int
-+ getIconName: string
-+ getLocation: Location
-+ getReferenceTime: int
-+ getSunset: int
-+ getSunrise: int
-+ toJSON: string
-+ toXML: string
++ get_clouds: int
++ get_rain: dict
++ get_snow: dict
++ get_wind: dict
++ get_humidity: int
++ get_pressure: float
++ get_temperature: dict
++ get_status: string
++ get_detailed_status: string
++ get_weather_code: int
++ get_icon_name: string
++ get_location: Location
++ get_reference_time: long
++ get_sunset: long
++ get_sunrise: long
++ to_JSON: string
++ to_XML: string

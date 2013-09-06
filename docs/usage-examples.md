@@ -5,21 +5,21 @@ Import the PyOWM library
 ------------------------
 As simple as:
 
-    >>> from pyowm import owm
+    >>> from pyowm import OWM
 
 Create global OWM object
 ------------------------
 Use your OWM API key if you have one (read [here](http://openweathermap.org/appid) 
 on how to obtain an API key).
 
-    >>> APIkey = 'G097IueS-9xN712E'
-    >>> owm = OWM(APIkey)
+    >>> API_key = 'G097IueS-9xN712E'
+    >>> owm = OWM(API_key)
     
 Of course you can change your API Key at a later time if you need:
 
-    >>> owm.getAPIkey()
+    >>> owm.get_API_key()
     'G09_7IueS-9xN712E'
-    >>> owm.setAPIkey('6Lp$0UY220_HaSB45')
+    >>> owm.set_API_key('6Lp$0UY220_HaSB45')
 
 Getting currently observed weather for a specific location
 ----------------------------------------------------------
@@ -52,19 +52,19 @@ _limit_ parameter.
 Examples:
 
     # Find observed weather in all the "London"s in the world
-    list_of_obs = owm.findObservationsByName('London',search='accurate')
+    list_of_obs = owm.find_observations_by_name('London',search='accurate')
     # As above but limit result items to 3
-    list_of_obs = owm.findObservationsByName('London',search='accurate',limit=3)
+    list_of_obs = owm.find_observations_by_name('London',search='accurate',limit=3)
     
     # Find observed weather for all the places whose name contains the word "London"
-    list_of_obs = owm.findObservationsByName('London',search='like')
+    list_of_obs = owm.find_observations_by_name('London',search='like')
     # As above but limit result items to 5
-    list_of_obs = owm.findObservationsByName('London',search='like',limit=5)
+    list_of_obs = owm.find_observations_by_name('London',search='like',limit=5)
     
     # Find observed weather for all the places in the surroundings of lon=-2.15,lat=57
-    list_of_obs = owm.findObservationsByCoords({'lon':-2.15,'lat':57})
+    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57})
     # As above but limit result items to 8
-    list_of_obs = owm.findObservationsByCoords({'lon':-2.15,'lat':57},limit=8)
+    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57},limit=8)
 
 Getting data from Observation objects
 -------------------------------------
@@ -76,55 +76,57 @@ location for which the weather data are provided.
 If you want to know when the weather observation data have been queried, just
 issue:
 
-    >>> obs.getReceptionTime()                             # UNIX GMT time
+    >>> obs.get_reception_time()                           # UNIX UTC time
 
 
 You can retrieve the _Weather_ object like this:
 
-    >>> w = obs.getWeather()
+    >>> w = obs.get_weather()
 
 and then access weather data using the following methods:
 
-    >> w.getReferenceTime()                                # UNIX GMT time of weather observation
+    >> w.get_reference_time()                              # get time of observation in UTC UNIXtime
     1377872206
-
-    >>> w.getClouds()                                      # Get cloud coverage
+    >>> w.get_reference_time(timeformat='iso')             # ...or in ISO 8601
+    2013-08-30 14:16:46+00
+    
+    >>> w.get_clouds()                                     # Get cloud coverage
     12
     
-    >>> w.getRain()                                        # Get rain volume
+    >>> w.get_rain()                                       # Get rain volume
     {'3h':0}
     
-    >>> w.getSnow()                                        # Get snow volume
-    {'3h':0}
+    >>> w.get_snow()                                       # Get snow volume
+    {'3h': 0}
     
-    >>> w.getWind()                                        # Get wind degree and speed
-    {'deg':59,'speed':2.660}
+    >>> w.get_wind()                                       # Get wind degree and speed
+    {'deg': 59, 'speed': 2.660}
     
-    >>> w.getHumidity()                                    # Get humidity percentage
+    >>> w.get_humidity()                                   # Get humidity percentage
     99
     
-    >>> w.getPressure()                                    # Get atmospheric pressure
-    296.519
+    >>> w.get_pressure()                                   # Get atmospheric pressure
+    {'pressure': 1030.119, 'sea_level: 1038.381}
     
-    >>> w.getTemperature()                                 # Get temperature In Kelvin degs
-    {'temp':293.4,'temp_kf':-1.89,'temp_max':297.5,'temp_min':290.9}
-    >>> w.getTemperature(unit='celsius')                   # ... or in Celsius degs
-    >>> w.getTemperatire(unit='fahrenheit')                # ... or in Fahrenheit degs
+    >>> w.get_temperature()                                # Get temperature in Kelvin degs
+    {'temp': 293.4, 'temp_kf': -1.89, 'temp_max': 297.5, 'temp_min': 290.9}
+    >>> w.get_temperature(unit='celsius')                  # ... or in Celsius degs
+    >>> w.get_temperatire(unit='fahrenheit')               # ... or in Fahrenheit degs
 
-    >>> w.getStatus()                                      # Get weather short status
+    >>> w.get_status()                                     # Get weather short status
     'Clouds'
-    >>> w.getDetailedStatus()                              # Get detailed weather status
+    >>> w.get_detailedStatus()                             # Get detailed weather status
     'Broken clouds'
 
-    >>> w.getWeatherCode()                                 # Get OWM weather condition code
+    >>> w.get_weather_code()                               # Get OWM weather condition code
     803
     
-    >>> w.getIconName()                                    # Get weather-related icon name
+    >>> w.get_weather_icon_name()                          # Get weather-related icon name
     '02d'
 
-    >>> e.getSunrise()                                     # UNIX GMT time for sunrise
+    >>> e.get_sunrise()                                    # Sunrise time (UTC UNIXtime or ISO 8601)
     1377862896
-    >>> e.getSunset()                                      # UNIX GMT time for sunset
+    >>> e.get_sunset()                                     # Sunset time (UTC UNIXtime or ISO 8601)
     1377893277
 
 Support to weather data interpreting can be found [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Data#Description-parameters) 
@@ -133,11 +135,11 @@ and [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Co
 If you need a JSON/XML representation of the _Weather_ object you can benefit 
 from the following methods:
 
-    >>> w.dumpJSON()                                       # Get a JSON representation
+    >>> w.dump_JSON()                                    # Get a JSON representation
     {'base':'gdpsstations','referenceTime':1377851530,'Location':{'name':'Palermo',
     'coordinates':{'lon':13.35976,'lat':38.115822}'ID':2523920},...}
     
-    >>> w.dumpXML()                                        # Same as above, but in XML
+    >>> w.dump_XML()                                     # Same as above, but in XML
     <weather><base>gdpsstations</base><referenceTime>1377851530</referenceTime>
     <Location><name>Palermo</name><coordinates><lon>13.35976</lon><lat>38.115822</lat>
     </coordinates><ID>2523920</ID></Location>...</weather>
@@ -145,14 +147,14 @@ from the following methods:
 As said, _Observation_ objects also contain a _Location_ objects with info about
 the weather location:
 
-    >>> l = obs.getLocation()
-    >>> l.getName()
+    >>> l = obs.get_location()
+    >>> l.get_name()
     'London'
-    >>> l.getLon()
+    >>> l.get_lon()
     -0.107331
-    >>> l.getLat()
+    >>> l.get_lat()
     51.503614
-    >>> l.getID()
+    >>> l.get_ID()
     2643743
 
 The last call returns the OWM city ID of the location - refer to the 
