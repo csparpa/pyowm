@@ -4,7 +4,7 @@
 Weather data classes and data structures.
 """
 
-from pyowm.utils import converter
+from utils import converter
 
 class Weather(object):
     """

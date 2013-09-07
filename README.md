@@ -34,6 +34,13 @@ You need _setuptools_ installed:
 
 Read [here](https://pypi.python.org/pypi/setuptools) how to install setuptools
 
+Test
+----
+Move into the library installation folder and execute:
+
+    python -m unittest discover
+
+
 Support
 -------
 Usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/docs/usage-examples.md).
