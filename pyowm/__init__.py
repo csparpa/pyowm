@@ -1,5 +1,5 @@
-__version__ = 0.1
-__OWM_API_version__ = 2.5
+__VERSION__ = 0.1
+__OWM_API_VERSION__ = 2.5
 
 #OpenWeatherMap API URLs
 API_URL = 'http://api.openweathermap.org/data/2.5'

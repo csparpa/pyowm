@@ -16,6 +16,17 @@ class Test(unittest.TestCase):
         result = converter.unix_to_ISO8601(unixtime)
         self.assertEqual(expected, result, "")
 
-
+    def test_kelvin_to_celsius(self):
+        kelvin = 301.0
+        expected = 27.85
+        result = converter.kelvin_to_celsius(kelvin)
+        self.assertEqual(expected, result, "")
+        
+    def test_kelvin_to_fahrenheit(self):
+        kelvin = 301.0
+        expected = 82.13
+        result = converter.kelvin_to_fahrenheit(kelvin)
+        self.assertEqual(expected, result, "")
+        
 if __name__ == "__main__":
     unittest.main()

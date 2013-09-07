@@ -100,14 +100,19 @@ class Test(unittest.TestCase):
         self.assertEqual(instance.get_sunrise_time(timeformat='iso'), self.__test_iso_sunrise_time, "")
         self.assertEqual(instance.get_sunrise_time(timeformat='unix'), self.__test_sunrise_time, "")
 
-
     def test_time_related_methods_fai_with_unknown_time_formats(self):
+        """
+        Test time-related methods fail when provided with unknown time formats
+        """
         instance = self.__test_instance
         self.assertRaises(ValueError, Weather.get_reference_time, instance, 'xyz')
         self.assertRaises(ValueError, Weather.get_sunset_time, instance, 'xyz')
         self.assertRaises(ValueError, Weather.get_sunrise_time, instance, 'xyz')
         
     #def test_returning_different_units_for_temperatures(self):
+    #    """
+    #    Test get_temperature return temperatures in the expected units
+    #    """
     #    self.fail('Not yet implemented')
 
     #def test_get_temperature_fails_with_unknown_units(self):
