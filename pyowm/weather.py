@@ -5,6 +5,7 @@ Weather data classes and data structures.
 """
 
 from utils import converter
+from json import dumps
 
 class Weather(object):
     """
@@ -189,4 +190,12 @@ class Weather(object):
         """Returns weather-related icon name as a str"""
         return self.__weather_icon_name
         
+    def to_JSON(self):
+        """Dumps object fields into a JSON formatted string"""
+        return dumps({ 'reference_time': self.__reference_time, 'sunset_time': self.__sunset_time,
+            'sunrise_time': self.__sunrise_time, 'clouds': self.__clouds, 'rain': self.__rain,
+            'snow': self.__snow, 'wind': self.__wind, 'humidity': self.__humidity,
+            'pressure': self.__pressure, 'temperature': self.__temperature, 'status' : self.__status,
+            'detailed_status': self.__detailed_status, 'weather_code': self.__weather_code,
+            'weather_icon_name': self.__weather_icon_name })
         

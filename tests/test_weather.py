@@ -126,14 +126,19 @@ class Test(unittest.TestCase):
             self.assertAlmostEqual(result_celsius[item], self.__test_celsius_temperature[item], delta=0.1)
             self.assertAlmostEqual(result_fahrenheit[item], self.__test_fahrenheit_temperature[item], delta=0.1)
         
-
-    #def test_get_temperature_fails_with_unknown_units(self):
-    #    self.fail('Not yet implemented')
+    def test_get_temperature_fails_with_unknown_units(self):
+        instance = self.__test_instance
+        self.assertRaises(ValueError, Weather.get_temperature, instance, 'xyz')
+    
+    def test_JSON_dump(self):
+        """
+        Test correct object data dump to a JSON string
+        """
+        expectedOutput = """{"status": "Clouds", "weather_code": 804, "rain": {"all": 20}, "snow": {"all": 0}, "pressure": {"pressure": 1030.119, "sea_level": 1038.589}, "sunrise_time": 1378449600, "weather_icon_name": "04d", "clouds": 67, "temperature": {"temp_kf": -1.899, "temp_min": 294.199, "temp": 294.199, "temp_max": 296.098}, "detailed_status": "Overcast clouds", "reference_time": 1378459200, "sunset_time": 1378496400, "humidity": 57, "wind": {"speed": 1.1, "deg": 252.002}}"""
+        instance = self.__test_instance
+        self.assertEqual(instance.to_JSON(), expectedOutput, "")
     
     #def test_XML_dump()
-    #    self.fail('Not yet implemented')
-    
-    #def test_JSON_dump()
     #    self.fail('Not yet implemented')
     
 if __name__ == "__main__":

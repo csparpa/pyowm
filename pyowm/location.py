@@ -53,10 +53,12 @@ class Location(object):
         return self.__ID
     
     def to_JSON(self):
+        """Dumps object fields into a JSON formatted string"""
         return dumps({ 'name': self.__name, 'coordinates': { 'lon': self.__lon, 
             'lat': self.__lat}, 'ID': self.__ID })
     
     def to_XML(self):
+        """Dumps object fields into a XML formatted string"""
         return """<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat></coordinates><ID>%s</ID></Location>""" % (self.__name,
             self.__lon, self.__lat, self.__ID)
     
