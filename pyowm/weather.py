@@ -72,6 +72,7 @@ class Weather(object):
         assert type(weather_icon_name) is str, "'iconName' must be a str"
         self.__weather_icon_name = weather_icon_name
 
+        
     def get_reference_time(self, timeformat='unix'):
         """
         Returns the GMT UNIX time of weather measurement
@@ -85,7 +86,6 @@ class Weather(object):
             return converter.unix_to_ISO8601(self.__reference_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
-        
 
 
     def get_sunset_time(self, timeformat='unix'):
@@ -148,9 +148,26 @@ class Weather(object):
         return self.__pressure
 
 
-    def get_temperature(self):
-        """Returns temperature info as a dict"""
-        return self.__temperature
+    def get_temperature(self, unit='kelvin'):
+        """
+        Returns temperature info as a dict
+            unit - which unit of measure for the temperature values:
+                kelvin (default) - returns a long
+                celsius - Celsius degrees
+                fahrenheit - Fahrenheit degrees
+        """
+        if unit == 'kelvin':
+            return self.__temperature
+        if unit == 'celsius':
+            helper = lambda x: converter.kelvin_to_celsius(x) if x > 0.0 else x
+            return dict((item, helper(self.__temperature[item])) 
+                for item in self.__temperature)
+        if unit == 'fahrenheit':
+            helper = lambda x: converter.kelvin_to_fahrenheit(x) if x > 0.0 else x
+            return dict((item, helper(self.__temperature[item])) 
+                for item in self.__temperature)
+        else:
+            raise ValueError("Invalid value for parameter 'unit'")
 
 
     def get_status(self):

@@ -24,6 +24,10 @@ class Test(unittest.TestCase):
     __test_pressure = {"pressure": 1030.119, "sea_level": 1038.589}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098, 
                        "temp_min": 294.199}
+    __test_celsius_temperature = {"temp": 21.049, "temp_kf": -1.899, "temp_max": 22.948, 
+                       "temp_min": 21.049}
+    __test_fahrenheit_temperature = {"temp": 69.888, "temp_kf": -1.899, "temp_max": 73.306, 
+                       "temp_min": 69.888}
     __test_status = "Clouds"
     __test_detailed_status = "Overcast clouds"
     __test_weather_code = 804
@@ -109,11 +113,19 @@ class Test(unittest.TestCase):
         self.assertRaises(ValueError, Weather.get_sunset_time, instance, 'xyz')
         self.assertRaises(ValueError, Weather.get_sunrise_time, instance, 'xyz')
         
-    #def test_returning_different_units_for_temperatures(self):
-    #    """
-    #    Test get_temperature return temperatures in the expected units
-    #    """
-    #    self.fail('Not yet implemented')
+    def test_returning_different_units_for_temperatures(self):
+        """
+        Test get_temperature return temperatures in the expected units
+        """
+        result_kelvin = self.__test_instance.get_temperature(unit='kelvin')
+        result_celsius = self.__test_instance.get_temperature(unit='celsius')
+        result_fahrenheit = self.__test_instance.get_temperature(unit='fahrenheit')
+        
+        for item in self.__test_temperature:
+            self.assertAlmostEqual(result_kelvin[item], self.__test_temperature[item], delta=0.1)
+            self.assertAlmostEqual(result_celsius[item], self.__test_celsius_temperature[item], delta=0.1)
+            self.assertAlmostEqual(result_fahrenheit[item], self.__test_fahrenheit_temperature[item], delta=0.1)
+        
 
     #def test_get_temperature_fails_with_unknown_units(self):
     #    self.fail('Not yet implemented')
