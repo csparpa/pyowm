@@ -6,6 +6,7 @@ Test case for weather.py module
 
 import unittest
 from pyowm import Weather
+from pyowm.utils import xmlutils
 
 
 class Test(unittest.TestCase):
@@ -21,7 +22,7 @@ class Test(unittest.TestCase):
     __test_snow = {"all": 0}
     __test_wind = {"deg": 252.002, "speed": 1.100}
     __test_humidity = 57
-    __test_pressure = {"pressure": 1030.119, "sea_level": 1038.589}
+    __test_pressure = {"press": 1030.119, "sea_level": 1038.589}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098, 
                        "temp_min": 294.199}
     __test_celsius_temperature = {"temp": 21.049, "temp_kf": -1.899, "temp_max": 22.948, 
@@ -127,19 +128,28 @@ class Test(unittest.TestCase):
             self.assertAlmostEqual(result_fahrenheit[item], self.__test_fahrenheit_temperature[item], delta=0.1)
         
     def test_get_temperature_fails_with_unknown_units(self):
-        instance = self.__test_instance
-        self.assertRaises(ValueError, Weather.get_temperature, instance, 'xyz')
+        self.assertRaises(ValueError, Weather.get_temperature, self.__test_instance, 'xyz')
     
     def test_JSON_dump(self):
         """
         Test correct object data dump to a JSON string
         """
-        expectedOutput = """{"status": "Clouds", "weather_code": 804, "rain": {"all": 20}, "snow": {"all": 0}, "pressure": {"pressure": 1030.119, "sea_level": 1038.589}, "sunrise_time": 1378449600, "weather_icon_name": "04d", "clouds": 67, "temperature": {"temp_kf": -1.899, "temp_min": 294.199, "temp": 294.199, "temp_max": 296.098}, "detailed_status": "Overcast clouds", "reference_time": 1378459200, "sunset_time": 1378496400, "humidity": 57, "wind": {"speed": 1.1, "deg": 252.002}}"""
-        instance = self.__test_instance
-        self.assertEqual(instance.to_JSON(), expectedOutput, "")
+        expectedOutput = """{"status": "Clouds", "weather_code": 804, "rain": {"all": 20}, "snow": {"all": 0}, "pressure": {"press": 1030.119, "sea_level": 1038.589}, "sunrise_time": 1378449600, "weather_icon_name": "04d", "clouds": 67, "temperature": {"temp_kf": -1.899, "temp_min": 294.199, "temp": 294.199, "temp_max": 296.098}, "detailed_status": "Overcast clouds", "reference_time": 1378459200, "sunset_time": 1378496400, "humidity": 57, "wind": {"speed": 1.1, "deg": 252.002}}"""
+        self.assertEqual(self.__test_instance.to_JSON(), expectedOutput, "")
     
-    #def test_XML_dump()
-    #    self.fail('Not yet implemented')
-    
+    def test_XML_dump(self):
+        """
+        Test correct object data dump to an XML string
+        """
+        expectedOutput = """<Weather><status>%s</status><weather_code>%s</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s</detailed_status><reference_time>%s</reference_time><sunset_time>%s</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>""" % (self.__test_status,
+            self.__test_weather_code, xmlutils.dict_to_XML(self.__test_rain), 
+            xmlutils.dict_to_XML(self.__test_snow), xmlutils.dict_to_XML(self.__test_pressure),
+            self.__test_sunrise_time, self.__test_weather_icon_name, self.__test_clouds, 
+            xmlutils.dict_to_XML(self.__test_temperature), self.__test_detailed_status, 
+            self.__test_reference_time, self.__test_sunset_time, self.__test_humidity, 
+            xmlutils.dict_to_XML(self.__test_wind))    
+        
+        self.assertEqual(self.__test_instance.to_XML(), expectedOutput, "")
+
 if __name__ == "__main__":
     unittest.main()

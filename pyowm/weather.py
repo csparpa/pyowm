@@ -4,7 +4,7 @@
 Weather data classes and data structures.
 """
 
-from utils import converter
+from utils import converter, xmlutils
 from json import dumps
 
 class Weather(object):
@@ -199,3 +199,14 @@ class Weather(object):
             'detailed_status': self.__detailed_status, 'weather_code': self.__weather_code,
             'weather_icon_name': self.__weather_icon_name })
         
+    def to_XML(self):
+        return """<Weather><status>%s</status><weather_code>%s</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s</detailed_status><reference_time>%s</reference_time><sunset_time>%s</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>""" % (self.__status,
+            self.__weather_code, xmlutils.dict_to_XML(self.__rain), 
+            xmlutils.dict_to_XML(self.__snow), xmlutils.dict_to_XML(self.__pressure),
+            self.__sunrise_time, self.__weather_icon_name, self.__clouds, 
+            xmlutils.dict_to_XML(self.__temperature), self.__detailed_status, 
+            self.__reference_time, self.__sunset_time, self.__humidity, 
+            xmlutils.dict_to_XML(self.__wind))  
+    
+    
+    
