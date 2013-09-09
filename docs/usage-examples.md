@@ -28,8 +28,8 @@ you want current the weather be looked up for and the job is done.
 You can specify the location either by passing its toponym (eg: "London") or
 its geographic coordinates (lon/lat):
 
-    obs = owm.observation('London,uk')                   # Toponym
-    obs = owm.observation(-0.107331,51.503614)           # Lon/lat
+    obs = owm.observation_for_name('London,uk')                     # Toponym
+    obs = owm.observation_for_coords(-0.107331,51.503614)           # Lon/lat
 
 A _Observation_ object will be returned, containing weather info about the first
 location matching the toponym/coordinates you provided. So be precise when

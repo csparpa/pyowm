@@ -8,7 +8,10 @@ Methods
 -------
 + get_API_key: string
 + set_API_key: void
-+ observation: Observation
++ get_API_version: float
++ get_version: float
++ observation_for_name: Observation
++ observation_for_coords: Observation
 + find_observations_by_name: list of Observations
 + find_observations_by_coords: list of Observations
 + three_hours_forecast: Forecast
@@ -109,3 +112,4 @@ Methods
 + get_sunrise: long
 + to_JSON: string
 + to_XML: string
++ from_JSON: Weather

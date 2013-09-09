@@ -206,7 +206,15 @@ class Weather(object):
             self.__sunrise_time, self.__weather_icon_name, self.__clouds, 
             xmlutils.dict_to_XML(self.__temperature), self.__detailed_status, 
             self.__reference_time, self.__sunset_time, self.__humidity, 
-            xmlutils.dict_to_XML(self.__wind))  
+            xmlutils.dict_to_XML(self.__wind))
+    
+    def from_JSON(json_data):
+        """
+        Factory method that builds a Weather instance from JSON data 
+        """
+        raise Exception("Not yet implemented")
+    
+    from_JSON = staticmethod(from_JSON)
     
     
     
