@@ -14,7 +14,7 @@ class Location(object):
     
     def __init__(self, name, lon, lat, ID):
         """
-        name - location toponym (str)
+        name - location toponym (Unicode str)
         lon - location longitude (int/float between -180 and 180 degrees)
         lat - location latitude (int/float between -90 and 90 degress)
         ID - location OpenWeatherMap city ID (int)
@@ -23,7 +23,7 @@ class Location(object):
           http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID
         """
         
-        assert type(name) is str, "'name' must be a string"
+        assert type(name) is unicode, "'name' must be a Unicode str"
         self.__name = name
         assert type(lon) is float or type(lon) is int,"'lon' must be a float"
         if lon < -180.0 or lon > 180.0:
@@ -37,7 +37,7 @@ class Location(object):
         self.__ID = ID
         
     def get_name(self):
-        """Returns the toponym of the location as a str"""
+        """Returns the toponym of the location as a Unicode str"""
         return self.__name
     
     def get_lon(self):

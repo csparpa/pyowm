@@ -4,9 +4,9 @@
 URL building utilities
 """
 
+import urllib2
 from urllib import urlencode
-from urllib2 import urlopen, HTTPError, URLError
-from pyowm.exceptions import OWM_API_call_exception 
+from pyowm.exceptions import api_call_exception 
 
 
 def call_API(API_subset_URL, params_dict, API_key):
@@ -23,12 +23,12 @@ def call_API(API_subset_URL, params_dict, API_key):
     
     # HTTP GET data
     try:
-        response = urlopen(url)
-    except HTTPError as e:
-        raise OWM_API_call_exception(e.reason, e.code, e)
+        response = urllib2.urlopen(url)
+    except urllib2.HTTPError as e:
+        raise api_call_exception.APICallException(e.reason, e)
         return None
-    except URLError as e:
-        raise OWM_API_call_exception(e.message, e.code, e)
+    except urllib2.URLError as e:
+        raise api_call_exception.APICallException(e.message, e)
         return None
     else:
         return response.read()

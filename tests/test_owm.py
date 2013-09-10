@@ -24,12 +24,23 @@ class Test(unittest.TestCase):
         
     def test_version_print_methods(self):
         """
-        Test methods that print out API and library versions
         """
         lib_version = self.__test_instance.get_version()
         API_version = self.__test_instance.get_API_version()
         self.assertIsInstance(lib_version, str, "")
         self.assertIsInstance(API_version, str, "")
 
+    #def test_observation_for_name(self):
+    #    """
+    #    Test that owm.observation_for_name returns a Location, a Weather and a 
+    #    reception time and the objects are as expected
+    #    """
+
+    #def test_observation_for_name(self):
+    #    """
+    #    Test that owm.observation_for_name returns a Location, a Weather and a 
+    #    reception time and the objects are as expected
+    #    """
+    
 if __name__ == "__main__":
     unittest.main()

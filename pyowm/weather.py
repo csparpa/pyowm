@@ -26,23 +26,26 @@ class Weather(object):
         humidity - atmospheric humidiy percentage (int) 
         pressure - atmospheric pressure info (dict)
         temperature - temperature info (dict)
-        status - short weather status (str)
-        detailed_status - detailed weather status (str)
+        status - short weather status (Unicode str)
+        detailed_status - detailed weather status (Unicode str)
         weather_code - OWM weather condition code (int)
-        weather_icon_name - weather-related icon name (str)
+        weather_icon_name - weather-related icon name (Unicode str)
         
         For reference about OWM weather codes and icons visit:
           http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
         """
-        assert type(reference_time) is long or type(reference_time) is int, "'reference_time' must be an int/long"
+        assert type(reference_time) is long or type(reference_time) is int, \
+            "'reference_time' must be an int/long"
         if long(reference_time) < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self.__reference_time = long(reference_time)        
-        assert type(sunset_time) is long or type(sunset_time) is int, "'sunset_time' must be a int/long"
+        assert type(sunset_time) is long or type(sunset_time) is int, \
+            "'sunset_time' must be a int/long"
         if long(sunset_time) < 0:
             raise ValueError("'sunset_time' must be greatear than 0")
         self.__sunset_time = long(sunset_time)
-        assert type(sunrise_time) is long or type(sunrise_time) is int, "'sunrise_time' must be a int/long"
+        assert type(sunrise_time) is long or type(sunrise_time) is int, \
+            "'sunrise_time' must be a int/long"
         if long(sunrise_time) < 0:
             raise ValueError("'sunrise_time' must be greatear than 0")
         self.__sunrise_time = long(sunrise_time)
@@ -64,13 +67,13 @@ class Weather(object):
         self.__pressure = pressure
         assert type(temperature) is dict, "'temperature' must be a dict"
         self.__temperature = temperature
-        assert type(status) is str, "'status' must be a str"
+        assert type(status) is unicode, "'status' must be a Unicode str"
         self.__status = status
-        assert type(detailed_status) is str, "'detailed_status' must be a str"
+        assert type(detailed_status) is unicode, "'detailed_status' must be a Unicode str"
         self.__detailed_status = detailed_status
         assert type(weather_code) is int, "'weather_code' must be an int"
         self.__weather_code = weather_code
-        assert type(weather_icon_name) is str, "'iconName' must be a str"
+        assert type(weather_icon_name) is unicode, "'iconName' must be a Unicode str"
         self.__weather_icon_name = weather_icon_name
 
         
@@ -200,7 +203,7 @@ class Weather(object):
             'weather_icon_name': self.__weather_icon_name })
         
     def to_XML(self):
-        return """<Weather><status>%s</status><weather_code>%s</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s</detailed_status><reference_time>%s</reference_time><sunset_time>%s</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>""" % (self.__status,
+        return '<Weather><status>%s</status><weather_code>%s</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s</detailed_status><reference_time>%s</reference_time><sunset_time>%s</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>' % (self.__status,
             self.__weather_code, xmlutils.dict_to_XML(self.__rain), 
             xmlutils.dict_to_XML(self.__snow), xmlutils.dict_to_XML(self.__pressure),
             self.__sunrise_time, self.__weather_icon_name, self.__clouds, 
@@ -208,13 +211,16 @@ class Weather(object):
             self.__reference_time, self.__sunset_time, self.__humidity, 
             xmlutils.dict_to_XML(self.__wind))
     
-    def from_JSON(json_data):
-        """
-        Factory method that builds a Weather instance from JSON data 
-        """
-        raise Exception("Not yet implemented")
-    
-    from_JSON = staticmethod(from_JSON)
-    
-    
+    def __str__(self):
+        """Redefine __str__ hook for pretty-printing of Weather instances"""
+        prop_names = ["reference_time","sunset_time","sunrise_time","clouds",
+                      "rain","snow","wind","humidity","pressure","temperature",
+                      "status","detailed_status","weather_code","weather_icon_name"]
+        prop_values = [self.__reference_time, self.__sunset_time, self.__sunrise_time,
+                 self.__clouds, self.__rain, self.__snow, self.__wind, self.__humidity,
+                 self.__pressure, self.__temperature, self.__status, 
+                 self.__detailed_status, self.__weather_code,self.__weather_icon_name]
+        string_prop_values = map(str, prop_values)
+        return "[Weather:\n"+"\n  ".join([ ": ".join([name,value]) for name,value \
+                                        in zip(prop_names,string_prop_values)])
     

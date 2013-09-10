@@ -52,6 +52,7 @@ Methods
 + get_weather: Weather
 + to_JSON: string
 + to_XML: string
++ from_JSON: Observation
 
 Forecast: class
 ===============
@@ -112,4 +113,3 @@ Methods
 + get_sunrise: long
 + to_JSON: string
 + to_XML: string
-+ from_JSON: Weather

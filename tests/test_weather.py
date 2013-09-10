@@ -29,10 +29,10 @@ class Test(unittest.TestCase):
                        "temp_min": 21.049}
     __test_fahrenheit_temperature = {"temp": 69.888, "temp_kf": -1.899, "temp_max": 73.306, 
                        "temp_min": 69.888}
-    __test_status = "Clouds"
-    __test_detailed_status = "Overcast clouds"
+    __test_status = u"Clouds"
+    __test_detailed_status = u"Overcast clouds"
     __test_weather_code = 804
-    __test_weather_icon_name = "04d"
+    __test_weather_icon_name = u"04d"
     
     __test_instance = Weather(__test_reference_time, __test_sunset_time, __test_sunrise_time, 
                          __test_clouds, __test_rain,  __test_snow, __test_wind,

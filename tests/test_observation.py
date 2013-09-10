@@ -10,7 +10,7 @@ from pyowm import Location
 class Test(unittest.TestCase):
 
     testReceptionTime = 1234567
-    testLocation = Location('test', 12.3, 43.7, 987)
+    testLocation = Location(u'test', 12.3, 43.7, 987)
     #testWeather 
 
 

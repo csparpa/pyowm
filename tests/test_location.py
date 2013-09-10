@@ -10,7 +10,7 @@ from pyowm import Location
 
 class Test(unittest.TestCase):
     
-    __test_name = 'London'
+    __test_name = u'London'
     __test_lon = 12.3
     __test_lat = 43.7
     __test_ID = 1234
@@ -19,10 +19,10 @@ class Test(unittest.TestCase):
         """
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90
         """
-        self.assertRaises(ValueError, Location, 'London', -200.0, 43.7, 1234)
-        self.assertRaises(ValueError, Location, 'London', 200.0, 43.7, 1234)
-        self.assertRaises(ValueError, Location, 'London', 12.3, -100.0, 1234)
-        self.assertRaises(ValueError, Location, 'London', 12.3, 100.0, 1234)
+        self.assertRaises(ValueError, Location, u'London', -200.0, 43.7, 1234)
+        self.assertRaises(ValueError, Location, u'London', 200.0, 43.7, 1234)
+        self.assertRaises(ValueError, Location, u'London', 12.3, -100.0, 1234)
+        self.assertRaises(ValueError, Location, u'London', 12.3, 100.0, 1234)
         
     def test_getters_return_expected_data(self):
         """

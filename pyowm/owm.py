@@ -6,8 +6,7 @@ PyOWM library entry point
 
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL
 from utils import httputils
-from weather import Weather
-from exceptions import OWM_API_call_exception
+from observation import Observation
 
 class OWM(object):
     """
@@ -44,20 +43,14 @@ class OWM(object):
     def observation_for_name(self, place):
         """
         Queries the OWM API for the currently observed weather at the specified
-        toponym (eg: "London,uk"). Returns a Weather object instance
+        toponym (eg: "London,uk"). Returns an Observation object instance
         
         place - a toponym (str)
         """
         assert type(place) is str, "'place' must be a str"
+        json_data = httputils.call_API(OBSERVATION_URL, {'q': place}, self.__API_key)
+        return Observation.from_JSON(json_data)
 
-        try:
-            json_data = httputils.call_API(OBSERVATION_URL, {'q': place}, self.__API_key)
-        except OWM_API_call_exception as e:
-            print(e)
-            return None
-        else:
-            return Weather.from_JSON(json_data)
-        
     
     def observation_for_coords(self, lon, lat):
         """
