@@ -8,7 +8,7 @@ from json import loads
 from time import time
 from location import Location
 from weather import Weather
-from pyowm.exceptions.parse_response_exception import ParseResponseException
+from exceptions.parse_response_exception import ParseResponseException
 
 class Observation(object):
     """
