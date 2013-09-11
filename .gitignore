@@ -4,3 +4,5 @@ build/*
 bin/*
 dist/*
 pyowm.egg-info/*
+.project
+.pydevproject
