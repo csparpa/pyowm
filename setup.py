@@ -9,7 +9,7 @@ setup(
     author='Claudio Sparpaglione (@csparpa)',
     author_email='claspock@hotmail.com',
     url='http://github.com/csparpa/pyowm',
-    packages=['pyowm','pyowm.utils','tests'],
+    packages=['pyowm','pyowm.utils','pyowm.exceptions','tests'],
       long_description="""\
       PyOWM is a client Python wrapper library for the OpenWeatherMap v2.5 web API.
       It allows quick and easy consumption of OWM weather data (either observations
