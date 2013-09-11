@@ -39,33 +39,33 @@ def parse_observation(json_data):
         sunset_time = d['sys']['sunset']
         sunrise_time = d['sys']['sunrise']
         clouds = d['clouds']['all']
-        if hasattr(d, 'rain'):
+        if 'rain' in d:
             rain = d['rain'].copy()
         else:
             rain = {}
-        if hasattr(d, 'wind'):
+        if 'wind' in d:
             wind = d['wind'].copy()
         else:
             wind = {}
         humidity = d['main']['humidity']
         # -- snow is not a mandatory field
-        if hasattr(d, 'snow'):
+        if 'snow' in d:
             snow = d['snow'].copy()
         else:
             snow = {}
         # -- pressure
         atm_press = d['main']['pressure']
-        if hasattr(d['main'], 'sea_level'):
+        if 'sea_level' in d['main']:
             sea_level_press = d['main']['sea_level']
         else:
             sea_level_press = None
         pressure = {'press': atm_press,'sea_level': sea_level_press}
         # -- temperature
-        if hasattr(d, 'temp'):
+        if 'temp' in d:
             temperature = d['temp'].copy()
         else:
             temp = d['main']['temp']
-            if hasattr(d['main'], 'temp_kf'):
+            if 'temp_kf' in d['main']:
                 temp_kf = d['main']['temp_kf']
             else:
                 temp_kf = None
