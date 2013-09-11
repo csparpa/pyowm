@@ -4,7 +4,8 @@
 PyOWM library entry point
 """
 
-from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL
+from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
+    FIND_OBSERVATIONS_URL
 from utils import httputils, jsonparser
 
 class OWM(object):
@@ -81,8 +82,8 @@ class OWM(object):
         searchtype - the search mode (str), use:
           'accurate' for an exact literal matching
           'like' for a pattern matching 
-        limit - the maximum number of Observation items to be returned (defaults
-        to 'None', which stands for no limitations)
+        limit - the maximum number of Observation items to be returned (int, 
+            defaults to 'None' which stands for no limitations)
         """
         assert isinstance(pattern, str), "'pattern' must be a str"
         assert isinstance(searchtype, str), "'searchtype' must be a str"
@@ -92,5 +93,10 @@ class OWM(object):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-            
-        # ---> TBD
+        params = {'q': pattern, 'type': searchtype}        
+        if limit is not None:
+            params['cnt'] = limit-1 # This is a bug of the OWM API
+        json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
+           params, self.__API_key)
+        return jsonparser.parse_search_results(json_data)
+        

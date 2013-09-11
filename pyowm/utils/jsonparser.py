@@ -11,41 +11,12 @@ from pyowm.weather import Weather
 from pyowm.observation import Observation
 from pyowm.exceptions.parse_response_exception import ParseResponseException
 
-
-def caused_HTTP_error(data_dictionary):
+def build_location_from(d):
     """
-    Check if the JSON response from the OWM API contains error codes. This method
-    overcomes the lack of use of HTTP error status codes by the OWM API but it's
-    supposed to be deprecated as soon as the API implements a correct HTTP 
-    mechanism for communicating errors to the clients. Returns a boolean.
+    Builds a Location object from the provided dictionary d
     
-    data_dictionary - dict representation of the JSON payload of an OWM web API 
-        response (dict)
+    d - a weather data dictionary (dict)
     """
-    if 'message' in data_dictionary and 'cod' in data_dictionary:
-        if data_dictionary['cod'] is not "200":
-            return True
-    return False
-    
-def parse_observation(json_data):
-    """
-    Factory method that builds an Observation instance from the JSON data
-    returned from the OWM web API.
-    Fallback policies are used: missing non mandatory JSON attributes will 
-    result in empty data structures while missing mandatory JSON attributes
-    will result into a ParseResponseException
-    
-    json_data - the JSON payload of an OWM web API response
-    """
-    d = loads(json_data)
-    
-    # Check if server returned errors
-    if caused_HTTP_error(d):
-        msg = "Unable to fulfill the request - content: "+dumps(d)
-        print msg
-        return None
-    
-    # Location object construction
     try:
         name = d['name']
         lon = d['coord']['lon']
@@ -53,14 +24,24 @@ def parse_observation(json_data):
         ID = d['id']
     except KeyError:
         raise ParseResponseException("Impossible to read location info") 
-    
-    l = Location(name, lon, lat, ID)
+    return Location(name, lon, lat, ID)
 
-    # Weather object construction
+def build_weather_from(d):
+    """
+    Builds a Weather object from the provided dictionary d
+    
+    d - a weather data dictionary (dict)
+    """
     try:
         reference_time = d['dt']
-        sunset_time = d['sys']['sunset']
-        sunrise_time = d['sys']['sunrise']
+        if 'sunset' in d['sys']:
+            sunset_time = d['sys']['sunset']
+        else:
+            sunset_time = 0L
+        if 'sunrise' in d['sys']:
+            sunrise_time = d['sys']['sunrise']
+        else:
+            sunrise_time = 0L
         clouds = d['clouds']['all']
         if 'rain' in d:
             rain = d['rain'].copy()
@@ -106,20 +87,75 @@ def parse_observation(json_data):
     except KeyError:
         raise ParseResponseException("Impossible to read weather info")
     else:
-        w = Weather(reference_time, sunset_time, sunrise_time, clouds,
+        return Weather(reference_time, sunset_time, sunrise_time, clouds,
                     rain, snow, wind, humidity, pressure, temperature, 
                     status, detailed_status, weather_code, 
                     weather_icon_name)
+
+def parse_observation(json_data):
+    """
+    Factory method that builds an Observation instance from the JSON data
+    returned from the OWM web API.
+    Fallback policies are implemented: missing non mandatory JSON attributes will 
+    result in empty data structures while missing mandatory JSON attributes
+    will result into a ParseResponseException
     
+    json_data - the JSON payload of an OWM web API response
+    """
+    d = loads(json_data)
+    
+    # Check if server returned errors: this check overcomes the lack of use of 
+    # HTTP error status codes by the OWM API but it's supposed to be deprecated 
+    # as soon as the API implements a correct HTTP mechanism for communicating 
+    # errors to the clients
+    if 'message' in d and 'cod' in d:
+        if d['cod'] is not "200":
+            print "Unable to fulfill the request - content: "+dumps(d)
+            return None
+    l = build_location_from(d)
+    w = build_weather_from(d)
     return Observation(long(round(time())), l, w)
+
+def parse_search_results(json_data):
+    """
+    Factory method that builds a list of Observation instances from the JSON data
+    returned from the OWM web API.
+    Fallback policies are implemented: when parsing each Observation instance, missing 
+    non mandatory JSON attributes will result in empty data structures while 
+    missing mandatory JSON attributes will result into a ParseResponseException
+    
+    json_data - the JSON payload of an OWM web API response
+    """
+    d = loads(json_data)
+    
+    # Check if server returned errors: this check overcomes the lack of use of 
+    # HTTP error status codes by the OWM API but it's supposed to be deprecated 
+    # as soon as the API implements a correct HTTP mechanism for communicating 
+    # errors to the clients
+    if 'cod' in d and d['cod'] != "200":
+        print "Unable to fulfill the request - content: "+dumps(d)
+        return None
+    
+    # Handle the case when no results are found
+    if 'count' in d and d['count'] is "0":
+        return []
+    else:
+        if 'list' in d:
+            return [Observation(long(round(time())), 
+                                build_location_from(item), 
+                                build_weather_from(item)) for item in d['list']]
+        else:
+            raise ParseResponseException("Impossible to read observations list") 
 
 
 def parse_forecast(json_data):
     """
     Factory method that builds a Forecast instance from the JSON data
     returned from the OWM web API.
-    Fallback policies are used: missing non mandatory JSON attributes will 
+    Fallback policies are implemented: missing non mandatory JSON attributes will 
     result in empty data structures while missing mandatory JSON attributes
-    will result into a ParseResponseException  
+    will result into a ParseResponseException
+    
+    json_data - the JSON payload of an OWM web API response
     """
     raise Exception("Not yet implemented")
