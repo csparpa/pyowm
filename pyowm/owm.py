@@ -51,7 +51,7 @@ class OWM(object):
         """
         assert type(place) is str, "'place' must be a str"
         json_data = httputils.call_API(OBSERVATION_URL, {'q': place}, self.__API_key)
-        return OWM_json_parser.parse_observation(json_data)
+        return jsonparser.parse_observation(json_data)
 
     
     def observation_for_coords(self, lon, lat):

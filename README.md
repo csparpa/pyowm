@@ -19,11 +19,11 @@ Code snippet
     owm = OWM('your-API-key')
     
     #Search for current weather in London, UK
-    obs = owm.observation('London,uk')
-    w = obs.getWeather()
-    w.getDetailedStatus()
+    obs = owm.observation_for_name('London,uk')
+    w = obs.get_weather()
+    w.get_detailed_status()
     'Light rain'
-    w.getWind()['speed']
+    w.get_wind()['speed']
     3.08
 
 Install
