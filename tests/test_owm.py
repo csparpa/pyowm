@@ -38,14 +38,14 @@ class Test(unittest.TestCase):
         self.assertIsInstance(lib_version, str, "")
         self.assertIsInstance(API_version, str, "")
 
-    def test_observation_for_name(self):
+    def test_observation_at_place(self):
         """
-        Test that owm.observation_for_name returns a valid Observation object.
+        Test that owm.observation_at_place returns a valid Observation object.
         We need to monkey patch the inner call to httputils.call_API function
         """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API
-        result = self.__test_instance.observation_for_name("London,uk")
+        result = self.__test_instance.observation_at_place("London,uk")
         httputils.call_API = ref_to_original_call_API
         self.assertFalse(result is None, "")
         self.assertFalse(result.get_reception_time() is None, "")
@@ -54,14 +54,14 @@ class Test(unittest.TestCase):
         self.assertFalse(result.get_weather() is None, "")
         self.assertNotIn(None, result.get_weather().__dict__.values(), "")
     
-    def test_observation_for_coords(self):
+    def test_observation_at_coords(self):
         """
-        Test that owm.observation_for_coords returns a valid Observation object.
+        Test that owm.observation_at_coords returns a valid Observation object.
         We need to monkey patch the inner call to httputils.call_API function
         """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API
-        result = self.__test_instance.observation_for_coords(-2.15,57.0)
+        result = self.__test_instance.observation_at_coords(-2.15,57.0)
         httputils.call_API = ref_to_original_call_API
         self.assertFalse(result is None, "")
         self.assertFalse(result.get_reception_time() is None, "")
@@ -69,6 +69,14 @@ class Test(unittest.TestCase):
         self.assertNotIn(None, result.get_location().__dict__.values(), "")
         self.assertFalse(result.get_weather() is None, "")
         self.assertNotIn(None, result.get_weather().__dict__.values(), "")
+        
+    def test_find_observations_by_name_fails_with_wrong_params(self):
+        """
+        Test method failure providing: a bad value for 'searchtype' and a
+        negative value for 'limit'
+        """
+        self.assertRaises(ValueError, OWM.find_observations_by_name, self.__test_instance, "London", "x")
+        self.assertRaises(ValueError, OWM.find_observations_by_name, self.__test_instance, "London", "accurate", -5)
         
 if __name__ == "__main__":
     unittest.main()

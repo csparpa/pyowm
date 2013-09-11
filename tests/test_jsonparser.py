@@ -5,14 +5,14 @@ Test case for jsonparser.py module
 """
 
 import unittest
-from json_test_responses import OBSERVATION_JSON
+from json_test_responses import OBSERVATION_JSON, NOT_FOUND_JSON
 from pyowm.utils import jsonparser
 from pyowm.exceptions.parse_response_exception import ParseResponseException
 
 
 class Test(unittest.TestCase):
 
-    __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'        
+    __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'  
 
     def test_parse_observation(self):
         """
@@ -33,6 +33,15 @@ class Test(unittest.TestCase):
         JSON data
         """
         self.assertRaises(ParseResponseException, jsonparser.parse_observation, self.__bad_json)
+        
+    def test_caused_HTTP_error(self):
+        self.assertTrue(jsonparser.caused_HTTP_error({'message':'Error', 'cod':'404'}))
+        self.assertFalse(jsonparser.caused_HTTP_error({'message':'Not an error','x':2}))
+        self.assertFalse(jsonparser.caused_HTTP_error({'x':2,'y':'test'}))
+        
+    def test_parse_observation_when_data_not_found(self):
+        result = jsonparser.parse_observation(NOT_FOUND_JSON)
+        self.assertTrue(result is None, "")
         
 if __name__ == "__main__":
     unittest.main()

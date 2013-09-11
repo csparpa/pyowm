@@ -4,13 +4,28 @@
 Parser for the JSON data found into the OWM web API responses
 """
 
-from json import loads
+from json import loads, dumps
 from time import time
 from pyowm.location import Location
 from pyowm.weather import Weather
 from pyowm.observation import Observation
 from pyowm.exceptions.parse_response_exception import ParseResponseException
 
+
+def caused_HTTP_error(data_dictionary):
+    """
+    Check if the JSON response from the OWM API contains error codes. This method
+    overcomes the lack of use of HTTP error status codes by the OWM API but it's
+    supposed to be deprecated as soon as the API implements a correct HTTP 
+    mechanism for communicating errors to the clients. Returns a boolean.
+    
+    data_dictionary - dict representation of the JSON payload of an OWM web API 
+        response (dict)
+    """
+    if 'message' in data_dictionary and 'cod' in data_dictionary:
+        if data_dictionary['cod'] is not "200":
+            return True
+    return False
     
 def parse_observation(json_data):
     """
@@ -18,9 +33,17 @@ def parse_observation(json_data):
     returned from the OWM web API.
     Fallback policies are used: missing non mandatory JSON attributes will 
     result in empty data structures while missing mandatory JSON attributes
-    will result into a ParseResponseException  
+    will result into a ParseResponseException
+    
+    json_data - the JSON payload of an OWM web API response
     """
     d = loads(json_data)
+    
+    # Check if server returned errors
+    if caused_HTTP_error(d):
+        msg = "Unable to fulfill the request - content: "+dumps(d)
+        print msg
+        return None
     
     # Location object construction
     try:

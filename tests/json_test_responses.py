@@ -25,3 +25,5 @@ DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '284.88,"eve": 287.53,"morn": 289.37},"pressure": 1025.35,"humidity": 71,' \
     '"weather": [{"id": 500,"main": "Rain","description": "light rain","icon"' \
     ': "10d"}],"speed": 3.76,"deg": 338,"clouds": 48,"rain": 3}]}'
+
+NOT_FOUND_JSON = '{"message":"Error: Not found city","cod":"404"}'

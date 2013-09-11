@@ -8,11 +8,11 @@ Features
 
     #http://api.openweathermap.org/data/2.5/weather?q=London,uk
     #retrieves the current weather for London,uk
-    obs = owm.observation_for_name('London,uk')
+    obs = owm.observation_at_place('London,uk')
     
     #http://api.openweathermap.org/data/2.5/weather?lat=57&lon=-2.15
     #retrieves the current weather for lat=57,lon=-2.15
-    obs = owm.observation_for_coords(57,2.15)
+    obs = owm.observation_at_coords(57,2.15)
     
     
     # *** Current weather for multiple locations ***

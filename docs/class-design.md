@@ -10,8 +10,8 @@ Methods
 + set_API_key: void
 + get_API_version: float
 + get_version: float
-+ observation_for_name: Observation
-+ observation_for_coords: Observation
++ observation_at_place: Observation
++ observation_at_coords: Observation
 + find_observations_by_name: list of Observations
 + find_observations_by_coords: list of Observations
 + three_hours_forecast: Forecast

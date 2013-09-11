@@ -42,7 +42,7 @@ class OWM(object):
 
     # Main OWM web API querying methods
 
-    def observation_for_name(self, place):
+    def observation_at_place(self, place):
         """
         Queries the OWM API for the currently observed weather at the specified
         toponym (eg: "London,uk"). Returns an Observation object instance
@@ -54,7 +54,7 @@ class OWM(object):
         return jsonparser.parse_observation(json_data)
 
     
-    def observation_for_coords(self, lon, lat):
+    def observation_at_coords(self, lon, lat):
         """
         Queries the OWM API for the currently observed weather at the specified
         lon/lat coordinates (eg: -0.107331,51.503614).
@@ -71,3 +71,26 @@ class OWM(object):
         json_data = httputils.call_API(OBSERVATION_URL, {'lon': lon, 'lat': lat},
                                        self.__API_key)
         return jsonparser.parse_observation(json_data)
+    
+    def find_observations_by_name(self, pattern, searchtype, limit=None):
+        """
+        Queries the OWM API for the currently observed weather in all the places 
+        matching the search parameters. The result is a list of Observation objects
+        
+        pattern - the toponym pattern to be searched (str)
+        searchtype - the search mode (str), use:
+          'accurate' for an exact literal matching
+          'like' for a pattern matching 
+        limit - the maximum number of Observation items to be returned (defaults
+        to 'None', which stands for no limitations)
+        """
+        assert isinstance(pattern, str), "'pattern' must be a str"
+        assert isinstance(searchtype, str), "'searchtype' must be a str"
+        if searchtype is not "accurate" or searchtype is not "like":
+            raise ValueError("'searchtype' value must be 'accurate' or 'like'")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+            
+        # ---> TBD
