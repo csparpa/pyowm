@@ -77,7 +77,7 @@ class Test(unittest.TestCase):
         """
         instance = self.__test_instance
         
-        self.assertEqual(instance.get_reception_time(), self.__test_reference_time, "")
+        self.assertEqual(instance.get_reference_time(), self.__test_reference_time, "")
         self.assertEqual(instance.get_sunset_time(), self.__test_sunset_time, "")
         self.assertEqual(instance.get_sunrise_time(), self.__test_sunrise_time, "")
         self.assertEqual(instance.get_clouds(), self.__test_clouds, "")
@@ -98,8 +98,8 @@ class Test(unittest.TestCase):
         """
         instance = self.__test_instance
                 
-        self.assertEqual(instance.get_reception_time(timeformat='iso'), self.__test_iso_reference_time, "")
-        self.assertEqual(instance.get_reception_time(timeformat='unix'), self.__test_reference_time, "")
+        self.assertEqual(instance.get_reference_time(timeformat='iso'), self.__test_iso_reference_time, "")
+        self.assertEqual(instance.get_reference_time(timeformat='unix'), self.__test_reference_time, "")
         self.assertEqual(instance.get_sunset_time(timeformat='iso'), self.__test_iso_sunset_time, "")
         self.assertEqual(instance.get_sunset_time(timeformat='unix'), self.__test_sunset_time, "")
         self.assertEqual(instance.get_sunrise_time(timeformat='iso'), self.__test_iso_sunrise_time, "")
@@ -110,7 +110,7 @@ class Test(unittest.TestCase):
         Test time-related methods fail when provided with unknown time formats
         """
         instance = self.__test_instance
-        self.assertRaises(ValueError, Weather.get_reception_time, instance, 'xyz')
+        self.assertRaises(ValueError, Weather.get_reference_time, instance, 'xyz')
         self.assertRaises(ValueError, Weather.get_sunset_time, instance, 'xyz')
         self.assertRaises(ValueError, Weather.get_sunrise_time, instance, 'xyz')
         

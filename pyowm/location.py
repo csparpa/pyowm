@@ -64,4 +64,7 @@ class Location(object):
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Location instances"""
-        return '[Location: name=%s lon=%s lat=%s ID=%s]' % (self.__name, self.__lon, self.__lat, self.__ID)
+        return '[Location: name=%s lon=%s lat=%s ID=%s]' % (self.__name.encode("utf-8"),
+                                                            self.__lon,
+                                                            self.__lat,
+                                                            self.__ID)

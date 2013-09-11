@@ -59,7 +59,15 @@ class OWM(object):
         Queries the OWM API for the currently observed weather at the specified
         lon/lat coordinates (eg: -0.107331,51.503614).
         
-        lon - longitude (float)
-        lat - latitued (float)
+        lon - location longitude (int/float between -180 and 180 degrees)
+        lat - location latitude (int/float between -90 and 90 degress)
         """
-        raise Exception("Not yet implemented")
+        assert type(lon) is float or type(lon) is int,"'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int,"'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        json_data = httputils.call_API(OBSERVATION_URL, {'lon': lon, 'lat': lat},
+                                       self.__API_key)
+        return jsonparser.parse_observation(json_data)
