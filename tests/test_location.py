@@ -25,9 +25,6 @@ class Test(unittest.TestCase):
         self.assertRaises(ValueError, Location, u'London', 12.3, 100.0, 1234)
         
     def test_getters_return_expected_data(self):
-        """
-        Test getters do their job
-        """
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat, self.__test_ID)
         self.assertEqual(instance.get_name(), self.__test_name, "")
         self.assertEqual(instance.get_lon(), self.__test_lon, "")

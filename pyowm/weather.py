@@ -38,7 +38,7 @@ class Weather(object):
             "'reference_time' must be an int/long"
         if long(reference_time) < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self.__reference_time = long(reference_time)        
+        self.__reception_time = long(reference_time)        
         assert type(sunset_time) is long or type(sunset_time) is int, \
             "'sunset_time' must be a int/long"
         if long(sunset_time) < 0:
@@ -77,7 +77,7 @@ class Weather(object):
         self.__weather_icon_name = weather_icon_name
 
         
-    def get_reference_time(self, timeformat='unix'):
+    def get_reception_time(self, timeformat='unix'):
         """
         Returns the GMT UNIX time of weather measurement
             format - how to format the result:
@@ -85,9 +85,9 @@ class Weather(object):
                 iso - returns a ISO 8601-formatted str
         """
         if timeformat == 'unix':
-            return self.__reference_time
+            return self.__reception_time
         if timeformat == 'iso':
-            return converter.unix_to_ISO8601(self.__reference_time)
+            return converter.unix_to_ISO8601(self.__reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -195,7 +195,7 @@ class Weather(object):
         
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string"""
-        return dumps({ 'reference_time': self.__reference_time, 'sunset_time': self.__sunset_time,
+        return dumps({ 'reference_time': self.__reception_time, 'sunset_time': self.__sunset_time,
             'sunrise_time': self.__sunrise_time, 'clouds': self.__clouds, 'rain': self.__rain,
             'snow': self.__snow, 'wind': self.__wind, 'humidity': self.__humidity,
             'pressure': self.__pressure, 'temperature': self.__temperature, 'status' : self.__status,
@@ -203,12 +203,13 @@ class Weather(object):
             'weather_icon_name': self.__weather_icon_name })
         
     def to_XML(self):
+        """Dumps object fields into a XML formatted string"""
         return '<Weather><status>%s</status><weather_code>%s</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s</detailed_status><reference_time>%s</reference_time><sunset_time>%s</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>' % (self.__status,
             self.__weather_code, xmlutils.dict_to_XML(self.__rain), 
             xmlutils.dict_to_XML(self.__snow), xmlutils.dict_to_XML(self.__pressure),
             self.__sunrise_time, self.__weather_icon_name, self.__clouds, 
             xmlutils.dict_to_XML(self.__temperature), self.__detailed_status, 
-            self.__reference_time, self.__sunset_time, self.__humidity, 
+            self.__reception_time, self.__sunset_time, self.__humidity, 
             xmlutils.dict_to_XML(self.__wind))
     
     def __str__(self):
@@ -216,7 +217,7 @@ class Weather(object):
         prop_names = ["reference_time","sunset_time","sunrise_time","clouds",
                       "rain","snow","wind","humidity","pressure","temperature",
                       "status","detailed_status","weather_code","weather_icon_name"]
-        prop_values = [self.__reference_time, self.__sunset_time, self.__sunrise_time,
+        prop_values = [self.__reception_time, self.__sunset_time, self.__sunrise_time,
                  self.__clouds, self.__rain, self.__snow, self.__wind, self.__humidity,
                  self.__pressure, self.__temperature, self.__status, 
                  self.__detailed_status, self.__weather_code,self.__weather_icon_name]

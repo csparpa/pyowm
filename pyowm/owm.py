@@ -5,8 +5,7 @@ PyOWM library entry point
 """
 
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL
-from utils import httputils
-from observation import Observation
+from utils import httputils, jsonparser
 
 class OWM(object):
     """
@@ -40,6 +39,9 @@ class OWM(object):
         """Returns the current version of the PyOWM library"""
         return PYOWM_VERSION
 
+
+    # Main OWM web API querying methods
+
     def observation_for_name(self, place):
         """
         Queries the OWM API for the currently observed weather at the specified
@@ -49,7 +51,7 @@ class OWM(object):
         """
         assert type(place) is str, "'place' must be a str"
         json_data = httputils.call_API(OBSERVATION_URL, {'q': place}, self.__API_key)
-        return Observation.from_JSON(json_data)
+        return OWM_json_parser.parse_observation(json_data)
 
     
     def observation_for_coords(self, lon, lat):
@@ -61,5 +63,3 @@ class OWM(object):
         lat - latitued (float)
         """
         raise Exception("Not yet implemented")
-        
-    

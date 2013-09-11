@@ -59,7 +59,47 @@ Features
 JSON responses
 --------------
 
-    #current weather
+    # current weather for specific location
+    http://api.openweathermap.org/data/2.5/weather?q=London,uk
+    
+    {
+        "coord": {
+            "lon": -0.12574,
+            "lat": 51.50853
+        },
+        "sys": {
+            "country": "GB",
+            "sunrise": 1378877413,
+            "sunset": 1378923812
+        },
+        "weather": [{
+            "id": 521,
+            "main": "Rain",
+            "description": "proximity shower rain",
+            "icon": "09d"
+        }],
+        "base": "gdps stations",
+        "main": {
+            "temp": 288.88,
+            "pressure": 1021,
+            "humidity": 63,
+            "temp_min": 287.15,
+            "temp_max": 290.37
+        },
+        "wind": {
+            "speed": 4.6,
+            "deg": 330
+        },
+        "clouds": {
+            "all": 75
+        },
+        "dt": 1378899070,
+        "id": 2643743,
+        "name": "London",
+        "cod": 200
+    }
+
+    #current weather with find
     http://api.openweathermap.org/data/2.5/find?q=London&type=like&cnt=4
 
     { "cod" : "200",

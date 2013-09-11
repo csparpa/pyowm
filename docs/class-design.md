@@ -52,7 +52,6 @@ Methods
 + get_weather: Weather
 + to_JSON: string
 + to_XML: string
-+ from_JSON: Observation
 
 Forecast: class
 ===============

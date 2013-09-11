@@ -3,7 +3,7 @@
 """
 Test case for httputils.py module. Here we don't use mock objects because we
 don't want to rely on exeternal mocking libraries; we use monkey patching instead.
-Monkey patching general steps:
+Monkey patching pattern:
   1. Keep a reference to the original function to be patched
   2. Replace the original function with the mock version
   3. Call function and get results
