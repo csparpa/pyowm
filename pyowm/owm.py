@@ -87,7 +87,7 @@ class OWM(object):
         """
         assert isinstance(pattern, str), "'pattern' must be a str"
         assert isinstance(searchtype, str), "'searchtype' must be a str"
-        if searchtype is not "accurate" or searchtype is not "like":
+        if searchtype is not "accurate" and searchtype is not "like":
             raise ValueError("'searchtype' value must be 'accurate' or 'like'")
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"

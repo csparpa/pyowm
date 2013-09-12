@@ -77,6 +77,5 @@ class Test(unittest.TestCase):
         """
         self.assertRaises(ValueError, OWM.find_observations_by_name, self.__test_instance, "London", "x")
         self.assertRaises(ValueError, OWM.find_observations_by_name, self.__test_instance, "London", "accurate", -5)
-        
 if __name__ == "__main__":
     unittest.main()
