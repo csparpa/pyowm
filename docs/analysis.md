@@ -31,11 +31,11 @@ Features
 
     #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15&cnt=1
     #search for the weather at the first matching location at the specified coords (defaults to limit=None)
-    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57})
+    list_of_obs = owm.find_observations_by_coords(-2.15, 57)
 
     #http://api.openweathermap.org/data/2.5/find?lat=57&lon=-2.15&cnt=3
     #search for the weather at the first 3 matching locations for the specified coords
-    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57}, limit=3)
+    list_of_obs = owm.find_observations_by_coords(-2.15, 57, limit=3)
 
 
     # *** Weather forecasts for a location ***

@@ -76,7 +76,8 @@ class OWM(object):
     def find_observations_by_name(self, pattern, searchtype, limit=None):
         """
         Queries the OWM API for the currently observed weather in all the places 
-        matching the search parameters. The result is a list of Observation objects
+        matching the specified text search parameters. The result is a list of 
+        Observation objects
         
         pattern - the toponym pattern to be searched (str)
         searchtype - the search mode (str), use:
@@ -95,8 +96,31 @@ class OWM(object):
                 raise ValueError("'limit' must be None or greater than zero")
         params = {'q': pattern, 'type': searchtype}        
         if limit is not None:
-            params['cnt'] = limit-1 # This is a bug of the OWM API
+            params['cnt'] = limit-1 # -1 is needed to fix a bug of the OWM API!
         json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
            params, self.__API_key)
         return jsonparser.parse_search_results(json_data)
+
+    def find_observations_by_coords(self, lon, lat, limit=None):
+        """
+        Queries the OWM API for the currently observed weather in all the places 
+        matching the specified coordinates. The result is a list of Observation 
+        objects
         
+        lon - location longitude (int/float between -180 and 180 degrees)
+        lat - location latitude (int/float between -90 and 90 degress)
+        limit - the maximum number of Observation items to be returned (int, 
+            defaults to 'None' which stands for no limitations)
+        """
+        assert type(lon) is float or type(lon) is int,"'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int,"'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        params = {'lon': lon, 'lat': lat}        
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
+           params, self.__API_key)
+        return jsonparser.parse_search_results(json_data)
