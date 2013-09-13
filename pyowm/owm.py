@@ -104,8 +104,8 @@ class OWM(object):
     def find_observations_by_coords(self, lon, lat, limit=None):
         """
         Queries the OWM API for the currently observed weather in all the places 
-        matching the specified coordinates. The result is a list of Observation 
-        objects
+        nearby the specified coordinates, for which observations are available.
+        The result is a list of Observation objects
         
         lon - location longitude (int/float between -180 and 180 degrees)
         lat - location latitude (int/float between -90 and 90 degress)

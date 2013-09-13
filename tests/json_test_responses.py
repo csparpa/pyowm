@@ -9,7 +9,7 @@ OBSERVATION_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' 
     '"temp_max":289.82,"humidity":75},"wind":{"speed":1.54,"gust":2.57,"deg":' \
     '31},"clouds":{"all":92},"dt":1378895177,"id":2643743,"name":"London","cod":200}'
 
-SEARCH_RESULTS_JSON = '{"cod": "200", "count": 5, "list": [{"clouds": {"all": ' \
+SEARCH_RESULTS_JSON = '{"cod": "200", "count": 2, "list": [{"clouds": {"all": ' \
     '20}, "coord": {"lat": 51.50853, "lon": -0.12573999999999999}, "dt": 1378237178,' \
     ' "id": 2643743, "main": {"humidity": 56, "pressure": 1025, "temp": ' \
     '293.74000000000001, "temp_max": 296.14999999999998, "temp_min": ' \

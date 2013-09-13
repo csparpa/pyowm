@@ -53,11 +53,11 @@ class Test(unittest.TestCase):
         httputils.call_API = self.mock_httputils_call_API_returning_single_obs
         result = self.__test_instance.observation_at_place("London,uk")
         httputils.call_API = ref_to_original_call_API
-        self.assertFalse(result is None, "")
-        self.assertFalse(result.get_reception_time() is None, "")
-        self.assertFalse(result.get_location() is None, "")
+        self.assertTrue(result, "")
+        self.assertTrue(result.get_reception_time(), "")
+        self.assertTrue(result.get_location(), "")
         self.assertNotIn(None, result.get_location().__dict__.values(), "")
-        self.assertFalse(result.get_weather() is None, "")
+        self.assertTrue(result.get_weather(), "")
         self.assertNotIn(None, result.get_weather().__dict__.values(), "")
     
     def test_observation_at_coords(self):
@@ -69,11 +69,11 @@ class Test(unittest.TestCase):
         httputils.call_API = self.mock_httputils_call_API_returning_single_obs
         result = self.__test_instance.observation_at_coords(-2.15,57.0)
         httputils.call_API = ref_to_original_call_API
-        self.assertFalse(result is None, "")
-        self.assertFalse(result.get_reception_time() is None, "")
-        self.assertFalse(result.get_location() is None, "")
+        self.assertTrue(result, "")
+        self.assertTrue(result.get_reception_time(), "")
+        self.assertTrue(result.get_location(), "")
         self.assertNotIn(None, result.get_location().__dict__.values(), "")
-        self.assertFalse(result.get_weather() is None, "")
+        self.assertTrue(result.get_weather(), "")
         self.assertNotIn(None, result.get_weather().__dict__.values(), "")
 
     def test_observation_at_coords_fails_when_coordinates_out_of_bounds(self):
@@ -96,12 +96,13 @@ class Test(unittest.TestCase):
         result = self.__test_instance.find_observations_by_name("London","accurate")
         httputils.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, list))
+        self.assertEqual(2, len(result), "")
         for item in result:
-            self.assertFalse(item is None, "")
-            self.assertFalse(item.get_reception_time() is None, "")
-            self.assertFalse(item.get_location() is None, "")
+            self.assertTrue(item, "")
+            self.assertTrue(item.get_reception_time(), "")
+            self.assertTrue(item.get_location(), "")
             self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertFalse(item.get_weather() is None, "")
+            self.assertTrue(item.get_weather(), "")
             self.assertNotIn(None, item.get_weather().__dict__.values(), "")
         
     def test_find_observations_by_name_fails_with_wrong_params(self):
@@ -124,11 +125,11 @@ class Test(unittest.TestCase):
         httputils.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, list))
         for item in result:
-            self.assertFalse(item is None, "")
-            self.assertFalse(item.get_reception_time() is None, "")
-            self.assertFalse(item.get_location() is None, "")
+            self.assertTrue(item, "")
+            self.assertTrue(item.get_reception_time(), "")
+            self.assertTrue(item.get_location(), "")
             self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertFalse(item.get_weather() is None, "")
+            self.assertTrue(item.get_weather(), "")
             self.assertNotIn(None, item.get_weather().__dict__.values(), "")
         
     def test_find_observations_by_coords_fails_when_coordinates_out_of_bounds(self):

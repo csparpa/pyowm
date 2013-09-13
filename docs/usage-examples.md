@@ -73,11 +73,13 @@ _Observation_ objects encapsulate two useful objects: a _Weather_ object that
 contains the weather-related data and a _Location_ object that describes the
 location for which the weather data are provided.
 
-If you want to know when the weather observation data have been queried, just
+If you want to know when the weather observation data have been received, just
 issue:
 
     >>> obs.get_reception_time()                           # UNIX UTC time
-
+	1379091600
+    >>> obs.get_reception_time(timeformat='iso')           # ISO 8601
+	2013-09-13 17:00:00+00
 
 You can retrieve the _Weather_ object like this:
 
@@ -161,10 +163,55 @@ The last call returns the OWM city ID of the location - refer to the
 [OWM API documentation](http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID)
 for details.
 
-Getting 3 hours weather forecast
---------------------------------
-TBD
+Getting weather forecasts
+-------------------------
+The OWM web API currently provides weather forecasts that are sampled :
 
-Getting daily weather forecast
-------------------------------
-TBD
++ every 3 hours
++ every day (24 hours)
+
+The 3h forecasts are provided for a streak of 5 days since the request time and
+daily forecasts are provided for a maximum streak of 14 days since the request 
+time (but also shorter streaks can be obtained).
+
+You can query for 3h forecasts for a location using:
+
+	# Query for 3 hours weather forecast for the next 5 days over London
+    >>> f = owm.three_hours_forecast('London,uk')
+    
+You can query for daily forecasts using:
+
+	# Query for daily weather forecast for the next 14 days over London
+    >>> f = owm.daily_forecast('London,uk')
+    
+and in this case you can limit the amount of days the weather forecast streak
+will contain by using:
+
+	# Daily weather forecast just for the next 6 days over London
+    >>> f = owm.daily_forecast('London,uk',limit=6)
+    
+Both of the above calls return a _Forecast_ object. _Forecast_ objects encapsulate
+the _Location_ object relative to the forecast and a list of _Weather_ objects.  
+Reading the forecast is easy:
+
+    # When has the forecast been received?
+    >>> f.get_reception_time()                           # UNIX UTC time
+    1379091600
+    >>> f.get_reception_time(timeformat='iso')           # ISO 8601
+	2013-09-13 17:00:00+00
+    
+    # Which time interval for the forecast? 
+    >>> f.get_interval()
+    daily
+
+	TBD
+
+
+Printing objects' content
+-------------------------
+For a quick reading of data, the _Location_, _Weather_,  _Observation_ and
+_Forecast_ objects can be printed on-screen, eg:
+
+    >>> l = Location('wonderland', 12.3, 44.7, 9876)
+    >>> print l
+    [Location: name=wonderland lon=12.3 lat=44.7 ID=9876]

@@ -58,14 +58,14 @@ Forecast: class
 
 Fields
 ------
-+ type: string
++ span: int
 + reception_time: long
 + location: Location
 + items: list of Weather objs
 
 Methods
 -------
-+ get_type: string
++ get_span: int
 + get_reception_time: long
 + get_location: Location
 + get_items: list of Weather objs
