@@ -5,7 +5,7 @@ PyOWM library entry point
 """
 
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
-    FIND_OBSERVATIONS_URL
+    FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL
 from utils import httputils, jsonparser
 
 class OWM(object):
@@ -51,7 +51,8 @@ class OWM(object):
         place - a toponym (str)
         """
         assert type(place) is str, "'place' must be a str"
-        json_data = httputils.call_API(OBSERVATION_URL, {'q': place}, self.__API_key)
+        json_data = httputils.call_API(OBSERVATION_URL, 
+                                       {'q': place}, self.__API_key)
         return jsonparser.parse_observation(json_data)
 
     
@@ -124,3 +125,16 @@ class OWM(object):
         json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
            params, self.__API_key)
         return jsonparser.parse_search_results(json_data)
+    
+    #def three_hours_forecast(self, place):
+    #    """
+    #    Queries the OWM API for 3 hours weather forecasts for the specified 
+    #    toponym (eg: "London,uk"). Returns a Forecast object instance containing
+    #    a 5-days weather forecast
+    #    
+    #    place - a toponym (str)
+    #    """
+    #    assert type(place) is str, "'place' must be a str"
+    #    json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
+    #                                   {'q': place}, self.__API_key)
+    #    return jsonparser.parse_forecast(json_data)
