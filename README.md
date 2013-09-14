@@ -36,9 +36,16 @@ how to do it). Just run:
 
 Test
 ----
-Launch tests by moving into the library installation folder and executing:
+Unit tests can be launched by moving into the library installation folder and 
+executing:
 
     python -m unittest discover
+    
+Integration tests can be launched by movin into the library installation folder
+and executing:
+
+    cd functional-tests
+    python integration-tests.py  
 
 Support
 -------
