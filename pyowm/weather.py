@@ -223,6 +223,6 @@ class Weather(object):
                  self.__detailed_status.encode("utf-8"), self.__weather_code,
                  self.__weather_icon_name.encode("utf-8")]
         string_prop_values = map(str, prop_values)
-        return "[Weather:\n"+"\n  ".join([ ": ".join([name,value]) for name,value \
-                                        in zip(prop_names,string_prop_values)])
+        return "[Weather:\n  "+"\n  ".join([ ": ".join([name,value]) for name,value \
+                                        in zip(prop_names,string_prop_values)])+"\n]"
     

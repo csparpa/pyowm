@@ -4,6 +4,7 @@
 Forecast observation classes and data structures.
 """
 
+from json import loads, dumps
 from location import Location
 from weather import Weather
 from utils import converter
@@ -49,7 +50,7 @@ class Forecast(object):
         assert type(interval) is str, "'interval' must be a str"
         if interval is not "3h" and interval is not "daily":
             raise ValueError("'interval' value must be '3h' or 'daily'")
-        self.__span = interval
+        self.__interval = interval
         assert type(reception_time) is long or type(reception_time) is int, "'reception_time' must be an long/int"
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
@@ -75,7 +76,7 @@ class Forecast(object):
     
     def get_interval(self):
         """Returns the time granularity of the forecast"""
-        return self.__span
+        return self.__interval
     
     def get_reception_time(self, timeformat='unix'):
         """
@@ -98,3 +99,30 @@ class Forecast(object):
     def get_weathers(self):
         """Returns a copy of the Weather objects list"""
         return list(self.__weathers)
+    
+    def count_weathers(self):
+        """Returns how many Weather objects are in list"""
+        return len(self.__weathers)
+    
+    def to_JSON(self):
+        """Dumps object fields into a JSON formatted string"""
+        
+        #[item.to_JSON() for item in self.__weathers]
+        
+        d = { "interval": self.__interval,
+              "reception_time": self.__reception_time, 
+              "Location": loads(self.__location.to_JSON()),
+              "weathers": loads("["+",".join([item.to_JSON() for item in self])+"]") 
+              }
+        return dumps(d)
+    
+    def to_XML(self):
+        """Dumps object fields into a XML formatted string"""
+        return '<Forecast><interval>%s</interval><reception_time>%s</reception_time>' \
+            '%s<weathers>%s</weathers></Forecast>' % \
+            (self.__interval, self.__reception_time, self.__location.to_XML(), \
+                "".join([item.to_XML() for item in self]))
+    
+    def __str__(self):
+        """Redefine __str__ hook for pretty-printing of Forecast instances"""
+        return "[Forecast:\n"+str(self.__location)+"\n"+str(self.__weather)+"\n]"

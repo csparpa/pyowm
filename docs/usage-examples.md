@@ -191,8 +191,7 @@ will contain by using:
     >>> f = owm.daily_forecast('London,uk',limit=6)
     
 Both of the above calls return a _Forecast_ object. _Forecast_ objects encapsulate
-the _Location_ object relative to the forecast and a list of _Weather_ objects.  
-Reading the forecast is easy:
+the _Location_ object relative to the forecast and a list of _Weather_ objects:
 
     # When has the forecast been received?
     >>> f.get_reception_time()                           # UNIX UTC time
@@ -204,8 +203,23 @@ Reading the forecast is easy:
     >>> f.get_interval()
     daily
 
-	TBD
-
+	# Get Location
+	>>> f.get_location()
+	<location.Location at 0x00DADBF0>
+	
+Once you obtain a _Forecast_ object, reading the forecast data is easy - you can
+get the whole list of _Weather_ objects or you can use the built-in iterator:
+	
+	# Get the list of Weather objects...
+	>>> lst = f.get_weathers()
+	
+	# ...or iterate directly over the Forecast object
+	>>> for weather in f:
+	      print (weather.get_reference_time(format='iso'),weather.get_status())
+	('2013-09-14 14:00:00+0','Clear')
+	('2013-09-14 17:00:00+0','Clear')
+	('2013-09-14 20:00:00+0','Clouds')
+	[...]
 
 Printing objects' content
 -------------------------

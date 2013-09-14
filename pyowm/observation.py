@@ -67,4 +67,5 @@ class Observation(object):
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Observation instances"""
-        return "[Observation:\n"+str(self.__location)+"\n"+str(self.__weather)+"\n]"
+        return "[Observation:\nreception time="+str(self.__reception_time)+ \
+            "\n"+str(self.__location)+"\n"+str(self.__weather)+"\n]"
