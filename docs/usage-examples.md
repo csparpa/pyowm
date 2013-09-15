@@ -203,6 +203,10 @@ the _Location_ object relative to the forecast and a list of _Weather_ objects:
     >>> f.get_interval()
     daily
 
+	# How many "weather scenarios" are in the forecast?
+	>>> len(f)
+	20 
+
 	# Get Location
 	>>> f.get_location()
 	<location.Location at 0x00DADBF0>

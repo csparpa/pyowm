@@ -13,14 +13,20 @@ Monkey patching pattern:
 """
 
 import unittest
-from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON
+from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
+    THREE_HOURS_FORECAST_JSON
 from pyowm import OWM
 from pyowm.utils import httputils
+from pyowm.forecast import Forecast
+from pyowm.observation import Observation
+from pyowm.weather import Weather
+from pyowm.location import Location
 
 class Test(unittest.TestCase):
     
     __test_instance = OWM('test_API_key')
     
+    # Mock functions
     def mock_httputils_call_API_returning_single_obs(self, API_subset_URL, 
                                                      params_dict, API_key):
         """Mock implementation of httputils.call_API"""
@@ -30,7 +36,13 @@ class Test(unittest.TestCase):
                                                      params_dict, API_key):
         """Mock implementation of httputils.call_API"""
         return SEARCH_RESULTS_JSON
+    
+    def mock_httputils_call_API_returning_3h_forecast(self, API_subset_URL, 
+                                                     params_dict, API_key):
+        """Mock implementation of httputils.call_API"""
+        return THREE_HOURS_FORECAST_JSON
 
+    # Tests
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
         owm = OWM()
@@ -53,7 +65,7 @@ class Test(unittest.TestCase):
         httputils.call_API = self.mock_httputils_call_API_returning_single_obs
         result = self.__test_instance.observation_at_place("London,uk")
         httputils.call_API = ref_to_original_call_API
-        self.assertTrue(result, "")
+        self.assertTrue(isinstance(result, Observation), "")
         self.assertTrue(result.get_reception_time(), "")
         self.assertTrue(result.get_location(), "")
         self.assertNotIn(None, result.get_location().__dict__.values(), "")
@@ -69,7 +81,7 @@ class Test(unittest.TestCase):
         httputils.call_API = self.mock_httputils_call_API_returning_single_obs
         result = self.__test_instance.observation_at_coords(-2.15,57.0)
         httputils.call_API = ref_to_original_call_API
-        self.assertTrue(result, "")
+        self.assertTrue(isinstance(result, Observation), "")
         self.assertTrue(result.get_reception_time(), "")
         self.assertTrue(result.get_location(), "")
         self.assertNotIn(None, result.get_location().__dict__.values(), "")
@@ -141,5 +153,24 @@ class Test(unittest.TestCase):
         self.assertRaises(ValueError, OWM.find_observations_by_coords, self.__test_instance, 2.5, -200)
         self.assertRaises(ValueError, OWM.find_observations_by_coords, self.__test_instance, 2.5, 200)
 
+    #def test_three_hours_forecast(self):
+    #    """
+    #    Test that owm.three_hours_forecast returns a list of valid Forecast object. 
+    #    We need to monkey patch the inner call to httputils.call_API function
+    #    """
+    #    ref_to_original_call_API = httputils.call_API
+    #    httputils.call_API = self.mock_httputils_call_API_returning_3h_forecast
+    #    result = self.__test_instance.three_hours_forecast("London,uk")
+    #    httputils.call_API = ref_to_original_call_API
+    #    print len(result)
+    #    self.assertTrue(isinstance(result, Forecast))
+    #    self.assertTrue(result.get_interval(),"")
+    #    self.assertTrue(result.get_reception_time(), "")
+    #    self.assertTrue(isinstance(result.get_location(), Location))
+    #    self.assertEqual(2, len(result), "")
+    #    for weather in result:
+    #        self.assertTrue(isinstance(weather, Weather), "")
+    #        self.assertNotIn(None, weather.__dict__.values(), "")
+            
 if __name__ == "__main__":
     unittest.main()

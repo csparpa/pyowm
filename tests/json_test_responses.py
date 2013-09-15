@@ -43,4 +43,8 @@ OBSERVATION_NOT_FOUND_JSON = '{"message":"Error: Not found city","cod":"404"}'
 
 INTERNAL_SERVER_ERROR_JSON = '{"message":"Error: Internal server error","cod":"500"}'
 
-SEARCH_WITH_NO_RESULTS_JSON = '{"message":"accurate","cod":"200","count":0,"list":[]}'
+SEARCH_WITH_NO_RESULTS_JSON = '{"cod": "200", "count": 0, "list": []}'
+
+FORECAST_NOT_FOUND_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 2643743,' \
+    '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
+    '"GB","population": 1000000},"cnt": 0,"list": []}'
