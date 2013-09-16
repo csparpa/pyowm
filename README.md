@@ -13,6 +13,13 @@ No additional libraries are requested: just the Python 2.7+ standard modules.
 
 For the moment, PyOWM only supports _version 2.5_ of the OWM API.
 
+Install
+-------
+You will need _setuptools_ installed (read [here](https://pypi.python.org/pypi/setuptools) 
+how to do it). Just run:
+
+    python setup.py install
+
 Take off
 --------
     from pyowm import OWM
@@ -26,13 +33,6 @@ Take off
     'Light rain'
     w.get_wind()
     {'speed': 4.6, 'deg': 330}
-
-Install
--------
-You will need _setuptools_ installed (read [here](https://pypi.python.org/pypi/setuptools) 
-how to do it). Just run:
-
-    python setup.py install
 
 Test
 ----
