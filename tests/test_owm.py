@@ -153,24 +153,23 @@ class Test(unittest.TestCase):
         self.assertRaises(ValueError, OWM.find_observations_by_coords, self.__test_instance, 2.5, -200)
         self.assertRaises(ValueError, OWM.find_observations_by_coords, self.__test_instance, 2.5, 200)
 
-    #def test_three_hours_forecast(self):
-    #    """
-    #    Test that owm.three_hours_forecast returns a list of valid Forecast object. 
-    #    We need to monkey patch the inner call to httputils.call_API function
-    #    """
-    #    ref_to_original_call_API = httputils.call_API
-    #    httputils.call_API = self.mock_httputils_call_API_returning_3h_forecast
-    #    result = self.__test_instance.three_hours_forecast("London,uk")
-    #    httputils.call_API = ref_to_original_call_API
-    #    print len(result)
-    #    self.assertTrue(isinstance(result, Forecast))
-    #    self.assertTrue(result.get_interval(),"")
-    #    self.assertTrue(result.get_reception_time(), "")
-    #    self.assertTrue(isinstance(result.get_location(), Location))
-    #    self.assertEqual(2, len(result), "")
-    #    for weather in result:
-    #        self.assertTrue(isinstance(weather, Weather), "")
-    #        self.assertNotIn(None, weather.__dict__.values(), "")
-            
+    def test_three_hours_forecast(self):
+        """
+        Test that owm.three_hours_forecast returns a list of valid Forecast object. 
+        We need to monkey patch the inner call to httputils.call_API function
+        """
+        ref_to_original_call_API = httputils.call_API
+        httputils.call_API = self.mock_httputils_call_API_returning_3h_forecast
+        result = self.__test_instance.three_hours_forecast("London,uk")
+        httputils.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, Forecast))
+        self.assertTrue(result.get_interval(),"")
+        self.assertTrue(result.get_reception_time(), "")
+        self.assertTrue(isinstance(result.get_location(), Location))
+        self.assertEqual(1, len(result), "")
+        for weather in result:
+            self.assertTrue(isinstance(weather, Weather), "")
+            self.assertNotIn(None, weather.__dict__.values(), "")
+ 
 if __name__ == "__main__":
     unittest.main()

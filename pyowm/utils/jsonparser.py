@@ -181,12 +181,9 @@ def parse_forecast(json_data):
     elif 'cnt' in d and d['cnt'] is 0:
         weathers = []
     else:
-        raise Exception("Not yet implemented")
-    #    if 'list' in d:
-    #        return [Weather(long(round(time())), 
-    #                            build_location_from(item), 
-    #                            build_weather_from(item)) for item in d['list']]
-    #    else:
-    #        raise ParseResponseException("Impossible to read observations list")
+        if 'list' in d:
+            weathers = [build_weather_from(item) for item in d['list']]
+        else:
+            raise ParseResponseException("Impossible to read observations list")
         
     return Forecast("3h", long(round(time())), l, weathers)

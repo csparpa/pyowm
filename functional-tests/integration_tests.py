@@ -123,6 +123,29 @@ class Test(unittest.TestCase):
             self.assertTrue(item.get_weather(), "")
             self.assertNotIn(None, item.get_weather().__dict__.values(), "")
         
+    def test_three_hours_forecast(self):
+        """
+        Test feature: get 3 hours forecast for a specific location
+        """
+        f1 = self.__owm.three_hours_forecast("London,uk")
+        f2 = self.__owm.three_hours_forecast('Kiev')
+        f3 = self.__owm.three_hours_forecast('QmFoPIlbf')  #Shall be None
+        self.assertTrue(f1)
+        self.assertFalse(f1.get_reception_time() is None)
+        self.assertTrue(f1.get_location())
+        self.assertNotIn(None, f1.get_location().__dict__.values())
+        for weather in f1:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values())
+        self.assertTrue(f2)
+        self.assertFalse(f2.get_reception_time() is None)
+        self.assertTrue(f2.get_location())
+        self.assertNotIn(None, f2.get_location().__dict__.values())
+        for weather in f2:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values())
+        self.assertFalse(f3)
+        
 if __name__ == "__main__":
     unittest.main()
     

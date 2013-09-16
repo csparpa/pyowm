@@ -97,21 +97,21 @@ class Test(unittest.TestCase):
         result = jsonparser.parse_search_results(INTERNAL_SERVER_ERROR_JSON)
         self.assertFalse(result, "")
 
-    #def test_parse_forecast(self):
-    #    """
-    #    Test that method returns a valid Forecast object when provided
-    #    with well-formed JSON data
-    #    """
-    #    result = jsonparser.parse_forecast(THREE_HOURS_FORECAST_JSON)
-    #    self.assertTrue(result, "")
-    #    self.assertTrue(result.get_reception_time(),"")
-    #    self.assertTrue(result.get_interval(),"")
-    #    self.assertTrue(result.get_location())
-    #    self.assertNotIn(None, result.get_location().__dict__.values(), "")
-    #    self.assertTrue(isinstance(result.get_weathers(),list), "")
-    #    for weather in result:
-    #        self.assertTrue(weather)
-    #        self.assertNotIn(None, result.get_weather().__dict__.values(), "")
+    def test_parse_forecast(self):
+        """
+        Test that method returns a valid Forecast object when provided
+        with well-formed JSON data
+        """
+        result = jsonparser.parse_forecast(THREE_HOURS_FORECAST_JSON)
+        self.assertTrue(result, "")
+        self.assertTrue(result.get_reception_time(),"")
+        self.assertTrue(result.get_interval(),"")
+        self.assertTrue(result.get_location())
+        self.assertNotIn(None, result.get_location().__dict__.values(), "")
+        self.assertTrue(isinstance(result.get_weathers(),list), "")
+        for weather in result:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values(), "")
         
     def test_parse_forecast_with_malformed_JSON_data(self):
         """
