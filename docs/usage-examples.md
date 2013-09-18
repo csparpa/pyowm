@@ -202,8 +202,20 @@ the _Location_ object relative to the forecast and a list of _Weather_ objects:
     # Which time interval for the forecast? 
     >>> f.get_interval()
     daily
+    
+    # When in time does the forecast begin?
+    >>> f.when_starts()                                  # UNIX UTC time
+    1379090800
+    >>> f.when_starts(timeformat='iso')                  # ISO 8601
+    2013-09-13 16:46:40+00
+    
+    # ...and when will it end?
+    >>> f.when_ends()                                    # UNIX UTC time
+    1379902600
+    >>> f.when_ends(timeformat='iso')                    # ISO 8601
+    2013-09-23 02:16:40+00
 
-	# How many "weather scenarios" are in the forecast?
+	# How many weather items are in the forecast?
 	>>> len(f)
 	20 
 
@@ -224,6 +236,63 @@ get the whole list of _Weather_ objects or you can use the built-in iterator:
 	('2013-09-14 17:00:00+0','Clear')
 	('2013-09-14 20:00:00+0','Clouds')
 	[...]
+
+The _Forecast_ class provides also a few convenience methods to inspect the
+weather forecasts. In example, you can ask the _Forecast_ object to tell which
+is the weather forecast for a specific point in time (UNIXtime or _datetime.datetime
+object_):
+
+    # Tell me the weather forecast for the specific UNIX time
+    >>> f.get_weather_at(1379902100L)
+    <weather.Weather at 0x00DF75F7>
+
+You will be provided with the weather forecast sample that lies closest in time 
+to the time that you specified. Of course this will work only if the specified time
+is covered by the forecast! Otherwise, you will be prompted with an error:
+
+    >>> f.get_weather_at(0L)
+    Error: the specified time is not included in the weather forecast
+
+Other useful convenicence methods are:
+
+    # Will it rain, be sunny or snow during the covered period?
+    >>> f.will_have_rain()
+    True
+    >>> f.will_have_sun()
+    True
+    >>> f.will_have_snow()
+    False
+    
+    # Will it be rainy, sunny or snowy at the specified time?
+    tomorrow_at_noon = 1379937600L
+    >>> f.will_be_rainy_on(tomorrow_at_noon)
+    False
+    >>> f.will_be_sunny_on(tomorrow_at_noon)
+    True
+    >>> f.will_be_snowy_on(tomorrow_at_noon)
+    False
+    >>> f.will_be_sunny_on(0L)           # Out of weather forecast time coverage
+    Error: the specified time is not included in the weather forecast 
+    
+    # List the weather elements for which the condition will be: 
+    # rain, sun and snow
+    >>> f.when_rain()
+    [<weather.Weather at 0x00DB22F7>,<weather.Weather at 0x00DB2317>]
+    >>> f.when_sun()
+    [...]
+    >>> f.when_snow()
+    []                                   # It won't snow: empty list
+
+You can also express times using _datetime.datetime_ Python objects
+
+When calling _f.will_be_rainy_on_, _f.will_be_sunny_on_ and _f.will_be_snowy_on_
+methods the _Weather_ item which is closest to the time you specified will be
+examined. So be precise if your forecast is 3h!  
+
+When calling _f.when_rain()_,_f.when_sun()_ and _f.when_snow()_ you
+will be provided with a sublist of the _Weather_ objects in _f_ for which
+the weather condition is the one you queried for.
+
 
 Printing objects' content
 -------------------------

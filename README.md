@@ -22,17 +22,24 @@ how to do it). Just run:
 
 Take off
 --------
-    from pyowm import OWM
+    >>> from pyowm import OWM
+    >>> from datetime import datetime
 
-    owm = OWM('your-API-key')
+    >>> owm = OWM('your-API-key')
     
-    #Search for current weather in London, UK
-    obs = owm.observation_for_name('London,uk')
-    w = obs.get_weather()
-    w.get_detailed_status()
+    # Search for current weather in London, UK
+    >>> obs = owm.observation_for_name('London,uk')
+    >>> w = obs.get_weather()
+    >>> w.get_detailed_status()
     'Light rain'
-    w.get_wind()
+    >>> w.get_wind()
     {'speed': 4.6, 'deg': 330}
+    
+    # Will it be sunny tomorrow morning in Milan, IT ?
+    >>> fcst = owm.daily_forecast("Milan,it", limit=3)
+    >>> tomorrow = datetime.datetime(2013, 9, 19, 11, 0)
+    >>> fcst.will_be_sunny_on(tomorrow)
+    True
 
 Test
 ----
