@@ -21,7 +21,8 @@ class Observation(object):
         location - the location relative to this observation (Location)
         weather - the observed weather data (Weather)
         """
-        assert type(reception_time) is long or type(reception_time) is int, "'reception_time' must be an int/long"
+        assert type(reception_time) is long or type(reception_time) is int, \
+            "'reception_time' must be an int/long"
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self.__reception_time = long(reception_time)
@@ -63,7 +64,8 @@ class Observation(object):
     def to_XML(self):
         """Dumps object fields into a XML formatted string"""
         return '<Observation><reception_time>%s</reception_time>%s%s</Observation>' % \
-            (self.__reception_time, self.__location.to_XML(), self.__weather.to_XML())
+            (self.__reception_time, self.__location.to_XML(), 
+             self.__weather.to_XML())
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Observation instances"""

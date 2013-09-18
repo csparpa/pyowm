@@ -39,32 +39,53 @@ def build_weather_from(d):
     """
     try:
         reference_time = d['dt']
-        if 'sunset' in d['sys']:
+        if 'sys' in d and 'sunset' in d['sys']:
             sunset_time = d['sys']['sunset']
         else:
             sunset_time = 0L
-        if 'sunrise' in d['sys']:
+        if 'sys' in d and 'sunrise' in d['sys']:
             sunrise_time = d['sys']['sunrise']
         else:
             sunrise_time = 0L
-        clouds = d['clouds']['all']
+        if 'clouds' in d:
+            if isinstance(d['clouds'], int) or isinstance(d['clouds'], float):
+                clouds = d['clouds']
+            elif 'all' in d['clouds']: 
+                clouds = d['clouds']['all']
+            else:
+                clouds = 0
+        else:
+            clouds = 0
         if 'rain' in d:
-            rain = d['rain'].copy()
+            if isinstance(d['rain'], int) or isinstance(d['rain'], float):
+                rain = {'all': d['rain']}
+            else:
+                rain = d['rain'].copy()
         else:
             rain = {}
         if 'wind' in d:
             wind = d['wind'].copy()
         else:
             wind = {}
-        humidity = d['main']['humidity']
+        if 'humidity' in d:
+            humidity = d['humidity']
+        elif 'main' in d and 'humidity' in d['main']:
+            humidity = d['main']['humidity']
+        else:
+            humidity = 0
         # -- snow is not a mandatory field
         if 'snow' in d:
             snow = d['snow'].copy()
         else:
             snow = {}
         # -- pressure
-        atm_press = d['main']['pressure']
-        if 'sea_level' in d['main']:
+        if 'pressure' in d:
+            atm_press = d['pressure']
+        elif 'main' in d and 'pressure' in d['main']:
+            atm_press = d['main']['pressure']
+        else:
+            atm_press = None
+        if 'main' in d and 'sea_level' in d['main']:
             sea_level_press = d['main']['sea_level']
         else:
             sea_level_press = None
@@ -72,7 +93,7 @@ def build_weather_from(d):
         # -- temperature
         if 'temp' in d:
             temperature = d['temp'].copy()
-        else:
+        elif 'main' in d and 'temp' in d['main']:
             temp = d['main']['temp']
             if 'temp_kf' in d['main']:
                 temp_kf = d['main']['temp_kf']
@@ -85,10 +106,18 @@ def build_weather_from(d):
                            'temp_max': temp_max,
                            'temp_min': temp_min
                            }
-        status = d['weather'][0]['main'].lower() #Sometimes provided with a leading upper case!
-        detailed_status = d['weather'][0]['description'].lower()
-        weather_code = d['weather'][0]['id']
-        weather_icon_name = d['weather'][0]['icon']
+        else:
+            temperature = {}
+        if 'weather' in d:
+            status = d['weather'][0]['main'].lower() #Sometimes provided with a leading upper case!
+            detailed_status = d['weather'][0]['description'].lower()
+            weather_code = d['weather'][0]['id']
+            weather_icon_name = d['weather'][0]['icon']
+        else:
+            status = u''
+            detailed_status = u''
+            weather_code = 0
+            weather_icon_name = u''
     except KeyError:
         raise ParseResponseException("Impossible to read weather info")
     else:

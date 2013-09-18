@@ -14,15 +14,19 @@ class Test(unittest.TestCase):
     __test_reception_time = 1234567L
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
     __test_location = Location(u'test', 12.3, 43.7, 987)
-    __test_weathers = [ Weather(1378459200, 1378496400, 1378449600, 67, {"all": 20},
-            {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57, 
+    __test_weathers = [ Weather(1378459200, 1378496400, 1378449600, 67, 
+            {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57, 
             {"press": 1030.119, "sea_level": 1038.589},
-            {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098, "temp_min": 294.199},
+            {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098, 
+                "temp_min": 294.199
+            },
             u"Clouds", u"Overcast clouds", 804, u"04d"),
            Weather(1378459690, 1378496480, 1378449510, 23, {"all": 10},
             {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12, 
             {"press": 1070.119, "sea_level": 1078.589},
-            {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0, "temp_min": 295.6},
+            {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0, 
+             "temp_min": 295.6
+             },
             u"Clear", u"Sky is clear", 804, u"02d")
        ]
     __test_n_weathers = len(__test_weathers)
@@ -30,7 +34,8 @@ class Test(unittest.TestCase):
                                __test_weathers)
 
     def test_init_fails_when_reception_time_is_negative(self):
-        self.assertRaises(ValueError, Forecast, "3h", -1234567L, self.__test_location, self.__test_weathers)
+        self.assertRaises(ValueError, Forecast, "3h", -1234567L, 
+                          self.__test_location, self.__test_weathers)
 
     def test_init_fails_with_unknown_interval(self):
         """
@@ -43,30 +48,34 @@ class Test(unittest.TestCase):
         """
         Test either for "3h" forecast and "daily" ones
         """
-        instance1 = Forecast("3h", self.__test_reception_time, self.__test_location,
-                             self.__test_weathers)
-        self.assertEqual(instance1.get_interval(), "3h", "")
-        self.assertEqual(instance1.get_reception_time(), self.__test_reception_time, "")
-        self.assertEqual(instance1.get_location(), self.__test_location, "")
-        self.assertEqual(instance1.get_weathers(), self.__test_weathers, "")
+        instance1 = Forecast("3h", self.__test_reception_time, 
+                             self.__test_location, self.__test_weathers)
+        self.assertEqual(instance1.get_interval(), "3h")
+        self.assertEqual(instance1.get_reception_time(), 
+                         self.__test_reception_time)
+        self.assertEqual(instance1.get_location(), self.__test_location)
+        self.assertEqual(instance1.get_weathers(), self.__test_weathers)
         instance2 = Forecast("daily", self.__test_reception_time, 
                              self.__test_location, self.__test_weathers)
-        self.assertEqual(instance2.get_interval(), "daily", "")
-        self.assertEqual(instance2.get_reception_time(), self.__test_reception_time, "")
-        self.assertEqual(instance2.get_location(), self.__test_location, "")
-        self.assertEqual(instance2.get_weathers(), self.__test_weathers, "")
+        self.assertEqual(instance2.get_interval(), "daily")
+        self.assertEqual(instance2.get_reception_time(), 
+                         self.__test_reception_time)
+        self.assertEqual(instance2.get_location(), self.__test_location)
+        self.assertEqual(instance2.get_weathers(), self.__test_weathers)
 
     def test_returning_different_formats_for_reception_time(self):
         """
         Test get_reception_time returns timestamps in the expected formats
         """
         instance = self.__test_instance
-        self.assertEqual(instance.get_reception_time(timeformat='iso'), self.__test_iso_reception_time, "")
-        self.assertEqual(instance.get_reception_time(timeformat='unix'), self.__test_reception_time, "")
+        self.assertEqual(instance.get_reception_time(timeformat='iso'), 
+                         self.__test_iso_reception_time)
+        self.assertEqual(instance.get_reception_time(timeformat='unix'), 
+                         self.__test_reception_time)
 
     def test_count_weathers(self):
         instance = self.__test_instance
-        self.assertEqual(instance.count_weathers(), self.__test_n_weathers, "")
+        self.assertEqual(instance.count_weathers(), self.__test_n_weathers)
 
     def test_forecast_iterator(self):
         """
@@ -78,7 +87,7 @@ class Test(unittest.TestCase):
         for weather in instance:
             self.assertTrue(isinstance(weather, Weather))
             counter += 1
-        self.assertEqual(instance.count_weathers(), counter, "")
+        self.assertEqual(instance.count_weathers(), counter)
 
     def test_JSON_dump(self):
         """
@@ -100,7 +109,7 @@ class Test(unittest.TestCase):
             '"weather_icon_name": "02d", "pressure": {"press": 1070.119, "sea_level":' \
             ' 1078.589}, "sunrise_time": 1378449510, "sunset_time": 1378496480, ' \
             '"humidity": 12, "wind": {"speed": 4.2, "deg": 103.4}}]}'
-        self.assertEqual(expected_output, self.__test_instance.to_JSON(), "")
+        self.assertEqual(expected_output, self.__test_instance.to_JSON())
         
     def test_XML_dump(self):
         """
@@ -129,7 +138,7 @@ class Test(unittest.TestCase):
             '<reference_time>1378459690</reference_time><sunset_time>1378496480' \
             '</sunset_time><humidity>12</humidity><wind><speed>4.2</speed><deg>' \
             '103.4</deg></wind></Weather></weathers></Forecast>'
-        self.assertEqual(expectedOutput, self.__test_instance.to_XML(), "")
+        self.assertEqual(expectedOutput, self.__test_instance.to_XML())
 
 if __name__ == "__main__":
     unittest.main()

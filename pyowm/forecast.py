@@ -51,7 +51,8 @@ class Forecast(object):
         if interval is not "3h" and interval is not "daily":
             raise ValueError("'interval' value must be '3h' or 'daily'")
         self.__interval = interval
-        assert type(reception_time) is long or type(reception_time) is int, "'reception_time' must be an long/int"
+        assert type(reception_time) is long or type(reception_time) is int, \
+            "'reception_time' must be an long/int"
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self.__reception_time = long(reception_time)
@@ -59,7 +60,7 @@ class Forecast(object):
         self.__location = location
         assert isinstance(weathers, list), "'weathers' must be a list"
         for item in weathers:
-            assert isinstance(item, Weather), "items of list 'weathers' must be Weather objects"
+            assert isinstance(item, Weather), "items in 'weathers' must be Weather objects"
         self.__weathers = weathers
     
     def __iter__(self):

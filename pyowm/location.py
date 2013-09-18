@@ -59,8 +59,9 @@ class Location(object):
     
     def to_XML(self):
         """Dumps object fields into a XML formatted string"""
-        return """<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat></coordinates><ID>%s</ID></Location>""" % (self.__name,
-            self.__lon, self.__lat, self.__ID)
+        return '<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat>' \
+                '</coordinates><ID>%s</ID></Location>' % (self.__name, self.__lon,
+                                                          self.__lat, self.__ID)
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Location instances"""

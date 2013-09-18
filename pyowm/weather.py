@@ -195,22 +195,31 @@ class Weather(object):
         
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string"""
-        return dumps({ 'reference_time': self.__reference_time, 'sunset_time': self.__sunset_time,
-            'sunrise_time': self.__sunrise_time, 'clouds': self.__clouds, 'rain': self.__rain,
-            'snow': self.__snow, 'wind': self.__wind, 'humidity': self.__humidity,
-            'pressure': self.__pressure, 'temperature': self.__temperature, 'status' : self.__status,
-            'detailed_status': self.__detailed_status, 'weather_code': self.__weather_code,
-            'weather_icon_name': self.__weather_icon_name })
+        return dumps({ 'reference_time': self.__reference_time, 
+                      'sunset_time': self.__sunset_time,
+                      'sunrise_time': self.__sunrise_time, 'clouds': self.__clouds,
+                      'rain': self.__rain, 'snow': self.__snow, 'wind': self.__wind,
+                      'humidity': self.__humidity, 'pressure': self.__pressure,
+                      'temperature': self.__temperature, 'status' : self.__status,
+                      'detailed_status': self.__detailed_status,
+                      'weather_code': self.__weather_code,
+                      'weather_icon_name': self.__weather_icon_name })
         
     def to_XML(self):
         """Dumps object fields into a XML formatted string"""
-        return '<Weather><status>%s</status><weather_code>%s</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s</detailed_status><reference_time>%s</reference_time><sunset_time>%s</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>' % (self.__status,
-            self.__weather_code, xmlutils.dict_to_XML(self.__rain), 
-            xmlutils.dict_to_XML(self.__snow), xmlutils.dict_to_XML(self.__pressure),
-            self.__sunrise_time, self.__weather_icon_name, self.__clouds, 
-            xmlutils.dict_to_XML(self.__temperature), self.__detailed_status, 
-            self.__reference_time, self.__sunset_time, self.__humidity, 
-            xmlutils.dict_to_XML(self.__wind))
+        return '<Weather><status>%s</status><weather_code>%s</weather_code><rain>' \
+            '%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s' \
+            '</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s' \
+            '</clouds><temperature>%s</temperature><detailed_status>%s' \
+            '</detailed_status><reference_time>%s</reference_time><sunset_time>%s' \
+            '</sunset_time><humidity>%s</humidity><wind>%s</wind></Weather>' % (
+                self.__status, self.__weather_code,
+                xmlutils.dict_to_XML(self.__rain),xmlutils.dict_to_XML(self.__snow),
+                xmlutils.dict_to_XML(self.__pressure), self.__sunrise_time,
+                self.__weather_icon_name, self.__clouds, 
+                xmlutils.dict_to_XML(self.__temperature), self.__detailed_status,
+                self.__reference_time, self.__sunset_time, self.__humidity,
+                xmlutils.dict_to_XML(self.__wind))
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Weather instances"""

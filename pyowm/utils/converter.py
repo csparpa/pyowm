@@ -18,7 +18,8 @@ def unix_to_ISO8601(unixtime):
     if isinstance(unixtime, (long,int)):
         if unixtime < 0:
             raise ValueError(__name__+": negative time values not allowed")
-        return datetime.utcfromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S+00')
+        return datetime.utcfromtimestamp(unixtime). \
+            strftime('%Y-%m-%d %H:%M:%S+00')
     else:
         raise TypeError(__name__+": unable to convert to ISO 8601 string")
 
@@ -32,7 +33,8 @@ def kelvin_to_celsius(kelvintemp):
         celsiustemp = kelvintemp - __KELVIN_OFFSET__
         return float("{0:.2f}".format(celsiustemp))
     else:
-        raise TypeError(__name__+": unable to convert from Kelvin to Celsius degrees")
+        raise TypeError(__name__+": unable to convert from Kelvin to Celsius" \
+                        " degrees")
 
 def kelvin_to_fahrenheit(kelvintemp):
     """
@@ -41,7 +43,9 @@ def kelvin_to_fahrenheit(kelvintemp):
     if isinstance(kelvintemp, (long,int,float)):
         if kelvintemp < 0:
             raise ValueError(__name__+": negative temperature values not allowed")
-        fahrenheittemp = (kelvintemp - __KELVIN_OFFSET__)*__FAHRENHEIT_DEGREE_SCALE + __FAHRENHEIT_OFFSET
+        fahrenheittemp = (kelvintemp - __KELVIN_OFFSET__)*__FAHRENHEIT_DEGREE_SCALE \
+            + __FAHRENHEIT_OFFSET
         return float("{0:.2f}".format(fahrenheittemp))
     else:
-        raise TypeError(__name__+": unable to convert from Kelvin to Fahrenheit degrees")
+        raise TypeError(__name__+": unable to convert from Kelvin to " \
+                        "Fahrenheit degrees")

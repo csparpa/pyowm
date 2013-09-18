@@ -7,6 +7,7 @@ PyOWM library entry point
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL
 from utils import httputils, jsonparser
+from pyowm.constants import DAILY_FORECAST_URL
 
 class OWM(object):
     """
@@ -137,4 +138,29 @@ class OWM(object):
         assert type(place) is str, "'place' must be a str"
         json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
                                        {'q': place}, self.__API_key)
+        return jsonparser.parse_forecast(json_data)
+    
+    def daily_forecast(self, place,limit=None):
+        """
+        Queries the OWM API for daily weather forecasts for the specified 
+        toponym (eg: "London,uk"). Returns a Forecast object instance. If no
+        limits are set for the maximum weather items of the forecast, 14 items
+        are provided by default
+        
+        place - a toponym (str)
+        limit - the maximum number of items the returned Forecast object is
+            supposed to contain (int, defaults to 'None' which stands for no 
+            limitations)
+        """
+        assert type(place) is str, "'place' must be a str"
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+            
+        params = {'q': place}        
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = httputils.call_API(DAILY_FORECAST_URL, 
+                                       params, self.__API_key)
         return jsonparser.parse_forecast(json_data)

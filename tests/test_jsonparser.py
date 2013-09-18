@@ -5,12 +5,14 @@ Test case for jsonparser.py module
 """
 
 import unittest
+from json import loads
 from json_test_responses import OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, \
     SEARCH_RESULTS_JSON, INTERNAL_SERVER_ERROR_JSON, SEARCH_WITH_NO_RESULTS_JSON, \
-    FORECAST_NOT_FOUND_JSON, THREE_HOURS_FORECAST_JSON
+    FORECAST_NOT_FOUND_JSON, THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON
 from pyowm.utils import jsonparser
 from pyowm.exceptions.parse_response_exception import ParseResponseException
 from pyowm.location import Location
+from pyowm.weather import Weather
 
 
 class Test(unittest.TestCase):
@@ -28,8 +30,47 @@ class Test(unittest.TestCase):
         result2 = jsonparser.build_location_from(dict2)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
-        self.assertNotIn(None, result1.__dict__.values(), "")
-        self.assertNotIn(None, result2.__dict__.values(), "")
+        self.assertNotIn(None, result1.__dict__.values())
+        self.assertNotIn(None, result2.__dict__.values())
+        
+    def test_build_weather_from(self):
+        dict1 = {'clouds': {'all': 92}, 'name': u'London',
+                 'coord': {'lat': 51.50853, 'lon': -0.12574},
+                 'sys': {'country': u'GB', 'sunset': 1378923812,
+                         'sunrise': 1378877413
+                         },
+                 'weather': [
+                 { 'main': u'Clouds', 'id': 804, 'icon': u'04d',
+                  'description': u'overcastclouds'}
+                 ],
+                 'cod': 200, 'base': u'gdpsstations', 'dt': 1378895177,
+                 'main': {
+                      'pressure': 1022,
+                      'humidity': 75,
+                      'temp_max': 289.82,
+                      'temp': 288.44,
+                      'temp_min': 287.59
+                  },
+                  'id': 2643743,
+                  'wind': { 'gust': 2.57, 'speed': 1.54, 'deg': 31}
+        }
+        dict2 = {"dt": 1378897200,
+                   "temp": { "day": 289.37,"min": 284.88, "max": 289.37,
+                             "night": 284.88, "eve": 287.53, "morn": 289.37
+                             },
+                   "pressure": 1025.35,
+                   "humidity": 71,
+                   "weather": [
+                   { "id": 500, "main": u"Rain", "description": u"light rain",
+                     "icon": u"u10d"}
+                   ],"speed": 3.76, "deg": 338, "clouds": 48,"rain": 3
+                }
+        result1 = jsonparser.build_weather_from(dict1)
+        self.assertTrue(isinstance(result1, Weather))
+        self.assertNotIn(None, result1.__dict__.values())
+        result2 = jsonparser.build_weather_from(dict2)
+        self.assertTrue(isinstance(result2, Weather))
+        self.assertNotIn(None, result2.__dict__.values())
 
     def test_parse_observation(self):
         """
@@ -38,25 +79,26 @@ class Test(unittest.TestCase):
         """
         result = jsonparser.parse_observation(OBSERVATION_JSON)
         self.assertFalse(result is None, "")
-        self.assertFalse(result.get_reception_time() is None, "")
-        self.assertFalse(result.get_location() is None, "")
-        self.assertNotIn(None, result.get_location().__dict__.values(), "")
-        self.assertFalse(result.get_weather() is None, "")
-        self.assertNotIn(None, result.get_weather().__dict__.values(), "")
+        self.assertFalse(result.get_reception_time() is None)
+        self.assertFalse(result.get_location() is None)
+        self.assertNotIn(None, result.get_location().__dict__.values())
+        self.assertFalse(result.get_weather() is None)
+        self.assertNotIn(None, result.get_weather().__dict__.values())
         
     def test_parse_observation_fails_with_malformed_JSON_data(self):
         """
         Test that method throws a ParseResponseException when provided with bad
         JSON data
         """
-        self.assertRaises(ParseResponseException, jsonparser.parse_observation, self.__bad_json)
+        self.assertRaises(ParseResponseException, jsonparser.parse_observation,
+                          self.__bad_json)
         
     def test_parse_observation_when_server_error(self):
         """
         Test that method returns None when server responds with an error JSON message
         """
         result = jsonparser.parse_observation(OBSERVATION_NOT_FOUND_JSON)
-        self.assertTrue(result is None, "")
+        self.assertTrue(result is None)
         
     def test_parse_search_results(self):
         """
@@ -64,22 +106,23 @@ class Test(unittest.TestCase):
         with well-formed JSON data
         """
         result = jsonparser.parse_search_results(SEARCH_RESULTS_JSON)
-        self.assertFalse(result is None, "")
+        self.assertFalse(result is None)
         self.assertTrue(isinstance(result, list))
         for item in result:
-            self.assertFalse(item is None, "")
-            self.assertFalse(item.get_reception_time() is None, "")
-            self.assertFalse(item.get_location() is None, "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertFalse(item.get_weather() is None, "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")
+            self.assertFalse(item is None)
+            self.assertFalse(item.get_reception_time() is None)
+            self.assertFalse(item.get_location() is None)
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertFalse(item.get_weather() is None)
+            self.assertNotIn(None, item.get_weather().__dict__.values())
         
     def test_parse_search_results_with_malformed_JSON_data(self):
         """
         Test that method throws a ParseResponseException when provided with bad
         JSON data
         """
-        self.assertRaises(ParseResponseException, jsonparser.parse_search_results, self.__bad_json)
+        self.assertRaises(ParseResponseException, jsonparser.parse_search_results,
+                          self.__bad_json)
         
     def test_parse_search_results_when_no_results(self):
         """
@@ -87,7 +130,7 @@ class Test(unittest.TestCase):
         """
         result = jsonparser.parse_search_results(SEARCH_WITH_NO_RESULTS_JSON)
         self.assertTrue(isinstance(result, list))
-        self.assertEqual(0, len(result), "")
+        self.assertEqual(0, len(result))
         
     def test_parse_search_results_when_server_error(self):
         """
@@ -95,7 +138,7 @@ class Test(unittest.TestCase):
         error JSON message
         """
         result = jsonparser.parse_search_results(INTERNAL_SERVER_ERROR_JSON)
-        self.assertFalse(result, "")
+        self.assertFalse(result)
 
     def test_parse_forecast(self):
         """
@@ -103,27 +146,28 @@ class Test(unittest.TestCase):
         with well-formed JSON data
         """
         result = jsonparser.parse_forecast(THREE_HOURS_FORECAST_JSON)
-        self.assertTrue(result, "")
-        self.assertTrue(result.get_reception_time(),"")
-        self.assertTrue(result.get_interval(),"")
+        self.assertTrue(result)
+        self.assertTrue(result.get_reception_time())
+        self.assertTrue(result.get_interval())
         self.assertTrue(result.get_location())
-        self.assertNotIn(None, result.get_location().__dict__.values(), "")
-        self.assertTrue(isinstance(result.get_weathers(),list), "")
+        self.assertNotIn(None, result.get_location().__dict__.values())
+        self.assertTrue(isinstance(result.get_weathers(),list))
         for weather in result:
             self.assertTrue(weather)
-            self.assertNotIn(None, weather.__dict__.values(), "")
+            self.assertNotIn(None, weather.__dict__.values())
         
     def test_parse_forecast_with_malformed_JSON_data(self):
         """
         Test that method throws a ParseResponseException when provided with bad
         JSON data
         """
-        self.assertRaises(ParseResponseException, jsonparser.parse_forecast, self.__bad_json)
+        self.assertRaises(ParseResponseException, jsonparser.parse_forecast, 
+                          self.__bad_json)
         
     def test_parse_forecast_when_no_results(self):
         result = jsonparser.parse_forecast(FORECAST_NOT_FOUND_JSON)
         self.assertFalse(result is None)
-        self.assertEqual(0, len(result), "")
+        self.assertEqual(0, len(result))
         
     def test_parse_forecast_when_server_error(self):
         """
@@ -131,7 +175,7 @@ class Test(unittest.TestCase):
         error JSON message
         """
         result = jsonparser.parse_forecast(INTERNAL_SERVER_ERROR_JSON)
-        self.assertFalse(result, "")
+        self.assertFalse(result)
 
 if __name__ == "__main__":
     unittest.main()

@@ -33,7 +33,7 @@ THREE_HOURS_FORECAST_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 2643
 
 DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '2643743,"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},' \
-    '"country": "GB","population": 1000000},"cnt": 1\,"list": [{"dt": ' \
+    '"country": "GB","population": 1000000},"cnt": 1,"list": [{"dt": ' \
     '1378897200,"temp": {"day": 289.37,"min": 284.88,"max": 289.37,"night": ' \
     '284.88,"eve": 287.53,"morn": 289.37},"pressure": 1025.35,"humidity": 71,' \
     '"weather": [{"id": 500,"main": "Rain","description": "light rain","icon"' \
