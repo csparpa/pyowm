@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
 
     __test_reception_time = 1234567L
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
-    __test_location = Location(u'test', 12.3, 43.7, 987)
+    __test_location = Location(u'test', 12.3, 43.7, 987, u'UK')
     __test_weather = Weather(1378459200, 1378496400, 1378449600, 67, {"all": 20},
             {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57, 
             {"press": 1030.119, "sea_level": 1038.589},
@@ -48,8 +48,8 @@ class Test(unittest.TestCase):
         """
         Test correct object data dump to a JSON string
         """
-        expected_output = '{"reception_time": 1234567, "Location": {"name": ' \
-            '"test", "coordinates": {"lat": 43.7, "lon": 12.3}, "ID": 987}, '\
+        expected_output = '{"reception_time": 1234567, "Location": {"country": "UK", ' \
+            '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, "ID": 987}, '\
             '"Weather": {"status": "Clouds", "clouds": 67, "temperature": ' \
             '{"temp_kf": -1.899, "temp_max": 296.098, "temp": 294.199, "temp_min": '\
             '294.199}, "detailed_status": "Overcast clouds", "reference_time": '\

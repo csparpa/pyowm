@@ -12,12 +12,13 @@ class Location(object):
     the following information: toponym, longitude, latitude and OWM city ID.
     """
     
-    def __init__(self, name, lon, lat, ID):
+    def __init__(self, name, lon, lat, ID, country=None):
         """
         name - location toponym (Unicode str)
         lon - location longitude (int/float between -180 and 180 degrees)
         lat - location latitude (int/float between -90 and 90 degress)
         ID - location OpenWeatherMap city ID (int)
+        country - country (Unicode str, defaults to None)
         
         For reference about OWM city IDs visit:
           http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID
@@ -35,6 +36,11 @@ class Location(object):
         self.__lat = float(lat)
         assert type(ID) is int, "'ID' must be an int"
         self.__ID = ID
+        if country is not None:
+            assert type(name) is unicode, "'country' must be a Unicode str or None"
+            self.__country = country
+        else:
+            self.__country = None
         
     def get_name(self):
         """Returns the toponym of the location as a Unicode str"""
@@ -52,20 +58,26 @@ class Location(object):
         """Returns the OWM city ID of the location"""
         return self.__ID
     
+    def get_country(self):
+        """Returns the country of the location"""
+        return self.__country        
+    
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string"""
         return dumps({ 'name': self.__name, 'coordinates': { 'lon': self.__lon, 
-            'lat': self.__lat}, 'ID': self.__ID })
+            'lat': self.__lat}, 'ID': self.__ID, 'country': self.__country })
     
     def to_XML(self):
         """Dumps object fields into a XML formatted string"""
         return '<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat>' \
-                '</coordinates><ID>%s</ID></Location>' % (self.__name, self.__lon,
-                                                          self.__lat, self.__ID)
+                '</coordinates><ID>%s</ID><country>%s</country></Location>' % (
+                                                           self.__name, self.__lon,
+                                                          self.__lat, self.__ID,
+                                                          self.__country)
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Location instances"""
-        return '[Location: name=%s lon=%s lat=%s ID=%s]' % (self.__name.encode("utf-8"),
-                                                            self.__lon,
-                                                            self.__lat,
-                                                            self.__ID)
+        return '[Location: name=%s lon=%s lat=%s ID=%s country=%s]' % (
+                                                   self.__name.encode("utf-8"),
+                                                   self.__lon, self.__lat,
+                                                   self.__ID, self.__country)

@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
 
     __test_reception_time = 1234567L
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
-    __test_location = Location(u'test', 12.3, 43.7, 987)
+    __test_location = Location(u'test', 12.3, 43.7, 987, u'IT')
     __test_weathers = [ Weather(1378459200, 1378496400, 1378449600, 67, 
             {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57, 
             {"press": 1030.119, "sea_level": 1038.589},
@@ -94,8 +94,9 @@ class Test(unittest.TestCase):
         Test correct object data dump to a JSON string
         """
         expected_output = '{"reception_time": 1234567, "interval": "daily", ' \
-            '"Location": {"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}' \
-            ', "ID": 987}, "weathers": [{"status": "Clouds", "clouds": 67, ' \
+            '"Location": {"country": "IT", "name": "test", "coordinates": {"lat":' \
+            ' 43.7, "lon": 12.3}, "ID": 987}, "weathers": [{"status": "Clouds", ' \
+            '"clouds": 67, ' \
             '"temperature": {"temp_kf": -1.899, "temp_max": 296.098, "temp": ' \
             '294.199, "temp_min": 294.199}, "detailed_status": "Overcast clouds"' \
             ', "reference_time": 1378459200, "weather_code": 804, "snow": {"all":' \
@@ -117,7 +118,7 @@ class Test(unittest.TestCase):
         """
         expectedOutput = '<Forecast><interval>daily</interval><reception_time>' \
             '1234567</reception_time><Location><name>test</name><coordinates>' \
-            '<lon>12.3</lon><lat>43.7</lat></coordinates><ID>987</ID></Location>' \
+            '<lon>12.3</lon><lat>43.7</lat></coordinates><ID>987</ID><country>IT</country></Location>' \
             '<weathers><Weather><status>Clouds</status><weather_code>804</weather_code>' \
             '<rain><all>20</all></rain><snow><all>0</all></snow><pressure>' \
             '<press>1030.119</press><sea_level>1038.589</sea_level></pressure>' \

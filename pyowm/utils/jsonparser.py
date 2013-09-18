@@ -18,6 +18,9 @@ def build_location_from(d):
     
     d - a weather data dictionary (dict)
     """
+    country = None
+    if 'sys' in d and 'country' in d['sys']:
+        country = d['sys']['country']
     if 'city' in d:
         data = d['city']
     else:
@@ -27,9 +30,11 @@ def build_location_from(d):
         lon = data['coord']['lon']
         lat = data['coord']['lat']
         ID = data['id']
+        if 'country' in data:
+            country = data['country']
     except KeyError:
         raise ParseResponseException("Impossible to read location info") 
-    return Location(name, lon, lat, ID)
+    return Location(name, lon, lat, ID, country)
 
 def build_weather_from(d):
     """

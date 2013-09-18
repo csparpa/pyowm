@@ -30,7 +30,11 @@ class Test(unittest.TestCase):
         result2 = jsonparser.build_location_from(dict2)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
-        self.assertNotIn(None, result1.__dict__.values())
+        self.assertFalse(result1.get_country())
+        self.assertTrue(result1.get_ID())
+        self.assertTrue(result1.get_lat())
+        self.assertTrue(result1.get_lon())
+        self.assertTrue(result1.get_name())
         self.assertNotIn(None, result2.__dict__.values())
         
     def test_build_weather_from(self):

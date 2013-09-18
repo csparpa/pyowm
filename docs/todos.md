@@ -1,13 +1,15 @@
 TODOs
 -----
-+ Write wiki with library API and internals
++ Provide a way to None-ify the eventually missing info (eg: sunrise time, etc)
++ Write wiki with library API
++ Explain internals:
+    + class diagram
+    + explain pywom design choices (eg: names usage, where it is not such a "thin" wrapper, etc)
 + Write better documentation in code
 + Sponsorize (FB, Linkedin, blog)
 + Provide __str__ hooks for each class
 + Test features on different platforms (Linux, MacOS, Win)
 + Test features on Python 3.x and 2.0+
-+ (eventual) Explain pywom design choices (eg: names usage, where it is not
-  so "thin" a wrapper, etc) 
 + (eventual) Provide XML schemas
 + (eventual) Provide utilities for human-friendly OWM data handling in separate
    project: 

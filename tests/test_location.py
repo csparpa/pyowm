@@ -14,6 +14,7 @@ class Test(unittest.TestCase):
     __test_lon = 12.3
     __test_lat = 43.7
     __test_ID = 1234
+    __test_country = u'UK'
 
     def test_init_fails_when_coordinates_are_out_of_bounds(self):
         """
@@ -26,34 +27,35 @@ class Test(unittest.TestCase):
         
     def test_getters_return_expected_data(self):
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat, 
-                            self.__test_ID)
+                            self.__test_ID, self.__test_country)
         self.assertEqual(instance.get_name(), self.__test_name)
         self.assertEqual(instance.get_lon(), self.__test_lon)
         self.assertEqual(instance.get_lat(), self.__test_lat)
         self.assertEqual(instance.get_ID(), self.__test_ID)
+        self.assertEqual(instance.get_country(), self.__test_country)
 
     def test_XML_dump(self):
         """
         Test correct object data dump to an XML string
         """
         expectedOutput = '<Location><name>%s</name><coordinates><lon>%s</lon>' \
-            '<lat>%s</lat></coordinates><ID>%s</ID></Location>' % (self.__test_name,
-                                                                    self.__test_lon,
-                                                                    self.__test_lat,
-                                                                    self.__test_ID)
+            '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country></Location>' % (
+                                            self.__test_name, self.__test_lon,
+                                            self.__test_lat, self.__test_ID,
+                                            self.__test_country)
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
-                            self.__test_ID)
+                            self.__test_ID, self.__test_country)
         self.assertEqual(instance.to_XML(), expectedOutput)
         
     def test_JSON_dump(self):
         """
         Test correct object data dump to a JSON string
         """
-        expectedOutput = '{"name": "%s", "coordinates": {"lat": %s, "lon": %s}, ' \
-            '"ID": %s}' %  (self.__test_name, self.__test_lat, self.__test_lon,
-                            self.__test_ID)
+        expectedOutput = '{"country": "%s", "name": "%s", "coordinates": {"lat": %s, "lon": %s}, ' \
+            '"ID": %s}' %  (self.__test_country, self.__test_name, self.__test_lat, 
+                           self.__test_lon, self.__test_ID)
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
-                            self.__test_ID)
+                            self.__test_ID, self.__test_country)
         self.assertEqual(instance.to_JSON(), expectedOutput)
         
 
