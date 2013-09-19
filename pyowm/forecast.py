@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Forecast observation classes and data structures.
+Weather forecast classes and data structures.
 """
 
 from json import loads, dumps
@@ -81,7 +81,7 @@ class Forecast(object):
     
     def get_reception_time(self, timeformat='unix'):
         """
-        Returns the GMT UNIX time of the forecast reception
+        Returns the GMT time of the forecast reception
             format - how to format the result:
                 unix (default) - returns a long
                 iso - returns a ISO 8601-formatted str

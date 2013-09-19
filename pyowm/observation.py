@@ -33,7 +33,7 @@ class Observation(object):
 
     def get_reception_time(self, timeformat='unix'):
         """
-        Returns the GMT UNIX time of the observation reception
+        Returns the GMT time of the observation reception
             format - how to format the result:
                 unix (default) - returns a long
                 iso - returns a ISO 8601-formatted str

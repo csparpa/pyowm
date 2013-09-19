@@ -79,7 +79,7 @@ class Weather(object):
         
     def get_reference_time(self, timeformat='unix'):
         """
-        Returns the GMT UNIX time of weather measurement
+        Returns the GMT time of weather measurement
             format - how to format the result:
                 unix (default) - returns a long
                 iso - returns a ISO 8601-formatted str
@@ -94,7 +94,7 @@ class Weather(object):
 
     def get_sunset_time(self, timeformat='unix'):
         """
-        Returns the GMT UNIX time of sunset
+        Returns the GMT time of sunset
             format - how to format the result:
                 unix (default) - returns a long
                 iso - returns a ISO 8601-formatted str
@@ -109,7 +109,7 @@ class Weather(object):
 
     def get_sunrise_time(self, timeformat='unix'):
         """
-        Returns the GMT UNIX time of sunrise
+        Returns the GMT time of sunrise
             format - how to format the result:
                 unix (default) - returns a long
                 iso - returns a ISO 8601-formatted str
