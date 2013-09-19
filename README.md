@@ -27,6 +27,12 @@ Take off
 
     >>> owm = OWM('your-API-key')
     
+    # Will it be sunny tomorrow morning in Milan, IT ?
+    >>> f = owm.daily_forecast("Milan,it", limit=3)
+    >>> tomorrow = datetime.datetime(2013, 9, 19, 11, 0)
+    >>> f.will_be_sunny_on(tomorrow)
+    True
+    
     # Search for current weather in London, UK
     >>> obs = owm.observation_for_name('London,uk')
     >>> w = obs.get_weather()
@@ -34,12 +40,6 @@ Take off
     'Light rain'
     >>> w.get_wind()
     {'speed': 4.6, 'deg': 330}
-    
-    # Will it be sunny tomorrow morning in Milan, IT ?
-    >>> fcst = owm.daily_forecast("Milan,it", limit=3)
-    >>> tomorrow = datetime.datetime(2013, 9, 19, 11, 0)
-    >>> fcst.will_be_sunny_on(tomorrow)
-    True
 
 Test
 ----

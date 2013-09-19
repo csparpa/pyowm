@@ -8,7 +8,7 @@ import unittest
 from pyowm import Location
 
 
-class Test(unittest.TestCase):
+class TestLocation(unittest.TestCase):
     
     __test_name = u'London'
     __test_lon = 12.3

@@ -56,6 +56,29 @@ Features
     forecast = owm.daily_forecast('London',limit=3)
 
 
+	# *** Historic hourly weather data recordings for a location ***
+	
+	#http://api.openweathermap.org/data/2.5/history/city?q=London,uk
+	#search all recent weather history for London (last 24h approx)
+	
+	#http://api.openweathermap.org/data/2.5/history/city?q=London,uk&cnt=3
+	#search the first 2 items of the recent weather history for London
+	
+	#http://api.openweathermap.org/data/2.5/history/city?q=London,uk&start=1369728000&end=1369789200
+	#search the recent weather history items for London, measured in the specified period
+	
+	
+	# *** Historic weather data recordings for a meteostation ***
+	
+	#http://api.openweathermap.org/data/2.5/history/station/39276?type=tick
+	#search data measurements of station 39276
+	#http://api.openweathermap.org/data/2.5/history/station/39276?type=hour
+	#http://api.openweathermap.org/data/2.5/history/station/39276?type=day
+
+
+	#http://api.openweathermap.org/data/2.5/history/station/39276?type=tick&cnt=3
+
+
 JSON responses
 --------------
 
@@ -207,6 +230,41 @@ JSON responses
         ...],
       "message" : 0.031
     }
+    
+    # Meteostation tick history
+    http://api.openweathermap.org/data/2.5/history/station/39276?type=tick
+    
+	{
+		"message": "",
+		"cod": "200",
+		"type": "tick",
+		"station_id": 39276,
+		"calctime": " tick = 0.0031 total=0.0039",
+		"cnt": 30,
+		"list": [{
+			"temp": 266.25,
+			"main": {
+				"temp": 266.25,
+				"humidity": 27.1,
+				"pressure": 1010.03
+			},
+			"humidity": 27.1,
+			"pressure": 1010.03,
+			"dt": 1362933923
+		},
+		{
+			"temp": 266.25,
+			"main": {
+				"temp": 266.25,
+				"humidity": 27.3,
+				"pressure": 1010.02
+			},
+			"humidity": 27.3,
+			"pressure": 1010.02,
+			"dt": 1362933983
+		},
+		...],
+	}
 
 API key usage
 -------------

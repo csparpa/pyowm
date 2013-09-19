@@ -22,7 +22,7 @@ from pyowm.observation import Observation
 from pyowm.weather import Weather
 from pyowm.location import Location
 
-class Test(unittest.TestCase):
+class TestOWM(unittest.TestCase):
     
     __test_instance = OWM('test_API_key')
     

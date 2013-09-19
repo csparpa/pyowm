@@ -9,7 +9,7 @@ from pyowm import Location
 from pyowm import Weather
 from pyowm import Observation
 
-class Test(unittest.TestCase):
+class TestObservation(unittest.TestCase):
 
     __test_reception_time = 1234567L
     __test_iso_reception_time = "1970-01-15 06:56:07+00"

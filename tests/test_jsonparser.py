@@ -15,7 +15,7 @@ from pyowm.location import Location
 from pyowm.weather import Weather
 
 
-class Test(unittest.TestCase):
+class TestJSONParser(unittest.TestCase):
 
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     

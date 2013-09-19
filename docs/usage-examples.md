@@ -177,21 +177,27 @@ time (but also shorter streaks can be obtained).
 You can query for 3h forecasts for a location using:
 
 	# Query for 3 hours weather forecast for the next 5 days over London
-    >>> f = owm.three_hours_forecast('London,uk')
+    >>> fc = owm.three_hours_forecast('London,uk')
     
 You can query for daily forecasts using:
 
 	# Query for daily weather forecast for the next 14 days over London
-    >>> f = owm.daily_forecast('London,uk')
+    >>> fc = owm.daily_forecast('London,uk')
     
 and in this case you can limit the amount of days the weather forecast streak
 will contain by using:
 
 	# Daily weather forecast just for the next 6 days over London
-    >>> f = owm.daily_forecast('London,uk',limit=6)
+    >>> fc = owm.daily_forecast('London,uk',limit=6)
     
-Both of the above calls return a _Forecast_ object. _Forecast_ objects encapsulate
-the _Location_ object relative to the forecast and a list of _Weather_ objects:
+Both of the above calls return a _Forecaster_ object. _Forecaster_ objects 
+encapsulate a _Forecast_ object, which has all the information about your weather
+forecast. If you need to handle it, just go with:
+
+    >>> f = fc.get_forecast()
+
+A _Forecast_ object encapsulates the _Location_ object relative to the forecast
+and a list of _Weather_ objects:
 
     # When has the forecast been received?
     >>> f.get_reception_time()                           # UNIX UTC time
@@ -202,18 +208,6 @@ the _Location_ object relative to the forecast and a list of _Weather_ objects:
     # Which time interval for the forecast? 
     >>> f.get_interval()
     daily
-    
-    # When in time does the forecast begin?
-    >>> f.when_starts()                                  # UNIX UTC time
-    1379090800
-    >>> f.when_starts(timeformat='iso')                  # ISO 8601
-    2013-09-13 16:46:40+00
-    
-    # ...and when will it end?
-    >>> f.when_ends()                                    # UNIX UTC time
-    1379902600
-    >>> f.when_ends(timeformat='iso')                    # ISO 8601
-    2013-09-23 02:16:40+00
 
 	# How many weather items are in the forecast?
 	>>> len(f)
@@ -237,61 +231,89 @@ get the whole list of _Weather_ objects or you can use the built-in iterator:
 	('2013-09-14 20:00:00+0','Clouds')
 	[...]
 
-The _Forecast_ class provides also a few convenience methods to inspect the
-weather forecasts. In example, you can ask the _Forecast_ object to tell which
-is the weather forecast for a specific point in time (UNIXtime or _datetime.datetime
-object_):
 
-    # Tell me the weather forecast for the specific UNIX time
-    >>> f.get_weather_at(1379902100L)
+The _Forecaster_ class provides a few convenience methods to inspect the
+weather forecasts in a human-friendly fashion. You can - for example - ask for 
+the time boundaries of the weather forecast data:
+
+    # When in time does the forecast begin?
+    >>> fc.when_starts()                                  # UNIX UTC time
+    1379090800
+    >>> fc.when_starts(timeformat='iso')                  # ISO 8601
+    2013-09-13 16:46:40+00
+    
+    # ...and when will it end?
+    >>> fc.when_ends()                                    # UNIX UTC time
+    1379902600
+    >>> fc.when_ends(timeformat='iso')                    # ISO 8601
+    2013-09-23 02:16:40+00
+
+In example, you can ask the _Forecaster_ object to tell which is the weather 
+forecast for a specific point in time that you can specify using UNIXtime, an 
+ISO8601 formatted string or a Pythone _datetime.datetime_ object (all times must
+be in GMT timezone):
+
+    # Tell me the weather for tomorrow at noon
+    >>> tomorrow_at_noon_obj = datetime.datetime(2013, 9, 19, 12, 0)
+    >>> tomorrow_at_noon_str = "2013-09-19 12:00+00"
+    >>> tomorrow_at_noon_unixtime = 1379592000L
+    >>> fc.weather_at(tomorrow_at_noon_obj)
+    <weather.Weather at 0x00DF75F7>
+    >>> fc.weather_at(tomorrow_at_noon_str)
+    <weather.Weather at 0x00DF75F7>
+    >>> fc.weather_at(tomorrow_at_noon_unixtime)
     <weather.Weather at 0x00DF75F7>
 
-You will be provided with the weather forecast sample that lies closest in time 
-to the time that you specified. Of course this will work only if the specified time
-is covered by the forecast! Otherwise, you will be prompted with an error:
+You will be provided with the _Weather_ sample that lies closest to the time that
+you specified. Of course this will work only if the specified time is covered by
+the forecast! Otherwise, you will be prompted with an error:
 
-    >>> f.get_weather_at(0L)
+    >>> fc.weather_at("1492-10-12 12:00+00")
     Error: the specified time is not included in the weather forecast
 
-Other useful convenicence methods are:
+Other useful convenicence methods in class _Forecaster_ are:
 
-    # Will it rain, be sunny or snow during the covered period?
-    >>> f.will_have_rain()
+    # Will it rain, be sunny, foggy or snow during the covered period?
+    >>> fc.will_have_rain()
     True
-    >>> f.will_have_sun()
+    >>> fc.will_have_sun()
     True
-    >>> f.will_have_snow()
+    >>> fc.will_have_fog()
+    False
+    >>> fc.will_have_snow()
     False
     
-    # Will it be rainy, sunny or snowy at the specified time?
-    tomorrow_at_noon = 1379937600L
-    >>> f.will_be_rainy_on(tomorrow_at_noon)
+    # Will it be rainy, sunny, foggy or snowy at the specified time?
+    tomorrow_at_noon = "2013-09-19 12:00+00"
+    >>> fc.will_be_rainy_on(tomorrow_at_noon)
     False
-    >>> f.will_be_sunny_on(tomorrow_at_noon)
+    >>> fc.will_be_sunny_on(tomorrow_at_noon)
     True
-    >>> f.will_be_snowy_on(tomorrow_at_noon)
+    >>> fc.will_be_foggy_on(tomorrow_at_noon)
     False
-    >>> f.will_be_sunny_on(0L)           # Out of weather forecast time coverage
+    >>> fc.will_be_snowy_on(tomorrow_at_noon)
+    False
+    >>> fc.will_be_sunny_on(0L)           # Out of weather forecast coverage span
     Error: the specified time is not included in the weather forecast 
     
     # List the weather elements for which the condition will be: 
-    # rain, sun and snow
-    >>> f.when_rain()
+    # rain, sun, fog and snow
+    >>> fc.when_rain()
     [<weather.Weather at 0x00DB22F7>,<weather.Weather at 0x00DB2317>]
-    >>> f.when_sun()
+    >>> fc.when_sun()
     [...]
-    >>> f.when_snow()
+    >>> fc.when_fog()
+    [...]
+    >>> fc.when_snow()
     []                                   # It won't snow: empty list
 
-You can also express times using _datetime.datetime_ Python objects
+When calling _fc.will_be_*_on_ methods the _Weather_ item which is closest to the
+time you specified will be examined. So be precise if your forecast is 3h!
+In addition, you can use these methods with either a UNIXtime, a 
+_datetime.datetime_ object or an ISO8601-formatted string. 
 
-When calling _f.will_be_rainy_on_, _f.will_be_sunny_on_ and _f.will_be_snowy_on_
-methods the _Weather_ item which is closest to the time you specified will be
-examined. So be precise if your forecast is 3h!  
-
-When calling _f.when_rain()_,_f.when_sun()_ and _f.when_snow()_ you
-will be provided with a sublist of the _Weather_ objects in _f_ for which
-the weather condition is the one you queried for.
+When calling _fc.when_*_  methods you will be provided with a sublist of the
+_Weather_ objects in _f_ for which the weather condition is the one you queried for.
 
 
 Printing objects' content

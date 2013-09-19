@@ -9,7 +9,7 @@ from pyowm import Weather
 from pyowm.utils import xmlutils
 
 
-class Test(unittest.TestCase):
+class TestWeather(unittest.TestCase):
 
     __test_reference_time = 1378459200
     __test_iso_reference_time = "2013-09-06 09:20:00+00"    

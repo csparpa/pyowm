@@ -8,7 +8,7 @@ import unittest
 from pyowm.utils import converter
 
 
-class Test(unittest.TestCase):
+class TestConverter(unittest.TestCase):
 
     def test_unix_to_ISO8601(self):
         unixtime = 1378459200

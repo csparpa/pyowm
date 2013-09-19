@@ -6,7 +6,7 @@ and running
 import unittest
 from pyowm import OWM
 
-class Test(unittest.TestCase):
+class IntegrationTest(unittest.TestCase):
     
     __API_key = 'b02f5370dfd0f398b5746e1a976021a0'
     __owm = OWM(__API_key)

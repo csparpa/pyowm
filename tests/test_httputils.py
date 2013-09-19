@@ -16,7 +16,7 @@ import unittest
 from pyowm.utils import httputils
 from pyowm.exceptions.api_call_exception import APICallException
 
-class Test(unittest.TestCase):
+class TestHTTPUtils(unittest.TestCase):
     
     __test_output = "this is a test HTTP response payload"
     

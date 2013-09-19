@@ -3,22 +3,18 @@ TODOs
 
 Code
 ----
-+ Forecast class:
-    - Forecast.when_starts(timeformat='unixtime|iso') -> when in time does the forecast start?
-    - Forecast.when_ends(timeformat='unixtime|iso') -> when in time will the forecast end?
-    - Forecast.will_have_rain() -> will it rain during the coverage period? returns bool
-    - Forecast.will_have_sun() -> will it be sunny during the coverage period? returns bool
-    - Forecast.will_have_snow() -> will it snow during the coverage period? returns bool
-
-    - Forecast.when_rain() -> list rainy Weather objs in forecats
-    - Forecast.when_sun() -> list sunny Weather objs in forecats
-    - Forecast.when_snow() -> list snowy Weather objs in forecats
++ Forecaster class:
+    - Forecaster.when_rain() -> list rainy Weather objs in forecats
+    - Forecaster.when_sun() -> list sunny Weather objs in forecats
+    - Forecaster.when_snow() -> list snowy Weather objs in forecats
+    - Forecaster.when_fog() -> list foggy Weather objs in forecats
     
-      #return error if unixtime is not in coverage
-    - Forecast.will_be_rainy_on(datetime|unixtime)
-    - Forecast.will_be_sunny_on(datetime|unixtime)
-    - Forecast.will_be_snowy_on(datetime|unixtime)
-    - Forecast.get_weather_at(datetime|unixtime) -> the closest Weather in time to the specified unixtime,
+      #the following return error if unixtime is not in coverage
+    - Forecaster.will_be_rainy_on(datetime|unixtime|iso)
+    - Forecaster.will_be_sunny_on(datetime|unixtime|iso)
+    - Forecaster.will_be_snowy_on(datetime|unixtime|iso)
+    - Forecaster.will_be_foggy_on(datetime|unixtime|iso)
+    - Forecaster.get_weather_at(datetime|unixtime|iso) -> the closest Weather in time to the specified time
 + Implement remaining features
 + (eventual) Provide utilities for human-friendly OWM data handling in separate
    project: 
@@ -37,7 +33,8 @@ Docs
 + Write better documentation in code
 + Explain internals:
     + class diagram
-    + explain pywom design choices (eg: names usage, where it is not such a "thin" wrapper, etc)
+    + explain pywom design choices (eg: names usage, why end users do not deal
+      with city IDs, why it is not such a "thin" wrapper, the API is rotting, etc)
 
 Various
 -------
