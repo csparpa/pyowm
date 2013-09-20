@@ -3,14 +3,6 @@ TODOs
 
 Code
 ----
-+ Forecaster class:    
-      #the following return error if unixtime is not in coverage
-    - Forecaster.will_be_rainy_on(datetime|unixtime|iso)
-    - Forecaster.will_be_sunny_on(datetime|unixtime|iso)
-    - Forecaster.will_be_snowy_on(datetime|unixtime|iso)
-    - Forecaster.will_be_cloudy_on(datetime|unixtime|iso)
-    - Forecaster.will_be_foggy_on(datetime|unixtime|iso)
-    - Forecaster.get_weather_at(datetime|unixtime|iso) -> the closest Weather in time to the specified time
 + Implement remaining features
 + (eventual) Provide utilities for human-friendly OWM data handling in separate
    project: 

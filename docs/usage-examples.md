@@ -286,17 +286,17 @@ Other useful convenicence methods in class _Forecaster_ are:
     
     # Will it be rainy, sunny, foggy or snowy at the specified GMT time?
     tomorrow_at_noon = "2013-09-19 12:00+00"
-    >>> fc.will_be_rainy_on(tomorrow_at_noon)
+    >>> fc.will_be_rainy_at(tomorrow_at_noon)
     False
-    >>> fc.will_be_sunny_on(tomorrow_at_noon)
+    >>> fc.will_be_sunny_at(tomorrow_at_noon)
     True
-    >>> fc.will_be_foggy_on(tomorrow_at_noon)
+    >>> fc.will_be_foggy_at(tomorrow_at_noon)
     False
-    >>> fc.will_be_cloudy_on(tomorrow_at_noon)
+    >>> fc.will_be_cloudy_at(tomorrow_at_noon)
     False
-    >>> fc.will_be_snowy_on(tomorrow_at_noon)
+    >>> fc.will_be_snowy_at(tomorrow_at_noon)
     False
-    >>> fc.will_be_sunny_on(0L)           # Out of weather forecast coverage span
+    >>> fc.will_be_sunny_at(0L)           # Out of weather forecast coverage span
     Error: the specified time is not included in the weather forecast 
     
     # List the weather elements for which the condition will be: 
@@ -312,10 +312,11 @@ Other useful convenicence methods in class _Forecaster_ are:
     >>> fc.when_snow()
     []                                   # It won't snow: empty list
 
-When calling _fc.will_be_*_on_ methods the _Weather_ item which is closest to the
-time you specified will be examined. So be precise if your forecast is 3h!
-In addition, you can use these methods with either a UNIXtime, a 
-_datetime.datetime_ object or an ISO8601-formatted string. 
+When calling _fc.will_be_*_at_ methods you can specify either a UNIXtime, a 
+_datetime.datetime_ object or an ISO8601-formatted string (format: ""). A boolean
+value will be returned, telling if the queried weather condition will apply to
+the time you specify (the check will be performed on the _Weather_ object of
+the forecast which is closest in time to the time value that you provided).
 
 When calling _fc.when_*_  methods you will be provided with a sublist of the 
 _Weather_ objects list in _f_ with items having as weather condition the one

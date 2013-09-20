@@ -127,9 +127,11 @@ class IntegrationTest(unittest.TestCase):
         """
         Test feature: get 3 hours forecast for a specific location
         """
-        f1 = self.__owm.three_hours_forecast("London,uk")
-        f2 = self.__owm.three_hours_forecast('Kiev')
-        f3 = self.__owm.three_hours_forecast('QmFoPIlbf')  #Shall be None
+        fc1 = self.__owm.three_hours_forecast("London,uk")
+        fc2 = self.__owm.three_hours_forecast('Kiev')
+        fc3 = self.__owm.three_hours_forecast('QmFoPIlbf')  #Shall be None
+        self.assertTrue(fc1)
+        f1 = fc1.get_forecast()
         self.assertTrue(f1)
         self.assertFalse(f1.get_reception_time() is None)
         self.assertTrue(f1.get_location())
@@ -137,6 +139,8 @@ class IntegrationTest(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather)
             self.assertNotIn(None, weather.__dict__.values())
+        self.assertTrue(fc2)
+        f2 = fc2.get_forecast()
         self.assertTrue(f2)
         self.assertFalse(f2.get_reception_time() is None)
         self.assertTrue(f2.get_location())
@@ -144,15 +148,17 @@ class IntegrationTest(unittest.TestCase):
         for weather in f2:
             self.assertTrue(weather)
             self.assertNotIn(None, weather.__dict__.values())
-        self.assertFalse(f3)
+        self.assertFalse(fc3)
         
     def test_daily_forecast(self):
         """
         Test feature: get daily forecast for a specific location
         """
-        f1 = self.__owm.daily_forecast("London,uk")
-        f2 = self.__owm.daily_forecast('Kiev')
-        f3 = self.__owm.daily_forecast('QmFoPIlbf')  #Shall be None
+        fc1 = self.__owm.daily_forecast("London,uk")
+        fc2 = self.__owm.daily_forecast('Kiev')
+        fc3 = self.__owm.daily_forecast('QmFoPIlbf')  #Shall be None
+        self.assertTrue(fc1)
+        f1 = fc1.get_forecast()
         self.assertTrue(f1)
         self.assertFalse(f1.get_reception_time() is None)
         self.assertTrue(f1.get_location())
@@ -160,6 +166,8 @@ class IntegrationTest(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather)
             self.assertNotIn(None, weather.__dict__.values())
+        self.assertTrue(fc2)
+        f2 = fc2.get_forecast()
         self.assertTrue(f2)
         self.assertFalse(f2.get_reception_time() is None)
         self.assertTrue(f2.get_location())
@@ -167,8 +175,7 @@ class IntegrationTest(unittest.TestCase):
         for weather in f2:
             self.assertTrue(weather)
             self.assertNotIn(None, weather.__dict__.values())
-        self.assertFalse(f3)
+        self.assertFalse(fc3)
         
 if __name__ == "__main__":
     unittest.main()
-    

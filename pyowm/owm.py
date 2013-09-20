@@ -5,9 +5,9 @@ PyOWM library entry point
 """
 
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
-    FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL
+    FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL
 from utils import httputils, jsonparser
-from pyowm.constants import DAILY_FORECAST_URL
+from forecaster import Forecaster
 
 class OWM(object):
     """
@@ -130,22 +130,26 @@ class OWM(object):
     def three_hours_forecast(self, place):
         """
         Queries the OWM API for 3 hours weather forecasts for the specified 
-        toponym (eg: "London,uk"). Returns a Forecast object instance containing
-        a 5-days weather forecast
+        toponym (eg: "London,uk"). Returns a Forecaster object instance containing
+        a 5-days weather Forecast object
         
         place - a toponym (str)
         """
         assert type(place) is str, "'place' must be a str"
         json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
                                        {'q': place}, self.__API_key)
-        return jsonparser.parse_forecast(json_data)
+        forecast = jsonparser.parse_forecast(json_data)
+        if forecast:
+            return Forecaster(forecast)
+        else:
+            return None
     
     def daily_forecast(self, place,limit=None):
         """
         Queries the OWM API for daily weather forecasts for the specified 
-        toponym (eg: "London,uk"). Returns a Forecast object instance. If no
-        limits are set for the maximum weather items of the forecast, 14 items
-        are provided by default
+        toponym (eg: "London,uk"). Returns a Forecaster object instance. If no
+        limits are set for the maximum weather items of the encapsulated Forecast
+        object, 14 items are provided by default
         
         place - a toponym (str)
         limit - the maximum number of items the returned Forecast object is
@@ -163,4 +167,8 @@ class OWM(object):
             params['cnt'] = limit
         json_data = httputils.call_API(DAILY_FORECAST_URL, 
                                        params, self.__API_key)
-        return jsonparser.parse_forecast(json_data)
+        forecast = jsonparser.parse_forecast(json_data)
+        if forecast:
+            return Forecaster(forecast)
+        else:
+            return None

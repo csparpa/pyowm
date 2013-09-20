@@ -21,6 +21,7 @@ from pyowm.forecast import Forecast
 from pyowm.observation import Observation
 from pyowm.weather import Weather
 from pyowm.location import Location
+from pyowm.forecaster import Forecaster
 
 class TestOWM(unittest.TestCase):
     
@@ -184,12 +185,14 @@ class TestOWM(unittest.TestCase):
         httputils.call_API = self.mock_httputils_call_API_returning_3h_forecast
         result = self.__test_instance.three_hours_forecast("London,uk")
         httputils.call_API = ref_to_original_call_API
-        self.assertTrue(isinstance(result, Forecast))
-        self.assertTrue(result.get_interval())
-        self.assertTrue(result.get_reception_time())
-        self.assertTrue(isinstance(result.get_location(), Location))
-        self.assertEqual(1, len(result))
-        for weather in result:
+        self.assertTrue(isinstance(result, Forecaster))        
+        forecast = result.get_forecast()
+        self.assertTrue(isinstance(forecast, Forecast))
+        self.assertTrue(forecast.get_interval())
+        self.assertTrue(forecast.get_reception_time())
+        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertEqual(1, len(forecast))
+        for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
             self.assertNotIn(None, weather.__dict__.values())
             
@@ -202,12 +205,14 @@ class TestOWM(unittest.TestCase):
         httputils.call_API = self.mock_httputils_call_API_returning_daily_forecast
         result = self.__test_instance.daily_forecast("London,uk")
         httputils.call_API = ref_to_original_call_API
-        self.assertTrue(isinstance(result, Forecast))
-        self.assertTrue(result.get_interval())
-        self.assertTrue(result.get_reception_time())
-        self.assertTrue(isinstance(result.get_location(), Location))
-        self.assertEqual(1, len(result))
-        for weather in result:
+        self.assertTrue(isinstance(result, Forecaster))
+        forecast = result.get_forecast()
+        self.assertTrue(isinstance(forecast, Forecast))
+        self.assertTrue(forecast.get_interval())
+        self.assertTrue(forecast.get_reception_time())
+        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertEqual(1, len(forecast))
+        for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
             self.assertNotIn(None, weather.__dict__.values())
             

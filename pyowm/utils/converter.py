@@ -14,7 +14,7 @@ __FAHRENHEIT_DEGREE_SCALE = 1.8
 def unix_to_ISO8601(unixtime):
     """
     Converts a int/long UNIX time to the correspondant ISO8601-formatted string
-    The result is in the format: [YYYY]-[MM]-[DD] [HH]:[MM]:[SS]+00
+    The result is in the format: YYYY-MM-DD HH:MM:SS+00
     
     unixtime - the UNIX time (long)
     """
@@ -29,7 +29,7 @@ def unix_to_ISO8601(unixtime):
 def ISO8601_to_unix(iso):
     """
     Converts a ISO8601-formatted string into a long UNIX time
-    The supposed format for the string is [YYYY]-[MM]-[DD] [HH]:[MM]:[SS]+00
+    The supposed format for the string is YYYY-MM-DD HH:MM:SS+00
     
     iso - the ISO8601-formatted str
     """
@@ -37,7 +37,8 @@ def ISO8601_to_unix(iso):
         try:
             d = datetime.strptime(iso,'%Y-%m-%d %H:%M:%S+00')
         except ValueError:
-            raise ValueError(__name__+": bad format for input ISO8601 string")
+            raise ValueError(__name__+": bad format for input ISO8601 string, ' \
+                'should have been: YYYY-MM-DD HH:MM:SS+00")
         return datetime_to_unix(d)
     else:
         raise TypeError(__name__+": bad argument type")
