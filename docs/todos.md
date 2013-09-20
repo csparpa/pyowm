@@ -8,7 +8,6 @@ Code
    project: 
     - find current weather for my position (geolocate IP?)
     - find forecasts for my position (geolocate IP?)
-+ Provide __str__ hooks for each class
 
 Test
 ----
@@ -18,7 +17,7 @@ Test
 Docs
 ----
 + Write wiki with library API
-+ Write better documentation in code
++ Write better documentation in code (http://raxcloud.blogspot.it/2013/02/documenting-python-code-using-sphinx.html)
 + Explain internals:
     + class diagram
     + explain pywom design choices (eg: names usage, why end users do not deal
