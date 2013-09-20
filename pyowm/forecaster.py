@@ -54,44 +54,129 @@ class Forecaster(object):
         else:
             raise ValueError("Invalid value for parameter 'format'")
     
-    def check_status(self, words, weathers):
+    # Utility methods
+    def status_matches_any(self, word_list, weather):
         """
         Checks if one or more words in a given list is contained into the
-        detailed weather statuses of the Forecast objects in the given list
+        detailed weather statuses of a Weather object
+        
+        word_list - list of str
+        weather - Weather object
         """
-        for item in weathers:
-            status = item.get_detailed_status().lower()
-            for word in words:
-                if word in status:
-                    return True
+        detailed_status = weather.get_detailed_status().lower()
+        for word in word_list:
+            if word in detailed_status:
+                return True
         return False
     
+    def statuses_match_any(self, word_list, weathers):
+        """
+        Checks if one or more of the detailed statuses of the Weather objects 
+        into the given list contain at least one of the words in the given word 
+        list
+        
+        word_list - list of str
+        weathers - list of Weather objects
+        """
+        for weather in weathers:
+            if self.status_matches_any(word_list, weather):
+                return True
+        return False
+            
+    def filter_by_matching_statuses(self, word_list, weathers):
+        """
+        Returns a sublist of the given list of Weather objects, whose items
+        have at least one of the words in the given list as part of their
+        detailed statuses
+        
+        word_list - list of str
+        weathers - list of Weather objects
+        """
+        result = []
+        for weather in weathers:
+            if self.status_matches_any(word_list, weather):
+                result.append(weather)
+        return result
+    
+    
+    # Convenience methods
     def will_have_rain(self):
         """
         Returns a boolean indicating if during the forecast coverage exist one
-        or more items related to rain
+        or more items related to rain/drizzle
         """
-        return self.check_status(['rain','drizzle'], self.__forecast.get_weathers())
+        return self.statuses_match_any(['rain','drizzle'], self.__forecast.get_weathers())
         
     def will_have_sun(self):
         """
         Returns a boolean indicating if during the forecast coverage exist one
         or more items related to sun
         """
-        return self.check_status(['clear'], self.__forecast.get_weathers())
+        return self.statuses_match_any(['clear'], self.__forecast.get_weathers())
     
     def will_have_fog(self):
         """
         Returns a boolean indicating if during the forecast coverage exist one
-        or more items related to fog
+        or more items related to fog/haze/mist
         """
-        return self.check_status(['fog','haze','mist'], 
+        return self.statuses_match_any(['fog','haze','mist'], 
+                                   self.__forecast.get_weathers())
+        
+    def will_have_clouds(self):
+        """
+        Returns a boolean indicating if during the forecast coverage exist one
+        or more items related to clouds
+        """
+        return self.statuses_match_any(['clouds'], 
                                    self.__forecast.get_weathers())
         
     def will_have_snow(self):
         """
         Returns a boolean indicating if during the forecast coverage exist one
-        or more items related to sun
+        or more items related to snow
         """
-        return self.check_status(['snow','sleet'],
+        return self.statuses_match_any(['snow','sleet'],
                                    self.__forecast.get_weathers())
+        
+    def when_rain(self):
+        """
+        Returns a sublist of the Weather objects list in the forecast, which
+        only contains items having rain/drizzle as weather condition.
+        """
+        return self.filter_by_matching_statuses(['rain', 'drizzle'],
+                                           self.__forecast.get_weathers())
+    
+    def when_sun(self):
+        """
+        Returns a sublist of the Weather objects list in the forecast, which
+        only contains items having clear as weather condition.
+        """
+        return self.filter_by_matching_statuses(['clear'],
+                                           self.__forecast.get_weathers())
+    
+    def when_fog(self):
+        """
+        Returns a sublist of the Weather objects list in the forecast, which
+        only contains items having fog/haze/mist as weather condition.
+        """
+        return self.filter_by_matching_statuses(['fog','haze','mist'],
+                                           self.__forecast.get_weathers())
+        
+    def when_clouds(self):
+        """
+        Returns a sublist of the Weather objects list in the forecast, which
+        only contains items having clouds as weather condition.
+        """
+        return self.filter_by_matching_statuses(['clouds'],
+                                           self.__forecast.get_weathers())
+    
+    def when_snow(self):
+        """
+        Returns a sublist of the Weather objects list in the forecast, which
+        only contains items having snow/sleet as weather condition.
+        """
+        return self.filter_by_matching_statuses(['snow', 'sleet'],
+                                           self.__forecast.get_weathers())
+        
+
+        

@@ -231,10 +231,9 @@ get the whole list of _Weather_ objects or you can use the built-in iterator:
 	('2013-09-14 20:00:00+0','Clouds')
 	[...]
 
-
 The _Forecaster_ class provides a few convenience methods to inspect the
 weather forecasts in a human-friendly fashion. You can - for example - ask for 
-the time boundaries of the weather forecast data:
+the GMT time boundaries of the weather forecast data:
 
     # When in time does the forecast begin?
     >>> fc.when_starts()                                  # UNIX UTC time
@@ -251,7 +250,7 @@ the time boundaries of the weather forecast data:
 In example, you can ask the _Forecaster_ object to tell which is the weather 
 forecast for a specific point in time that you can specify using UNIXtime, an 
 ISO8601 formatted string or a Pythone _datetime.datetime_ object (all times must
-be in GMT timezone):
+be provided GMT):
 
     # Tell me the weather for tomorrow at noon
     >>> tomorrow_at_noon_obj = datetime.datetime(2013, 9, 19, 12, 0)
@@ -280,16 +279,20 @@ Other useful convenicence methods in class _Forecaster_ are:
     True
     >>> fc.will_have_fog()
     False
+    >>> fc.will_have_clouds()
+    False
     >>> fc.will_have_snow()
     False
     
-    # Will it be rainy, sunny, foggy or snowy at the specified time?
+    # Will it be rainy, sunny, foggy or snowy at the specified GMT time?
     tomorrow_at_noon = "2013-09-19 12:00+00"
     >>> fc.will_be_rainy_on(tomorrow_at_noon)
     False
     >>> fc.will_be_sunny_on(tomorrow_at_noon)
     True
     >>> fc.will_be_foggy_on(tomorrow_at_noon)
+    False
+    >>> fc.will_be_cloudy_on(tomorrow_at_noon)
     False
     >>> fc.will_be_snowy_on(tomorrow_at_noon)
     False
@@ -301,9 +304,11 @@ Other useful convenicence methods in class _Forecaster_ are:
     >>> fc.when_rain()
     [<weather.Weather at 0x00DB22F7>,<weather.Weather at 0x00DB2317>]
     >>> fc.when_sun()
-    [...]
+    [<weather.Weather at 0x00DB62F7>]
+    >> fc.when_clouds()
+    [<weather.Weather at 0x00DE22F7>]
     >>> fc.when_fog()
-    [...]
+    [<weather.Weather at 0x00DC22F7>.]
     >>> fc.when_snow()
     []                                   # It won't snow: empty list
 
@@ -312,9 +317,9 @@ time you specified will be examined. So be precise if your forecast is 3h!
 In addition, you can use these methods with either a UNIXtime, a 
 _datetime.datetime_ object or an ISO8601-formatted string. 
 
-When calling _fc.when_*_  methods you will be provided with a sublist of the
-_Weather_ objects in _f_ for which the weather condition is the one you queried for.
-
+When calling _fc.when_*_  methods you will be provided with a sublist of the 
+_Weather_ objects list in _f_ with items having as weather condition the one
+the method queries for.
 
 Printing objects' content
 -------------------------

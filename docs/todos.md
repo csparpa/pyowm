@@ -3,16 +3,12 @@ TODOs
 
 Code
 ----
-+ Forecaster class:
-    - Forecaster.when_rain() -> list rainy Weather objs in forecats
-    - Forecaster.when_sun() -> list sunny Weather objs in forecats
-    - Forecaster.when_snow() -> list snowy Weather objs in forecats
-    - Forecaster.when_fog() -> list foggy Weather objs in forecats
-    
++ Forecaster class:    
       #the following return error if unixtime is not in coverage
     - Forecaster.will_be_rainy_on(datetime|unixtime|iso)
     - Forecaster.will_be_sunny_on(datetime|unixtime|iso)
     - Forecaster.will_be_snowy_on(datetime|unixtime|iso)
+    - Forecaster.will_be_cloudy_on(datetime|unixtime|iso)
     - Forecaster.will_be_foggy_on(datetime|unixtime|iso)
     - Forecaster.get_weather_at(datetime|unixtime|iso) -> the closest Weather in time to the specified time
 + Implement remaining features
