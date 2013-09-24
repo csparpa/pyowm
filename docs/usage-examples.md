@@ -28,8 +28,8 @@ you want current the weather be looked up for and the job is done.
 You can specify the location either by passing its toponym (eg: "London") or
 its geographic coordinates (lon/lat):
 
-    obs = owm.observation_at_place('London,uk')                     # Toponym
-    obs = owm.observation_at_coords(-0.107331,51.503614)            # Lon/lat
+    obs = owm.weather_at('London,uk')                          # Toponym
+    obs = owm.weather_at_coords(-0.107331,51.503614)           # Lon/lat
 
 A _Observation_ object will be returned, containing weather info about the first
 location matching the toponym/coordinates you provided. So be precise when
@@ -52,19 +52,19 @@ _limit_ parameter.
 Examples:
 
     # Find observed weather in all the "London"s in the world
-    list_of_obs = owm.find_observations_by_name('London',search='accurate')
+    list_of_obs = owm.find_weather_by_name('London',search='accurate')
     # As above but limit result items to 3
-    list_of_obs = owm.find_observations_by_name('London',search='accurate',limit=3)
+    list_of_obs = owm.find_weather_by_name('London',search='accurate',limit=3)
     
     # Find observed weather for all the places whose name contains the word "London"
-    list_of_obs = owm.find_observations_by_name('London',search='like')
+    list_of_obs = owm.find_weather_by_name('London',search='like')
     # As above but limit result items to 5
-    list_of_obs = owm.find_observations_by_name('London',search='like',limit=5)
+    list_of_obs = owm.find_weather_by_name('London',search='like',limit=5)
     
     # Find observed weather for all the places in the surroundings of lon=-2.15,lat=57
-    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57})
+    list_of_obs = owm.find_weather_by_coords({'lon':-2.15,'lat':57})
     # As above but limit result items to 8
-    list_of_obs = owm.find_observations_by_coords({'lon':-2.15,'lat':57},limit=8)
+    list_of_obs = owm.find_weather_by_coords({'lon':-2.15,'lat':57},limit=8)
 
 Getting data from Observation objects
 -------------------------------------
@@ -330,3 +330,5 @@ _Forecast_ objects can be printed on-screen, eg:
     >>> l = Location('wonderland', 12.3, 44.7, 9876)
     >>> print l
     [Location: name=wonderland lon=12.3 lat=44.7 ID=9876]
+
+Remember that all PyOWM entities can be dumped to JSON or XML strings.

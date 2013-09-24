@@ -66,26 +66,37 @@ class OWM(object):
 
     # Main OWM web API querying methods
 
-    def observation_at_place(self, place):
+    def weather_at(self, name):
         """
-        Queries the OWM API for the currently observed weather at the specified
-        toponym (eg: "London,uk"). Returns an Observation object instance
+        Queries the OWM web API for the currently observed weather at the 
+        specified toponym (eg: "London,uk")
         
-        place - a toponym (str)
+        :param name: the location's toponym
+        :type name: str
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed or *APICallException* when OWM web API can not be reached
         """
-        assert type(place) is str, "'place' must be a str"
+        assert type(name) is str, "'name' must be a str"
         json_data = httputils.call_API(OBSERVATION_URL, 
-                                       {'q': place}, self.__API_key)
+                                       {'q': name}, self.__API_key)
         return jsonparser.parse_observation(json_data)
 
     
-    def observation_at_coords(self, lon, lat):
+    def weather_at_coords(self, lon, lat):
         """
-        Queries the OWM API for the currently observed weather at the specified
-        lon/lat coordinates (eg: -0.107331,51.503614).
+        Queries the OWM web API for the currently observed weather at the 
+        specified geographic (eg: -0.107331,51.503614).
         
-        lon - location longitude (int/float between -180 and 180 degrees)
-        lat - location latitude (int/float between -90 and 90 degress)
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed or *APICallException* when OWM web API can not be reached
         """
         assert type(lon) is float or type(lon) is int,"'lon' must be a float"
         if lon < -180.0 or lon > 180.0:
@@ -97,18 +108,28 @@ class OWM(object):
                                        self.__API_key)
         return jsonparser.parse_observation(json_data)
     
-    def find_observations_by_name(self, pattern, searchtype, limit=None):
+    def find_weather_by_name(self, pattern, searchtype, limit=None):
         """
-        Queries the OWM API for the currently observed weather in all the places 
-        matching the specified text search parameters. The result is a list of 
-        Observation objects
+        Queries the OWM web API for the currently observed weather in all the 
+        locations whose name is matching the specified text search parameters.
+        A twofold search can be issued: *'accurate'* (exact matching) and 
+        *'like'* (matches names that are similar to the supplied pattern).
         
-        pattern - the toponym pattern to be searched (str)
-        searchtype - the search mode (str), use:
-          'accurate' for an exact literal matching
-          'like' for a pattern matching 
-        limit - the maximum number of Observation items to be returned (int, 
-            defaults to 'None' which stands for no limitations)
+        :param pattern: the string pattern (not a regex) to be searched for the 
+            toponym
+        :type pattern: str
+        :param searchtype: the search mode to be used, must be *'accurate'* for 
+          an exact matching or *'like'* for a likelihood matching
+        :type: searchtype: str 
+        :param limit: the maximum number of *Observation* items in the returned
+            list (default is ``None``, which stands for any number of items)
+        :param limit: int or ``None``
+        :returns: a list of *Observation* objects or ``None`` if no weather data
+            is available
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed, *APICallException* when OWM web API can not be reached,
+            *ValueError* when bad value is supplied for the search type or the
+            maximum number of items retrieved
         """
         assert isinstance(pattern, str), "'pattern' must be a str"
         assert isinstance(searchtype, str), "'searchtype' must be a str"
@@ -125,16 +146,24 @@ class OWM(object):
            params, self.__API_key)
         return jsonparser.parse_search_results(json_data)
 
-    def find_observations_by_coords(self, lon, lat, limit=None):
+    def find_weather_by_coords(self, lon, lat, limit=None):
         """
-        Queries the OWM API for the currently observed weather in all the places 
-        nearby the specified coordinates, for which observations are available.
-        The result is a list of Observation objects
+        Queries the OWM web API for the currently observed weather in all the 
+        locations in the proximity of the specified coordinates.
         
-        lon - location longitude (int/float between -180 and 180 degrees)
-        lat - location latitude (int/float between -90 and 90 degress)
-        limit - the maximum number of Observation items to be returned (int, 
-            defaults to 'None' which stands for no limitations)
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param limit: the maximum number of *Observation* items in the returned
+            list (default is ``None``, which stands for any number of items)
+        :param limit: int or ``None``
+        :returns: a list of *Observation* objects or ``None`` if no weather data
+            is available
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed, *APICallException* when OWM web API can not be reached,
+            *ValueError* when coordinates values are out of bounds or negative
+            values are provided for limit
         """
         assert type(lon) is float or type(lon) is int,"'lon' must be a float"
         if lon < -180.0 or lon > 180.0:
@@ -144,47 +173,64 @@ class OWM(object):
             raise ValueError("'lat' value must be between -90 and 90")
         params = {'lon': lon, 'lat': lat}        
         if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
             params['cnt'] = limit
         json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
            params, self.__API_key)
         return jsonparser.parse_search_results(json_data)
     
-    def three_hours_forecast(self, place):
+    def three_hours_forecast(self, name):
         """
-        Queries the OWM API for 3 hours weather forecasts for the specified 
-        toponym (eg: "London,uk"). Returns a Forecaster object instance containing
-        a 5-days weather Forecast object
+        Queries the OWM web API for three hours weather forecast for the specified 
+        location (eg: "London,uk"). A *Forecaster* object is returned, containing
+        a *Forecast* instance covering a global streak of five days: this instance
+        encapsulates *Weather* objects, with a time interval of three hours one
+        from each other
         
-        place - a toponym (str)
+        :param name: the location's toponym
+        :type name: str
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed, *APICallException* when OWM web API can not be reached
         """
-        assert type(place) is str, "'place' must be a str"
+        assert type(name) is str, "'name' must be a str"
         json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
-                                       {'q': place}, self.__API_key)
+                                       {'q': name}, self.__API_key)
         forecast = jsonparser.parse_forecast(json_data)
         if forecast:
             return Forecaster(forecast)
         else:
             return None
     
-    def daily_forecast(self, place,limit=None):
+    def daily_forecast(self, name, limit=None):
         """
-        Queries the OWM API for daily weather forecasts for the specified 
-        toponym (eg: "London,uk"). Returns a Forecaster object instance. If no
-        limits are set for the maximum weather items of the encapsulated Forecast
-        object, 14 items are provided by default
+        Queries the OWM web API for daily weather forecast for the specified 
+        location (eg: "London,uk"). A *Forecaster* object is returned, containing
+        a *Forecast* instance covering a global streak of fourteen days by default:
+        this instance encapsulates *Weather* objects, with a time interval of one
+        day one from each other
         
-        place - a toponym (str)
-        limit - the maximum number of items the returned Forecast object is
-            supposed to contain (int, defaults to 'None' which stands for no 
-            limitations)
+        :param name: the location's toponym
+        :type name: str
+        :param limit: the maximum number of daily *Weather* items to be retrieved
+            (default is ``None``, which stands for any number of items)
+        :type limit: int or ``None``
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed, *APICallException* when OWM web API can not be reached,
+            *ValueError* if negative values are supplied for limit
         """
-        assert type(place) is str, "'place' must be a str"
+        assert type(name) is str, "'name' must be a str"
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
             
-        params = {'q': place}        
+        params = {'q': name}        
         if limit is not None:
             params['cnt'] = limit
         json_data = httputils.call_API(DAILY_FORECAST_URL, 

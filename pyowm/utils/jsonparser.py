@@ -29,11 +29,11 @@ def build_location_from(d):
         name = data['name']
         lon = data['coord']['lon']
         lat = data['coord']['lat']
-        ID = data['id']
+        ID = int(data['id'])
         if 'country' in data:
             country = data['country']
     except KeyError:
-        raise ParseResponseException("Impossible to read location info") 
+        raise ParseResponseException("Impossible to read location info")
     return Location(name, lon, lat, ID, country)
 
 def build_weather_from(d):
