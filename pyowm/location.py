@@ -1,29 +1,37 @@
 #!/usr/bin/env python
 
 """
-Location-related classes and data structures. 
+Module containing location-related classes and data structures. 
 """
 
 from json import dumps
 
 class Location(object):
     """
-    A databox representing a location in the world. A location is defined through
-    the following information: toponym, longitude, latitude and OWM city ID.
+    A class representing a location in the world. A location is defined through
+    a toponym, a couple of geographic coordinates such as longitude and
+    latitude and a numeric identifier assigned by the OWM web API that uniquely 
+    spots the location in the world. Optionally, the country specification may
+    be provided.
+    
+    Further reference about OWM city IDs can be found at
+       http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID
+       
+    :param name: the location's toponym
+    :type name: Unicode
+    :param lon: the location's longitude, must be between -180.0 and 180.0
+    :type lon: int/float
+    :param lat: the location's latitude, must be between -90.0 and 90.0
+    :type lat: int/float
+    :param ID: the location's OWM city ID
+    :type ID: int
+    :param country: the location's country (``None`` by default)
+    :type country: Unicode
+    :returns: a *Location* instance
+    :raises: *ValueError* if lon or lat values are provided out of bounds
     """
     
     def __init__(self, name, lon, lat, ID, country=None):
-        """
-        name - location toponym (Unicode str)
-        lon - location longitude (int/float between -180 and 180 degrees)
-        lat - location latitude (int/float between -90 and 90 degress)
-        ID - location OpenWeatherMap city ID (int)
-        country - country (Unicode str, defaults to None)
-        
-        For reference about OWM city IDs visit:
-          http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID
-        """
-        
         assert type(name) is unicode, "'name' must be a Unicode str"
         self.__name = name
         assert type(lon) is float or type(lon) is int,"'lon' must be a float"
@@ -43,32 +51,65 @@ class Location(object):
             self.__country = None
         
     def get_name(self):
-        """Returns the toponym of the location as a Unicode str"""
+        """
+        Returns the toponym of the location
+        
+        :returns: the Unicode toponym
+        
+        """
         return self.__name
     
     def get_lon(self):
-        """Returns the longitude of the location as a float"""
+        """
+        Returns the longitude of the location
+        
+        :returns: the float longitude
+        
+        """
         return self.__lon
     
     def get_lat(self):
-        """Returns the latitude of the location as a float"""
+        """
+        Returns the latitude of the location
+        
+        :returns: the float latitude
+        
+        """
         return self.__lat
     
     def get_ID(self):
-        """Returns the OWM city ID of the location"""
+        """
+        Returns the OWM city ID of the location
+        
+        :returns: the int OWM city ID
+        
+        """
         return self.__ID
     
     def get_country(self):
-        """Returns the country of the location"""
+        """
+        Returns the country of the location
+        
+        :returns: the Unicode country
+        
+        """
         return self.__country        
     
     def to_JSON(self):
-        """Dumps object fields into a JSON formatted string"""
+        """Dumps object fields into a JSON formatted string
+    
+        :returns:  the JSON string
+    
+        """
         return dumps({ 'name': self.__name, 'coordinates': { 'lon': self.__lon, 
             'lat': self.__lat}, 'ID': self.__ID, 'country': self.__country })
     
     def to_XML(self):
-        """Dumps object fields into a XML formatted string"""
+        """Dumps object fields into a XML formatted string
+    
+        :returns:  the XML string
+    
+        """
         return '<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat>' \
                 '</coordinates><ID>%s</ID><country>%s</country></Location>' % (
                                                            self.__name, self.__lon,

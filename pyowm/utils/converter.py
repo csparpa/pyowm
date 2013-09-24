@@ -11,7 +11,7 @@ __KELVIN_OFFSET__ = 273.15
 __FAHRENHEIT_OFFSET = 32.0
 __FAHRENHEIT_DEGREE_SCALE = 1.8
 
-def unix_to_ISO8601(unixtime):
+def UNIXtime_to_ISO8601(unixtime):
     """
     Converts a int/long UNIX time to the correspondant ISO8601-formatted string
     The result is in the format: YYYY-MM-DD HH:MM:SS+00
@@ -26,7 +26,7 @@ def unix_to_ISO8601(unixtime):
     else:
         raise TypeError(__name__+": bad argument type")
     
-def ISO8601_to_unix(iso):
+def ISO8601_to_UNIXtime(iso):
     """
     Converts a ISO8601-formatted string into a long UNIX time
     The supposed format for the string is YYYY-MM-DD HH:MM:SS+00
@@ -39,11 +39,30 @@ def ISO8601_to_unix(iso):
         except ValueError:
             raise ValueError(__name__+": bad format for input ISO8601 string, ' \
                 'should have been: YYYY-MM-DD HH:MM:SS+00")
-        return datetime_to_unix(d)
+        return datetime_to_UNIXtime(d)
     else:
         raise TypeError(__name__+": bad argument type")
+
+def to_UNIXtime(timeobject):
+    """
+    Returns the UNIXtime corresponding to the time value conveyed by the 
+    specified 'timeobject', which can be either a UNIXtime, a 
+    datetime.datetime object or an ISO8601-formatted string.
     
-def datetime_to_unix(date):
+    timeobject - the time value (long/int, datetime.datetime, str)
+    """
+    if isinstance(timeobject, (long, int)):
+        return timeobject
+    elif isinstance(timeobject, datetime):
+        return datetime_to_UNIXtime(timeobject)
+    elif isinstance(timeobject, str):
+        return ISO8601_to_UNIXtime(timeobject)
+    else:
+        raise TypeError('The time value must be espressed either by a long ' \
+                         'UNIX time, a datetime.datetime object or an ' \
+                         'ISO8601-formatted string')
+   
+def datetime_to_UNIXtime(date):
     """
     Converts a Python datetime.datetime object to the correspondant UNIX time
     

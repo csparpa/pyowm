@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+"""
+The main PyOWM init file, contains imports
+
+**Author**: Claudio Sparpaglione, @csparpa <claspock@hotmail.com>
+
+**Platform**: platform independent
+
+"""
+
 from location import Location
 from weather import Weather
 from observation import Observation

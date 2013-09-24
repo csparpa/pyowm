@@ -119,15 +119,15 @@ class TestForecaster(unittest.TestCase):
         Collector test that checks that all Forecaster.will_be_*_at methods
         fail when provided with bad type parameters
         """
-        self.assertRaises(ValueError, Forecaster.will_be_rainy_at, 
+        self.assertRaises(TypeError, Forecaster.will_be_rainy_at, 
                           self.__test_instance, 45.7)
-        self.assertRaises(ValueError, Forecaster.will_be_sunny_at, 
+        self.assertRaises(TypeError, Forecaster.will_be_sunny_at, 
                           self.__test_instance, 45.7)
-        self.assertRaises(ValueError, Forecaster.will_be_snowy_at, 
+        self.assertRaises(TypeError, Forecaster.will_be_snowy_at, 
                           self.__test_instance, 45.7)
-        self.assertRaises(ValueError, Forecaster.will_be_snowy_at, 
+        self.assertRaises(TypeError, Forecaster.will_be_snowy_at, 
                           self.__test_instance, 45.7)
-        self.assertRaises(ValueError, Forecaster.will_be_foggy_at, 
+        self.assertRaises(TypeError, Forecaster.will_be_foggy_at, 
                           self.__test_instance, 45.7)
         
     def test_will_be_rainy_at(self):
@@ -197,7 +197,7 @@ class TestForecaster(unittest.TestCase):
                          self.__test_weather_sun_1)
         
     def test_get_weather_at_fails_with_bad_parameter(self):
-        self.assertRaises(ValueError, Forecaster.get_weather_at, 
+        self.assertRaises(TypeError, Forecaster.get_weather_at, 
                           self.__test_instance, 45.7)
 
 if __name__ == "__main__":

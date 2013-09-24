@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-PyOWM library entry point
+Module containing the PyOWM library main entry point
 """
 
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
@@ -11,34 +11,56 @@ from forecaster import Forecaster
 
 class OWM(object):
     """
-    A global facade representing the OWM web API
+    A global facade class representing the OWM web API. Every query to the API
+    is done programmatically via an instance of this class, and can be optionally
+    sent with an OWM API key (references can be found at http://openweathermap.org/appid)
+    
+    :param API_key: An OWM API key value
+    :type API_key: string (defaults to ``None``)
+    :returns: an *OWM* instance
+
     """
 
     def __init__(self, API_key=None):
-        """
-        API_key - An OpenWeatherMap API key (str, may be None)
-        
-        For reference about OWM API keys visit:
-          http://openweathermap.org/appid
-        """
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self.__API_key = API_key  
 
     def get_API_key(self):
-        """Returns the OWM API key"""
+        """
+        Returns the OWM API key
+        
+        :returns: the OWM API key string
+        
+        """
         return self.__API_key
 
     def set_API_key(self, API_key):
-        """Updates the OWM API key"""
+        """
+        Updates the OWM API key
+        
+        :param API_key: the new value for the OWM API key
+        :type API_key: str
+        
+        """
         self.__API_key = API_key    
     
     def get_API_version(self):
-        """Returns the currently supported OWM API version"""
+        """
+        Returns the currently supported OWM web API version
+        
+        :returns: the OWM web API version string
+        
+        """
         return OWM_API_VERSION
     
     def get_version(self):
-        """Returns the current version of the PyOWM library"""
+        """
+        Returns the current version of the PyOWM library
+        
+        :returns: the current PyOWM library version string
+        
+        """
         return PYOWM_VERSION
 
 

@@ -43,7 +43,12 @@ class TestForecast(unittest.TestCase):
         """
         self.assertRaises(ValueError, Forecast, "xyz", self.__test_reception_time,
                           self.__test_location, self.__test_weathers)
-        
+    
+    def test_get(self):
+        index = 1
+        self.assertEqual(self.__test_weathers[index],
+                         self.__test_instance.get(index))    
+    
     def test_getters_return_expected_data(self):
         """
         Test either for "3h" forecast and "daily" ones

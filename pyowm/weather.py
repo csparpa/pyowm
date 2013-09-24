@@ -1,39 +1,54 @@
 #!/usr/bin/env python
 
 """
-Weather data classes and data structures.
+Module containing weather data classes and data structures.
 """
 
 from utils import converter, xmlutils
 from json import dumps
 
-class Weather(object):
+class Weather(object):    
     """
-    A databox containing raw weather data, such as pressure, temperature, etc.
+    A class encapsulating raw weather data.    
+    A reference about OWM weather codes and icons can be found at 
+    http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
+    
+    :param reference_time: GMT UNIX time of weather measurement
+    :type reference_time: long
+    :param sunset_time: GMT UNIX time of sunset
+    :type sunset_time: long
+    :param sunrise_time: GMT UNIX time of sunrise
+    :type sunrise_time: long
+    :param clouds: cloud coverage percentage
+    :type clouds: int
+    :param rain: precipitation info
+    :type rain: dict
+    :param snow: snow info
+    :type snow: dict
+    :param wind: wind info
+    :type wind: dict
+    :param humidity: atmospheric humidity percentage
+    :type humidity: int 
+    :param pressure: atmospheric pressure info
+    :type pressure: dict
+    :param temperature: temperature info
+    :type temperature: dict
+    :param status: short weather status
+    :type status: Unicode
+    :param detailed_status: detailed weather status
+    :type detailed_status: Unicode
+    :param weather_code: OWM weather condition code
+    :type weather_code: int
+    :param weather_icon_name: weather-related icon name
+    :type weather_icon_name: Unicode    
+    :returns:  a *Weather* instance
+    :raises: *ValueError* when negative values are provided
+    
     """
-
+    
     def __init__(self, reference_time, sunset_time, sunrise_time, clouds, rain, 
                  snow, wind, humidity, pressure, temperature, status, 
-                 detailed_status, weather_code, weather_icon_name):
-        """
-        reference_time - GMT UNIX time of weather measurement (long)
-        sunset_time - GMT UNIX time of sunrise_time (long)
-        sunrise_time - GMT UNIX time of sunset_time (long)
-        clouds - cloud coverage percentage (int)
-        rain - precipitation info (dict)
-        snow - snow info (dict)
-        wind - wind info (dict)
-        humidity - atmospheric humidiy percentage (int) 
-        pressure - atmospheric pressure info (dict)
-        temperature - temperature info (dict)
-        status - short weather status (Unicode str)
-        detailed_status - detailed weather status (Unicode str)
-        weather_code - OWM weather condition code (int)
-        weather_icon_name - weather-related icon name (Unicode str)
-        
-        For reference about OWM weather codes and icons visit:
-          http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
-        """
+                 detailed_status, weather_code, weather_icon_name):        
         assert type(reference_time) is long or type(reference_time) is int, \
             "'reference_time' must be an int/long"
         if long(reference_time) < 0:
@@ -78,87 +93,125 @@ class Weather(object):
 
         
     def get_reference_time(self, timeformat='unix'):
-        """
-        Returns the GMT time of weather measurement
-            format - how to format the result:
-                unix (default) - returns a long
-                iso - returns a ISO 8601-formatted str
+        """Returns the GMT time telling when the weather was measured
+    
+        :param timeformat: the format for the time value. May be: 
+            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
+            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeformat: str
+        :returns: a long or a str
+        :raises: ValueError when negative values are provided
+    
         """
         if timeformat == 'unix':
             return self.__reference_time
         if timeformat == 'iso':
-            return converter.unix_to_ISO8601(self.__reference_time)
+            return converter.UNIXtime_to_ISO8601(self.__reference_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
 
     def get_sunset_time(self, timeformat='unix'):
-        """
-        Returns the GMT time of sunset
-            format - how to format the result:
-                unix (default) - returns a long
-                iso - returns a ISO 8601-formatted str
+        """Returns the GMT time of sunset
+    
+        :param timeformat: the format for the time value. May be: 
+            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
+            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeformat: str
+        :returns: a long or a str
+        :raises: ValueError
+    
         """
         if timeformat == 'unix':
             return self.__sunset_time
         if timeformat == 'iso':
-            return converter.unix_to_ISO8601(self.__sunset_time)
+            return converter.UNIXtime_to_ISO8601(self.__sunset_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
 
     def get_sunrise_time(self, timeformat='unix'):
-        """
-        Returns the GMT time of sunrise
-            format - how to format the result:
-                unix (default) - returns a long
-                iso - returns a ISO 8601-formatted str
+        """Returns the GMT time of sunrise
+    
+        :param timeformat: the format for the time value. May be: 
+            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
+            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeformat: str
+        :returns: a long or a str
+        :raises: ValueError
+    
         """
         if timeformat == 'unix':
             return self.__sunrise_time
         if timeformat == 'iso':
-            return converter.unix_to_ISO8601(self.__sunrise_time)
+            return converter.UNIXtime_to_ISO8601(self.__sunrise_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
 
     def get_clouds(self):
-        """Returns the cloud coverage percentage as an int"""
+        """Returns the cloud coverage percentage as an int
+        
+        :returns: the cloud coverage percentage
+        
+        """
         return self.__clouds
 
 
     def get_rain(self):
-        """Returns precipitation info as a dict"""
+        """Returns a dict containing precipitation info
+        
+        :returns: a dict containing rain info
+        
+        """
         return self.__rain
 
 
     def get_snow(self):
-        """Returns snow info as a dict"""
+        """Returns a dict containing snow info
+        
+        :returns: a dict containing snow info
+        
+        """
         return self.__snow
 
 
     def get_wind(self):
-        """Returns wind info as a dict"""
+        """Returns a dict containing wind info
+        
+        :returns: a dict containing wind info
+        
+        """
         return self.__wind
 
 
     def get_humidity(self):
-        """Returns atmospheric humidity info as a dict"""
+        """Returns the atmospheric humidity as an int
+        
+        :returns: the humidity
+        
+        """
         return self.__humidity
 
 
     def get_pressure(self):
-        """Returns atmospheric pressure info as a dict"""
+        """Returns a dict containing atmospheric pressure info
+        
+        :returns: a dict containing pressure info
+        
+        """
         return self.__pressure
 
 
     def get_temperature(self, unit='kelvin'):
-        """
-        Returns temperature info as a dict
-            unit - which unit of measure for the temperature values:
-                kelvin (default) - returns a long
-                celsius - Celsius degrees
-                fahrenheit - Fahrenheit degrees
+        """Returns a dict with temperature info
+    
+        :param unit: the unit of measure for the temperature values. May be: 
+            '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
+        :type unit: str
+        :returns: a dict containing temperature values.
+        :raises: ValueError
+    
         """
         if unit == 'kelvin':
             return self.__temperature
@@ -175,26 +228,46 @@ class Weather(object):
 
 
     def get_status(self):
-        """Returns short weather status as a str"""
+        """Returns the short weather status as a Unicode string
+        
+        :returns: the short weather status
+        
+        """
         return self.__status
 
 
     def get_detailed_status(self):
-        """Returns detailed weather status as a str"""
+        """Returns the detailed weather status as a Unicode string
+        
+        :returns: the detailed weather status
+        
+        """
         return self.__detailed_status
 
 
     def get_weather_code(self):
-        """Returns OWM weather condition code as an int"""
+        """Returns the OWM weather condition code as an int
+        
+        :returns: the OWM weather condition code
+        
+        """
         return self.__weather_code
 
 
     def get_weather_icon_name(self):
-        """Returns weather-related icon name as a str"""
+        """Returns weather-related icon name as a Unicode string.
+    
+        :returns: the icon name.
+    
+        """
         return self.__weather_icon_name
         
     def to_JSON(self):
-        """Dumps object fields into a JSON formatted string"""
+        """Dumps object fields into a JSON formatted string
+        
+        :returns: the JSON string
+        
+        """
         return dumps({ 'reference_time': self.__reference_time, 
                       'sunset_time': self.__sunset_time,
                       'sunrise_time': self.__sunrise_time, 'clouds': self.__clouds,
@@ -206,7 +279,11 @@ class Weather(object):
                       'weather_icon_name': self.__weather_icon_name })
         
     def to_XML(self):
-        """Dumps object fields into a XML formatted string"""
+        """Dumps object fields into a XML formatted string
+    
+        :returns:  the XML string
+    
+        """
         return '<Weather><status>%s</status><weather_code>%s</weather_code><rain>' \
             '%s</rain><snow>%s</snow><pressure>%s</pressure><sunrise_time>%s' \
             '</sunrise_time><weather_icon_name>%s</weather_icon_name><clouds>%s' \
