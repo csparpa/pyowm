@@ -1,9 +1,11 @@
 *.pyc
 *.py~
+*.md~
 build/*
 bin/*
 dist/*
 pyowm.egg-info/*
 sphinx/*
+.settings/*
 .project
 .pydevproject
