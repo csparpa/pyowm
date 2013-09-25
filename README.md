@@ -20,6 +20,8 @@ how to do it). Just run:
 
     python setup.py install
 
+Superuser privileges may be needed under *nix platforms. 
+
 Take off
 --------
     >>> from pyowm import OWM
@@ -30,11 +32,11 @@ Take off
     # Will it be sunny tomorrow morning in Milan, IT ?
     >>> f = owm.daily_forecast("Milan,it", limit=3)
     >>> tomorrow = datetime.datetime(2013, 9, 19, 11, 0)
-    >>> f.will_be_sunny_on(tomorrow)
+    >>> f.will_be_sunny_at(tomorrow)
     True
     
     # Search for current weather in London, UK
-    >>> obs = owm.observation_for_name('London,uk')
+    >>> obs = owm.weather_at('London,uk')
     >>> w = obs.get_weather()
     >>> w.get_detailed_status()
     'Light rain'

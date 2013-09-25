@@ -4,6 +4,7 @@
 Module containing search and filter utilities for *Weather* objects lists 
 management
 """
+from pyowm.exceptions.not_found_error import NotFoundError
 
 def status_matches_any(word_list, weather):
     """
@@ -57,6 +58,30 @@ def filter_by_matching_statuses(word_list, weathers_list):
             result.append(weather)
     return result
 
+def is_in_coverage(unixtime, weathers_list):
+    """
+    Checks if the supplied UNIX time is contained into the time range (coverage)
+    defined by the most ancient and most recent *Weather* objects in the supplied
+    list
+    
+    :param unixtime: the UNIX time to be searched in the time range
+    :type unixtime: int/long
+    :param weathers_list: the list of *Weather* objects to be scanned for global
+        time coverage
+    :type weathers_list: list
+    :returns: ``True`` if the UNIX time is contained into the time range,
+        ``False`` otherwise
+    """
+    assert isinstance(unixtime, (int, long)), __name__+": 'unixtime' must be an int/float"
+    if not weathers_list:
+        return False
+    else:
+        min_of_coverage = min([weather.get_reference_time() for weather in weathers_list])
+        max_of_coverage = max([weather.get_reference_time() for weather in weathers_list])
+        if unixtime < min_of_coverage or unixtime > max_of_coverage:
+            return False
+        return True
+
 def find_closest_weather(weathers_list, unixtime):
     """
     Extracts from the provided list of Weather objects the item which is
@@ -72,11 +97,14 @@ def find_closest_weather(weathers_list, unixtime):
     assert isinstance(unixtime, (int, long)), __name__+": 'unixtime' must be an int/float"
     if not weathers_list:
         return None
-    else: 
-        closest_weather = weathers_list[0]
-        time_distance = abs(closest_weather.get_reference_time() - unixtime)
-        for weather in weathers_list:
-            if abs(weather.get_reference_time() - unixtime) < time_distance:
-                time_distance = abs(weather.get_reference_time() - unixtime)
-                closest_weather = weather
-        return closest_weather
+    if not is_in_coverage(unixtime, weathers_list):
+        raise NotFoundError('Error: the specified time is not included in the ' \
+                            'weather coverage range')
+    closest_weather = weathers_list[0]
+    time_distance = abs(closest_weather.get_reference_time() - unixtime)
+    for weather in weathers_list:
+        if abs(weather.get_reference_time() - unixtime) < time_distance:
+            time_distance = abs(weather.get_reference_time() - unixtime)
+            closest_weather = weather
+    return closest_weather
+            
