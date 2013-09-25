@@ -63,6 +63,9 @@ class TestWeatherUtils(unittest.TestCase):
         self.assertEqual(self.__test_weather_rain, 
                          weatherutils.find_closest_weather(self.__test_weathers,
                                                            time_2))
+        
+    def test_find_closest_weather_with_empty_list(self):
+        self.assertFalse(weatherutils.find_closest_weather([],1379361300L))
 
 if __name__ == "__main__":
     unittest.main()

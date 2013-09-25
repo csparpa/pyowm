@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Time and units conversion functions
+Module containing utility functions for time and temperature units conversion
 """
 
 from datetime import datetime
@@ -13,10 +13,15 @@ __FAHRENHEIT_DEGREE_SCALE = 1.8
 
 def UNIXtime_to_ISO8601(unixtime):
     """
-    Converts a int/long UNIX time to the correspondant ISO8601-formatted string
-    The result is in the format: YYYY-MM-DD HH:MM:SS+00
+    Converts a UNIXtime to the correspondant ISO8601-formatted string
+    The result string is in the format ``YYYY-MM-DD HH:MM:SS+00``
     
-    unixtime - the UNIX time (long)
+    :param unixtime: the UNIXtime
+    :type unixtime: int/long
+    :returns: an ISO8601-formatted string
+    :raises: *TypeError* when bad argument types are provided, *ValueError* for
+        negative values of UNIX time
+        
     """
     if isinstance(unixtime, (long,int)):
         if unixtime < 0:
@@ -28,10 +33,15 @@ def UNIXtime_to_ISO8601(unixtime):
     
 def ISO8601_to_UNIXtime(iso):
     """
-    Converts a ISO8601-formatted string into a long UNIX time
-    The supposed format for the string is YYYY-MM-DD HH:MM:SS+00
+    Converts an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+    to the correspondant UNIXtime
     
-    iso - the ISO8601-formatted str
+    :param iso: the ISO8601-formatted string
+    :type iso: string
+    :returns: a long UNIXtime
+    :raises: *TypeError* when bad argument types are provided, *ValueError* when
+        the ISO8601 string is badly formatted
+        
     """
     if isinstance(iso, str):
         try:
@@ -46,10 +56,15 @@ def ISO8601_to_UNIXtime(iso):
 def to_UNIXtime(timeobject):
     """
     Returns the UNIXtime corresponding to the time value conveyed by the 
-    specified 'timeobject', which can be either a UNIXtime, a 
-    datetime.datetime object or an ISO8601-formatted string.
+    specified object, which can be either a UNIXtime, a 
+    ``datetime.datetime`` object or an ISO8601-formatted string in the format 
+    `YYYY-MM-DD HH:MM:SS+00``.
     
-    timeobject - the time value (long/int, datetime.datetime, str)
+    :param timeobject: the object conveying the time value
+    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted string
+    :returns: a long UNIXtime
+    :raises: *TypeError* when bad argument types are provided
+    
     """
     if isinstance(timeobject, (long, int)):
         return timeobject
@@ -64,9 +79,12 @@ def to_UNIXtime(timeobject):
    
 def datetime_to_UNIXtime(date):
     """
-    Converts a Python datetime.datetime object to the correspondant UNIX time
+    Converts a ``datetime.datetime`` object to its correspondent UNIXtime
     
-    date - the datetime.datetime object to be converted
+    :param date: the ``datetime.datetime`` object
+    :type date: ``datetime.datetime``
+    :returns: a long UNIXtime
+    :raises: *TypeError* when bad argument types are provided
     """
     if isinstance(date, datetime):
         return timegm(date.timetuple())
@@ -77,7 +95,11 @@ def kelvin_to_celsius(kelvintemp):
     """
     Converts a numeric temperature from Kelvin degrees to Celsius degrees
     
-    kelvintemp - the Kelvin temperature (int/long/float)
+    :param kelvintemp: the Kelvin temperature
+    :type kelvintemp: int/long/float
+    :returns: the float Celsius temperature
+    :raises: *TypeError* when bad argument types are provided
+    
     """
     if isinstance(kelvintemp, (long,int,float)):
         if kelvintemp < 0:
@@ -91,7 +113,11 @@ def kelvin_to_fahrenheit(kelvintemp):
     """
     Converts a numeric temperature from Kelvin degrees to Fahrenheit degrees
     
-    kelvintemp - the Kelvin temperature (int/long/float)
+    :param kelvintemp: the Kelvin temperature
+    :type kelvintemp: int/long/float
+    :returns: the float Fahrenheit temperature
+    
+    :raises: *TypeError* when bad argument types are provided
     """
     if isinstance(kelvintemp, (long,int,float)):
         if kelvintemp < 0:

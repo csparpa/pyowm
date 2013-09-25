@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 """
-Parser for the JSON data found into the OWM web API responses
+Module containing utility functions for parsing of JSON data coming from OWM 
+web API responses
 """
 
 from json import loads, dumps
@@ -16,9 +17,16 @@ from pyowm.forecast import Forecast
 
 def build_location_from(d):
     """
-    Builds a Location object from the provided dictionary d
+    Factory method that builds a *Location* object out of a data dictionary data.
+    Only certain properties of the dictionary are used: if these properties are 
+    not found or cannot be parsed, an error is issued.
     
-    d - a weather data dictionary (dict)
+    :param d: a data dictionary
+    :type d: dict
+    :returns: a *Location* instance
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the instance
+        
     """
     country = None
     if 'sys' in d and 'country' in d['sys']:
@@ -42,9 +50,16 @@ def build_location_from(d):
 
 def build_weather_from(d):
     """
-    Builds a Weather object from the provided dictionary d
+    Factory method that builds a *Weather* object out of a data dictionary data.
+    Only certain properties of the dictionary are used: if these properties are
+    not found or cannot be parsed, an error is issued.
     
-    d - a weather data dictionary (dict)
+    :param d: a data dictionary
+    :type d: dict
+    :returns: a *Weather* instance
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the instance
+        
     """
     try:
         reference_time = d['dt']
@@ -138,21 +153,23 @@ def build_weather_from(d):
 
 def parse_observation(json_data):
     """
-    Factory method that builds an Observation instance from the JSON data
-    returned from the OWM web API.
-    Fallback policies are implemented: missing non mandatory JSON attributes will 
-    result in empty data structures while missing mandatory JSON attributes
-    will result into a ParseResponseException
+    Parses an *Observation* instance out of raw JSON data coming from OWM web 
+    API responses. Only certain properties of the data are used:
+    if these properties are not found or cannot be parsed, an error is issued.
     
-    json_data - the JSON payload of an OWM web API response
+    :param json_data: a raw JSON string
+    :type json_data: str
+    :returns: an *Observation* instance
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the result, *APIResponseError* if the OWM API returns
+        a HTTP status error
+        
     """
     d = loads(json_data)
-    
     # Check if server returned errors: this check overcomes the lack of use of 
     # HTTP error status codes by the OWM API but it's supposed to be deprecated 
     # as soon as the API implements a correct HTTP mechanism for communicating 
     # errors to the clients
-    
     if 'message' in d and 'cod' in d:
         if d['cod'] == "404":
             print "OWM API: data not found - response payload: "+dumps(d)
@@ -165,16 +182,19 @@ def parse_observation(json_data):
 
 def parse_search_results(json_data):
     """
-    Factory method that builds a list of Observation instances from the JSON data
-    returned from the OWM web API.
-    Fallback policies are implemented: when parsing each Observation instance, missing 
-    non mandatory JSON attributes will result in empty data structures while 
-    missing mandatory JSON attributes will result into a ParseResponseException
+    Parses a list of *Observation* instances out of raw JSON data coming from 
+    OWM web API responses. Only certain properties of the data are used:
+    if these properties are not found or cannot be parsed, an error is issued.
     
-    json_data - the JSON payload of an OWM web API response
+    :param json_data: a raw JSON string
+    :type json_data: str
+    :returns: a list of *Observation* instances
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the result, *APIResponseError* if the OWM API returns
+        a HTTP status error
+        
     """
     d = loads(json_data)
-    
     # Check if server returned errors: this check overcomes the lack of use of 
     # HTTP error status codes by the OWM API but it's supposed to be deprecated 
     # as soon as the API implements a correct HTTP mechanism for communicating 
@@ -205,16 +225,19 @@ def parse_search_results(json_data):
 
 def parse_forecast(json_data):
     """
-    Factory method that builds a Forecast instance from the JSON data
-    returned from the OWM web API.
-    Fallback policies are implemented: missing non mandatory JSON attributes will 
-    result in empty data structures while missing mandatory JSON attributes
-    will result into a ParseResponseException
+    Parses a *Forecast* instance out of raw JSON data coming from OWM web 
+    API responses. Only certain properties of the data are used:
+    if these properties are not found or cannot be parsed, an error is issued.
     
-    json_data - the JSON payload of an OWM web API response
+    :param json_data: a raw JSON string
+    :type json_data: str
+    :returns: a *Forecast* instance
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the result, *APIResponseError* if the OWM API returns
+        a HTTP status error
+        
     """
     d = loads(json_data)
-    
     # Check if server returned errors: this check overcomes the lack of use of 
     # HTTP error status codes by the OWM API but it's supposed to be deprecated 
     # as soon as the API implements a correct HTTP mechanism for communicating 

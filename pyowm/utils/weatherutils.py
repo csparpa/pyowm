@@ -1,16 +1,21 @@
 #!/usr/bin/env python
 
 """
-Search and filter utilities for Weather lists management
+Module containing search and filter utilities for *Weather* objects lists 
+management
 """
 
 def status_matches_any(word_list, weather):
     """
-    Checks if one or more words in a given list is contained into the
-    detailed weather statuses of a Weather object
+    Checks if one or more keywords in a given list is contained into the
+    detailed weather status of a *Weather* object
     
-    word_list - list of str
-    weather - Weather object
+    :param word_list: a list of string keywords
+    :type word_list: list
+    :param weather: a *Weather* object
+    :type weather: *Weather*
+    :returns: ``True`` if one or more matchings are found, ``False`` otherwise 
+    
     """
     detailed_status = weather.get_detailed_status().lower()
     for word in word_list:
@@ -18,47 +23,60 @@ def status_matches_any(word_list, weather):
             return True
     return False
 
-def statuses_match_any(word_list, weather_list):
+def statuses_match_any(word_list, weathers_list):
     """
-    Checks if one or more of the detailed statuses of the Weather objects 
-    into the given list contain at least one of the words in the given word 
-    list
+    Checks if one or more of the detailed statuses of the *Weather* objects 
+    into the given list contain at least one of the keywords in the given list
     
-    word_list - list of str
-    weather_list - list of Weather objects
+    :param word_list: a list of string keywords
+    :type word_list: list
+    :param weathers_list: a list of *Weather* objects
+    :type weathers_list: list
+    :returns: ``True`` if one or more matchings are found, ``False`` otherwise
     """
-    for weather in weather_list:
+    for weather in weathers_list:
         if status_matches_any(word_list, weather):
             return True
     return False
         
-def filter_by_matching_statuses(word_list, weather_list):
+def filter_by_matching_statuses(word_list, weathers_list):
     """
-    Returns a sublist of the given list of Weather objects, whose items
-    have at least one of the words in the given list as part of their
-    detailed statuses
+    Returns a sublist of the given list of *Weather* objects, whose items
+    have at least one of the keywords from the given list as part of their
+    detailed statuses.
     
-    word_list - list of str
-    weather_list - list of Weather objects
+    :param word_list: a list of string keywords
+    :type word_list: list
+    :param weathers_list: a list of *Weather* objects
+    :type weathers_list: list
+    :returns: a list of *Weather* objects
     """
     result = []
-    for weather in weather_list:
+    for weather in weathers_list:
         if status_matches_any(word_list, weather):
             result.append(weather)
     return result
 
-def find_closest_weather(weather_list, unixtime):
+def find_closest_weather(weathers_list, unixtime):
     """
-    Extracts from the provided list of Weather objects the one which is
-    closest in time to the provided unixtime
+    Extracts from the provided list of Weather objects the item which is
+    closest in time to the provided UNIXtime.
     
-    weather_list - list of Weather objects
-    unixtime - UNIXtime (long)
+    :param weathers_list: a list of *Weather* objects
+    :type weathers_list: list
+    :param unixtime: a UNIX time
+    :type unixtime: long
+    :returns: the *Weather* object which is closest in time or ``None`` if the
+        list is empty
     """
-    closest_weather = weather_list[0]
-    time_distance = abs(closest_weather.get_reference_time() - unixtime)
-    for weather in weather_list:
-        if abs(weather.get_reference_time() - unixtime) < time_distance:
-            time_distance = abs(weather.get_reference_time() - unixtime)
-            closest_weather = weather
-    return closest_weather
+    assert isinstance(unixtime, (int, long)), __name__+": 'unixtime' must be an int/float"
+    if not weathers_list:
+        return None
+    else: 
+        closest_weather = weathers_list[0]
+        time_distance = abs(closest_weather.get_reference_time() - unixtime)
+        for weather in weathers_list:
+            if abs(weather.get_reference_time() - unixtime) < time_distance:
+                time_distance = abs(weather.get_reference_time() - unixtime)
+                closest_weather = weather
+        return closest_weather
