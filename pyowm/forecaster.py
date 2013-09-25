@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Weather forecast abstraction classes and data structures.
+Module containing weather forecast abstraction classes and data structures.
 """
 
 from forecast import Forecast

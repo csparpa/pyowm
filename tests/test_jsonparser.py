@@ -5,14 +5,14 @@ Test case for jsonparser.py module
 """
 
 import unittest
-from json import loads
 from json_test_responses import OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, \
     SEARCH_RESULTS_JSON, INTERNAL_SERVER_ERROR_JSON, SEARCH_WITH_NO_RESULTS_JSON, \
-    FORECAST_NOT_FOUND_JSON, THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON
+    FORECAST_NOT_FOUND_JSON, THREE_HOURS_FORECAST_JSON
 from pyowm.utils import jsonparser
-from pyowm.exceptions.parse_response_exception import ParseResponseException
+from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.location import Location
 from pyowm.weather import Weather
+from pyowm.exceptions.api_response_error import APIResponseError
 
 
 class TestJSONParser(unittest.TestCase):
@@ -82,7 +82,7 @@ class TestJSONParser(unittest.TestCase):
         with well-formed JSON data
         """
         result = jsonparser.parse_observation(OBSERVATION_JSON)
-        self.assertFalse(result is None, "")
+        self.assertTrue(result)
         self.assertFalse(result.get_reception_time() is None)
         self.assertFalse(result.get_location() is None)
         self.assertNotIn(None, result.get_location().__dict__.values())
@@ -94,7 +94,7 @@ class TestJSONParser(unittest.TestCase):
         Test that method throws a ParseResponseException when provided with bad
         JSON data
         """
-        self.assertRaises(ParseResponseException, jsonparser.parse_observation,
+        self.assertRaises(ParseResponseError, jsonparser.parse_observation,
                           self.__bad_json)
         
     def test_parse_observation_when_server_error(self):
@@ -125,7 +125,7 @@ class TestJSONParser(unittest.TestCase):
         Test that method throws a ParseResponseException when provided with bad
         JSON data
         """
-        self.assertRaises(ParseResponseException, jsonparser.parse_search_results,
+        self.assertRaises(ParseResponseError, jsonparser.parse_search_results,
                           self.__bad_json)
         
     def test_parse_search_results_when_no_results(self):
@@ -141,8 +141,8 @@ class TestJSONParser(unittest.TestCase):
         Test that method returns None when server responds with an 
         error JSON message
         """
-        result = jsonparser.parse_search_results(INTERNAL_SERVER_ERROR_JSON)
-        self.assertFalse(result)
+        self.assertRaises(APIResponseError, jsonparser.parse_search_results,
+                          INTERNAL_SERVER_ERROR_JSON)
 
     def test_parse_forecast(self):
         """
@@ -165,7 +165,7 @@ class TestJSONParser(unittest.TestCase):
         Test that method throws a ParseResponseException when provided with bad
         JSON data
         """
-        self.assertRaises(ParseResponseException, jsonparser.parse_forecast, 
+        self.assertRaises(ParseResponseError, jsonparser.parse_forecast, 
                           self.__bad_json)
         
     def test_parse_forecast_when_no_results(self):
@@ -178,8 +178,8 @@ class TestJSONParser(unittest.TestCase):
         Test that method returns None when server responds with an 
         error JSON message
         """
-        result = jsonparser.parse_forecast(INTERNAL_SERVER_ERROR_JSON)
-        self.assertFalse(result)
+        self.assertRaises(APIResponseError, jsonparser.parse_forecast,
+                          INTERNAL_SERVER_ERROR_JSON)
 
 if __name__ == "__main__":
     unittest.main()

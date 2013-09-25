@@ -14,7 +14,7 @@ Monkey patching pattern:
 
 import unittest
 from pyowm.utils import httputils
-from pyowm.exceptions.api_call_exception import APICallException
+from pyowm.exceptions.api_call_error import APICallError
 
 class TestHTTPUtils(unittest.TestCase):
     
@@ -68,10 +68,10 @@ class TestHTTPUtils(unittest.TestCase):
     def test_call_API_raises_OWM_API_call_exception(self):
         ref_to_original_urlopen = httputils.urllib2.urlopen
         httputils.urllib2.urlopen = self.mock_urllib2_urlopen_raising_HTTPError
-        self.assertRaises(APICallException, httputils.call_API, 
+        self.assertRaises(APICallError, httputils.call_API, 
                           'http://tests.com/api', {'a': 1, 'b': 2}, 'test_API_key')
         httputils.urllib2.urlopen = self.mock_urllib2_urlopen_raising_URLError
-        self.assertRaises(APICallException, httputils.call_API, 
+        self.assertRaises(APICallError, httputils.call_API, 
                           'http://tests.com/api', {'a': 1, 'b': 2}, 'test_API_key')
         httputils.urllib2.urlopen = ref_to_original_urlopen
         

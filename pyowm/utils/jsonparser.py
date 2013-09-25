@@ -6,10 +6,12 @@ Parser for the JSON data found into the OWM web API responses
 
 from json import loads, dumps
 from time import time
+from os import linesep
 from pyowm.location import Location
 from pyowm.weather import Weather
 from pyowm.observation import Observation
-from pyowm.exceptions.parse_response_exception import ParseResponseException
+from pyowm.exceptions.parse_response_error import ParseResponseError
+from pyowm.exceptions.api_response_error import APIResponseError
 from pyowm.forecast import Forecast
 
 def build_location_from(d):
@@ -33,8 +35,10 @@ def build_location_from(d):
         if 'country' in data:
             country = data['country']
     except KeyError:
-        raise ParseResponseException("Impossible to read location info")
-    return Location(name, lon, lat, ID, country)
+        raise ParseResponseError(''.join([__name__,': impossible to read ' \
+              'location info from JSON data', linesep, str(data)]))
+    else:
+        return Location(name, lon, lat, ID, country)
 
 def build_weather_from(d):
     """
@@ -124,7 +128,8 @@ def build_weather_from(d):
             weather_code = 0
             weather_icon_name = u''
     except KeyError:
-        raise ParseResponseException("Impossible to read weather info")
+        raise ParseResponseError(''.join([__name__,': impossible to read ' \
+              'weather info from JSON data', linesep, str(d)]))
     else:
         return Weather(reference_time, sunset_time, sunrise_time, clouds,
                     rain, snow, wind, humidity, pressure, temperature, 
@@ -147,10 +152,13 @@ def parse_observation(json_data):
     # HTTP error status codes by the OWM API but it's supposed to be deprecated 
     # as soon as the API implements a correct HTTP mechanism for communicating 
     # errors to the clients
+    
     if 'message' in d and 'cod' in d:
-        if d['cod'] is not "200":
-            print "Unable to fulfill the request - Server response: "+dumps(d)
+        if d['cod'] == "404":
+            print "OWM API: data not found - response payload: "+dumps(d)
             return None
+        else:
+            raise APIResponseError("OWM API: error - response payload: "+dumps(d))
     l = build_location_from(d)
     w = build_weather_from(d)
     return Observation(long(round(time())), l, w)
@@ -171,20 +179,28 @@ def parse_search_results(json_data):
     # HTTP error status codes by the OWM API but it's supposed to be deprecated 
     # as soon as the API implements a correct HTTP mechanism for communicating 
     # errors to the clients
-    if 'cod' in d and d['cod'] != "200":
-        print "Unable to fulfill the request - Server response: "+dumps(d)
-        return None
-    
-    # Handle the case when no results are found
-    if 'count' in d and d['count'] is "0":
-        return []
-    else:
-        if 'list' in d:
-            return [Observation(long(round(time())), 
-                                build_location_from(item), 
-                                build_weather_from(item)) for item in d['list']]
+    if 'cod' in d:
+        if d['cod'] == "404":
+            print "OWM API: data not found - response payload: "+dumps(d)
+            return None
+        elif d['cod'] == "200":
+            # Handle the case when no results are found
+            if 'count' in d and d['count'] is "0":
+                return []
+            else:
+                if 'list' in d:
+                    return [Observation(long(round(time())), 
+                                        build_location_from(item), 
+                                        build_weather_from(item)) for item in d['list']]
+                else:
+                    raise ParseResponseError(''.join([__name__,': impossible to read ' \
+                      'observation list from JSON data', linesep, str(d)]))
         else:
-            raise ParseResponseException("Impossible to read observations list") 
+            raise APIResponseError("OWM API: error - response payload: "+dumps(d))
+    else:
+            raise ParseResponseError(''.join([__name__,': impossible to read ' \
+              'JSON data', linesep, str(d)]))
+
 
 
 def parse_forecast(json_data):
@@ -204,11 +220,12 @@ def parse_forecast(json_data):
     # as soon as the API implements a correct HTTP mechanism for communicating 
     # errors to the clients
     if 'message' in d and 'cod' in d:
-        if d['cod'] != "200":
-            print "Unable to fulfill the request - Server response: "+dumps(d)
+        if d['cod'] == "404":
+            print "OWM API: data not found - response payload: "+dumps(d)
             return None
+        elif d['cod'] != "200" :
+            raise APIResponseError("OWM API: error - response payload: "+dumps(d))
     l = build_location_from(d)
-    
     # Handle the case when no results are found
     if 'count' in d and d['count'] is "0":
         weathers = []
@@ -218,6 +235,6 @@ def parse_forecast(json_data):
         if 'list' in d:
             weathers = [build_weather_from(item) for item in d['list']]
         else:
-            raise ParseResponseException("Impossible to read observations list")
-        
+            raise ParseResponseError(''.join([__name__,': impossible to read ' \
+              'observation list from JSON data', linesep, str(d)])) 
     return Forecast("3h", long(round(time())), l, weathers)

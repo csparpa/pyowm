@@ -6,7 +6,7 @@ URL building utilities
 
 import urllib2
 from urllib import urlencode
-from pyowm.exceptions import api_call_exception 
+from pyowm.exceptions import api_call_error
 
 
 def call_API(API_subset_URL, params_dict, API_key):
@@ -25,11 +25,11 @@ def call_API(API_subset_URL, params_dict, API_key):
     try:
         response = urllib2.urlopen(url)
     except urllib2.HTTPError as e:
-        raise api_call_exception.APICallException(e.reason, e)
-        return None
+        raise api_call_error.APICallError(e.reason, e)
+        #return None
     except urllib2.URLError as e:
-        raise api_call_exception.APICallException(e.message, e)
-        return None
+        raise api_call_error.APICallError(e.message, e)
+        #return None
     else:
         return response.read()
     
