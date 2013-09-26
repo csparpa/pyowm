@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.utils.converter &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.utils.converter</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing utility functions for time and temperature units conversion</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">calendar</span> <span class="kn">import</span> <span class="n">timegm</span>
+
+<span class="n">__KELVIN_OFFSET__</span> <span class="o">=</span> <span class="mf">273.15</span>
+<span class="n">__FAHRENHEIT_OFFSET</span> <span class="o">=</span> <span class="mf">32.0</span>
+<span class="n">__FAHRENHEIT_DEGREE_SCALE</span> <span class="o">=</span> <span class="mf">1.8</span>
+
+<div class="viewcode-block" id="UNIXtime_to_ISO8601"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.converter.UNIXtime_to_ISO8601">[docs]</a><span class="k">def</span> <span class="nf">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="n">unixtime</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a UNIXtime to the correspondant ISO8601-formatted string</span>
+<span class="sd">    The result string is in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">    </span>
+<span class="sd">    :param unixtime: the UNIXtime</span>
+<span class="sd">    :type unixtime: int/long</span>
+<span class="sd">    :returns: an ISO8601-formatted string</span>
+<span class="sd">    :raises: *TypeError* when bad argument types are provided, *ValueError* for</span>
+<span class="sd">        negative values of UNIX time</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unixtime</span><span class="p">,</span> <span class="p">(</span><span class="nb">long</span><span class="p">,</span><span class="nb">int</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">unixtime</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: negative time values not allowed&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="n">unixtime</span><span class="p">)</span><span class="o">.</span> \
+            <span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S+00&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: bad argument type&quot;</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="ISO8601_to_UNIXtime"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.converter.ISO8601_to_UNIXtime">[docs]</a><span class="k">def</span> <span class="nf">ISO8601_to_UNIXtime</span><span class="p">(</span><span class="n">iso</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">    to the correspondant UNIXtime</span>
+<span class="sd">    </span>
+<span class="sd">    :param iso: the ISO8601-formatted string</span>
+<span class="sd">    :type iso: string</span>
+<span class="sd">    :returns: a long UNIXtime</span>
+<span class="sd">    :raises: *TypeError* when bad argument types are provided, *ValueError* when</span>
+<span class="sd">        the ISO8601 string is badly formatted</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iso</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">iso</span><span class="p">,</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S+00&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: bad format for input ISO8601 string, &#39; </span><span class="se">\</span>
+<span class="s">                &#39;should have been: YYYY-MM-DD HH:MM:SS+00&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">datetime_to_UNIXtime</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: bad argument type&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="to_UNIXtime"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.converter.to_UNIXtime">[docs]</a><span class="k">def</span> <span class="nf">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the UNIXtime corresponding to the time value conveyed by the </span>
+<span class="sd">    specified object, which can be either a UNIXtime, a </span>
+<span class="sd">    ``datetime.datetime`` object or an ISO8601-formatted string in the format </span>
+<span class="sd">    `YYYY-MM-DD HH:MM:SS+00``.</span>
+<span class="sd">    </span>
+<span class="sd">    :param timeobject: the object conveying the time value</span>
+<span class="sd">    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted string</span>
+<span class="sd">    :returns: a long UNIXtime</span>
+<span class="sd">    :raises: *TypeError* when bad argument types are provided</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeobject</span><span class="p">,</span> <span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">timeobject</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeobject</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime_to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeobject</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ISO8601_to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;The time value must be espressed either by a long &#39;</span> \
+                         <span class="s">&#39;UNIX time, a datetime.datetime object or an &#39;</span> \
+                         <span class="s">&#39;ISO8601-formatted string&#39;</span><span class="p">)</span>
+   </div>
+<div class="viewcode-block" id="datetime_to_UNIXtime"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.converter.datetime_to_UNIXtime">[docs]</a><span class="k">def</span> <span class="nf">datetime_to_UNIXtime</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a ``datetime.datetime`` object to its correspondent UNIXtime</span>
+<span class="sd">    </span>
+<span class="sd">    :param date: the ``datetime.datetime`` object</span>
+<span class="sd">    :type date: ``datetime.datetime``</span>
+<span class="sd">    :returns: a long UNIXtime</span>
+<span class="sd">    :raises: *TypeError* when bad argument types are provided</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">timegm</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: bad argument type&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="kelvin_to_celsius"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.converter.kelvin_to_celsius">[docs]</a><span class="k">def</span> <span class="nf">kelvin_to_celsius</span><span class="p">(</span><span class="n">kelvintemp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a numeric temperature from Kelvin degrees to Celsius degrees</span>
+<span class="sd">    </span>
+<span class="sd">    :param kelvintemp: the Kelvin temperature</span>
+<span class="sd">    :type kelvintemp: int/long/float</span>
+<span class="sd">    :returns: the float Celsius temperature</span>
+<span class="sd">    :raises: *TypeError* when bad argument types are provided</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kelvintemp</span><span class="p">,</span> <span class="p">(</span><span class="nb">long</span><span class="p">,</span><span class="nb">int</span><span class="p">,</span><span class="nb">float</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">kelvintemp</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: negative temperature values not allowed&quot;</span><span class="p">)</span>
+        <span class="n">celsiustemp</span> <span class="o">=</span> <span class="n">kelvintemp</span> <span class="o">-</span> <span class="n">__KELVIN_OFFSET__</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s">&quot;{0:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">celsiustemp</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: bad argument type&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="kelvin_to_fahrenheit"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.converter.kelvin_to_fahrenheit">[docs]</a><span class="k">def</span> <span class="nf">kelvin_to_fahrenheit</span><span class="p">(</span><span class="n">kelvintemp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a numeric temperature from Kelvin degrees to Fahrenheit degrees</span>
+<span class="sd">    </span>
+<span class="sd">    :param kelvintemp: the Kelvin temperature</span>
+<span class="sd">    :type kelvintemp: int/long/float</span>
+<span class="sd">    :returns: the float Fahrenheit temperature</span>
+<span class="sd">    </span>
+<span class="sd">    :raises: *TypeError* when bad argument types are provided</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kelvintemp</span><span class="p">,</span> <span class="p">(</span><span class="nb">long</span><span class="p">,</span><span class="nb">int</span><span class="p">,</span><span class="nb">float</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">kelvintemp</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: negative temperature values not allowed&quot;</span><span class="p">)</span>
+        <span class="n">fahrenheittemp</span> <span class="o">=</span> <span class="p">(</span><span class="n">kelvintemp</span> <span class="o">-</span> <span class="n">__KELVIN_OFFSET__</span><span class="p">)</span><span class="o">*</span><span class="n">__FAHRENHEIT_DEGREE_SCALE</span> \
+            <span class="o">+</span> <span class="n">__FAHRENHEIT_OFFSET</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s">&quot;{0:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fahrenheittemp</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: bad argument type&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

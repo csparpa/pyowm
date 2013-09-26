@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.utils.weatherutils &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.utils.weatherutils</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing search and filter utilities for *Weather* objects lists </span>
+<span class="sd">management</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pyowm.exceptions.not_found_error</span> <span class="kn">import</span> <span class="n">NotFoundError</span>
+
+<div class="viewcode-block" id="status_matches_any"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.status_matches_any">[docs]</a><span class="k">def</span> <span class="nf">status_matches_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if one or more keywords in a given list is contained into the</span>
+<span class="sd">    detailed weather status of a *Weather* object</span>
+<span class="sd">    </span>
+<span class="sd">    :param word_list: a list of string keywords</span>
+<span class="sd">    :type word_list: list</span>
+<span class="sd">    :param weather: a *Weather* object</span>
+<span class="sd">    :type weather: *Weather*</span>
+<span class="sd">    :returns: ``True`` if one or more matchings are found, ``False`` otherwise </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">detailed_status</span> <span class="o">=</span> <span class="n">weather</span><span class="o">.</span><span class="n">get_detailed_status</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">detailed_status</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="statuses_match_any"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.statuses_match_any">[docs]</a><span class="k">def</span> <span class="nf">statuses_match_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weathers_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if one or more of the detailed statuses of the *Weather* objects </span>
+<span class="sd">    into the given list contain at least one of the keywords in the given list</span>
+<span class="sd">    </span>
+<span class="sd">    :param word_list: a list of string keywords</span>
+<span class="sd">    :type word_list: list</span>
+<span class="sd">    :param weathers_list: a list of *Weather* objects</span>
+<span class="sd">    :type weathers_list: list</span>
+<span class="sd">    :returns: ``True`` if one or more matchings are found, ``False`` otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weathers_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">status_matches_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">False</span>
+        </div>
+<div class="viewcode-block" id="filter_by_matching_statuses"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.filter_by_matching_statuses">[docs]</a><span class="k">def</span> <span class="nf">filter_by_matching_statuses</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weathers_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a sublist of the given list of *Weather* objects, whose items</span>
+<span class="sd">    have at least one of the keywords from the given list as part of their</span>
+<span class="sd">    detailed statuses.</span>
+<span class="sd">    </span>
+<span class="sd">    :param word_list: a list of string keywords</span>
+<span class="sd">    :type word_list: list</span>
+<span class="sd">    :param weathers_list: a list of *Weather* objects</span>
+<span class="sd">    :type weathers_list: list</span>
+<span class="sd">    :returns: a list of *Weather* objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weathers_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">status_matches_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weather</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="is_in_coverage"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.is_in_coverage">[docs]</a><span class="k">def</span> <span class="nf">is_in_coverage</span><span class="p">(</span><span class="n">unixtime</span><span class="p">,</span> <span class="n">weathers_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the supplied UNIX time is contained into the time range (coverage)</span>
+<span class="sd">    defined by the most ancient and most recent *Weather* objects in the supplied</span>
+<span class="sd">    list</span>
+<span class="sd">    </span>
+<span class="sd">    :param unixtime: the UNIX time to be searched in the time range</span>
+<span class="sd">    :type unixtime: int/long</span>
+<span class="sd">    :param weathers_list: the list of *Weather* objects to be scanned for global</span>
+<span class="sd">        time coverage</span>
+<span class="sd">    :type weathers_list: list</span>
+<span class="sd">    :returns: ``True`` if the UNIX time is contained into the time range,</span>
+<span class="sd">        ``False`` otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unixtime</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">)),</span> <span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: &#39;unixtime&#39; must be an int/float&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">weathers_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">min_of_coverage</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weathers_list</span><span class="p">])</span>
+        <span class="n">max_of_coverage</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weathers_list</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">unixtime</span> <span class="o">&lt;</span> <span class="n">min_of_coverage</span> <span class="ow">or</span> <span class="n">unixtime</span> <span class="o">&gt;</span> <span class="n">max_of_coverage</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="find_closest_weather"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.find_closest_weather">[docs]</a><span class="k">def</span> <span class="nf">find_closest_weather</span><span class="p">(</span><span class="n">weathers_list</span><span class="p">,</span> <span class="n">unixtime</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extracts from the provided list of Weather objects the item which is</span>
+<span class="sd">    closest in time to the provided UNIXtime.</span>
+<span class="sd">    </span>
+<span class="sd">    :param weathers_list: a list of *Weather* objects</span>
+<span class="sd">    :type weathers_list: list</span>
+<span class="sd">    :param unixtime: a UNIX time</span>
+<span class="sd">    :type unixtime: long</span>
+<span class="sd">    :returns: the *Weather* object which is closest in time or ``None`` if the</span>
+<span class="sd">        list is empty</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unixtime</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">)),</span> <span class="n">__name__</span><span class="o">+</span><span class="s">&quot;: &#39;unixtime&#39; must be an int/float&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">weathers_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_in_coverage</span><span class="p">(</span><span class="n">unixtime</span><span class="p">,</span> <span class="n">weathers_list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">NotFoundError</span><span class="p">(</span><span class="s">&#39;Error: the specified time is not included in the &#39;</span> \
+                            <span class="s">&#39;weather coverage range&#39;</span><span class="p">)</span>
+    <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weathers_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">time_distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">closest_weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">unixtime</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weathers_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">unixtime</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">time_distance</span><span class="p">:</span>
+            <span class="n">time_distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">unixtime</span><span class="p">)</span>
+            <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weather</span>
+    <span class="k">return</span> <span class="n">closest_weather</span>
+            </div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

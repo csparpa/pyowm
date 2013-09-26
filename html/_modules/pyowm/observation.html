@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.observation &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.observation</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Weather observation classes and data structures.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">loads</span>
+<span class="kn">from</span> <span class="nn">location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">weather</span> <span class="kn">import</span> <span class="n">Weather</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">converter</span>
+
+<div class="viewcode-block" id="Observation"><a class="viewcode-back" href="../../pyowm.html#pyowm.observation.Observation">[docs]</a><span class="k">class</span> <span class="nc">Observation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing the weather which is currently being observed in a certain</span>
+<span class="sd">    location in the world. The location is represented by the encapsulated</span>
+<span class="sd">    *Location* object while the observed weather data are held by the encapsulated</span>
+<span class="sd">    *Weather* object.</span>
+
+<span class="sd">    :param reception_time: GMT UNIXtime telling when the weather obervation has </span>
+<span class="sd">        been received from the OWM web API</span>
+<span class="sd">    :type reception_time: long/int</span>
+<span class="sd">    :param location: the *Location* relative to this observation</span>
+<span class="sd">    :type location: *Location*</span>
+<span class="sd">    :param weather: the *Weather* relative to this observation</span>
+<span class="sd">    :type weather: *Weather*</span>
+<span class="sd">    :returns: an *Observation* instance</span>
+<span class="sd">    :raises: *ValueError* when negative values are provided as reception time</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reception_time</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">reception_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">long</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">reception_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> \
+            <span class="s">&quot;&#39;reception_time&#39; must be an int/long&quot;</span>
+        <span class="k">if</span> <span class="nb">long</span><span class="p">(</span><span class="n">reception_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;reception_time&#39; must be greater than 0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__reception_time</span> <span class="o">=</span> <span class="nb">long</span><span class="p">(</span><span class="n">reception_time</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">Location</span><span class="p">),</span> <span class="s">&quot;&#39;location&#39; must be a Location object&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weather</span><span class="p">,</span> <span class="n">Weather</span><span class="p">),</span> <span class="s">&quot;&#39;weather&#39; must be a Weather object&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__weather</span> <span class="o">=</span> <span class="n">weather</span>
+
+<div class="viewcode-block" id="Observation.get_reception_time"><a class="viewcode-back" href="../../pyowm.html#pyowm.observation.Observation.get_reception_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_reception_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeformat</span><span class="o">=</span><span class="s">&#39;unix&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the GMT time telling when the observation has been received</span>
+<span class="sd">          from the OWM web API</span>
+<span class="sd">    </span>
+<span class="sd">        :param timeformat: the format for the time value. May be: </span>
+<span class="sd">            &#39;*unix*&#39; (default) for UNIX time or &#39;*iso*&#39; for ISO8601-formatted</span>
+<span class="sd">            string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeformat: str</span>
+<span class="sd">        :returns: a long or a str</span>
+<span class="sd">        :raises: ValueError when negative values are provided</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;unix&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reception_time</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;iso&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__reception_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;format&#39;&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Observation.get_location"><a class="viewcode-back" href="../../pyowm.html#pyowm.observation.Observation.get_location">[docs]</a>    <span class="k">def</span> <span class="nf">get_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the *Location* object for this observation</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the *Location* object</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__location</span>
+</div>
+<div class="viewcode-block" id="Observation.get_weather"><a class="viewcode-back" href="../../pyowm.html#pyowm.observation.Observation.get_weather">[docs]</a>    <span class="k">def</span> <span class="nf">get_weather</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the *Weather* object for this observation</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the *Weather* object</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather</span>
+    </div>
+<div class="viewcode-block" id="Observation.to_JSON"><a class="viewcode-back" href="../../pyowm.html#pyowm.observation.Observation.to_JSON">[docs]</a>    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dumps object fields into a JSON formatted string</span>
+<span class="sd">    </span>
+<span class="sd">        :returns:  the JSON string</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;reception_time&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reception_time</span><span class="p">,</span> 
+              <span class="s">&quot;Location&quot;</span><span class="p">:</span> <span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__location</span><span class="o">.</span><span class="n">to_JSON</span><span class="p">()),</span>
+              <span class="s">&quot;Weather&quot;</span><span class="p">:</span> <span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__weather</span><span class="o">.</span><span class="n">to_JSON</span><span class="p">())</span>
+              <span class="p">}</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="Observation.to_XML"><a class="viewcode-back" href="../../pyowm.html#pyowm.observation.Observation.to_XML">[docs]</a>    <span class="k">def</span> <span class="nf">to_XML</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dumps object fields into a XML formatted string</span>
+<span class="sd">    </span>
+<span class="sd">        :returns:  the XML string</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;Observation&gt;&lt;reception_time&gt;</span><span class="si">%s</span><span class="s">&lt;/reception_time&gt;</span><span class="si">%s%s</span><span class="s">&lt;/Observation&gt;&#39;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__reception_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__location</span><span class="o">.</span><span class="n">to_XML</span><span class="p">(),</span> 
+             <span class="bp">self</span><span class="o">.</span><span class="n">__weather</span><span class="o">.</span><span class="n">to_XML</span><span class="p">())</span>
+    </div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Redefine __str__ hook for pretty-printing of Observation instances&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&quot;[Observation:</span><span class="se">\n</span><span class="s">reception time=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__reception_time</span><span class="p">)</span><span class="o">+</span> \
+            <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__location</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__weather</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">]&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
