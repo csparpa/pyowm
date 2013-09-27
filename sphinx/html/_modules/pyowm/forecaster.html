@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.forecaster &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.forecaster</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing weather forecast abstraction classes and data structures.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">forecast</span> <span class="kn">import</span> <span class="n">Forecast</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">converter</span><span class="p">,</span> <span class="n">weatherutils</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">CLOUDS_KEYWORDS</span><span class="p">,</span> <span class="n">FOG_KEYWORDS</span><span class="p">,</span> <span class="n">RAIN_KEYWORDS</span><span class="p">,</span> \
+    <span class="n">SNOW_KEYWORDS</span><span class="p">,</span> <span class="n">SUN_KEYWORDS</span>
+
+<div class="viewcode-block" id="Forecaster"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster">[docs]</a><span class="k">class</span> <span class="nc">Forecaster</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class providing convenience methods for manipulating weather forecast data.</span>
+<span class="sd">    The class encapsulates a *Forecast* instance and provides abstractions on</span>
+<span class="sd">    the top of it in order to let programmers exploit weather forecast data in</span>
+<span class="sd">    a human-friendly fashion</span>
+<span class="sd">    </span>
+<span class="sd">    :param forecast: a *Forecast* instance</span>
+<span class="sd">    :type forecast: *Forecast*</span>
+<span class="sd">    :returns: a *Forecaster* instance</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forecast</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">forecast</span><span class="p">,</span> <span class="n">Forecast</span><span class="p">),</span> <span class="s">&quot;&#39;forecast&#39; must be a Forecast object&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span> <span class="o">=</span> <span class="n">forecast</span>
+        
+<div class="viewcode-block" id="Forecaster.get_forecast"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.get_forecast">[docs]</a>    <span class="k">def</span> <span class="nf">get_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the *Forecast* instance</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the *Forecast* instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span>
+        
+        </div>
+<div class="viewcode-block" id="Forecaster.when_starts"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_starts">[docs]</a>    <span class="k">def</span> <span class="nf">when_starts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeformat</span><span class="o">=</span><span class="s">&#39;unix&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the GMT time of the start of the forecast coverage, which is the</span>
+<span class="sd">        time of the most ancient *Weather* item in the forecast</span>
+<span class="sd">    </span>
+<span class="sd">        :param timeformat: the format for the time value. May be: </span>
+<span class="sd">            &#39;*unix*&#39; (default) for UNIX time or &#39;*iso*&#39; for ISO8601-formatted</span>
+<span class="sd">            string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeformat: str</span>
+<span class="sd">        :returns: a long or a str</span>
+<span class="sd">        :raises: *ValueError* when invalid time format values are provided</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_coverage</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">item</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;unix&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">start_coverage</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;iso&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="n">start_coverage</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;format&#39;&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.when_ends"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_ends">[docs]</a>    <span class="k">def</span> <span class="nf">when_ends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeformat</span><span class="o">=</span><span class="s">&#39;unix&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the GMT time of the end of the forecast coverage, which is the</span>
+<span class="sd">        time of the most recent *Weather* item in the forecast</span>
+<span class="sd">    </span>
+<span class="sd">        :param timeformat: the format for the time value. May be: </span>
+<span class="sd">            &#39;*unix*&#39; (default) for UNIX time or &#39;*iso*&#39; for ISO8601-formatted</span>
+<span class="sd">            string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeformat: str</span>
+<span class="sd">        :returns: a long or a str</span>
+<span class="sd">        :raises: *ValueError* when invalid time format values are provided</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">end_coverage</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">item</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;unix&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">end_coverage</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;iso&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="n">end_coverage</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;format&#39;&quot;</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.will_have_rain"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_have_rain">[docs]</a>    <span class="k">def</span> <span class="nf">will_have_rain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if into the forecast coverage exist one or more *Weather* items</span>
+<span class="sd">        related to rain conditions</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">statuses_match_any</span><span class="p">(</span><span class="n">RAIN_KEYWORDS</span><span class="p">,</span> 
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.will_have_sun"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_have_sun">[docs]</a>    <span class="k">def</span> <span class="nf">will_have_sun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if into the forecast coverage exist one or more *Weather* items</span>
+<span class="sd">        related to sun conditions</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">statuses_match_any</span><span class="p">(</span><span class="n">SUN_KEYWORDS</span><span class="p">,</span> 
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.will_have_fog"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_have_fog">[docs]</a>    <span class="k">def</span> <span class="nf">will_have_fog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if into the forecast coverage exist one or more *Weather* items</span>
+<span class="sd">        related to fog conditions</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">statuses_match_any</span><span class="p">(</span><span class="n">FOG_KEYWORDS</span><span class="p">,</span> 
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.will_have_clouds"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_have_clouds">[docs]</a>    <span class="k">def</span> <span class="nf">will_have_clouds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if into the forecast coverage exist one or more *Weather* items</span>
+<span class="sd">        related to cloud conditions</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">statuses_match_any</span><span class="p">(</span><span class="n">CLOUDS_KEYWORDS</span><span class="p">,</span> 
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.will_have_snow"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_have_snow">[docs]</a>    <span class="k">def</span> <span class="nf">will_have_snow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if into the forecast coverage exist one or more *Weather* items</span>
+<span class="sd">        related to snow conditions</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">statuses_match_any</span><span class="p">(</span><span class="n">SNOW_KEYWORDS</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.when_rain"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_rain">[docs]</a>    <span class="k">def</span> <span class="nf">when_rain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a sublist of the *Weather* list in the forecast, containing</span>
+<span class="sd">        only items having rain as weather condition.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a list of *Weather* objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">filter_by_matching_statuses</span><span class="p">(</span><span class="n">RAIN_KEYWORDS</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.when_sun"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_sun">[docs]</a>    <span class="k">def</span> <span class="nf">when_sun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a sublist of the *Weather* list in the forecast, containing</span>
+<span class="sd">        only items having sun as weather condition.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a list of *Weather* objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">filter_by_matching_statuses</span><span class="p">(</span><span class="n">SUN_KEYWORDS</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.when_fog"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_fog">[docs]</a>    <span class="k">def</span> <span class="nf">when_fog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a sublist of the *Weather* list in the forecast, containing</span>
+<span class="sd">        only items having fog as weather condition.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a list of *Weather* objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">filter_by_matching_statuses</span><span class="p">(</span><span class="n">FOG_KEYWORDS</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.when_clouds"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_clouds">[docs]</a>    <span class="k">def</span> <span class="nf">when_clouds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a sublist of the *Weather* list in the forecast, containing</span>
+<span class="sd">        only items having clouds as weather condition.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a list of *Weather* objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">filter_by_matching_statuses</span><span class="p">(</span><span class="n">CLOUDS_KEYWORDS</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.when_snow"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.when_snow">[docs]</a>    <span class="k">def</span> <span class="nf">when_snow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a sublist of the *Weather* list in the forecast, containing</span>
+<span class="sd">        only items having snow as weather condition.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a list of *Weather* objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">filter_by_matching_statuses</span><span class="p">(</span><span class="n">SNOW_KEYWORDS</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">())</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.will_be_rainy_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_be_rainy_at">[docs]</a>    <span class="k">def</span> <span class="nf">will_be_rainy_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeobject</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if at the specified time the condition is rain. The check is</span>
+<span class="sd">        performed on the *Weather* item of the forecast which is closest to the</span>
+<span class="sd">        time value conveyed by the parameter</span>
+
+<span class="sd">        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object </span>
+<span class="sd">            or an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeobject: long/int, ``datetime.datetime`` or str)</span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+        <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">find_closest_weather</span><span class="p">(</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">(),</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">status_matches_any</span><span class="p">(</span><span class="n">RAIN_KEYWORDS</span><span class="p">,</span> <span class="n">closest_weather</span><span class="p">)</span>
+
+                </div>
+<div class="viewcode-block" id="Forecaster.will_be_sunny_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_be_sunny_at">[docs]</a>    <span class="k">def</span> <span class="nf">will_be_sunny_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeobject</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if at the specified time the condition is sun. The check is</span>
+<span class="sd">        performed on the *Weather* item of the forecast which is closest to the</span>
+<span class="sd">        time value conveyed by the parameter</span>
+
+<span class="sd">        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object </span>
+<span class="sd">            or an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeobject: long/int, ``datetime.datetime`` or str)</span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+        <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">find_closest_weather</span><span class="p">(</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">(),</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">status_matches_any</span><span class="p">(</span><span class="n">SUN_KEYWORDS</span><span class="p">,</span> <span class="n">closest_weather</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.will_be_snowy_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_be_snowy_at">[docs]</a>    <span class="k">def</span> <span class="nf">will_be_snowy_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeobject</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if at the specified time the condition is snow. The check is</span>
+<span class="sd">        performed on the *Weather* item of the forecast which is closest to the</span>
+<span class="sd">        time value conveyed by the parameter</span>
+
+<span class="sd">        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object </span>
+<span class="sd">            or an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeobject: long/int, ``datetime.datetime`` or str)</span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+        <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">find_closest_weather</span><span class="p">(</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">(),</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">status_matches_any</span><span class="p">(</span><span class="n">SNOW_KEYWORDS</span><span class="p">,</span> <span class="n">closest_weather</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.will_be_cloudy_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_be_cloudy_at">[docs]</a>    <span class="k">def</span> <span class="nf">will_be_cloudy_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeobject</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if at the specified time the condition is clouds. The check is</span>
+<span class="sd">        performed on the *Weather* item of the forecast which is closest to the</span>
+<span class="sd">        time value conveyed by the parameter</span>
+
+<span class="sd">        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object </span>
+<span class="sd">            or an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeobject: long/int, ``datetime.datetime`` or str)</span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+        <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">find_closest_weather</span><span class="p">(</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">(),</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">status_matches_any</span><span class="p">(</span><span class="n">CLOUDS_KEYWORDS</span><span class="p">,</span> <span class="n">closest_weather</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="Forecaster.will_be_foggy_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.will_be_foggy_at">[docs]</a>    <span class="k">def</span> <span class="nf">will_be_foggy_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeobject</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tells if at the specified time the condition is fog. The check is</span>
+<span class="sd">        performed on the *Weather* item of the forecast which is closest to the</span>
+<span class="sd">        time value conveyed by the parameter</span>
+
+<span class="sd">        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object </span>
+<span class="sd">            or an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeobject: long/int, ``datetime.datetime`` or str)</span>
+<span class="sd">        :returns: boolean</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">)</span>
+        <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">find_closest_weather</span><span class="p">(</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">(),</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">status_matches_any</span><span class="p">(</span><span class="n">FOG_KEYWORDS</span><span class="p">,</span> <span class="n">closest_weather</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="Forecaster.get_weather_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.forecaster.Forecaster.get_weather_at">[docs]</a>    <span class="k">def</span> <span class="nf">get_weather_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeobject</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gives the *Weather* item in the forecast that is closest in time to</span>
+<span class="sd">        the time value conveyed by the parameter </span>
+<span class="sd">        </span>
+<span class="sd">        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object </span>
+<span class="sd">            or an ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeobject: long/int, ``datetime.datetime`` or str)</span>
+<span class="sd">        :returns: a *Weather* object</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">weatherutils</span><span class="o">.</span><span class="n">find_closest_weather</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__forecast</span><span class="o">.</span><span class="n">get_weathers</span><span class="p">(),</span>
+                                                 <span class="n">converter</span><span class="o">.</span><span class="n">to_UNIXtime</span><span class="p">(</span><span class="n">timeobject</span><span class="p">))</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

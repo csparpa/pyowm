@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.location &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.location</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing location-related classes and data structures. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
+
+<div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing a location in the world. A location is defined through</span>
+<span class="sd">    a toponym, a couple of geographic coordinates such as longitude and</span>
+<span class="sd">    latitude and a numeric identifier assigned by the OWM web API that uniquely </span>
+<span class="sd">    spots the location in the world. Optionally, the country specification may</span>
+<span class="sd">    be provided.</span>
+<span class="sd">    </span>
+<span class="sd">    Further reference about OWM city IDs can be found at</span>
+<span class="sd">       http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID</span>
+<span class="sd">       </span>
+<span class="sd">    :param name: the location&#39;s toponym</span>
+<span class="sd">    :type name: Unicode</span>
+<span class="sd">    :param lon: the location&#39;s longitude, must be between -180.0 and 180.0</span>
+<span class="sd">    :type lon: int/float</span>
+<span class="sd">    :param lat: the location&#39;s latitude, must be between -90.0 and 90.0</span>
+<span class="sd">    :type lat: int/float</span>
+<span class="sd">    :param ID: the location&#39;s OWM city ID</span>
+<span class="sd">    :type ID: int</span>
+<span class="sd">    :param country: the location&#39;s country (``None`` by default)</span>
+<span class="sd">    :type country: Unicode</span>
+<span class="sd">    :returns: a *Location* instance</span>
+<span class="sd">    :raises: *ValueError* if lon or lat values are provided out of bounds</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">ID</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">unicode</span><span class="p">,</span> <span class="s">&quot;&#39;name&#39; must be a Unicode str&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span><span class="s">&quot;&#39;lon&#39; must be a float&quot;</span>
+        <span class="k">if</span> <span class="n">lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">180.0</span> <span class="ow">or</span> <span class="n">lon</span> <span class="o">&gt;</span> <span class="mf">180.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;lon&#39; value must be between -180 and 180&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lon</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span><span class="s">&quot;&#39;lat&#39; must be a float&quot;</span>
+        <span class="k">if</span> <span class="n">lat</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">90.0</span> <span class="ow">or</span> <span class="n">lat</span> <span class="o">&gt;</span> <span class="mf">90.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;lat&#39; value must be between -90 and 90&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lat</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> <span class="s">&quot;&#39;ID&#39; must be an int&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__ID</span> <span class="o">=</span> <span class="n">ID</span>
+        <span class="k">if</span> <span class="n">country</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">unicode</span><span class="p">,</span> <span class="s">&quot;&#39;country&#39; must be a Unicode str or None&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__country</span> <span class="o">=</span> <span class="n">country</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__country</span> <span class="o">=</span> <span class="bp">None</span>
+        
+<div class="viewcode-block" id="Location.get_name"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.get_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the toponym of the location</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the Unicode toponym</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name</span>
+    </div>
+<div class="viewcode-block" id="Location.get_lon"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.get_lon">[docs]</a>    <span class="k">def</span> <span class="nf">get_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the longitude of the location</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the float longitude</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lon</span>
+    </div>
+<div class="viewcode-block" id="Location.get_lat"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.get_lat">[docs]</a>    <span class="k">def</span> <span class="nf">get_lat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the latitude of the location</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the float latitude</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lat</span>
+    </div>
+<div class="viewcode-block" id="Location.get_ID"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.get_ID">[docs]</a>    <span class="k">def</span> <span class="nf">get_ID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the OWM city ID of the location</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the int OWM city ID</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ID</span>
+    </div>
+<div class="viewcode-block" id="Location.get_country"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.get_country">[docs]</a>    <span class="k">def</span> <span class="nf">get_country</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the country of the location</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the Unicode country</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__country</span>        
+    </div>
+<div class="viewcode-block" id="Location.to_JSON"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.to_JSON">[docs]</a>    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dumps object fields into a JSON formatted string</span>
+<span class="sd">    </span>
+<span class="sd">        :returns:  the JSON string</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">({</span> <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="p">,</span> <span class="s">&#39;coordinates&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;lon&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lon</span><span class="p">,</span> 
+            <span class="s">&#39;lat&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lat</span><span class="p">},</span> <span class="s">&#39;ID&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ID</span><span class="p">,</span> <span class="s">&#39;country&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__country</span> <span class="p">})</span>
+    </div>
+<div class="viewcode-block" id="Location.to_XML"><a class="viewcode-back" href="../../pyowm.html#pyowm.location.Location.to_XML">[docs]</a>    <span class="k">def</span> <span class="nf">to_XML</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dumps object fields into a XML formatted string</span>
+<span class="sd">    </span>
+<span class="sd">        :returns:  the XML string</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;Location&gt;&lt;name&gt;</span><span class="si">%s</span><span class="s">&lt;/name&gt;&lt;coordinates&gt;&lt;lon&gt;</span><span class="si">%s</span><span class="s">&lt;/lon&gt;&lt;lat&gt;</span><span class="si">%s</span><span class="s">&lt;/lat&gt;&#39;</span> \
+                <span class="s">&#39;&lt;/coordinates&gt;&lt;ID&gt;</span><span class="si">%s</span><span class="s">&lt;/ID&gt;&lt;country&gt;</span><span class="si">%s</span><span class="s">&lt;/country&gt;&lt;/Location&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lon</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">__lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ID</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">__country</span><span class="p">)</span>
+    </div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Redefine __str__ hook for pretty-printing of Location instances&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;[Location: name=</span><span class="si">%s</span><span class="s"> lon=</span><span class="si">%s</span><span class="s"> lat=</span><span class="si">%s</span><span class="s"> ID=</span><span class="si">%s</span><span class="s"> country=</span><span class="si">%s</span><span class="s">]&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">),</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">__lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lat</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">__ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__country</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

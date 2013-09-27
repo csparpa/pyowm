@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.weather &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.weather</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing weather data classes and data structures.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">converter</span><span class="p">,</span> <span class="n">xmlutils</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
+
+<div class="viewcode-block" id="Weather"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather">[docs]</a><span class="k">class</span> <span class="nc">Weather</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class encapsulating raw weather data.    </span>
+<span class="sd">    A reference about OWM weather codes and icons can be found at </span>
+<span class="sd">    http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes</span>
+<span class="sd">    </span>
+<span class="sd">    :param reference_time: GMT UNIX time of weather measurement</span>
+<span class="sd">    :type reference_time: long</span>
+<span class="sd">    :param sunset_time: GMT UNIX time of sunset</span>
+<span class="sd">    :type sunset_time: long</span>
+<span class="sd">    :param sunrise_time: GMT UNIX time of sunrise</span>
+<span class="sd">    :type sunrise_time: long</span>
+<span class="sd">    :param clouds: cloud coverage percentage</span>
+<span class="sd">    :type clouds: int</span>
+<span class="sd">    :param rain: precipitation info</span>
+<span class="sd">    :type rain: dict</span>
+<span class="sd">    :param snow: snow info</span>
+<span class="sd">    :type snow: dict</span>
+<span class="sd">    :param wind: wind info</span>
+<span class="sd">    :type wind: dict</span>
+<span class="sd">    :param humidity: atmospheric humidity percentage</span>
+<span class="sd">    :type humidity: int </span>
+<span class="sd">    :param pressure: atmospheric pressure info</span>
+<span class="sd">    :type pressure: dict</span>
+<span class="sd">    :param temperature: temperature info</span>
+<span class="sd">    :type temperature: dict</span>
+<span class="sd">    :param status: short weather status</span>
+<span class="sd">    :type status: Unicode</span>
+<span class="sd">    :param detailed_status: detailed weather status</span>
+<span class="sd">    :type detailed_status: Unicode</span>
+<span class="sd">    :param weather_code: OWM weather condition code</span>
+<span class="sd">    :type weather_code: int</span>
+<span class="sd">    :param weather_icon_name: weather-related icon name</span>
+<span class="sd">    :type weather_icon_name: Unicode    </span>
+<span class="sd">    :returns:  a *Weather* instance</span>
+<span class="sd">    :raises: *ValueError* when negative values are provided</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_time</span><span class="p">,</span> <span class="n">sunset_time</span><span class="p">,</span> <span class="n">sunrise_time</span><span class="p">,</span> <span class="n">clouds</span><span class="p">,</span> <span class="n">rain</span><span class="p">,</span> 
+                 <span class="n">snow</span><span class="p">,</span> <span class="n">wind</span><span class="p">,</span> <span class="n">humidity</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> 
+                 <span class="n">detailed_status</span><span class="p">,</span> <span class="n">weather_code</span><span class="p">,</span> <span class="n">weather_icon_name</span><span class="p">):</span>        
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">reference_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">long</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">reference_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> \
+            <span class="s">&quot;&#39;reference_time&#39; must be an int/long&quot;</span>
+        <span class="k">if</span> <span class="nb">long</span><span class="p">(</span><span class="n">reference_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;reference_time&#39; must be greater than 0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__reference_time</span> <span class="o">=</span> <span class="nb">long</span><span class="p">(</span><span class="n">reference_time</span><span class="p">)</span>        
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">sunset_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">long</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">sunset_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> \
+            <span class="s">&quot;&#39;sunset_time&#39; must be a int/long&quot;</span>
+        <span class="k">if</span> <span class="nb">long</span><span class="p">(</span><span class="n">sunset_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;sunset_time&#39; must be greatear than 0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sunset_time</span> <span class="o">=</span> <span class="nb">long</span><span class="p">(</span><span class="n">sunset_time</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">sunrise_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">long</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">sunrise_time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> \
+            <span class="s">&quot;&#39;sunrise_time&#39; must be a int/long&quot;</span>
+        <span class="k">if</span> <span class="nb">long</span><span class="p">(</span><span class="n">sunrise_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;sunrise_time&#39; must be greatear than 0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sunrise_time</span> <span class="o">=</span> <span class="nb">long</span><span class="p">(</span><span class="n">sunrise_time</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">clouds</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> <span class="s">&quot;&#39;clouds&#39; must be an int&quot;</span>
+        <span class="k">if</span> <span class="n">clouds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;clouds&#39; must be greater than 0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__clouds</span> <span class="o">=</span> <span class="n">clouds</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">rain</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s">&quot;&#39;rain&#39; must be a dict&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rain</span> <span class="o">=</span> <span class="n">rain</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">snow</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s">&quot;&#39;snow&#39; must be a dict&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__snow</span> <span class="o">=</span> <span class="n">snow</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">wind</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s">&quot;&#39;wind&#39; must be a dict&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wind</span> <span class="o">=</span> <span class="n">wind</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">humidity</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> <span class="s">&quot;&#39;humidity&#39; must be an int&quot;</span>
+        <span class="k">if</span> <span class="n">humidity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;humidity&#39; must be greatear than 0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__humidity</span> <span class="o">=</span> <span class="n">humidity</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s">&quot;&#39;pressure&#39; must be a dict&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span> <span class="o">=</span> <span class="n">pressure</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s">&quot;&#39;temperature&#39; must be a dict&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">unicode</span><span class="p">,</span> <span class="s">&quot;&#39;status&#39; must be a Unicode str&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">detailed_status</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">unicode</span><span class="p">,</span> <span class="s">&quot;&#39;detailed_status&#39; must be a Unicode str&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__detailed_status</span> <span class="o">=</span> <span class="n">detailed_status</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">weather_code</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> <span class="s">&quot;&#39;weather_code&#39; must be an int&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__weather_code</span> <span class="o">=</span> <span class="n">weather_code</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">weather_icon_name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">unicode</span><span class="p">,</span> <span class="s">&quot;&#39;iconName&#39; must be a Unicode str&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__weather_icon_name</span> <span class="o">=</span> <span class="n">weather_icon_name</span>
+
+        
+<div class="viewcode-block" id="Weather.get_reference_time"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_reference_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeformat</span><span class="o">=</span><span class="s">&#39;unix&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the GMT time telling when the weather was measured</span>
+<span class="sd">    </span>
+<span class="sd">        :param timeformat: the format for the time value. May be: </span>
+<span class="sd">            &#39;*unix*&#39; (default) for UNIX time or &#39;*iso*&#39; for ISO8601-formatted</span>
+<span class="sd">            string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeformat: str</span>
+<span class="sd">        :returns: a long or a str</span>
+<span class="sd">        :raises: ValueError when negative values are provided</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;unix&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reference_time</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;iso&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__reference_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;format&#39;&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_sunset_time"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_sunset_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_sunset_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeformat</span><span class="o">=</span><span class="s">&#39;unix&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the GMT time of sunset</span>
+<span class="sd">    </span>
+<span class="sd">        :param timeformat: the format for the time value. May be: </span>
+<span class="sd">            &#39;*unix*&#39; (default) for UNIX time or &#39;*iso*&#39; for ISO8601-formatted</span>
+<span class="sd">            string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeformat: str</span>
+<span class="sd">        :returns: a long or a str</span>
+<span class="sd">        :raises: ValueError</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;unix&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunset_time</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;iso&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sunset_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;format&#39;&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_sunrise_time"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_sunrise_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_sunrise_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeformat</span><span class="o">=</span><span class="s">&#39;unix&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the GMT time of sunrise</span>
+<span class="sd">    </span>
+<span class="sd">        :param timeformat: the format for the time value. May be: </span>
+<span class="sd">            &#39;*unix*&#39; (default) for UNIX time or &#39;*iso*&#39; for ISO8601-formatted</span>
+<span class="sd">            string in the format ``YYYY-MM-DD HH:MM:SS+00``</span>
+<span class="sd">        :type timeformat: str</span>
+<span class="sd">        :returns: a long or a str</span>
+<span class="sd">        :raises: ValueError</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;unix&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunrise_time</span>
+        <span class="k">if</span> <span class="n">timeformat</span> <span class="o">==</span> <span class="s">&#39;iso&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">UNIXtime_to_ISO8601</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sunrise_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;format&#39;&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_clouds"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_clouds">[docs]</a>    <span class="k">def</span> <span class="nf">get_clouds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the cloud coverage percentage as an int</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the cloud coverage percentage</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__clouds</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_rain"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_rain">[docs]</a>    <span class="k">def</span> <span class="nf">get_rain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dict containing precipitation info</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a dict containing rain info</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rain</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_snow"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_snow">[docs]</a>    <span class="k">def</span> <span class="nf">get_snow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dict containing snow info</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a dict containing snow info</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__snow</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_wind"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_wind">[docs]</a>    <span class="k">def</span> <span class="nf">get_wind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dict containing wind info</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a dict containing wind info</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wind</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_humidity"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_humidity">[docs]</a>    <span class="k">def</span> <span class="nf">get_humidity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the atmospheric humidity as an int</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the humidity</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__humidity</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_pressure"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_pressure">[docs]</a>    <span class="k">def</span> <span class="nf">get_pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dict containing atmospheric pressure info</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: a dict containing pressure info</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_temperature"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;kelvin&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dict with temperature info</span>
+<span class="sd">    </span>
+<span class="sd">        :param unit: the unit of measure for the temperature values. May be: </span>
+<span class="sd">            &#39;*kelvin*&#39; (default), &#39;*celsius*&#39; or &#39;*fahrenheit*&#39;</span>
+<span class="sd">        :type unit: str</span>
+<span class="sd">        :returns: a dict containing temperature values.</span>
+<span class="sd">        :raises: ValueError</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s">&#39;kelvin&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s">&#39;celsius&#39;</span><span class="p">:</span>
+            <span class="n">helper</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">converter</span><span class="o">.</span><span class="n">kelvin_to_celsius</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">x</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">item</span><span class="p">,</span> <span class="n">helper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">[</span><span class="n">item</span><span class="p">]))</span> 
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s">&#39;fahrenheit&#39;</span><span class="p">:</span>
+            <span class="n">helper</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">converter</span><span class="o">.</span><span class="n">kelvin_to_fahrenheit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">x</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">item</span><span class="p">,</span> <span class="n">helper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">[</span><span class="n">item</span><span class="p">]))</span> 
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid value for parameter &#39;unit&#39;&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_status"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the short weather status as a Unicode string</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the short weather status</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__status</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_detailed_status"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_detailed_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_detailed_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the detailed weather status as a Unicode string</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the detailed weather status</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__detailed_status</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_weather_code"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_weather_code">[docs]</a>    <span class="k">def</span> <span class="nf">get_weather_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the OWM weather condition code as an int</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the OWM weather condition code</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather_code</span>
+
+</div>
+<div class="viewcode-block" id="Weather.get_weather_icon_name"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.get_weather_icon_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_weather_icon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns weather-related icon name as a Unicode string.</span>
+<span class="sd">    </span>
+<span class="sd">        :returns: the icon name.</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather_icon_name</span>
+        </div>
+<div class="viewcode-block" id="Weather.to_JSON"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.to_JSON">[docs]</a>    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dumps object fields into a JSON formatted string</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the JSON string</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">({</span> <span class="s">&#39;reference_time&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reference_time</span><span class="p">,</span> 
+                      <span class="s">&#39;sunset_time&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunset_time</span><span class="p">,</span>
+                      <span class="s">&#39;sunrise_time&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunrise_time</span><span class="p">,</span> <span class="s">&#39;clouds&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__clouds</span><span class="p">,</span>
+                      <span class="s">&#39;rain&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rain</span><span class="p">,</span> <span class="s">&#39;snow&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__snow</span><span class="p">,</span> <span class="s">&#39;wind&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wind</span><span class="p">,</span>
+                      <span class="s">&#39;humidity&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__humidity</span><span class="p">,</span> <span class="s">&#39;pressure&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span><span class="p">,</span>
+                      <span class="s">&#39;temperature&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">,</span> <span class="s">&#39;status&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__status</span><span class="p">,</span>
+                      <span class="s">&#39;detailed_status&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__detailed_status</span><span class="p">,</span>
+                      <span class="s">&#39;weather_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather_code</span><span class="p">,</span>
+                      <span class="s">&#39;weather_icon_name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather_icon_name</span> <span class="p">})</span>
+        </div>
+<div class="viewcode-block" id="Weather.to_XML"><a class="viewcode-back" href="../../pyowm.html#pyowm.weather.Weather.to_XML">[docs]</a>    <span class="k">def</span> <span class="nf">to_XML</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dumps object fields into a XML formatted string</span>
+<span class="sd">    </span>
+<span class="sd">        :returns:  the XML string</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;Weather&gt;&lt;status&gt;</span><span class="si">%s</span><span class="s">&lt;/status&gt;&lt;weather_code&gt;</span><span class="si">%s</span><span class="s">&lt;/weather_code&gt;&lt;rain&gt;&#39;</span> \
+            <span class="s">&#39;</span><span class="si">%s</span><span class="s">&lt;/rain&gt;&lt;snow&gt;</span><span class="si">%s</span><span class="s">&lt;/snow&gt;&lt;pressure&gt;</span><span class="si">%s</span><span class="s">&lt;/pressure&gt;&lt;sunrise_time&gt;</span><span class="si">%s</span><span class="s">&#39;</span> \
+            <span class="s">&#39;&lt;/sunrise_time&gt;&lt;weather_icon_name&gt;</span><span class="si">%s</span><span class="s">&lt;/weather_icon_name&gt;&lt;clouds&gt;</span><span class="si">%s</span><span class="s">&#39;</span> \
+            <span class="s">&#39;&lt;/clouds&gt;&lt;temperature&gt;</span><span class="si">%s</span><span class="s">&lt;/temperature&gt;&lt;detailed_status&gt;</span><span class="si">%s</span><span class="s">&#39;</span> \
+            <span class="s">&#39;&lt;/detailed_status&gt;&lt;reference_time&gt;</span><span class="si">%s</span><span class="s">&lt;/reference_time&gt;&lt;sunset_time&gt;</span><span class="si">%s</span><span class="s">&#39;</span> \
+            <span class="s">&#39;&lt;/sunset_time&gt;&lt;humidity&gt;</span><span class="si">%s</span><span class="s">&lt;/humidity&gt;&lt;wind&gt;</span><span class="si">%s</span><span class="s">&lt;/wind&gt;&lt;/Weather&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather_code</span><span class="p">,</span>
+                <span class="n">xmlutils</span><span class="o">.</span><span class="n">dict_to_XML</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rain</span><span class="p">),</span><span class="n">xmlutils</span><span class="o">.</span><span class="n">dict_to_XML</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__snow</span><span class="p">),</span>
+                <span class="n">xmlutils</span><span class="o">.</span><span class="n">dict_to_XML</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunrise_time</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__weather_icon_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__clouds</span><span class="p">,</span> 
+                <span class="n">xmlutils</span><span class="o">.</span><span class="n">dict_to_XML</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__detailed_status</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__reference_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunset_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__humidity</span><span class="p">,</span>
+                <span class="n">xmlutils</span><span class="o">.</span><span class="n">dict_to_XML</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wind</span><span class="p">))</span>
+    </div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Redefine __str__ hook for pretty-printing of Weather instances&quot;&quot;&quot;</span>
+        <span class="n">prop_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;reference_time&quot;</span><span class="p">,</span><span class="s">&quot;sunset_time&quot;</span><span class="p">,</span><span class="s">&quot;sunrise_time&quot;</span><span class="p">,</span><span class="s">&quot;clouds&quot;</span><span class="p">,</span>
+                      <span class="s">&quot;rain&quot;</span><span class="p">,</span><span class="s">&quot;snow&quot;</span><span class="p">,</span><span class="s">&quot;wind&quot;</span><span class="p">,</span><span class="s">&quot;humidity&quot;</span><span class="p">,</span><span class="s">&quot;pressure&quot;</span><span class="p">,</span><span class="s">&quot;temperature&quot;</span><span class="p">,</span>
+                      <span class="s">&quot;status&quot;</span><span class="p">,</span><span class="s">&quot;detailed_status&quot;</span><span class="p">,</span><span class="s">&quot;weather_code&quot;</span><span class="p">,</span><span class="s">&quot;weather_icon_name&quot;</span><span class="p">]</span>
+        <span class="n">prop_values</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__reference_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunset_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sunrise_time</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">__clouds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__snow</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__humidity</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__status</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">),</span> 
+                 <span class="bp">self</span><span class="o">.</span><span class="n">__detailed_status</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weather_code</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">__weather_icon_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)]</span>
+        <span class="n">string_prop_values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prop_values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s">&quot;[Weather:</span><span class="se">\n</span><span class="s">  &quot;</span><span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">  &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="s">&quot;: &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name</span><span class="p">,</span><span class="n">value</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span> \
+                                        <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">prop_names</span><span class="p">,</span><span class="n">string_prop_values</span><span class="p">)])</span><span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">]&quot;</span>
+    </div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

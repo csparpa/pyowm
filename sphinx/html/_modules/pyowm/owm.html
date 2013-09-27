@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.owm &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.owm</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing the PyOWM library main entry point</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">OWM_API_VERSION</span><span class="p">,</span> <span class="n">PYOWM_VERSION</span><span class="p">,</span> <span class="n">OBSERVATION_URL</span><span class="p">,</span> \
+    <span class="n">FIND_OBSERVATIONS_URL</span><span class="p">,</span> <span class="n">THREE_HOURS_FORECAST_URL</span><span class="p">,</span> <span class="n">DAILY_FORECAST_URL</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">httputils</span><span class="p">,</span> <span class="n">jsonparser</span>
+<span class="kn">from</span> <span class="nn">forecaster</span> <span class="kn">import</span> <span class="n">Forecaster</span>
+
+<div class="viewcode-block" id="OWM"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM">[docs]</a><span class="k">class</span> <span class="nc">OWM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A global facade class representing the OWM web API. Every query to the API</span>
+<span class="sd">    is done programmatically via an instance of this class, and can be optionally</span>
+<span class="sd">    sent with an OWM API key (references can be found at http://openweathermap.org/appid)</span>
+<span class="sd">    </span>
+<span class="sd">    :param API_key: An OWM API key value</span>
+<span class="sd">    :type API_key: string (defaults to ``None``)</span>
+<span class="sd">    :returns: an *OWM* instance</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">API_key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">API_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">API_key</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">,</span> <span class="s">&quot;If provided, &#39;API_key&#39; must be a str&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span> <span class="o">=</span> <span class="n">API_key</span>  
+
+<div class="viewcode-block" id="OWM.get_API_key"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.get_API_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_API_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the OWM API key</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the OWM API key string</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span>
+</div>
+<div class="viewcode-block" id="OWM.set_API_key"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.set_API_key">[docs]</a>    <span class="k">def</span> <span class="nf">set_API_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">API_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the OWM API key</span>
+<span class="sd">        </span>
+<span class="sd">        :param API_key: the new value for the OWM API key</span>
+<span class="sd">        :type API_key: str</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span> <span class="o">=</span> <span class="n">API_key</span>    
+    </div>
+<div class="viewcode-block" id="OWM.get_API_version"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.get_API_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_API_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the currently supported OWM web API version</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the OWM web API version string</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">OWM_API_VERSION</span>
+    </div>
+<div class="viewcode-block" id="OWM.get_version"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.get_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the current version of the PyOWM library</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the current PyOWM library version string</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PYOWM_VERSION</span>
+
+
+    <span class="c"># Main OWM web API querying methods</span>
+</div>
+<div class="viewcode-block" id="OWM.weather_at"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.weather_at">[docs]</a>    <span class="k">def</span> <span class="nf">weather_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the OWM web API for the currently observed weather at the </span>
+<span class="sd">        specified toponym (eg: &quot;London,uk&quot;)</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: the location&#39;s toponym</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :returns: an *Observation* instance or ``None`` if no weather data is</span>
+<span class="sd">            available</span>
+<span class="sd">        :raises: *ParseResponseException* when OWM web API responses&#39; data cannot</span>
+<span class="sd">            be parsed or *APICallException* when OWM web API can not be reached</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">,</span> <span class="s">&quot;&#39;name&#39; must be a str&quot;</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">httputils</span><span class="o">.</span><span class="n">call_API</span><span class="p">(</span><span class="n">OBSERVATION_URL</span><span class="p">,</span> 
+                                       <span class="p">{</span><span class="s">&#39;q&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span> <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonparser</span><span class="o">.</span><span class="n">parse_observation</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+
+    </div>
+<div class="viewcode-block" id="OWM.weather_at_coords"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.weather_at_coords">[docs]</a>    <span class="k">def</span> <span class="nf">weather_at_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the OWM web API for the currently observed weather at the </span>
+<span class="sd">        specified geographic (eg: -0.107331,51.503614).</span>
+<span class="sd">        </span>
+<span class="sd">        :param lon: the location&#39;s longitude, must be between -180.0 and 180.0</span>
+<span class="sd">        :type lon: int/float</span>
+<span class="sd">        :param lat: the location&#39;s latitude, must be between -90.0 and 90.0</span>
+<span class="sd">        :type lat: int/float</span>
+<span class="sd">        :returns: an *Observation* instance or ``None`` if no weather data is</span>
+<span class="sd">            available</span>
+<span class="sd">        :raises: *ParseResponseException* when OWM web API responses&#39; data cannot</span>
+<span class="sd">            be parsed or *APICallException* when OWM web API can not be reached</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span><span class="s">&quot;&#39;lon&#39; must be a float&quot;</span>
+        <span class="k">if</span> <span class="n">lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">180.0</span> <span class="ow">or</span> <span class="n">lon</span> <span class="o">&gt;</span> <span class="mf">180.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;lon&#39; value must be between -180 and 180&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span><span class="s">&quot;&#39;lat&#39; must be a float&quot;</span>
+        <span class="k">if</span> <span class="n">lat</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">90.0</span> <span class="ow">or</span> <span class="n">lat</span> <span class="o">&gt;</span> <span class="mf">90.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;lat&#39; value must be between -90 and 90&quot;</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">httputils</span><span class="o">.</span><span class="n">call_API</span><span class="p">(</span><span class="n">OBSERVATION_URL</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;lon&#39;</span><span class="p">:</span> <span class="n">lon</span><span class="p">,</span> <span class="s">&#39;lat&#39;</span><span class="p">:</span> <span class="n">lat</span><span class="p">},</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonparser</span><span class="o">.</span><span class="n">parse_observation</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="OWM.find_weather_by_name"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.find_weather_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">find_weather_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">searchtype</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the OWM web API for the currently observed weather in all the </span>
+<span class="sd">        locations whose name is matching the specified text search parameters.</span>
+<span class="sd">        A twofold search can be issued: *&#39;accurate&#39;* (exact matching) and </span>
+<span class="sd">        *&#39;like&#39;* (matches names that are similar to the supplied pattern).</span>
+<span class="sd">        </span>
+<span class="sd">        :param pattern: the string pattern (not a regex) to be searched for the </span>
+<span class="sd">            toponym</span>
+<span class="sd">        :type pattern: str</span>
+<span class="sd">        :param searchtype: the search mode to be used, must be *&#39;accurate&#39;* for </span>
+<span class="sd">          an exact matching or *&#39;like&#39;* for a likelihood matching</span>
+<span class="sd">        :type: searchtype: str </span>
+<span class="sd">        :param limit: the maximum number of *Observation* items in the returned</span>
+<span class="sd">            list (default is ``None``, which stands for any number of items)</span>
+<span class="sd">        :param limit: int or ``None``</span>
+<span class="sd">        :returns: a list of *Observation* objects or ``None`` if no weather data</span>
+<span class="sd">            is available</span>
+<span class="sd">        :raises: *ParseResponseException* when OWM web API responses&#39; data cannot</span>
+<span class="sd">            be parsed, *APICallException* when OWM web API can not be reached,</span>
+<span class="sd">            *ValueError* when bad value is supplied for the search type or the</span>
+<span class="sd">            maximum number of items retrieved</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s">&quot;&#39;pattern&#39; must be a str&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">searchtype</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s">&quot;&#39;searchtype&#39; must be a str&quot;</span>
+        <span class="k">if</span> <span class="n">searchtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s">&quot;accurate&quot;</span> <span class="ow">and</span> <span class="n">searchtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s">&quot;like&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;searchtype&#39; value must be &#39;accurate&#39; or &#39;like&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s">&quot;&#39;limit&#39; must be an int or None&quot;</span>
+            <span class="k">if</span> <span class="n">limit</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;limit&#39; must be None or greater than zero&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;q&#39;</span><span class="p">:</span> <span class="n">pattern</span><span class="p">,</span> <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">searchtype</span><span class="p">}</span>        
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;cnt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">limit</span><span class="o">-</span><span class="mi">1</span> <span class="c"># -1 is needed to fix a bug of the OWM API!</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">httputils</span><span class="o">.</span><span class="n">call_API</span><span class="p">(</span><span class="n">FIND_OBSERVATIONS_URL</span><span class="p">,</span> 
+           <span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonparser</span><span class="o">.</span><span class="n">parse_search_results</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="OWM.find_weather_by_coords"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.find_weather_by_coords">[docs]</a>    <span class="k">def</span> <span class="nf">find_weather_by_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the OWM web API for the currently observed weather in all the </span>
+<span class="sd">        locations in the proximity of the specified coordinates.</span>
+<span class="sd">        </span>
+<span class="sd">        :param lon: location&#39;s longitude, must be between -180.0 and 180.0</span>
+<span class="sd">        :type lon: int/float</span>
+<span class="sd">        :param lat: location&#39;s latitude, must be between -90.0 and 90.0</span>
+<span class="sd">        :type lat: int/float</span>
+<span class="sd">        :param limit: the maximum number of *Observation* items in the returned</span>
+<span class="sd">            list (default is ``None``, which stands for any number of items)</span>
+<span class="sd">        :param limit: int or ``None``</span>
+<span class="sd">        :returns: a list of *Observation* objects or ``None`` if no weather data</span>
+<span class="sd">            is available</span>
+<span class="sd">        :raises: *ParseResponseException* when OWM web API responses&#39; data cannot</span>
+<span class="sd">            be parsed, *APICallException* when OWM web API can not be reached,</span>
+<span class="sd">            *ValueError* when coordinates values are out of bounds or negative</span>
+<span class="sd">            values are provided for limit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span><span class="s">&quot;&#39;lon&#39; must be a float&quot;</span>
+        <span class="k">if</span> <span class="n">lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">180.0</span> <span class="ow">or</span> <span class="n">lon</span> <span class="o">&gt;</span> <span class="mf">180.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;lon&#39; value must be between -180 and 180&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span><span class="s">&quot;&#39;lat&#39; must be a float&quot;</span>
+        <span class="k">if</span> <span class="n">lat</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">90.0</span> <span class="ow">or</span> <span class="n">lat</span> <span class="o">&gt;</span> <span class="mf">90.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;lat&#39; value must be between -90 and 90&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;lon&#39;</span><span class="p">:</span> <span class="n">lon</span><span class="p">,</span> <span class="s">&#39;lat&#39;</span><span class="p">:</span> <span class="n">lat</span><span class="p">}</span>        
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s">&quot;&#39;limit&#39; must be an int or None&quot;</span>
+            <span class="k">if</span> <span class="n">limit</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;limit&#39; must be None or greater than zero&quot;</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;cnt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">limit</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">httputils</span><span class="o">.</span><span class="n">call_API</span><span class="p">(</span><span class="n">FIND_OBSERVATIONS_URL</span><span class="p">,</span> 
+           <span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonparser</span><span class="o">.</span><span class="n">parse_search_results</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="OWM.three_hours_forecast"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.three_hours_forecast">[docs]</a>    <span class="k">def</span> <span class="nf">three_hours_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the OWM web API for three hours weather forecast for the specified </span>
+<span class="sd">        location (eg: &quot;London,uk&quot;). A *Forecaster* object is returned, containing</span>
+<span class="sd">        a *Forecast* instance covering a global streak of five days: this instance</span>
+<span class="sd">        encapsulates *Weather* objects, with a time interval of three hours one</span>
+<span class="sd">        from each other</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: the location&#39;s toponym</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :returns: a *Forecaster* instance or ``None`` if forecast data is not</span>
+<span class="sd">            available for the specified location</span>
+<span class="sd">        :raises: *ParseResponseException* when OWM web API responses&#39; data cannot</span>
+<span class="sd">            be parsed, *APICallException* when OWM web API can not be reached</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">,</span> <span class="s">&quot;&#39;name&#39; must be a str&quot;</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">httputils</span><span class="o">.</span><span class="n">call_API</span><span class="p">(</span><span class="n">THREE_HOURS_FORECAST_URL</span><span class="p">,</span> 
+                                       <span class="p">{</span><span class="s">&#39;q&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span> <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span><span class="p">)</span>
+        <span class="n">forecast</span> <span class="o">=</span> <span class="n">jsonparser</span><span class="o">.</span><span class="n">parse_forecast</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">forecast</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Forecaster</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+    </div>
+<div class="viewcode-block" id="OWM.daily_forecast"><a class="viewcode-back" href="../../pyowm.html#pyowm.owm.OWM.daily_forecast">[docs]</a>    <span class="k">def</span> <span class="nf">daily_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the OWM web API for daily weather forecast for the specified </span>
+<span class="sd">        location (eg: &quot;London,uk&quot;). A *Forecaster* object is returned, containing</span>
+<span class="sd">        a *Forecast* instance covering a global streak of fourteen days by default:</span>
+<span class="sd">        this instance encapsulates *Weather* objects, with a time interval of one</span>
+<span class="sd">        day one from each other</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: the location&#39;s toponym</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param limit: the maximum number of daily *Weather* items to be retrieved</span>
+<span class="sd">            (default is ``None``, which stands for any number of items)</span>
+<span class="sd">        :type limit: int or ``None``</span>
+<span class="sd">        :returns: a *Forecaster* instance or ``None`` if forecast data is not</span>
+<span class="sd">            available for the specified location</span>
+<span class="sd">        :raises: *ParseResponseException* when OWM web API responses&#39; data cannot</span>
+<span class="sd">            be parsed, *APICallException* when OWM web API can not be reached,</span>
+<span class="sd">            *ValueError* if negative values are supplied for limit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">,</span> <span class="s">&quot;&#39;name&#39; must be a str&quot;</span>
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s">&quot;&#39;limit&#39; must be an int or None&quot;</span>
+            <span class="k">if</span> <span class="n">limit</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;limit&#39; must be None or greater than zero&quot;</span><span class="p">)</span>
+            
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;q&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>        
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;cnt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">limit</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">httputils</span><span class="o">.</span><span class="n">call_API</span><span class="p">(</span><span class="n">DAILY_FORECAST_URL</span><span class="p">,</span> 
+                                       <span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__API_key</span><span class="p">)</span>
+        <span class="n">forecast</span> <span class="o">=</span> <span class="n">jsonparser</span><span class="o">.</span><span class="n">parse_forecast</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">forecast</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Forecaster</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

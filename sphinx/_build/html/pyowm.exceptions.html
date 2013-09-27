@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.exceptions package &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="index.html" />
+    <link rel="up" title="pyowm package" href="pyowm.html" />
+    <link rel="next" title="pyowm.utils package" href="pyowm.utils.html" />
+    <link rel="prev" title="pyowm package" href="pyowm.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyowm.utils.html" title="pyowm.utils package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyowm.html" title="pyowm package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="pyowm.html" accesskey="U">pyowm package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyowm-exceptions-package">
+<h1>pyowm.exceptions package<a class="headerlink" href="#pyowm-exceptions-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyowm.exceptions.api_call_error">
+<span id="pyowm-exceptions-api-call-error-module"></span><h2>pyowm.exceptions.api_call_error module<a class="headerlink" href="#module-pyowm.exceptions.api_call_error" title="Permalink to this headline">¶</a></h2>
+<p>Module containing APICallError class</p>
+<dl class="exception">
+<dt id="pyowm.exceptions.api_call_error.APICallError">
+<em class="property">exception </em><tt class="descclassname">pyowm.exceptions.api_call_error.</tt><tt class="descname">APICallError</tt><big>(</big><em>message</em>, <em>triggering_error=None</em><big>)</big><a class="reference internal" href="_modules/pyowm/exceptions/api_call_error.html#APICallError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.exceptions.api_call_error.APICallError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Error class that represents failures when invoking OWM web API, in example
+due to network errors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message</strong> (<em>str</em>) &#8211; the message of the error</li>
+<li><strong>triggering_error</strong> (an <em>Exception</em> subtype) &#8211; optional <em>Exception</em> object that triggered this error 
+(defaults to <tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyowm.exceptions.api_response_error">
+<span id="pyowm-exceptions-api-response-error-module"></span><h2>pyowm.exceptions.api_response_error module<a class="headerlink" href="#module-pyowm.exceptions.api_response_error" title="Permalink to this headline">¶</a></h2>
+<p>Module containing APIResponseError class</p>
+<dl class="exception">
+<dt id="pyowm.exceptions.api_response_error.APIResponseError">
+<em class="property">exception </em><tt class="descclassname">pyowm.exceptions.api_response_error.</tt><tt class="descname">APIResponseError</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="_modules/pyowm/exceptions/api_response_error.html#APIResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.exceptions.api_response_error.APIResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Error class that represents HTTP error status codes in OWM web API responses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cause</strong> (<em>str</em>) &#8211; the message of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <em>APIResponseError</em> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyowm.exceptions.parse_response_error">
+<span id="pyowm-exceptions-parse-response-error-module"></span><h2>pyowm.exceptions.parse_response_error module<a class="headerlink" href="#module-pyowm.exceptions.parse_response_error" title="Permalink to this headline">¶</a></h2>
+<p>Module containing ParseResponseError class</p>
+<dl class="exception">
+<dt id="pyowm.exceptions.parse_response_error.ParseResponseError">
+<em class="property">exception </em><tt class="descclassname">pyowm.exceptions.parse_response_error.</tt><tt class="descname">ParseResponseError</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="_modules/pyowm/exceptions/parse_response_error.html#ParseResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.exceptions.parse_response_error.ParseResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Error class that represents failures when parsing payload data in HTTP 
+responses sent by the OWM web API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cause</strong> (<em>str</em>) &#8211; the message of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <em>ParseResponseError</em> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyowm.exceptions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyowm.exceptions" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyowm.exceptions package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-pyowm.exceptions.api_call_error">pyowm.exceptions.api_call_error module</a></li>
+<li><a class="reference internal" href="#module-pyowm.exceptions.api_response_error">pyowm.exceptions.api_response_error module</a></li>
+<li><a class="reference internal" href="#module-pyowm.exceptions.parse_response_error">pyowm.exceptions.parse_response_error module</a></li>
+<li><a class="reference internal" href="#module-pyowm.exceptions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pyowm.html"
+                        title="previous chapter">pyowm package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pyowm.utils.html"
+                        title="next chapter">pyowm.utils package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/pyowm.exceptions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyowm.utils.html" title="pyowm.utils package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyowm.html" title="pyowm package"
+             >previous</a> |</li>
+        <li><a href="index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="pyowm.html" >pyowm package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

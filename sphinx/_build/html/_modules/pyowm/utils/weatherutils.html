@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyowm.utils.weatherutils &mdash; pyowm  documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="pyowm  documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pyowm.utils.weatherutils</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Search and filter utilities for Weather lists management</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="status_matches_any"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.status_matches_any">[docs]</a><span class="k">def</span> <span class="nf">status_matches_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if one or more words in a given list is contained into the</span>
+<span class="sd">    detailed weather statuses of a Weather object</span>
+<span class="sd">    </span>
+<span class="sd">    word_list - list of str</span>
+<span class="sd">    weather - Weather object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">detailed_status</span> <span class="o">=</span> <span class="n">weather</span><span class="o">.</span><span class="n">get_detailed_status</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">detailed_status</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="statuses_match_any"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.statuses_match_any">[docs]</a><span class="k">def</span> <span class="nf">statuses_match_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if one or more of the detailed statuses of the Weather objects </span>
+<span class="sd">    into the given list contain at least one of the words in the given word </span>
+<span class="sd">    list</span>
+<span class="sd">    </span>
+<span class="sd">    word_list - list of str</span>
+<span class="sd">    weather_list - list of Weather objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weather_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">status_matches_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">False</span>
+        </div>
+<div class="viewcode-block" id="filter_by_matching_statuses"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.filter_by_matching_statuses">[docs]</a><span class="k">def</span> <span class="nf">filter_by_matching_statuses</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a sublist of the given list of Weather objects, whose items</span>
+<span class="sd">    have at least one of the words in the given list as part of their</span>
+<span class="sd">    detailed statuses</span>
+<span class="sd">    </span>
+<span class="sd">    word_list - list of str</span>
+<span class="sd">    weather_list - list of Weather objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weather_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">status_matches_any</span><span class="p">(</span><span class="n">word_list</span><span class="p">,</span> <span class="n">weather</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weather</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="find_closest_weather"><a class="viewcode-back" href="../../../pyowm.utils.html#pyowm.utils.weatherutils.find_closest_weather">[docs]</a><span class="k">def</span> <span class="nf">find_closest_weather</span><span class="p">(</span><span class="n">weather_list</span><span class="p">,</span> <span class="n">unixtime</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extracts from the provided list of Weather objects the one which is</span>
+<span class="sd">    closest in time to the provided unixtime</span>
+<span class="sd">    </span>
+<span class="sd">    weather_list - list of Weather objects</span>
+<span class="sd">    unixtime - UNIXtime (long)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weather_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">time_distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">closest_weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">unixtime</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">weather</span> <span class="ow">in</span> <span class="n">weather_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">unixtime</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">time_distance</span><span class="p">:</span>
+            <span class="n">time_distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">weather</span><span class="o">.</span><span class="n">get_reference_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">unixtime</span><span class="p">)</span>
+            <span class="n">closest_weather</span> <span class="o">=</span> <span class="n">weather</span>
+    <span class="k">return</span> <span class="n">closest_weather</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">pyowm  documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Claudio Sparpaglione (@csparpa).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
