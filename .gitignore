@@ -1,6 +1,5 @@
 *.pyc
-*.py~
-*.md~
+*~
 build/*
 bin/*
 dist/*
