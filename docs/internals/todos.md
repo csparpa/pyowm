@@ -3,21 +3,20 @@ TODOs
 
 Code
 ----
-+ Implement remaining features
++ Implement features 7, 8
 + (eventual) Provide utilities for human-friendly OWM data handling in separate
-   project: 
+   project:
     - find current weather for my position (geolocate IP?)
     - find forecasts for my position (geolocate IP?)
 
 Test
 ----
 + Test features on different platforms (Linux, MacOS, Win)
-+ Test features on Python 3.x and 2.0+
++ Test features on Python 3.x and 2.0+ (virtualenv)
 
 Docs
 ----
-+ Write wiki with library API
-+ Write better documentation in code (http://raxcloud.blogspot.it/2013/02/documenting-python-code-using-sphinx.html)
++ Write wiki
 + Explain internals:
     + class diagram
     + explain pywom design choices (eg: names usage, why end users do not deal
@@ -26,5 +25,5 @@ Docs
 Various
 -------
 + Sponsorize (FB, Linkedin, blog)
-+ (eventual) Provide XML schemas
++ (eventual) Provide XML DTDs
 + (eventual) Upload egg to cheeseshop or similars

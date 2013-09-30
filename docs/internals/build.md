@@ -23,7 +23,7 @@ First install Sphinx:
 
     $> easy_install sphinx
 
-The setup the docs folder: move to the main project folder and issue
+Then setup the docs folder: move to the main project folder and launch
 
     $> mkdir sphinx
     $> sphinx-apidoc -A "<authorname>" -F -o sphinx pyowm/
@@ -33,7 +33,7 @@ Modify the sphinx/conf.py file by adding/uncommenting this line:
 
     sys.path.insert(0, os.path.abspath('..'))
 
-Now you are ready to generate HTML docs by issuing:
+Now you are ready to generate HTML docs by launching:
 
     $> cd sphinx/
     $> make html
