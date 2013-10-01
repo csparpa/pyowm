@@ -364,6 +364,73 @@ a HTTP status error</td>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pyowm.utils.timeutils">
+<span id="pyowm-utils-timeutils-module"></span><h2>pyowm.utils.timeutils module<a class="headerlink" href="#module-pyowm.utils.timeutils" title="Permalink to this headline">¶</a></h2>
+<p>Module containing utility functions for time values generation/management</p>
+<dl class="function">
+<dt id="pyowm.utils.timeutils.tomorrow">
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">tomorrow</tt><big>(</big><em>hour=17</em>, <em>minute=59</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#tomorrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.tomorrow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to tomorrow. The default
+value for optional parameters is the current value of hour and minute. I.e: 
+when called without specifying values for parameters, the resulting object
+will refer to the time = now + 24 hours; when called with only hour specified,
+the resulting object will refer to tomorrow at the specified hour and at
+the current minute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hour</strong> (<em>int</em>) &#8211; the hour for tomorrow, in the format <em>0-23</em> (defaults to 
+<tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+<li><strong>minute</strong> (<em>int</em>) &#8211; the minute for tomorrow, in the format <em>0-59</em> (defaults to 
+<tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ValueError</em> when hour or minute have bad values</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyowm.utils.timeutils.yesterday">
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">yesterday</tt><big>(</big><em>hour=17</em>, <em>minute=59</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#yesterday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.yesterday" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to yesterday. The default
+value for optional parameters is the current value of hour and minute. I.e: 
+when called without specifying values for parameters, the resulting object
+will refer to the time = now - 24 hours; when called with only hour specified,
+the resulting object will refer to yesterday at the specified hour and at
+the current minute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hour</strong> (<em>int</em>) &#8211; the hour for yesterday, in the format <em>0-23</em> (defaults to 
+<tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+<li><strong>minute</strong> (<em>int</em>) &#8211; the minute for yesterday, in the format <em>0-59</em> (defaults to 
+<tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ValueError</em> when hour or minute have bad values
+a</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pyowm.utils.weatherutils">
 <span id="pyowm-utils-weatherutils-module"></span><h2>pyowm.utils.weatherutils module<a class="headerlink" href="#module-pyowm.utils.weatherutils" title="Permalink to this headline">¶</a></h2>
 <p>Module containing search and filter utilities for <em>Weather</em> objects lists 
@@ -517,6 +584,7 @@ and nested dictionaries.
 <li><a class="reference internal" href="#module-pyowm.utils.converter">pyowm.utils.converter module</a></li>
 <li><a class="reference internal" href="#module-pyowm.utils.httputils">pyowm.utils.httputils module</a></li>
 <li><a class="reference internal" href="#module-pyowm.utils.jsonparser">pyowm.utils.jsonparser module</a></li>
+<li><a class="reference internal" href="#module-pyowm.utils.timeutils">pyowm.utils.timeutils module</a></li>
 <li><a class="reference internal" href="#module-pyowm.utils.weatherutils">pyowm.utils.weatherutils module</a></li>
 <li><a class="reference internal" href="#module-pyowm.utils.xmlutils">pyowm.utils.xmlutils module</a></li>
 <li><a class="reference internal" href="#module-pyowm.utils">Module contents</a></li>

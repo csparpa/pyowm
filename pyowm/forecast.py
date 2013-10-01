@@ -182,7 +182,10 @@ class Forecast(object):
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of Forecast instances"""
-        return "[Forecast:\n"+str(self.__location)+"\n"+str(self.__weather)+"\n]"
+        return "".join(["[Forecast:\n",
+                        str(self.__location), "\n",
+                        "".join([str(item)+'\n' for item in self.__weathers]),
+                        "\n]"])
     
     def __len__(self):
         """Redefine __len__ hook"""

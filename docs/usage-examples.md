@@ -24,15 +24,15 @@ Of course you can change your API Key at a later time if you need:
 Getting currently observed weather for a specific location
 ----------------------------------------------------------
 Querying for current weather is simple: provide an _OWM_ object with the location
-you want current the weather be looked up for and the job is done.
+you want the current weather be looked up for and the job is done.
 You can specify the location either by passing its toponym (eg: "London") or
 its geographic coordinates (lon/lat):
 
     obs = owm.weather_at('London,uk')                          # Toponym
     obs = owm.weather_at_coords(-0.107331,51.503614)           # Lon/lat
 
-A _Observation_ object will be returned, containing weather info about the first
-location matching the toponym/coordinates you provided. So be precise when
+A _Observation_ object will be returned, containing weather info about the 
+location matching the toponym/coordinates you provided. Be precise when
 specifying locations!
     
     
@@ -52,34 +52,34 @@ _limit_ parameter.
 Examples:
 
     # Find observed weather in all the "London"s in the world
-    list_of_obs = owm.find_weather_by_name('London',search='accurate')
+    obs_list = owm.find_weather_by_name('London', 'accurate')
     # As above but limit result items to 3
-    list_of_obs = owm.find_weather_by_name('London',search='accurate',limit=3)
+    obs_list = owm.find_weather_by_name('London',searchtype='accurate',limit=3)
     
     # Find observed weather for all the places whose name contains the word "London"
-    list_of_obs = owm.find_weather_by_name('London',search='like')
+    obs_list = owm.find_weather_by_name('London', 'like')
     # As above but limit result items to 5
-    list_of_obs = owm.find_weather_by_name('London',search='like',limit=5)
+    obs_list = owm.find_weather_by_name('London',searchtype='like', 5)
     
     # Find observed weather for all the places in the surroundings of lon=-2.15,lat=57
-    list_of_obs = owm.find_weather_by_coords({'lon':-2.15,'lat':57})
+    obs_list = owm.find_weather_by_coords(-2.15, 57)
     # As above but limit result items to 8
-    list_of_obs = owm.find_weather_by_coords({'lon':-2.15,'lat':57},limit=8)
+    obs_list = owm.find_weather_by_coords(-2.15, 57, limit=8)
 
 Getting data from Observation objects
 -------------------------------------
 
-_Observation_ objects encapsulate two useful objects: a _Weather_ object that
+_Observation_ objects stores two useful objects: a _Weather_ object that
 contains the weather-related data and a _Location_ object that describes the
-location for which the weather data are provided.
+location for which the weather data is provided.
 
 If you want to know when the weather observation data have been received, just
-issue:
+call:
 
-    >>> obs.get_reception_time()                           # UNIX UTC time
-	1379091600
+    >>> obs.get_reception_time()                           # UNIX GMT time
+    1379091600L
     >>> obs.get_reception_time(timeformat='iso')           # ISO 8601
-	2013-09-13 17:00:00+00
+    '2013-09-13 17:00:00+00'
 
 You can retrieve the _Weather_ object like this:
 
@@ -87,37 +87,37 @@ You can retrieve the _Weather_ object like this:
 
 and then access weather data using the following methods:
 
-    >> w.get_reference_time()                              # get time of observation in UTC UNIXtime
-    1377872206
+    >>> w.get_reference_time()                             # get time of observation in GMT UNIXtime
+    1377872206L
     >>> w.get_reference_time(timeformat='iso')             # ...or in ISO 8601
-    2013-08-30 14:16:46+00
+    '2013-08-30 14:16:46+00'
     
     >>> w.get_clouds()                                     # Get cloud coverage
-    12
+    65
     
     >>> w.get_rain()                                       # Get rain volume
-    {'3h':0}
+    {'3h': 0}
     
     >>> w.get_snow()                                       # Get snow volume
-    {'3h': 0}
+    {}
     
     >>> w.get_wind()                                       # Get wind degree and speed
     {'deg': 59, 'speed': 2.660}
     
     >>> w.get_humidity()                                   # Get humidity percentage
-    99
+    67
     
     >>> w.get_pressure()                                   # Get atmospheric pressure
-    {'pressure': 1030.119, 'sea_level: 1038.381}
+    {'press': 1009, 'sea_level': 1038.381}
     
     >>> w.get_temperature()                                # Get temperature in Kelvin degs
-    {'temp': 293.4, 'temp_kf': -1.89, 'temp_max': 297.5, 'temp_min': 290.9}
+    {'temp': 293.4, 'temp_kf': None, 'temp_max': 297.5, 'temp_min': 290.9}
     >>> w.get_temperature(unit='celsius')                  # ... or in Celsius degs
-    >>> w.get_temperatire(unit='fahrenheit')               # ... or in Fahrenheit degs
+    >>> w.get_temperatire('fahrenheit')                    # ... or in Fahrenheit degs
 
     >>> w.get_status()                                     # Get weather short status
-    'Clouds'
-    >>> w.get_detailedStatus()                             # Get detailed weather status
+    'clouds'
+    >>> w.get_detailedS_status()                           # Get detailed weather status
     'Broken clouds'
 
     >>> w.get_weather_code()                               # Get OWM weather condition code
@@ -126,10 +126,10 @@ and then access weather data using the following methods:
     >>> w.get_weather_icon_name()                          # Get weather-related icon name
     '02d'
 
-    >>> e.get_sunrise()                                    # Sunrise time (UTC UNIXtime or ISO 8601)
-    1377862896
-    >>> e.get_sunset()                                     # Sunset time (UTC UNIXtime or ISO 8601)
-    1377893277
+    >>> w.get_sunrise_time()                               # Sunrise time (GMT UNIXtime or ISO 8601)
+    1377862896L
+    >>> w.get_sunset_time('iso')                           # Sunset time (GMT UNIXtime or ISO 8601)
+    '2013-08-30 20:07:57+00'
 
 Support to weather data interpreting can be found [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Data#Description-parameters) 
 and [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes) you can read about OWM weather condition codes and icons.
@@ -141,9 +141,9 @@ the weather location:
     >>> l.get_name()
     'London'
     >>> l.get_lon()
-    -0.107331
+    -0.12574
     >>> l.get_lat()
-    51.503614
+    51.50863
     >>> l.get_ID()
     2643743
 
@@ -164,23 +164,23 @@ time (but also shorter streaks can be obtained).
 
 You can query for 3h forecasts for a location using:
 
-	# Query for 3 hours weather forecast for the next 5 days over London
+    # Query for 3 hours weather forecast for the next 5 days over London
     >>> fc = owm.three_hours_forecast('London,uk')
     
 You can query for daily forecasts using:
 
-	# Query for daily weather forecast for the next 14 days over London
+    # Query for daily weather forecast for the next 14 days over London
     >>> fc = owm.daily_forecast('London,uk')
     
 and in this case you can limit the amount of days the weather forecast streak
 will contain by using:
 
-	# Daily weather forecast just for the next 6 days over London
+    # Daily weather forecast just for the next 6 days over London
     >>> fc = owm.daily_forecast('London,uk',limit=6)
     
 Both of the above calls return a _Forecaster_ object. _Forecaster_ objects 
-encapsulate a _Forecast_ object, which has all the information about your weather
-forecast. If you need to handle it, just go with:
+contain a _Forecast_ object, which has all the information about your weather
+forecast. If you need to manipulate the latter, just go with:
 
     >>> f = fc.get_forecast()
 
@@ -188,76 +188,86 @@ A _Forecast_ object encapsulates the _Location_ object relative to the forecast
 and a list of _Weather_ objects:
 
     # When has the forecast been received?
-    >>> f.get_reception_time()                           # UNIX UTC time
-    1379091600
-    >>> f.get_reception_time(timeformat='iso')           # ISO 8601
-	2013-09-13 17:00:00+00
+    >>> f.get_reception_time()                           # UNIX GMT time
+    1379091600L
+    >>> f.get_reception_time('iso')                      # ISO 8601
+    '2013-09-13 17:00:00+00'
     
     # Which time interval for the forecast? 
     >>> f.get_interval()
-    daily
+    'daily'
 
-	# How many weather items are in the forecast?
-	>>> len(f)
-	20 
+    # How many weather items are in the forecast?
+    >>> len(f)
+    20 
 
-	# Get Location
-	>>> f.get_location()
-	<location.Location at 0x00DADBF0>
-	
+    # Get Location
+    >>> f.get_location()
+    <pyowm.location.Location object at 0x01921DF0>
+    
 Once you obtain a _Forecast_ object, reading the forecast data is easy - you can
 get the whole list of _Weather_ objects or you can use the built-in iterator:
-	
-	# Get the list of Weather objects...
-	>>> lst = f.get_weathers()
-	
-	# ...or iterate directly over the Forecast object
-	>>> for weather in f:
-	      print (weather.get_reference_time(format='iso'),weather.get_status())
-	('2013-09-14 14:00:00+0','Clear')
-	('2013-09-14 17:00:00+0','Clear')
-	('2013-09-14 20:00:00+0','Clouds')
-	[...]
+    
+    # Get the list of Weather objects...
+    >>> lst = f.get_weathers()
+    
+    # ...or iterate directly over the Forecast object
+    >>> for weather in f:
+          print (weather.get_reference_time('iso'),weather.get_status())
+    ('2013-09-14 14:00:00+0','Clear')
+    ('2013-09-14 17:00:00+0','Clear')
+    ('2013-09-14 20:00:00+0','Clouds')
 
 The _Forecaster_ class provides a few convenience methods to inspect the
 weather forecasts in a human-friendly fashion. You can - for example - ask for 
 the GMT time boundaries of the weather forecast data:
 
     # When in time does the forecast begin?
-    >>> fc.when_starts()                                  # UNIX UTC time
-    1379090800
-    >>> fc.when_starts(timeformat='iso')                  # ISO 8601
-    2013-09-13 16:46:40+00
+    >>> fc.when_starts()                                  # UNIX GMT time
+    1379090800L
+    >>> fc.when_starts('iso')                             # ISO 8601
+    '2013-09-13 16:46:40+00'
     
     # ...and when will it end?
-    >>> fc.when_ends()                                    # UNIX UTC time
-    1379902600
-    >>> fc.when_ends(timeformat='iso')                    # ISO 8601
-    2013-09-23 02:16:40+00
+    >>> fc.when_ends()                                    # UNIX GMT time
+    1379902600L
+    >>> fc.when_ends('iso')                               # ISO 8601
+    '2013-09-23 02:16:40+00'
 
 In example, you can ask the _Forecaster_ object to tell which is the weather 
-forecast for a specific point in time that you can specify using UNIXtime, an 
-ISO8601 formatted string or a Pythone _datetime.datetime_ object (all times must
-be provided GMT):
+forecast for a specific point in time. You can specify this time using UNIXtime,
+an ISO8601-formatted string or a Pythone _datetime.datetime_ object (all times 
+must are handled as GMT):
 
-    # Tell me the weather for tomorrow at noon
-    >>> tomorrow_at_noon_obj = datetime.datetime(2013, 9, 19, 12, 0)
-    >>> tomorrow_at_noon_str = "2013-09-19 12:00+00"
-    >>> tomorrow_at_noon_unixtime = 1379592000L
-    >>> fc.weather_at(tomorrow_at_noon_obj)
+    # Tell me the weather for tomorrow at this hour
+    >>> from datetime import datetime
+    >>> date_tomorrow = datetime(2013, 9, 19, 12, 0)
+    >>> str_tomorrow = "2013-09-19 12:00+00"
+    >>> unix_tomorrow = 1379592000L
+    >>> fc.get_weather_at(date_tomorrow)
     <weather.Weather at 0x00DF75F7>
-    >>> fc.weather_at(tomorrow_at_noon_str)
+    >>> fc.get_weather_at(str_tomorrow)
     <weather.Weather at 0x00DF75F7>
-    >>> fc.weather_at(tomorrow_at_noon_unixtime)
+    >>> fc.get_weather_at(unix_tomorrow)
     <weather.Weather at 0x00DF75F7>
 
 You will be provided with the _Weather_ sample that lies closest to the time that
 you specified. Of course this will work only if the specified time is covered by
 the forecast! Otherwise, you will be prompted with an error:
 
-    >>> fc.weather_at("1492-10-12 12:00+00")
-    Error: the specified time is not included in the weather forecast
+    >>> fc.get_weather_at("1492-10-12 12:00:00+00")
+    pyowm.exceptions.not_found_error.NotFoundError: The searched item was not found.
+    Reason: Error: the specified time is not included in the weather coverage range
 
+Keep in mind that you can leverage the convenience _timeutils_ module's functions
+to quickly build datetime objects:
+
+    >>> from pyowm import timeutils
+    >>> timeutils.tomorrow()                              # Tomorrow at this hour
+    datetime.datetime(2013, 9, 19, 12, 0)
+    >>> timeutils.yesterday(23, 27)                       # Yesterday at 23:27
+    datetime.datetime(2013, 9, 19, 12, 0)
+    
 Other useful convenicence methods in class _Forecaster_ are:
 
     # Will it rain, be sunny, foggy or snow during the covered period?
@@ -273,19 +283,20 @@ Other useful convenicence methods in class _Forecaster_ are:
     False
     
     # Will it be rainy, sunny, foggy or snowy at the specified GMT time?
-    tomorrow_at_noon = "2013-09-19 12:00+00"
-    >>> fc.will_be_rainy_at(tomorrow_at_noon)
+    time = "2013-09-19 12:00+00"
+    >>> fc.will_be_rainy_at(time)
     False
-    >>> fc.will_be_sunny_at(tomorrow_at_noon)
+    >>> fc.will_be_sunny_at(time)
     True
-    >>> fc.will_be_foggy_at(tomorrow_at_noon)
+    >>> fc.will_be_foggy_at(time)
     False
-    >>> fc.will_be_cloudy_at(tomorrow_at_noon)
+    >>> fc.will_be_cloudy_at(time)
     False
-    >>> fc.will_be_snowy_at(tomorrow_at_noon)
+    >>> fc.will_be_snowy_at(time)
     False
-    >>> fc.will_be_sunny_at(0L)           # Out of weather forecast coverage span
-    Error: the specified time is not included in the weather forecast 
+    >>> fc.will_be_sunny_at(0L)           # Out of weather forecast coverage
+    pyowm.exceptions.not_found_error.NotFoundError: The searched item was not found.
+    Reason: Error: the specified time is not included in the weather coverage range
     
     # List the weather elements for which the condition will be: 
     # rain, sun, fog and snow
@@ -315,8 +326,7 @@ Printing objects' content
 For a quick reading of data, the _Location_, _Weather_, _Observation_ and
 _Forecast_ objects can be printed on-screen, eg:
 
-    >>> l = Location('wonderland', 12.3, 44.7, 9876)
-    >>> print l
+    >>> print location
     [Location: name=wonderland lon=12.3 lat=44.7 ID=9876]
 
 Dumping objects' content to JSON and XML
@@ -325,12 +335,12 @@ _Location_, _Weather_, _Observation_ and _Forecast_ objects can be dumped to
 JSON or XML strings:
 
     # Dump a Weather object to JSON...
-    >>> w.dump_JSON()
+    >>> w.to_JSON()
     {'referenceTime':1377851530,'Location':{'name':'Palermo',
     'coordinates':{'lon':13.35976,'lat':38.115822}'ID':2523920},...}
     
     #... and to XML
-    >>> w.dump_XML()
+    >>> w.to_XML()
     <weather><referenceTime>1377851530</referenceTime>
     <Location><name>Palermo</name><coordinates><lon>13.35976</lon><lat>38.115822</lat>
     </coordinates><ID>2523920</ID></Location>...</weather>

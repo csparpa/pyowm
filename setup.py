@@ -20,7 +20,7 @@ setup(
           "Programming Language :: Python",
           "Natural Language :: English",
           "Operating System :: OS Independent",
-          "Development Status :: 2 - Pre-Alpha",
+          "Development Status :: 3 - Alpha",
           "Intended Audience :: Developers",
           "Topic :: Software Development :: Libraries",
       ],
