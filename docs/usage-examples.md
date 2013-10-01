@@ -134,18 +134,6 @@ and then access weather data using the following methods:
 Support to weather data interpreting can be found [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Data#Description-parameters) 
 and [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes) you can read about OWM weather condition codes and icons.
 
-If you need a JSON/XML representation of the _Weather_ object you can benefit 
-from the following methods:
-
-    >>> w.dump_JSON()                                    # Get a JSON representation
-    {'base':'gdpsstations','referenceTime':1377851530,'Location':{'name':'Palermo',
-    'coordinates':{'lon':13.35976,'lat':38.115822}'ID':2523920},...}
-    
-    >>> w.dump_XML()                                     # Same as above, but in XML
-    <weather><base>gdpsstations</base><referenceTime>1377851530</referenceTime>
-    <Location><name>Palermo</name><coordinates><lon>13.35976</lon><lat>38.115822</lat>
-    </coordinates><ID>2523920</ID></Location>...</weather>
-
 As said, _Observation_ objects also contain a _Location_ objects with info about
 the weather location:
 
@@ -324,11 +312,25 @@ the method queries for.
 
 Printing objects' content
 -------------------------
-For a quick reading of data, the _Location_, _Weather_,  _Observation_ and
+For a quick reading of data, the _Location_, _Weather_, _Observation_ and
 _Forecast_ objects can be printed on-screen, eg:
 
     >>> l = Location('wonderland', 12.3, 44.7, 9876)
     >>> print l
     [Location: name=wonderland lon=12.3 lat=44.7 ID=9876]
 
-Remember that all PyOWM entities can be dumped to JSON or XML strings.
+Dumping objects' content to JSON and XML
+----------------------------------------
+_Location_, _Weather_, _Observation_ and _Forecast_ objects can be dumped to 
+JSON or XML strings:
+
+    # Dump a Weather object to JSON...
+    >>> w.dump_JSON()
+    {'referenceTime':1377851530,'Location':{'name':'Palermo',
+    'coordinates':{'lon':13.35976,'lat':38.115822}'ID':2523920},...}
+    
+    #... and to XML
+    >>> w.dump_XML()
+    <weather><referenceTime>1377851530</referenceTime>
+    <Location><name>Palermo</name><coordinates><lon>13.35976</lon><lat>38.115822</lat>
+    </coordinates><ID>2523920</ID></Location>...</weather>
