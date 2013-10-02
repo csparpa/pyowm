@@ -41,9 +41,9 @@ Support
 -------
 The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
 
-Usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/docs/usage-examples.md).
+Usage examples are available [here](https://github.com/csparpa/pyowm/wiki/Usage-examples).
 
-Technical and development documents are available in the [docs section](https://github.com/csparpa/pyowm/tree/master/docs).
+Technical and development documents are available in the [docs section](https://github.com/csparpa/pyowm/tree/master/docs/internals).
 
 License
 -------
