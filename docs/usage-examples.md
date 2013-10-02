@@ -267,6 +267,11 @@ to quickly build datetime objects:
     datetime.datetime(2013, 9, 19, 12, 0)
     >>> timeutils.yesterday(23, 27)                       # Yesterday at 23:27
     datetime.datetime(2013, 9, 19, 12, 0)
+    >>> timeutils.next_three_hours()
+    datetime.datetime(2013, 9, 18, 15, 0)                 # 3 hours from now
+    >>> t = datetime.datetime(2013, 19, 27, 8, 47, 0)
+    >>> timeutils.next_three_hours(t)
+    datetime.datetime(2013, 19, 27, 11, 47, 0)            # 3 hours from a specific datetime    
     
 Other useful convenicence methods in class _Forecaster_ are:
 

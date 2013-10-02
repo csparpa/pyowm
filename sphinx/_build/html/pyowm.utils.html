@@ -368,8 +368,44 @@ a HTTP status error</td>
 <span id="pyowm-utils-timeutils-module"></span><h2>pyowm.utils.timeutils module<a class="headerlink" href="#module-pyowm.utils.timeutils" title="Permalink to this headline">¶</a></h2>
 <p>Module containing utility functions for time values generation/management</p>
 <dl class="function">
+<dt id="pyowm.utils.timeutils.last_three_hours">
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">last_three_hours</tt><big>(</big><em>date=None</em><big>)</big><a class="headerlink" href="#pyowm.utils.timeutils.last_three_hours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to last next three hours
+from now or from the specified <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> (<tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object) &#8211; the date you want three hours to be subtracted (if left <tt class="docutils literal"><span class="pre">None</span></tt>,
+the current date and time will be used)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyowm.utils.timeutils.next_three_hours">
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">next_three_hours</tt><big>(</big><em>date=None</em><big>)</big><a class="headerlink" href="#pyowm.utils.timeutils.next_three_hours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to the next three hours
+from now or from the specified <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> (<tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object) &#8211; the date you want three hours to be added (if left <tt class="docutils literal"><span class="pre">None</span></tt>,
+the current date and time will be used)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="pyowm.utils.timeutils.tomorrow">
-<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">tomorrow</tt><big>(</big><em>hour=17</em>, <em>minute=59</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#tomorrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.tomorrow" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">tomorrow</tt><big>(</big><em>hour=10</em>, <em>minute=53</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#tomorrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.tomorrow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to tomorrow. The default
 value for optional parameters is the current value of hour and minute. I.e: 
 when called without specifying values for parameters, the resulting object
@@ -400,7 +436,7 @@ the current minute.</p>
 
 <dl class="function">
 <dt id="pyowm.utils.timeutils.yesterday">
-<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">yesterday</tt><big>(</big><em>hour=17</em>, <em>minute=59</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#yesterday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.yesterday" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">yesterday</tt><big>(</big><em>hour=None</em>, <em>minute=None</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#yesterday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.yesterday" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to yesterday. The default
 value for optional parameters is the current value of hour and minute. I.e: 
 when called without specifying values for parameters, the resulting object
@@ -422,8 +458,7 @@ the current minute.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ValueError</em> when hour or minute have bad values
-a</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ValueError</em> when hour or minute have bad values</p>
 </td>
 </tr>
 </tbody>

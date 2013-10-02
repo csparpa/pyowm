@@ -4,10 +4,6 @@ TODOs
 Code
 ----
 + Implement features 7, 8
-+ (eventual) Provide utilities for human-friendly OWM data handling in separate
-   project:
-    - find current weather for my position (geolocate IP?)
-    - find forecasts for my position (geolocate IP?)
 
 Test
 ----
@@ -27,3 +23,8 @@ Various
 + Sponsorize (FB, Linkedin, blog)
 + (eventual) Provide XML DTDs
 + (eventual) Upload egg to cheeseshop or similars
++ (eventual) Provide utilities for human-friendly OWM data handling in separate
+   project:
+    - find current weather for my position (geolocate IP?)
+    - find forecasts for my position (geolocate IP?)
+    - generate Location instance for my position

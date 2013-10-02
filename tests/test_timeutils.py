@@ -51,3 +51,23 @@ class TestTimeUtils(unittest.TestCase):
         expected_3 = datetime(yesterday_3.year, yesterday_3.month, yesterday_3.day, 6,
                             now_3.minute, 0)
         self.assertEqual(expected_3, result_3)
+        
+    def test_next_three_hours(self):
+        result_1 = timeutils.next_three_hours()
+        expected_1 = datetime.now() + timedelta(hours=3)
+        self.assertAlmostEqual(expected_1, result_1)
+        
+        d = datetime(2013, 12, 7, 15, 46, 12)
+        expected_2 = d + timedelta(hours=3)
+        result_2 = timeutils.next_three_hours(d)
+        self.assertAlmostEqual(expected_2, result_2)
+        
+    def test_last_three_hours(self):
+        result_1 = timeutils.last_three_hours()
+        expected_1 = datetime.now() + timedelta(hours=-3)
+        self.assertAlmostEqual(expected_1, result_1)
+        
+        d = datetime(2013, 12, 7, 15, 46, 12)
+        expected_2 = d + timedelta(hours=-3)
+        result_2 = timeutils.last_three_hours(d)
+        self.assertAlmostEqual(expected_2, result_2)
