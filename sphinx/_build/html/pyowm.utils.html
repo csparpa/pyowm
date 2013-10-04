@@ -167,7 +167,8 @@ specified object, which can be either a UNIXtime, a
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a long UNIXtime</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><em>TypeError</em> when bad argument types are provided</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><em>TypeError</em> when bad argument types are provided, <em>ValueError</em> when
+negative UNIXtimes are provided</td>
 </tr>
 </tbody>
 </table>
@@ -342,8 +343,31 @@ a HTTP status error</td>
 </dd></dl>
 
 <dl class="function">
-<dt id="pyowm.utils.jsonparser.parse_search_results">
-<tt class="descclassname">pyowm.utils.jsonparser.</tt><tt class="descname">parse_search_results</tt><big>(</big><em>json_data</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/jsonparser.html#parse_search_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.jsonparser.parse_search_results" title="Permalink to this definition">¶</a></dt>
+<dt id="pyowm.utils.jsonparser.parse_weather_history">
+<tt class="descclassname">pyowm.utils.jsonparser.</tt><tt class="descname">parse_weather_history</tt><big>(</big><em>json_data</em><big>)</big><a class="headerlink" href="#pyowm.utils.jsonparser.parse_weather_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a list of <em>Weather</em> instance out of raw JSON data coming from OWM web 
+API responses when querying for city weatherhistory. Only certain properties
+of the data are used: if these properties are not found or cannot be parsed,
+an error is issued.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_data</strong> (<em>str</em>) &#8211; a raw JSON string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a list of <em>Weather</em> instances</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><em>ParseResponseError</em> if it is impossible to find or parse the data
+needed to build the result, <em>APIResponseError</em> if the OWM API returns
+a HTTP status error</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyowm.utils.jsonparser.parse_weather_search_results">
+<tt class="descclassname">pyowm.utils.jsonparser.</tt><tt class="descname">parse_weather_search_results</tt><big>(</big><em>json_data</em><big>)</big><a class="headerlink" href="#pyowm.utils.jsonparser.parse_weather_search_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a list of <em>Observation</em> instances out of raw JSON data coming from 
 OWM web API responses. Only certain properties of the data are used:
 if these properties are not found or cannot be parsed, an error is issued.</p>
@@ -405,7 +429,7 @@ the current date and time will be used)</td>
 
 <dl class="function">
 <dt id="pyowm.utils.timeutils.tomorrow">
-<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">tomorrow</tt><big>(</big><em>hour=10</em>, <em>minute=53</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#tomorrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.tomorrow" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pyowm.utils.timeutils.</tt><tt class="descname">tomorrow</tt><big>(</big><em>hour=None</em>, <em>minute=None</em><big>)</big><a class="reference internal" href="_modules/pyowm/utils/timeutils.html#tomorrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.utils.timeutils.tomorrow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives the <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> object corresponding to tomorrow. The default
 value for optional parameters is the current value of hour and minute. I.e: 
 when called without specifying values for parameters, the resulting object

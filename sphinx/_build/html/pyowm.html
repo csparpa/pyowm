@@ -1138,6 +1138,41 @@ be parsed or <em>APICallException</em> when OWM web API can not be reached</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="pyowm.owm.OWM.weather_history">
+<tt class="descname">weather_history</tt><big>(</big><em>name</em>, <em>start=None</em>, <em>end=None</em><big>)</big><a class="headerlink" href="#pyowm.owm.OWM.weather_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the OWM web API for weather history for the specified location 
+(eg: &#8220;London,uk&#8221;). A list of <em>Weather</em> objects is returned. It is possible
+to query for weather history in a closed time period, whose boundaries
+can be passed as optional parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; the location&#8217;s toponym</li>
+<li><strong>start</strong> (int/long, <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> or ISO8601-formatted string) &#8211; the object conveying the time value for the start query boundary
+(defaults to <tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+<li><strong>end</strong> (int/long, <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> or ISO8601-formatted string) &#8211; the object conveying the time value for the end query boundary
+(defaults to <tt class="docutils literal"><span class="pre">None</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of <em>Weather</em> instances or <tt class="docutils literal"><span class="pre">None</span></tt> if history data is not
+available for the specified location</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ParseResponseException</em> when OWM web API responses&#8217; data cannot
+be parsed, <em>APICallException</em> when OWM web API can not be reached,
+<em>ValueError</em> if the time boundaries are not in the correct chronological
+order, if one of the time boundaries is not <tt class="docutils literal"><span class="pre">None</span></tt> and the other is
+or if one or both of the time boundaries are after the current time</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
