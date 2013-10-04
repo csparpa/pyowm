@@ -20,6 +20,7 @@ OBSERVATION_URL = ROOT_API_URL+'/weather'
 FIND_OBSERVATIONS_URL = ROOT_API_URL+'/find'
 THREE_HOURS_FORECAST_URL = ROOT_API_URL+'/forecast'
 DAILY_FORECAST_URL = ROOT_API_URL+'/forecast/daily'
+CITY_WEATHER_HISTORY_URL = ROOT_API_URL+'/history/city'
 
 # Weather status keywords
 RAIN_KEYWORDS = ['rain','drizzle']

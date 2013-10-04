@@ -6,7 +6,7 @@ Module containing utility functions for time values generation/management
 
 from datetime import datetime, date, timedelta
 
-def tomorrow(hour=datetime.now().hour, minute=datetime.now().minute):
+def tomorrow(hour=None, minute=None):
     """
     Gives the ``datetime.datetime`` object corresponding to tomorrow. The default
     value for optional parameters is the current value of hour and minute. I.e: 
@@ -25,6 +25,10 @@ def tomorrow(hour=datetime.now().hour, minute=datetime.now().minute):
     :raises: *ValueError* when hour or minute have bad values
         
     """
+    if hour is None:
+        hour=datetime.now().hour
+    if minute is None:
+        minute=datetime.now().minute
     tomorrow_date = date.today() + timedelta(days=1) 
     return datetime(tomorrow_date.year, tomorrow_date.month, tomorrow_date.day,
                     hour, minute, 0)

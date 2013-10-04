@@ -4,7 +4,9 @@ These are "live" executions, that of course need the OWM web API to be up
 and running
 '''
 import unittest
+from datetime import datetime
 from pyowm import OWM
+from xmlrpclib import DateTime
 
 class IntegrationTest(unittest.TestCase):
     
@@ -176,6 +178,40 @@ class IntegrationTest(unittest.TestCase):
             self.assertTrue(weather)
             self.assertNotIn(None, weather.__dict__.values())
         self.assertFalse(fc3)
+        
+    def test_weather_history(self):
+        """
+        Test feature: get weather history for a specific location
+        """
+        start_iso = "2013-09-06 09:20:00+00"
+        start_unix = 1378459200L
+        start_date = datetime(2013, 9, 6, 9, 20, 0)
+        end_iso = "2013-09-06 20:26:40+00"
+        end_unix = 1378499200L
+        end_date = datetime(2013, 9, 6, 20, 26, 40)
+        l1 = self.__owm.weather_history("London")
+        self.assertTrue(l1)
+        for weather in l1:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values())
+        l2 = self.__owm.weather_history('Kiev', start_unix, end_unix)
+        self.assertTrue(l2)
+        for weather in l2:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values())
+        l3 = self.__owm.weather_history('Rome', start_iso, end_iso)
+        self.assertTrue(l3)
+        for weather in l3:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values())
+        l4 = self.__owm.weather_history('Berlin', start_date, end_date)
+        self.assertTrue(l4)
+        for weather in l4:
+            self.assertTrue(weather)
+            self.assertNotIn(None, weather.__dict__.values())
+        l5 = self.__owm.weather_history('QmFoPIlbf')  #Shall be None
+        self.assertFalse(l5)
+
         
 if __name__ == "__main__":
     unittest.main()

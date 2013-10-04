@@ -38,6 +38,20 @@ DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '284.88,"eve": 287.53,"morn": 289.37},"pressure": 1025.35,"humidity": 71,' \
     '"weather": [{"id": 500,"main": "Rain","description": "light rain","icon"' \
     ': "10d"}],"speed": 3.76,"deg": 338,"clouds": 48,"rain": 3}]}'
+    
+CITY_WEATHER_HISTORY_JSON = '{"message": "","cod": "200","city_id": 2643743,' \
+    '"calctime": 0.5363,"cnt": 1,"list": [{"weather": [{"id": 500,"main": "Rain"' \
+    ',"description": "light rain","icon": "10d"}],"base": "gdps stations","main":' \
+    ' {"temp": 290.31,"pressure": 1011,"humidity": 82,"temp_min": 288.15,"temp_max"' \
+    ': 292.59},"wind": {"speed": 3.6,"deg": 160},"rain": {"1h": 0.25},"clouds": ' \
+    '{"all": 40},"city": {"zoom": 13,"country": "GB","population": 1000000,"find":' \
+    ' ["LONDON"],"id": 2643743,"name": "London"},"dt": 1378459300},' \
+    '{"weather": [{"id": 500,"main": "Rain"' \
+    ',"description": "rain","icon": "10d"}],"base": "gdps stations","main":' \
+    ' {"temp": 288.31,"pressure": 1015,"humidity": 87,"temp_min": 284.15,"temp_max"' \
+    ': 292.59},"wind": {"speed": 3.6,"deg": 160},"rain": {"1h": 0.75},"clouds": ' \
+    '{"all": 70},"city": {"zoom": 13,"country": "GB","population": 1000000,"find":' \
+    ' ["LONDON"],"id": 2643743,"name": "London"},"dt": 1378498200}]}'
 
 OBSERVATION_NOT_FOUND_JSON = '{"message":"Error: Not found city","cod":"404"}'
 
@@ -48,3 +62,8 @@ SEARCH_WITH_NO_RESULTS_JSON = '{"cod": "200", "count": 0, "list": []}'
 FORECAST_NOT_FOUND_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
     '"GB","population": 1000000},"cnt": 0,"list": []}'
+
+CITY_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"no data","cod":"404"}'
+
+CITY_WEATHER_HISTORY_NO_RESULTS_JSON = '{"calctime" : 1.9337,"city_id" : 4219762,' \
+    '"cnt" : 0,"cod" : "200","list" : [],"message" : ""}' 

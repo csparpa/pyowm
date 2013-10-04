@@ -150,6 +150,54 @@ JSON responses
       "message" : 0.031
     }
     
+    #City weather history
+    http://api.openweathermap.org/data/2.5/history/city?q=London
+    
+	{
+	  "message": "",
+	  "cod": "200",
+	  "city_id": 2643743,
+	  "calctime": 0.5979,
+	  "cnt": 9,
+	  "list": [
+		   {
+		    "weather": [{
+		      "id": 803,
+		      "main": "Clouds",
+		      "description": "broken clouds",
+		      "icon": "04d"
+		    }],
+		    "base": "gdps stations",
+		    "main": {
+		      "temp": 290.16,
+		      "pressure": 1009,
+		      "humidity": 67,
+		      "temp_min": 289.26,
+		      "temp_max": 290.93
+		    },
+		    "wind": {
+		      "speed": 5.7,
+		      "deg": 90
+		    },
+		    "clouds": {
+		      "all": 75
+		    },
+		    "city": {
+		      "zoom": 13,
+		      "country": "GB",
+		      "population": 1000000,
+		      "find": ["LONDON"],
+		      "id": 2643743,
+		      "name": "London"
+		    },
+		    "dt": 1380636000
+		  },
+	
+	  ...
+	  
+	  ]
+	}
+    
     # Meteostation tick history
     http://api.openweathermap.org/data/2.5/history/station/39276?type=tick
     

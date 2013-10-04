@@ -41,7 +41,9 @@ class TestConverter(unittest.TestCase):
     
     def test_to_UNIXtime_fails_with_bad_argument(self):
         self.assertRaises(TypeError, converter.to_UNIXtime, None)
-        #self.assertRaises(TypeError, converter.to_UNIXtime, [1,2,3])
+        
+    def test_to_UNIXtime_fails_with_negative_unixtime(self):
+        self.assertRaises(ValueError, converter.to_UNIXtime, -1234L)
     
     def test_datetime_to_UNIXtime(self):
         date = datetime(2013, 9, 19, 12, 0)

@@ -63,10 +63,12 @@ def to_UNIXtime(timeobject):
     :param timeobject: the object conveying the time value
     :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted string
     :returns: a long UNIXtime
-    :raises: *TypeError* when bad argument types are provided
-    
+    :raises: *TypeError* when bad argument types are provided, *ValueError* when
+        negative UNIXtimes are provided
     """
     if isinstance(timeobject, (long, int)):
+        if(timeobject < 0):
+            raise ValueError("The time value is a negative number")
         return timeobject
     elif isinstance(timeobject, datetime):
         return datetime_to_UNIXtime(timeobject)

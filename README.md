@@ -11,7 +11,7 @@ and forecast) from Python applications via a simple object model.
 
 No additional libraries are requested: only the Python 2.6/2.7 standard library modules.
 
-For the moment, PyOWM only supports _version 2.5_ of the OWM API.
+PyOWM currently supports _version 2.5_ of the OWM API.
 
 Install
 -------

@@ -180,7 +180,7 @@ def parse_observation(json_data):
     w = build_weather_from(d)
     return Observation(long(round(time())), l, w)
 
-def parse_search_results(json_data):
+def parse_weather_search_results(json_data):
     """
     Parses a list of *Observation* instances out of raw JSON data coming from 
     OWM web API responses. Only certain properties of the data are used:
@@ -221,8 +221,6 @@ def parse_search_results(json_data):
             raise ParseResponseError(''.join([__name__,': impossible to read ' \
               'JSON data', linesep, str(d)]))
 
-
-
 def parse_forecast(json_data):
     """
     Parses a *Forecast* instance out of raw JSON data coming from OWM web 
@@ -261,3 +259,39 @@ def parse_forecast(json_data):
             raise ParseResponseError(''.join([__name__,': impossible to read ' \
               'observation list from JSON data', linesep, str(d)])) 
     return Forecast("3h", long(round(time())), l, weathers)
+
+def parse_weather_history(json_data):
+    """
+    Parses a list of *Weather* instance out of raw JSON data coming from OWM web 
+    API responses when querying for city weatherhistory. Only certain properties
+    of the data are used: if these properties are not found or cannot be parsed,
+    an error is issued.
+    
+    :param json_data: a raw JSON string
+    :type json_data: str
+    :returns: a list of *Weather* instances
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the result, *APIResponseError* if the OWM API returns
+        a HTTP status error
+        
+    """
+    d = loads(json_data)
+    # Check if server returned errors: this check overcomes the lack of use of 
+    # HTTP error status codes by the OWM API but it's supposed to be deprecated 
+    # as soon as the API implements a correct HTTP mechanism for communicating 
+    # errors to the clients
+    if 'message' in d and 'cod' in d:
+        if d['cod'] == "404":
+            print "OWM API: data not found - response payload: "+dumps(d)
+            return None
+        elif d['cod'] != "200" :
+            raise APIResponseError("OWM API: error - response payload: "+dumps(d))
+    # Handle the case when no results are found
+    if 'cnt' in d and d['cnt'] is "0":
+        return []
+    else:
+        if 'list' in d:
+            return [build_weather_from(item) for item in d['list']]
+        else:
+            raise ParseResponseError(''.join([__name__,': impossible to read ' \
+              'JSON data', linesep, str(d)]))

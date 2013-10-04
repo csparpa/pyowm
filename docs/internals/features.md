@@ -17,10 +17,10 @@ Feature list
 	6. Retrieve full daily weather forecast for a specific toponym
 	
 	
-	# History for a city
-	7. search history for city (Yet To Be Implemented)
+	# Weather history for a location
+	7. search history for a specific location
 	
-	# History for a station
+	# Weather history for a station
 	8. search history for station (Yet To Be Implemented)
 
 
@@ -83,12 +83,11 @@ Features in code
 	
 	#http://api.openweathermap.org/data/2.5/history/city?q=London,uk
 	#search all recent weather history for London (last 24h approx)
-	
-	#http://api.openweathermap.org/data/2.5/history/city?q=London,uk&cnt=3
-	#search the first 2 items of the recent weather history for London
+	list_of_weathers = owm.weather_history('London,uk')
 	
 	#http://api.openweathermap.org/data/2.5/history/city?q=London,uk&start=1369728000&end=1369789200
 	#search the recent weather history items for London, measured in the specified period
+	list_of_weathers = owm.weather_history('London,uk', start=1369728000, end=1369789200)
 	
 	
 	# *** Historic weather data recordings for a meteostation ***

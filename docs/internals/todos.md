@@ -3,12 +3,13 @@ TODOs
 
 Code
 ----
-+ Implement features 7, 8
++ Implement feature 8
++ More utilities in forecaster.py
 
 Test
 ----
 + Test features on different platforms (Linux, MacOS, Win)
-+ Test features on Python 3.x and 2.0+ (virtualenv)
++ Test features on Python 3.x and 2.6+
 
 Docs
 ----
@@ -20,11 +21,9 @@ Docs
 
 Various
 -------
-+ Sponsorize (FB, Linkedin, blog)
-+ (eventual) Provide XML DTDs
 + (eventual) Upload egg to cheeseshop or similars
 + (eventual) Provide utilities for human-friendly OWM data handling in separate
    project:
-    - find current weather for my position (geolocate IP?)
-    - find forecasts for my position (geolocate IP?)
+    - find current weather for my position
+    - find forecasts for my position
     - generate Location instance for my position

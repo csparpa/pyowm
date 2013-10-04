@@ -13,8 +13,9 @@ Monkey patching pattern:
 """
 
 import unittest
+import time
 from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
-    THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON
+    THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON
 from pyowm import OWM
 from pyowm.utils import httputils
 from pyowm.forecast import Forecast
@@ -30,23 +31,24 @@ class TestOWM(unittest.TestCase):
     # Mock functions
     def mock_httputils_call_API_returning_single_obs(self, API_subset_URL, 
                                                      params_dict, API_key):
-        """Mock implementation of httputils.call_API"""
         return OBSERVATION_JSON
     
     def mock_httputils_call_API_returning_multiple_obs(self, API_subset_URL, 
                                                      params_dict, API_key):
-        """Mock implementation of httputils.call_API"""
         return SEARCH_RESULTS_JSON
     
     def mock_httputils_call_API_returning_3h_forecast(self, API_subset_URL, 
                                                      params_dict, API_key):
-        """Mock implementation of httputils.call_API"""
         return THREE_HOURS_FORECAST_JSON
     
     def mock_httputils_call_API_returning_daily_forecast(self, API_subset_URL, 
                                                      params_dict, API_key):
-        """Mock implementation of httputils.call_API"""
         return DAILY_FORECAST_JSON
+    
+    def mock_httputils_call_API_returning_city_weather_history(self, 
+                                                       API_subset_URL,
+                                                       params_dict, API_key):
+        return CITY_WEATHER_HISTORY_JSON
 
     # Tests
     def test_API_key_accessors(self):
@@ -222,6 +224,49 @@ class TestOWM(unittest.TestCase):
         """
         self.assertRaises(ValueError, OWM.daily_forecast, self.__test_instance, \
                           "London,uk", -3)
+        
+    def test_weather_history(self):
+        """
+        Test that owm.weather_history returns a list of Weather objects. 
+        We need to monkey patch the inner call to httputils.call_API function
+        """
+        ref_to_original_call_API = httputils.call_API
+        httputils.call_API = self.mock_httputils_call_API_returning_city_weather_history
+        result = self.__test_instance.weather_history("London,uk")
+        httputils.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, list))
+        for weather in result:
+            self.assertTrue(isinstance(weather, Weather))
+            self.assertNotIn(None, weather.__dict__.values())
+        
+    def test_weather_history_fails_with_unordered_time_boundaries(self):
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                          "London,uk", "2013-09-06 20:26:40+00", 
+                          "2013-09-06 09:20:00+00")
+        
+    def test_weather_history_fails_with_time_boundaries_in_the_future(self):
+        current_time = long(time.time())
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                          "London,uk", current_time + 1000L, 
+                          current_time + 2000L)
+        
+    def test_weather_history_fails_with_wrong_time_boundaries(self):        
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                          "London,uk", None, 1234567L)
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                          "London,uk", 1234567L, None )
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                          "London,uk", 1234567L, None )
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                          "London,uk", -1234567L, None )
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                  "London,uk", None, -1234567L)
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                  "London,uk", -999L, -888L)
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                  "London,uk", "test", 1234567L)
+        self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
+                  "London,uk", 1234567L, "test")
  
 if __name__ == "__main__":
     unittest.main()

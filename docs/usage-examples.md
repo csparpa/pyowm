@@ -317,14 +317,34 @@ Other useful convenicence methods in class _Forecaster_ are:
     []                                   # It won't snow: empty list
 
 When calling _fc.will_be_*_at_ methods you can specify either a UNIXtime, a 
-_datetime.datetime_ object or an ISO8601-formatted string (format: ""). A boolean
-value will be returned, telling if the queried weather condition will apply to
-the time you specify (the check will be performed on the _Weather_ object of
-the forecast which is closest in time to the time value that you provided).
+_datetime.datetime_ object or an ISO8601-formatted string (format: 
+"YYYY-MM-DD HH:MM:SS+00"). A boolean value will be returned, telling if the 
+queried weather condition will apply to the time you specify (the check will be 
+performed on the _Weather_ object of the forecast which is closest in time to 
+the time value that you provided).
 
 When calling _fc.when_*_  methods you will be provided with a sublist of the 
 _Weather_ objects list in _f_ with items having as weather condition the one
 the method queries for.
+
+Getting weather historic series on a location
+---------------------------------------------
+Weather history on a specific location can be retrieved using:
+
+    >>> owm.weather_history('London,uk')
+    [ <weather.Weather at 0x00BF81A2>, <weather.Weather at 0x00BF81C8>, ... ]
+
+A list of _Weather_ objects is returned.
+You can can specify a time window in which you want the results to be filtered:
+
+    >>> owm.weather_history('London,uk', start=1379090800L, end=1379099800L)
+    >>> owm.weather_history('London,uk', '2013-09-13 16:46:40+00',
+                            '2013-09-13 19:16:40+00')
+    >>> owm.weather_history('London,uk', datetime(2013, 9, 13, 16, 46, 40),
+                            datetime(2013, 9, 13, 19, 16, 40))
+    
+The time boundaries can be expressed either as a UNIXtime, a _datetime.datetime_
+object or an ISO8601-formatted string (format: "YYYY-MM-DD HH:MM:SS+00").
 
 Printing objects' content
 -------------------------
