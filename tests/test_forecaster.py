@@ -25,32 +25,36 @@ class TestForecaster(unittest.TestCase):
     __test_location = Location(u'test', 12.3, 43.7, 987, u'IT')
     
     __test_weather_rain = Weather(__test_time_1, 1378496400, 1378449600, 67, 
-            {"all": 30}, {"all": 0}, {"deg": 252.002, "speed": 4.100}, 57, 
+            {"all": 30}, {}, {"deg": 252.002, "speed": 4.100}, 57, 
             {"press": 1030.119, "sea_level": 1038.589},
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098, 
                 "temp_min": 294.199
             },
             u"Rain", u"Light rain", 500, u"10d")
     __test_weather_clouds = Weather(__test_middle_1_coverage, 1378496480, 1378449510, 23, 
-            {"all": 0}, {"all": 0}, {"deg": 103.4, "speed": 1.2}, 12, 
+            {"all": 0}, {}, {"deg": 103.4, "speed": 1.2}, 12, 
             {"press": 1070.119, "sea_level": 1078.589},
             {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0, 
              "temp_min": 295.6
              },
             u"Clouds", u"Overcast clouds", 804, u"02d")
     __test_weather_sun_1 = Weather(__test_time_2, 1378496480, 1378449510, 5, 
-            {"all": 0}, {"all": 0}, {"deg": 103.4, "speed": 1.2}, 12, 
+            {"all": 0}, {}, {"deg": 103.4, "speed": 1.2}, 12, 
             {"press": 1090.119, "sea_level": 1078.589},
             {"temp": 299.199, "temp_kf": -1.899, "temp_max": 301.0, 
              "temp_min": 297.6
              },
             u"Clear", u"Sky is clear", 800, u"01d")
     __test_weather_sun_2 = Weather(__test_end_coverage, 1378496480, 1378449510, 5, 
-            {"all": 0}, {"all": 0}, {"deg": 99.4, "speed": 0.8}, 7, 
+            {"all": 0}, {}, {"deg": 99.4, "speed": 0.8}, 7, 
             {"press": 1091.119, "sea_level": 1079.589},
             {"temp": 299.599, "temp_kf": -1.899, "temp_max": 301.9, 
              "temp_min": 298.0
              },
+            u"Clear", u"Sky is clear", 800, u"01d")
+    __test_none_values = Weather(__test_end_coverage, 1378496480, 1378449510, 5, 
+            {}, {}, {}, 7, {"press": 1091.119, "sea_level": 1079.589},
+            {"temp": 299.599, "temp_kf": -1.899},
             u"Clear", u"Sky is clear", 800, u"01d")
     __test_weathers = [ __test_weather_rain, __test_weather_clouds, 
                        __test_weather_sun_1, __test_weather_sun_2 ]
@@ -199,6 +203,40 @@ class TestForecaster(unittest.TestCase):
     def test_get_weather_at_fails_with_bad_parameter(self):
         self.assertRaises(TypeError, Forecaster.get_weather_at, 
                           self.__test_instance, 45.7)
-
+        
+    def test_most_hot(self):
+        self.assertEqual(self.__test_weather_sun_2, self.__test_instance.most_hot())
+        # Test when None is returned
+        fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
+                                   [self.__test_none_values]))
+        self.assertFalse(fcstr.most_hot())
+        
+    def test_most_cold(self):
+        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_cold())
+        # Test when None is returned
+        fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
+                                   [self.__test_none_values]))
+        self.assertFalse(fcstr.most_hot())
+        
+    def test_most_humid(self):
+        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_humid())
+        
+    def test_most_rainy(self):
+        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_rainy())
+        # Test when None is returned
+        fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
+                                   [self.__test_none_values]))
+        self.assertFalse(fcstr.most_rainy())
+        
+    def test_most_snowy(self):
+        self.assertFalse(self.__test_instance.most_snowy())
+        
+    def test_most_windy(self):
+        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_windy())
+        # Test when None is returned
+        fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
+                                   [self.__test_none_values]))
+        self.assertFalse(fcstr.most_windy())
+        
 if __name__ == "__main__":
     unittest.main()

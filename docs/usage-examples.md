@@ -316,6 +316,21 @@ Other useful convenicence methods in class _Forecaster_ are:
     >>> fc.when_snow()
     []                                   # It won't snow: empty list
 
+    # Get weather for the hottest, coldest, most humid, most rainy, most snowy
+    # and most windy days in the forecast
+    >>> fc.most_hot()
+    <weather.Weather at 0x00DB67D9>
+    >>> fc.most_cold()
+    <weather.Weather at 0x00DB62F7>
+    >>> fc.most_humid()
+    <weather.Weather at 0x00DB62F7>
+    >>> fc.most_rainy()
+    <weather.Weather at 0x00DB62F7>
+    >>> fc.most_snowy()
+    None                                 # No snow
+    >>> fc.most_windy()
+    <weather.Weather at 0x00DB62F7>    
+
 When calling _fc.will_be_*_at_ methods you can specify either a UNIXtime, a 
 _datetime.datetime_ object or an ISO8601-formatted string (format: 
 "YYYY-MM-DD HH:MM:SS+00"). A boolean value will be returned, telling if the 

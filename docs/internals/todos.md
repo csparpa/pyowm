@@ -4,7 +4,6 @@ TODOs
 Code
 ----
 + Implement feature 8
-+ More utilities in forecaster.py
 
 Test
 ----

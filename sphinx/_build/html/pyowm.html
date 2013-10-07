@@ -347,6 +347,111 @@ or an ISO8601-formatted string in the format <tt class="docutils literal"><span 
 </dd></dl>
 
 <dl class="method">
+<dt id="pyowm.forecaster.Forecaster.most_cold">
+<tt class="descname">most_cold</tt><big>(</big><big>)</big><a class="headerlink" href="#pyowm.forecaster.Forecaster.most_cold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>Weather</em> object in the forecast having the lowest min
+temperature. The temperature is retrieved using the 
+<tt class="docutils literal"><span class="pre">get_temperature['temp_min']</span></tt> call; was &#8216;temp_min&#8217; key missing for every 
+<em>Weather</em> instance in the forecast, <tt class="docutils literal"><span class="pre">None</span></tt> would be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <em>Weather</em> object or <tt class="docutils literal"><span class="pre">None</span></tt> if no item in the forecast is
+eligible</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyowm.forecaster.Forecaster.most_hot">
+<tt class="descname">most_hot</tt><big>(</big><big>)</big><a class="headerlink" href="#pyowm.forecaster.Forecaster.most_hot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>Weather</em> object in the forecast having the highest max 
+temperature. The temperature is retrieved using the 
+<tt class="docutils literal"><span class="pre">get_temperature['temp_max']</span></tt> call; was &#8216;temp_max&#8217; key missing for every 
+<em>Weather</em> instance in the forecast, <tt class="docutils literal"><span class="pre">None</span></tt> would be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <em>Weather</em> object or <tt class="docutils literal"><span class="pre">None</span></tt> if no item in the forecast is
+eligible</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyowm.forecaster.Forecaster.most_humid">
+<tt class="descname">most_humid</tt><big>(</big><big>)</big><a class="headerlink" href="#pyowm.forecaster.Forecaster.most_humid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>Weather</em> object in the forecast having the highest humidty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <em>Weather</em> object or <tt class="docutils literal"><span class="pre">None</span></tt> if no item in the forecast is
+eligible</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyowm.forecaster.Forecaster.most_rainy">
+<tt class="descname">most_rainy</tt><big>(</big><big>)</big><a class="headerlink" href="#pyowm.forecaster.Forecaster.most_rainy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>Weather</em> object in the forecast having the highest 
+precipitation volume. The rain amount is retrieved via the <tt class="docutils literal"><span class="pre">get_rain['all']</span></tt>
+call; was the &#8216;all&#8217; key missing for every <em>Weather</em> instance in the 
+forecast,``None`` would be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <em>Weather</em> object or <tt class="docutils literal"><span class="pre">None</span></tt> if no item in the forecast is
+eligible</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyowm.forecaster.Forecaster.most_snowy">
+<tt class="descname">most_snowy</tt><big>(</big><big>)</big><a class="headerlink" href="#pyowm.forecaster.Forecaster.most_snowy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>Weather</em> object in the forecast having the highest 
+snow volume. The snow amount is retrieved via the <tt class="docutils literal"><span class="pre">get_snow['all']</span></tt>
+call; was the &#8216;all&#8217; key missing for every <em>Weather</em> instance in the 
+forecast, <tt class="docutils literal"><span class="pre">None</span></tt> would be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <em>Weather</em> object or <tt class="docutils literal"><span class="pre">None</span></tt> if no item in the forecast is
+eligible</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyowm.forecaster.Forecaster.most_windy">
+<tt class="descname">most_windy</tt><big>(</big><big>)</big><a class="headerlink" href="#pyowm.forecaster.Forecaster.most_windy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>Weather</em> object in the forecast having the highest 
+wind speed. The snow amount is retrieved via the <tt class="docutils literal"><span class="pre">get_wind['speed']</span></tt>
+call; was the &#8216;speed&#8217; key missing for every <em>Weather</em> instance in the 
+forecast, <tt class="docutils literal"><span class="pre">None</span></tt> would be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <em>Weather</em> object or <tt class="docutils literal"><span class="pre">None</span></tt> if no item in the forecast is
+eligible</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyowm.forecaster.Forecaster.when_clouds">
 <tt class="descname">when_clouds</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pyowm/forecaster.html#Forecaster.when_clouds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyowm.forecaster.Forecaster.when_clouds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a sublist of the <em>Weather</em> list in the forecast, containing

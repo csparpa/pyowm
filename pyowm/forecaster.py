@@ -282,3 +282,119 @@ class Forecaster(object):
         """
         return weatherutils.find_closest_weather(self.__forecast.get_weathers(),
                                                  converter.to_UNIXtime(timeobject))
+        
+    def most_hot(self):
+        """
+        Returns the *Weather* object in the forecast having the highest max 
+        temperature. The temperature is retrieved using the 
+        ``get_temperature['temp_max']`` call; was 'temp_max' key missing for every 
+        *Weather* instance in the forecast, ``None`` would be returned.
+        
+        :returns: a *Weather* object or ``None`` if no item in the forecast is
+            eligible
+        """
+        maxtemp = -270.0 #No one would survive that...
+        hottest = None
+        for weather in self.__forecast.get_weathers():
+            d = weather.get_temperature()
+            if 'temp_max' in d:
+                if d['temp_max'] > maxtemp:
+                    maxtemp = d['temp_max']
+                    hottest = weather
+        return hottest
+    
+    def most_cold(self):
+        """
+        Returns the *Weather* object in the forecast having the lowest min
+        temperature. The temperature is retrieved using the 
+        ``get_temperature['temp_min']`` call; was 'temp_min' key missing for every 
+        *Weather* instance in the forecast, ``None`` would be returned.
+        
+        :returns: a *Weather* object or ``None`` if no item in the forecast is
+            eligible
+        """
+        mintemp = 1000.0 #No one would survive that... 
+        coldest = None
+        for weather in self.__forecast.get_weathers():
+            d = weather.get_temperature()
+            if 'temp_min' in d:
+                if d['temp_min'] < mintemp:
+                    mintemp = d['temp_min']
+                    coldest = weather
+        return coldest
+    
+    def most_humid(self):
+        """
+        Returns the *Weather* object in the forecast having the highest humidty.
+        
+        :returns: a *Weather* object or ``None`` if no item in the forecast is
+            eligible
+        """
+        max_humidity = 0
+        most_humid = None
+        for weather in self.__forecast.get_weathers():
+            h = weather.get_humidity()
+            if h > max_humidity:
+                max_humidity = h
+                most_humid = weather
+        return most_humid
+    
+    def most_rainy(self):
+        """
+        Returns the *Weather* object in the forecast having the highest 
+        precipitation volume. The rain amount is retrieved via the ``get_rain['all']``
+        call; was the 'all' key missing for every *Weather* instance in the 
+        forecast,``None`` would be returned.
+        
+        :returns: a *Weather* object or ``None`` if no item in the forecast is
+            eligible
+        """
+        max_rain = 0
+        most_rainy = None
+        for weather in self.__forecast.get_weathers():
+            d = weather.get_rain()
+            if 'all' in d:
+                if d['all'] > max_rain:
+                    max_rain = d['all']
+                    most_rainy = weather
+        return most_rainy
+    
+    def most_snowy(self):
+        """
+        Returns the *Weather* object in the forecast having the highest 
+        snow volume. The snow amount is retrieved via the ``get_snow['all']``
+        call; was the 'all' key missing for every *Weather* instance in the 
+        forecast, ``None`` would be returned.
+        
+        :returns: a *Weather* object or ``None`` if no item in the forecast is
+            eligible
+        """
+        max_snow = 0
+        most_snowy = None
+        for weather in self.__forecast.get_weathers():
+            d = weather.get_snow()
+            if 'all' in d:
+                if d['all'] > max_snow:
+                    max_snow = d['all']
+                    most_snowy = weather
+        return most_snowy
+    
+    def most_windy(self):
+        """
+        Returns the *Weather* object in the forecast having the highest 
+        wind speed. The snow amount is retrieved via the ``get_wind['speed']``
+        call; was the 'speed' key missing for every *Weather* instance in the 
+        forecast, ``None`` would be returned.
+        
+        :returns: a *Weather* object or ``None`` if no item in the forecast is
+            eligible
+        """
+        max_wind_speed = 0
+        most_windy = None
+        for weather in self.__forecast.get_weathers():
+            d = weather.get_wind()
+            if 'speed' in d:
+                if d['speed'] > max_wind_speed:
+                    max_wind_speed = d['speed']
+                    most_windy = weather
+        return most_windy
