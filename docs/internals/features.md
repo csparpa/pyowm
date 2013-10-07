@@ -21,7 +21,7 @@ Feature list
 	7. search history for a specific location
 	
 	# Weather history for a station
-	8. search history for station (Yet To Be Implemented)
+	8. search history for station
 
 
 Features in code
@@ -92,11 +92,28 @@ Features in code
 	
 	# *** Historic weather data recordings for a meteostation ***
 	
-	#http://api.openweathermap.org/data/2.5/history/station/39276?type=tick
-	#search data measurements of station 39276
-	#http://api.openweathermap.org/data/2.5/history/station/39276?type=hour
-	#http://api.openweathermap.org/data/2.5/history/station/39276?type=day
+	#search data measurements of station 39276 in the last minutes, every minute
+	#is a tick (defaults to: limit=None)
+	#http://api.openweathermap.org/data/2.5/history/station?id=39276&type=tick
+	dictionary = owm.station_tick_history(39276)
+	
+	#search data measurements of station 39276 in the last hours (defaults to: 
+	#limit=None)
+	#http://api.openweathermap.org/data/2.5/history/station?id=39276&type=hour
+	sh = owm.station_hour_history(39276)
+	
+	#search data measurements of station 39276 in the last days (defaults to: 
+	#limit=None)
+	#http://api.openweathermap.org/data/2.5/history/station?id=39276&type=day
+	sh = owm.station_day_history(39276)
 
-
-	#http://api.openweathermap.org/data/2.5/history/station/39276?type=tick&cnt=3
+	#search data measurements of station 2865, keep only 3 items
+	#http://api.openweathermap.org/data/2.5/history/station?id=2865&type=tick&cnt=3
+	sh = owm.station_tick_history(2865, limit=3)
+	
+	#http://api.openweathermap.org/data/2.5/history/station?id=2865&type=hour&cnt=3
+	sh = owm.station_hour_history(2865, limit=3)
+	
+	#http://api.openweathermap.org/data/2.5/history/station?id=2865&type=day&cnt=3
+	sh = owm.station_day_history(2865, limit=3)
 

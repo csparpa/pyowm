@@ -199,38 +199,258 @@ JSON responses
 	}
     
     # Meteostation tick history
-    http://api.openweathermap.org/data/2.5/history/station/39276?type=tick
+    http://api.openweathermap.org/data/2.5/history/station?id=39276&type=tick
     
 	{
-		"message": "",
-		"cod": "200",
-		"type": "tick",
-		"station_id": 39276,
-		"calctime": " tick = 0.0031 total=0.0039",
-		"cnt": 30,
-		"list": [{
-			"temp": 266.25,
-			"main": {
-				"temp": 266.25,
-				"humidity": 27.1,
-				"pressure": 1010.03
-			},
-			"humidity": 27.1,
-			"pressure": 1010.03,
-			"dt": 1362933923
-		},
-		{
-			"temp": 266.25,
-			"main": {
-				"temp": 266.25,
-				"humidity": 27.3,
-				"pressure": 1010.02
-			},
-			"humidity": 27.3,
-			"pressure": 1010.02,
-			"dt": 1362933983
-		},
-		...],
+	  "message": "",
+	  "cod": "200",
+	  "type": "tick",
+	  "station_id": 39276,
+	  "calctime": " tick = 0.0128 total=1.1367",
+	  "cnt": 30,
+	  "list": [{
+	    "temp": 266.25,
+	    "main": {
+	      "temp": 266.25,
+	      "humidity": 27.1,
+	      "pressure": 1010.03
+	    },
+	    "humidity": 27.1,
+	    "pressure": 1010.03,
+	    "dt": 1362933923
+	  },
+	  {
+	    "temp": 266.25,
+	    "main": {
+	      "temp": 266.25,
+	      "humidity": 27.3,
+	      "pressure": 1010.02
+	    },
+	    "humidity": 27.3,
+	    "pressure": 1010.02,
+	    "dt": 1362933983
+	  },
+	  {
+	    "temp": 266.25,
+	    "main": {
+	      "temp": 266.25,
+	      "humidity": 27.7,
+	      "pressure": 1010.09
+	    },
+	    "humidity": 27.7,
+	    "pressure": 1010.09,
+	    "dt": 1362934043
+	  }
+	    ...
+	    ]
+	}
+	
+    # Meteostation hour history
+	#http://api.openweathermap.org/data/2.5/history/station?id=35579&type=hour
+	
+	{
+	  "message": "",
+	  "cod": "200",
+	  "type": "hour",
+	  "station_id": 35579,
+	  "calctime": 0.1122,
+	  "cnt": 1,
+	  "list": [{
+	    "temp": {
+	      "v": 281.48,
+	      "c": 2,
+	      "mi": 281.48,
+	      "ma": 281.48
+	    },
+	    "pressure": {
+	      "v": 1024,
+	      "c": 2,
+	      "mi": 1024,
+	      "ma": 1024
+	    },
+	    "humidity": {
+	      "v": 98,
+	      "c": 2,
+	      "mi": 98,
+	      "ma": 98
+	    },
+	    "rain": {
+	      "today": {
+	        "v": 19.81,
+	        "c": 2,
+	        "mi": 19.812,
+	        "ma": 19.812
+	      }
+	    },
+	    "wind": {
+	      "speed": {
+	        "v": 4.37,
+	        "c": 2,
+	        "mi": 4.11,
+	        "ma": 4.63
+	      },
+	      "deg": {
+	        "v": 356
+	      }
+	    },
+	    "main": {
+	      "humidity": {
+	        "v": 98,
+	        "c": 2,
+	        "mi": 98,
+	        "ma": 98
+	      },
+	      "temp": {
+	        "v": 281.48,
+	        "c": 2,
+	        "mi": 281.48,
+	        "ma": 281.48
+	      },
+	      "temp_max": 281.48,
+	      "pressure": {
+	        "v": 1024,
+	        "c": 2,
+	        "mi": 1024,
+	        "ma": 1024
+	      }
+	    },
+	    "dt": 1381140000
+	  }]
+	}
+	
+	# Meteostation day history
+	# http://api.openweathermap.org/data/2.5/history/station?id=35579&type=day
+	{
+	  "message": "",
+	  "cod": "200",
+	  "type": "day",
+	  "station_id": 35579,
+	  "calctime": 0.1868,
+	  "cnt": 14,
+	  "list": [{
+	    "temp": {
+	      "v": 287.78,
+	      "c": 3,
+	      "mi": 287.59,
+	      "ma": 288.15
+	    },
+	    "pressure": {
+	      "v": 1021,
+	      "c": 3,
+	      "mi": 1021,
+	      "ma": 1021
+	    },
+	    "humidity": {
+	      "v": 84.33,
+	      "c": 3,
+	      "mi": 84,
+	      "ma": 85
+	    },
+	    "rain": {
+	      "today": {
+	        "v": 0.76,
+	        "c": 3,
+	        "mi": 0.762,
+	        "ma": 0.762
+	      }
+	    },
+	    "wind": {
+	      "speed": {
+	        "v": 11.82,
+	        "c": 3,
+	        "mi": 10.79,
+	        "ma": 12.85
+	      },
+	      "deg": {
+	        "v": 197
+	      }
+	    },
+	    "main": {
+	      "humidity": {
+	        "v": 84.33,
+	        "c": 3,
+	        "mi": 84,
+	        "ma": 85
+	      },
+	      "temp": {
+	        "v": 287.78,
+	        "c": 3,
+	        "mi": 287.59,
+	        "ma": 288.15
+	      },
+	      "temp_max": 287.59,
+	      "pressure": {
+	        "v": 1021,
+	        "c": 3,
+	        "mi": 1021,
+	        "ma": 1021
+	      }
+	    },
+	    "dt": 1378598400
+	  },
+	  {
+	    "temp": {
+	      "v": 287.97,
+	      "c": 31,
+	      "mi": 285.93,
+	      "ma": 289.26
+	    },
+	    "pressure": {
+	      "v": 1020.35,
+	      "c": 31,
+	      "mi": 1019,
+	      "ma": 1021
+	    },
+	    "humidity": {
+	      "v": 74.74,
+	      "c": 31,
+	      "mi": 62,
+	      "ma": 87
+	    },
+	    "rain": {
+	      "today": {
+	        "v": 0,
+	        "c": 31,
+	        "mi": 0,
+	        "ma": 0
+	      }
+	    },
+	    "wind": {
+	      "speed": {
+	        "v": 2.97,
+	        "c": 31,
+	        "mi": 0,
+	        "ma": 15.93
+	      },
+	      "deg": {
+	        "v": 196
+	      }
+	    },
+	    "main": {
+	      "humidity": {
+	        "v": 74.74,
+	        "c": 31,
+	        "mi": 62,
+	        "ma": 87
+	      },
+	      "temp": {
+	        "v": 287.97,
+	        "c": 31,
+	        "mi": 285.93,
+	        "ma": 289.26
+	      },
+	      "temp_max": 285.93,
+	      "pressure": {
+	        "v": 1020.35,
+	        "c": 31,
+	        "mi": 1019,
+	        "ma": 1021
+	      }
+	    },
+	    "dt": 1378684800
+	  },
+	  ...
+	  ]
 	}
 
 API key usage

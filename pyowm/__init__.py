@@ -14,5 +14,6 @@ from weather import Weather
 from observation import Observation
 from forecast import Forecast
 from forecaster import Forecaster
+from stationhistory import StationHistory
 from utils import timeutils
 from owm import OWM
