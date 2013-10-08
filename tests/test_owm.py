@@ -16,7 +16,7 @@ import unittest
 import time
 from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
     THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON, \
-    STATION_TICK_WEATHER_HISTORY_JSON
+    STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_JSON
 from pyowm import OWM
 from pyowm.utils import httputils
 from pyowm.forecast import Forecast
@@ -56,7 +56,17 @@ class TestOWM(unittest.TestCase):
                                                        API_subset_URL,
                                                        params_dict, API_key):
         return STATION_TICK_WEATHER_HISTORY_JSON
-
+    
+    def mock_httputils_call_API_returning_station_hour_weather_history(self,
+                                                       API_subset_URL,
+                                                       params_dict, API_key):
+        return STATION_WEATHER_HISTORY_JSON
+    
+    def mock_httputils_call_API_returning_station_day_weather_history(self,
+                                                       API_subset_URL,
+                                                       params_dict, API_key):
+        return STATION_WEATHER_HISTORY_JSON
+    
     # Tests
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
@@ -277,7 +287,7 @@ class TestOWM(unittest.TestCase):
         
     def test_station_tick_history(self):
         """
-        Test that owm.weather_history returns a list of Weather objects. 
+        Test that method returns a StationHistory object 
         We need to monkey patch the inner call to httputils.call_API function
         """
         ref_to_original_call_API = httputils.call_API
@@ -292,6 +302,44 @@ class TestOWM(unittest.TestCase):
         Test method failure providing a negative value for 'limit'
         """
         self.assertRaises(ValueError, OWM.station_tick_history, self.__test_instance, \
+                          1234, -3)
+        
+    def test_station_hour_history(self):
+        """
+        Test that method returns a StationHistory object
+        We need to monkey patch the inner call to httputils.call_API function
+        """
+        ref_to_original_call_API = httputils.call_API
+        httputils.call_API = self.mock_httputils_call_API_returning_station_hour_weather_history
+        result = self.__test_instance.station_hour_history(1234, limit=4)
+        httputils.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, StationHistory))
+        self.assertTrue(isinstance(result.get_measurements(), dict))
+        
+    def test_station_hour_history_fails_with_wrong_params(self):
+        """
+        Test method failure providing a negative value for 'limit'
+        """
+        self.assertRaises(ValueError, OWM.station_hour_history, self.__test_instance, \
+                          1234, -3)
+        
+    def test_station_day_history(self):
+        """
+        Test that method returns a StationHistory object
+        We need to monkey patch the inner call to httputils.call_API function
+        """
+        ref_to_original_call_API = httputils.call_API
+        httputils.call_API = self.mock_httputils_call_API_returning_station_day_weather_history
+        result = self.__test_instance.station_day_history(1234, limit=4)
+        httputils.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, StationHistory))
+        self.assertTrue(isinstance(result.get_measurements(), dict))
+        
+    def test_station_day_history_fails_with_wrong_params(self):
+        """
+        Test method failure providing a negative value for 'limit'
+        """
+        self.assertRaises(ValueError, OWM.station_day_history, self.__test_instance, \
                           1234, -3)
  
 if __name__ == "__main__":

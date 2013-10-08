@@ -1172,6 +1172,70 @@ maximum number of items retrieved</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pyowm.owm.OWM.station_day_history">
+<tt class="descname">station_day_history</tt><big>(</big><em>station_ID</em>, <em>limit=None</em><big>)</big><a class="headerlink" href="#pyowm.owm.OWM.station_day_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the OWM web API for historic weather data measurements for the
+specified meteostation (eg: 2865), sampled once a day. 
+A <em>StationHistory</em> object instance is returned, encapsulating the 
+measurements: the total number of data points can be limited using the
+appropriate parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>station_ID</strong> (<em>int</em>) &#8211; the numeric ID of the meteostation</li>
+<li><strong>limit</strong> (int or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; the maximum number of data points the result shall contain
+(default is <tt class="docutils literal"><span class="pre">None</span></tt>, which stands for any number of data points)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <em>StationHistory</em> instance or <tt class="docutils literal"><span class="pre">None</span></tt> if data is not
+available for the specified meteostation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ParseResponseException</em> when OWM web API responses&#8217; data cannot
+be parsed, <em>APICallException</em> when OWM web API can not be reached,
+<em>ValueError</em> if the limit value is negative</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyowm.owm.OWM.station_hour_history">
+<tt class="descname">station_hour_history</tt><big>(</big><em>station_ID</em>, <em>limit=None</em><big>)</big><a class="headerlink" href="#pyowm.owm.OWM.station_hour_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the OWM web API for historic weather data measurements for the
+specified meteostation (eg: 2865), sampled once a hour. 
+A <em>StationHistory</em> object instance is returned, encapsulating the 
+measurements: the total number of data points can be limited using the
+appropriate parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>station_ID</strong> (<em>int</em>) &#8211; the numeric ID of the meteostation</li>
+<li><strong>limit</strong> (int or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; the maximum number of data points the result shall contain
+(default is <tt class="docutils literal"><span class="pre">None</span></tt>, which stands for any number of data points)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <em>StationHistory</em> instance or <tt class="docutils literal"><span class="pre">None</span></tt> if data is not
+available for the specified meteostation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><em>ParseResponseException</em> when OWM web API responses&#8217; data cannot
+be parsed, <em>APICallException</em> when OWM web API can not be reached,
+<em>ValueError</em> if the limit value is negative</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyowm.owm.OWM.station_tick_history">
 <tt class="descname">station_tick_history</tt><big>(</big><em>station_ID</em>, <em>limit=None</em><big>)</big><a class="headerlink" href="#pyowm.owm.OWM.station_tick_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queries the OWM web API for historic weather data measurements for the

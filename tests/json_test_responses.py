@@ -75,5 +75,15 @@ STATION_TICK_WEATHER_HISTORY_JSON = '{"message": "", "cod": "200", "type": "tick
     ' {"temp": 266.25, "main": {"temp": 266.25, "humidity": 27.3, "pressure": ' \
     '1010.02}, "humidity": 27.3, "pressure": 1010.02, "dt": 1362933983}]}'
 
+STATION_WEATHER_HISTORY_JSON = '{"message": "", "cod": "200", "type": "hour", ' \
+    '"station_id": 35579, "calctime": 0.1122, "cnt": 1, "list": [{"temp": {"v": ' \
+    '281.48, "c": 2, "mi": 281.48, "ma": 281.48}, "pressure": {"v": 1024, "c": 2,' \
+    ' "mi": 1024, "ma": 1024}, "humidity": {"v": 98, "c": 2, "mi": 98, "ma": 98},' \
+    ' "rain": {"today": {"v": 19.81, "c": 2, "mi": 19.812, "ma": 19.812}}, "wind":' \
+    ' {"speed": {"v": 4.37, "c": 2, "mi": 4.11, "ma": 4.63}, "deg": {"v": 356}}, ' \
+    '"main": {"humidity": {"v": 98, "c": 2, "mi": 98, "ma": 98}, "temp": {"v": 281.48,' \
+    ' "c": 2, "mi": 281.48, "ma": 281.48}, "temp_max": 281.48, "pressure": {"v": 1024,' \
+    ' "c": 2, "mi": 1024, "ma": 1024}}, "dt": 1381140000}]}'
+
 STATION_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"","cod":"200","type":"tick",' \
     '"station_id":11347,"calctime":" tick = 0.1258 total=1.7684","cnt":0,"list":[]}'
