@@ -15,7 +15,8 @@ Monkey patching pattern:
 import unittest
 import time
 from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
-    THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON
+    THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON, \
+    STATION_TICK_WEATHER_HISTORY_JSON
 from pyowm import OWM
 from pyowm.utils import httputils
 from pyowm.forecast import Forecast
@@ -23,6 +24,7 @@ from pyowm.observation import Observation
 from pyowm.weather import Weather
 from pyowm.location import Location
 from pyowm.forecaster import Forecaster
+from pyowm.stationhistory import StationHistory
 
 class TestOWM(unittest.TestCase):
     
@@ -49,6 +51,11 @@ class TestOWM(unittest.TestCase):
                                                        API_subset_URL,
                                                        params_dict, API_key):
         return CITY_WEATHER_HISTORY_JSON
+
+    def mock_httputils_call_API_returning_station_tick_weather_history(self, 
+                                                       API_subset_URL,
+                                                       params_dict, API_key):
+        return STATION_TICK_WEATHER_HISTORY_JSON
 
     # Tests
     def test_API_key_accessors(self):
@@ -267,6 +274,25 @@ class TestOWM(unittest.TestCase):
                   "London,uk", "test", 1234567L)
         self.assertRaises(ValueError, OWM.weather_history, self.__test_instance, \
                   "London,uk", 1234567L, "test")
+        
+    def test_station_tick_history(self):
+        """
+        Test that owm.weather_history returns a list of Weather objects. 
+        We need to monkey patch the inner call to httputils.call_API function
+        """
+        ref_to_original_call_API = httputils.call_API
+        httputils.call_API = self.mock_httputils_call_API_returning_station_tick_weather_history
+        result = self.__test_instance.station_tick_history(1234, limit=4)
+        httputils.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, StationHistory))
+        self.assertTrue(isinstance(result.get_measurements(), dict))
+        
+    def test_station_tick_history_fails_with_wrong_params(self):
+        """
+        Test method failure providing a negative value for 'limit'
+        """
+        self.assertRaises(ValueError, OWM.station_tick_history, self.__test_instance, \
+                          1234, -3)
  
 if __name__ == "__main__":
     unittest.main()

@@ -14,6 +14,7 @@ from pyowm.observation import Observation
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from pyowm.forecast import Forecast
+from pyowm.stationhistory import StationHistory
 
 def build_location_from(d):
     """
@@ -159,7 +160,7 @@ def parse_observation(json_data):
     
     :param json_data: a raw JSON string
     :type json_data: str
-    :returns: an *Observation* instance
+    :returns: an *Observation* instance or ``None`` if no data is available
     :raises: *ParseResponseError* if it is impossible to find or parse the data
         needed to build the result, *APIResponseError* if the OWM API returns
         a HTTP status error
@@ -188,7 +189,7 @@ def parse_weather_search_results(json_data):
     
     :param json_data: a raw JSON string
     :type json_data: str
-    :returns: a list of *Observation* instances
+    :returns: a list of *Observation* instances or ``None`` if no data is available
     :raises: *ParseResponseError* if it is impossible to find or parse the data
         needed to build the result, *APIResponseError* if the OWM API returns
         a HTTP status error
@@ -221,7 +222,7 @@ def parse_weather_search_results(json_data):
             raise ParseResponseError(''.join([__name__,': impossible to read ' \
               'JSON data', linesep, str(d)]))
 
-def parse_forecast(json_data):
+def parse_forecast(json_data, interval):
     """
     Parses a *Forecast* instance out of raw JSON data coming from OWM web 
     API responses. Only certain properties of the data are used:
@@ -229,7 +230,9 @@ def parse_forecast(json_data):
     
     :param json_data: a raw JSON string
     :type json_data: str
-    :returns: a *Forecast* instance
+    :param interval: the time granularity for this weather forecast
+    :type interval: string
+    :returns: a *Forecast* instance  or ``None`` if no data is available
     :raises: *ParseResponseError* if it is impossible to find or parse the data
         needed to build the result, *APIResponseError* if the OWM API returns
         a HTTP status error
@@ -258,18 +261,18 @@ def parse_forecast(json_data):
         else:
             raise ParseResponseError(''.join([__name__,': impossible to read ' \
               'observation list from JSON data', linesep, str(d)])) 
-    return Forecast("3h", long(round(time())), l, weathers)
+    return Forecast(interval, long(round(time())), l, weathers)
 
 def parse_weather_history(json_data):
     """
     Parses a list of *Weather* instance out of raw JSON data coming from OWM web 
-    API responses when querying for city weatherhistory. Only certain properties
+    API responses when querying for city weather history. Only certain properties
     of the data are used: if these properties are not found or cannot be parsed,
     an error is issued.
     
     :param json_data: a raw JSON string
     :type json_data: str
-    :returns: a list of *Weather* instances
+    :returns: a list of *Weather* instances or ``None`` if no data is available 
     :raises: *ParseResponseError* if it is impossible to find or parse the data
         needed to build the result, *APIResponseError* if the OWM API returns
         a HTTP status error
@@ -295,3 +298,71 @@ def parse_weather_history(json_data):
         else:
             raise ParseResponseError(''.join([__name__,': impossible to read ' \
               'JSON data', linesep, str(d)]))
+            
+def parse_station_history(json_data, station_ID, interval):
+    """
+    Parses a *StationHistory* instance out of raw JSON data coming from OWM web 
+    API responses when querying for meteostation weather history. Only certain 
+    properties of the data are used: if these properties are not found or cannot
+    be parsed, an error is issued.
+    
+    :param json_data: a raw JSON string
+    :type json_data: str
+    :param station_ID: the meteostation ID
+    :type station_ID: int
+    :param interval: the time granularity for this historic weather dataset
+    :type interval: string
+    :returns: a *StationHistory* or ``None`` if no data is available 
+    :raises: *ParseResponseError* if it is impossible to find or parse the data
+        needed to build the result, *APIResponseError* if the OWM API returns
+        a HTTP status error
+        
+    """
+    d = loads(json_data)
+    # Check if server returned errors: this check overcomes the lack of use of 
+    # HTTP error status codes by the OWM API but it's supposed to be deprecated 
+    # as soon as the API implements a correct HTTP mechanism for communicating 
+    # errors to the clients. In addition, in this specific case the OWM API 
+    # responses are the very same either when no results are found for a station
+    # and when the station does not exist!
+    measurements = {}
+    try:
+        if d['cod'] != "200":
+            raise APIResponseError("OWM API: error - response payload: "+dumps(d))
+        if str(d['cnt']) is "0":
+            return None
+        else:
+            for item in d['list']:
+                if isinstance(item['temp'], dict):
+                    temp = item['temp']['v']
+                else:
+                    temp = item['temp']
+                if isinstance(item['humidity'], dict):
+                    hum = item['humidity']['v']
+                else:
+                    hum = item['humidity']
+                if isinstance(item['pressure'], dict):
+                    pres = item['pressure']['v']
+                else:
+                    pres = item['pressure']
+                if 'rain' in item and isinstance(item['rain']['today'], dict):
+                    rain = item['rain']['today']['v']
+                else:
+                    rain = None
+                if 'wind' in item and isinstance(item['wind']['speed'], dict):
+                    wind = item['wind']['speed']['v']
+                else:
+                    wind = None
+                measurements[item['dt']] = {
+                 "temperature": temp,
+                 "humidity": hum,
+                 "pressure": pres,
+                 "rain": rain,
+                 "wind": wind
+                }
+    except KeyError:
+        raise ParseResponseError(''.join([__name__,': impossible to read JSON data',
+                                   linesep, str(d)]))
+    return StationHistory(station_ID, interval, long(round(time())),
+                              measurements)
+        

@@ -212,6 +212,21 @@ class IntegrationTest(unittest.TestCase):
         l5 = self.__owm.weather_history('QmFoPIlbf')  #Shall be None
         self.assertFalse(l5)
 
+    def test_station_tick_history(self):
+        """
+        Test feature: get station tick weather history for a specific meteostation
+        """
+        sh1 = self.__owm.station_tick_history(39276)
+        self.assertTrue(sh1)
+        data1 = sh1.get_measurements()
+        self.assertTrue(data1)
+        self.assertFalse(0, len(data1))
+        sh2 = self.__owm.station_tick_history(39276, limit=2)
+        data2 = sh2.get_measurements()
+        self.assertTrue(data2)
+        self.assertEqual(2, len(data2))        
+        sh3 = self.__owm.station_tick_history(987654) #Shall be None
+        self.assertFalse(sh3)
         
 if __name__ == "__main__":
     unittest.main()

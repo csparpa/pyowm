@@ -66,4 +66,14 @@ FORECAST_NOT_FOUND_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 264374
 CITY_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"no data","cod":"404"}'
 
 CITY_WEATHER_HISTORY_NO_RESULTS_JSON = '{"calctime" : 1.9337,"city_id" : 4219762,' \
-    '"cnt" : 0,"cod" : "200","list" : [],"message" : ""}' 
+    '"cnt" : 0,"cod" : "200","list" : [],"message" : ""}'
+    
+STATION_TICK_WEATHER_HISTORY_JSON = '{"message": "", "cod": "200", "type": "tick", ' \
+    '"station_id": 39276, "calctime": "tick=0.0128total=1.1367", "cnt": 30, ' \
+    '"list": [{"temp": 266.25, "main": {"temp": 266.25, "humidity": 27.1, ' \
+    '"pressure": 1010.03}, "humidity": 27.1, "pressure": 1010.03, "dt": 1362933923},' \
+    ' {"temp": 266.25, "main": {"temp": 266.25, "humidity": 27.3, "pressure": ' \
+    '1010.02}, "humidity": 27.3, "pressure": 1010.02, "dt": 1362933983}]}'
+
+STATION_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"","cod":"200","type":"tick",' \
+    '"station_id":11347,"calctime":" tick = 0.1258 total=1.7684","cnt":0,"list":[]}'

@@ -89,7 +89,77 @@ class StationHistory(object):
             return converter.UNIXtime_to_ISO8601(self.__reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
+
+
+    def temperature_serie(self, unit='kelvin'):
+        """Returns the temperature time series relative to the meteostation, in 
+        the form of a list of tuples, each one containing the couple timestamp-value
+    
+        :param unit: the unit of measure for the temperature values. May be among: 
+            '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
+        :type unit: str
+        :returns: a list of tuples
+        :raises: ValueError when invalid values are provided for the unit of 
+            measure
+    
+        """
+        if unit not in ('kelvin','celsius','fahrenheit'):
+            raise ValueError("Invalid value for parameter 'unit'")
+        result = []
+        for timestamp in self.__measurements:
+            t = self.__measurements[timestamp]['temperature']
+            if unit == 'kelvin':
+                temp = t
+            if unit == 'celsius':
+                temp = converter.kelvin_to_celsius(t)
+            if unit == 'fahrenheit':
+                temp = converter.kelvin_to_fahrenheit(t)
+            result.append((timestamp, temp))
+        return result
+    
+    def humidity_serie(self):
+        """Returns the humidity time series relative to the meteostation, in 
+        the form of a list of tuples, each one containing the couple timestamp-value
+
+        :returns: a list of tuples
+    
+        """
+        return [(timestamp, self.__measurements[timestamp]['humidity']) \
+                for timestamp in self.__measurements]
         
+    def pressure_serie(self):
+        """Returns the atmospheric pressure time series relative to the 
+        meteostation, in the form of a list of tuples, each one containing the
+        couple timestamp-value
+
+        :returns: a list of tuples
+    
+        """
+        return [(timestamp, self.__measurements[timestamp]['pressure']) \
+                for timestamp in self.__measurements]
+        
+    def rain_serie(self):
+        """Returns the precipitation time series relative to the 
+        meteostation, in the form of a list of tuples, each one containing the
+        couple timestamp-value
+
+        :returns: a list of tuples
+    
+        """
+        return [(timestamp, self.__measurements[timestamp]['rain']) \
+                for timestamp in self.__measurements]
+        
+    def wind_serie(self):
+        """Returns the wind speed time series relative to the 
+        meteostation, in the form of a list of tuples, each one containing the
+        couple timestamp-value
+
+        :returns: a list of tuples
+    
+        """
+        return [(timestamp, self.__measurements[timestamp]['wind']) \
+                for timestamp in self.__measurements]
+
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
         

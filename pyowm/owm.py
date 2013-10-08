@@ -7,7 +7,7 @@ Module containing the PyOWM library main entry point
 import time
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
-    CITY_WEATHER_HISTORY_URL
+    CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
 from utils import httputils, jsonparser, converter
 from forecaster import Forecaster
 
@@ -200,7 +200,7 @@ class OWM(object):
         assert type(name) is str, "'name' must be a str"
         json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
                                        {'q': name}, self.__API_key)
-        forecast = jsonparser.parse_forecast(json_data)
+        forecast = jsonparser.parse_forecast(json_data, "3h")
         if forecast:
             return Forecaster(forecast)
         else:
@@ -235,7 +235,7 @@ class OWM(object):
             params['cnt'] = limit
         json_data = httputils.call_API(DAILY_FORECAST_URL, 
                                        params, self.__API_key)
-        forecast = jsonparser.parse_forecast(json_data)
+        forecast = jsonparser.parse_forecast(json_data, "daily")
         if forecast:
             return Forecaster(forecast)
         else:
@@ -287,3 +287,36 @@ class OWM(object):
         json_data = httputils.call_API(CITY_WEATHER_HISTORY_URL, 
            params, self.__API_key)
         return jsonparser.parse_weather_history(json_data)
+    
+    def station_tick_history(self, station_ID, limit=None):
+        """
+        Queries the OWM web API for historic weather data measurements for the
+        specified meteostation (eg: 2865), sampled once a minute (tick). 
+        A *StationHistory* object instance is returned, encapsulating the 
+        measurements: the total number of data points can be limited using the
+        appropriate parameter        
+        
+        :param station_ID: the numeric ID of the meteostation
+        :type station_ID: int
+        :param limit: the maximum number of data points the result shall contain
+            (default is ``None``, which stands for any number of data points)
+        :type limit: int or ``None``
+        :returns: a *StationHistory* instance or ``None`` if data is not
+            available for the specified meteostation
+        :raises: *ParseResponseException* when OWM web API responses' data cannot
+            be parsed, *APICallException* when OWM web API can not be reached,
+            *ValueError* if the limit value is negative
+            
+        """
+        assert isinstance(station_ID, int), "'station_ID' must be int"
+        self.__station_ID = station_ID
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+        params = {'id': station_ID, 'type': 'tick'}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = httputils.call_API(STATION_WEATHER_HISTORY_URL, 
+                                       params, self.__API_key)
+        return jsonparser.parse_station_history(json_data, station_ID, "tick")

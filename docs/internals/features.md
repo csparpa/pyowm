@@ -95,7 +95,7 @@ Features in code
 	#search data measurements of station 39276 in the last minutes, every minute
 	#is a tick (defaults to: limit=None)
 	#http://api.openweathermap.org/data/2.5/history/station?id=39276&type=tick
-	dictionary = owm.station_tick_history(39276)
+	sh = owm.station_tick_history(39276)
 	
 	#search data measurements of station 39276 in the last hours (defaults to: 
 	#limit=None)
