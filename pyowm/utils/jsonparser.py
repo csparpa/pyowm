@@ -327,21 +327,28 @@ def parse_station_history(json_data, station_ID, interval):
     # and when the station does not exist!
     measurements = {}
     try:
-        if d['cod'] != "200":
-            raise APIResponseError("OWM API: error - response payload: "+dumps(d))
+        if 'cod' in d:
+            if d['cod'] != "200":
+                raise APIResponseError("OWM API: error - response payload: "+dumps(d))
         if str(d['cnt']) is "0":
             return None
         else:
             for item in d['list']:
-                if isinstance(item['temp'], dict):
+                if 'temp' not in item:
+                    temp = None
+                elif isinstance(item['temp'], dict):
                     temp = item['temp']['v']
                 else:
                     temp = item['temp']
-                if isinstance(item['humidity'], dict):
+                if 'humidity' not in item:
+                    hum = None
+                elif isinstance(item['humidity'], dict):
                     hum = item['humidity']['v']
                 else:
                     hum = item['humidity']
-                if isinstance(item['pressure'], dict):
+                if 'pressure' not in item:
+                    pres = None
+                elif isinstance(item['pressure'], dict):
                     pres = item['pressure']['v']
                 else:
                     pres = item['pressure']

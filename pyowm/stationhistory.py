@@ -64,7 +64,12 @@ class StationHistory(object):
     
     def get_measurements(self):
         """
-        Returns the measurements of the meteostation
+        Returns the measurements of the meteostation as a dict. The dictionary
+        keys are UNIX timestamps and for each one the value is a dict containing
+        the keys 'temperature','humidity','pressure','rain','wind' along with 
+        their corresponding numeric values.
+        Eg: ``{1362933983: { "temperature": 266.25, "humidity": 27.3,  
+        "pressure": 1010.02, "rain": None, "wind": 4.7}, ... }``
         
         :returns: the dict containing the meteostation's measurements
         
@@ -91,7 +96,7 @@ class StationHistory(object):
             raise ValueError("Invalid value for parameter 'format'")
 
 
-    def temperature_serie(self, unit='kelvin'):
+    def temperature_series(self, unit='kelvin'):
         """Returns the temperature time series relative to the meteostation, in 
         the form of a list of tuples, each one containing the couple timestamp-value
     
@@ -117,7 +122,7 @@ class StationHistory(object):
             result.append((timestamp, temp))
         return result
     
-    def humidity_serie(self):
+    def humidity_series(self):
         """Returns the humidity time series relative to the meteostation, in 
         the form of a list of tuples, each one containing the couple timestamp-value
 
@@ -127,7 +132,7 @@ class StationHistory(object):
         return [(timestamp, self.__measurements[timestamp]['humidity']) \
                 for timestamp in self.__measurements]
         
-    def pressure_serie(self):
+    def pressure_series(self):
         """Returns the atmospheric pressure time series relative to the 
         meteostation, in the form of a list of tuples, each one containing the
         couple timestamp-value
@@ -138,7 +143,7 @@ class StationHistory(object):
         return [(timestamp, self.__measurements[timestamp]['pressure']) \
                 for timestamp in self.__measurements]
         
-    def rain_serie(self):
+    def rain_series(self):
         """Returns the precipitation time series relative to the 
         meteostation, in the form of a list of tuples, each one containing the
         couple timestamp-value
@@ -149,7 +154,7 @@ class StationHistory(object):
         return [(timestamp, self.__measurements[timestamp]['rain']) \
                 for timestamp in self.__measurements]
         
-    def wind_serie(self):
+    def wind_series(self):
         """Returns the wind speed time series relative to the 
         meteostation, in the form of a list of tuples, each one containing the
         couple timestamp-value

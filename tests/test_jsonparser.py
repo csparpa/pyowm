@@ -190,6 +190,21 @@ class TestJSONParser(unittest.TestCase):
     def test_parse_station_history_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, jsonparser.parse_station_history, 
                           self.__bad_json, 1234, "tick")
+
+    def test_parse_station_history_with_empty_data(self):
+        """
+        Test that method returns a StationHistory instance having None values
+        for every stored physical entities, at every sampling time
+        """
+        json_data = '{"message": "","cod": "200","type": "hour","station_id": ' \
+            '35579,"calctime": 0.1122,"cnt": 1,"list": [{"main": "test","dt": ' \
+            '1381140000}]}'
+        result = jsonparser.parse_station_history(json_data, 1234, "hour")
+        datapoints = result.get_measurements()
+        for datapoint in datapoints:
+            self.assertTrue(all(value is None for value \
+                                in datapoints[datapoint].values()))
+            
         
     def test_parse_station_history_when_station_not_found(self):
         """
