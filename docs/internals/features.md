@@ -3,25 +3,27 @@ Feature list
 ------------
 
 	# Current weather for a single location
-	1. Retrieve the current weather conditions for a specific toponym
-	2. Retrieve the current weather conditions for a specific lon/lat couple
+	01. Retrieve the current weather conditions for a specific toponym
+	02. Retrieve the current weather conditions for a specific lon/lat couple
 	
 	# Current weather for multiple locations
-	3. Search for current weather conditions in all the cities whose name match 
+	03. Search for current weather conditions in all the cities whose name match 
 	   a specific pattern
-	4. Search for current weather conditions in all the cities that lie close to
+	04. Search for current weather conditions in all the cities that lie close to
 	   the specified lon/lat couple
 	
 	# Weather forecasts for a location
-	5. Retrieve full 3h weather forecast for a specific toponym
-	6. Retrieve full daily weather forecast for a specific toponym
+	05. Retrieve full 3h weather forecast for a specific toponym
+	06. Retrieve full daily weather forecast for a specific toponym
 	
 	
 	# Weather history for a location
-	7. search history for a specific location
+	07. search weather history for a specific location
 	
-	# Weather history for a station
-	8. search history for station
+	# Weather history for a meteostation
+	08. search tick weather history for meteostation
+	09. search hour weather history for meteostation
+	10. search day weather history for meteostation
 
 
 Features in code
