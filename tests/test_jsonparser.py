@@ -113,9 +113,6 @@ class TestJSONParser(unittest.TestCase):
                           self.__bad_json)
         
     def test_parse_weather_search_results_when_no_results(self):
-        """
-        Test that method returns an empty list when server found no results
-        """
         result = jsonparser.parse_weather_search_results(SEARCH_WITH_NO_RESULTS_JSON)
         self.assertTrue(isinstance(result, list))
         self.assertEqual(0, len(result))
@@ -162,17 +159,11 @@ class TestJSONParser(unittest.TestCase):
                           self.__bad_json)
         
     def test_parse_weather_history_when_no_results(self):
-        """
-        Test that method returns an empty list when server found no results
-        """
         result = jsonparser.parse_weather_history(CITY_WEATHER_HISTORY_NO_RESULTS_JSON)
         self.assertTrue(isinstance(result, list))
         self.assertEqual(0, len(result))
         
     def test_parse_weather_history_when_location_not_found(self):
-        """
-        Test that method returns None when the specified location is not found
-        """
         self.assertFalse(jsonparser.parse_weather_history(
                                           CITY_WEATHER_HISTORY_NOT_FOUND_JSON))
         
@@ -192,10 +183,6 @@ class TestJSONParser(unittest.TestCase):
                           self.__bad_json, 1234, "tick")
 
     def test_parse_station_history_with_empty_data(self):
-        """
-        Test that method returns a StationHistory instance having None values
-        for every stored physical entities, at every sampling time
-        """
         json_data = '{"message": "","cod": "200","type": "hour","station_id": ' \
             '35579,"calctime": 0.1122,"cnt": 1,"list": [{"main": "test","dt": ' \
             '1381140000}]}'
@@ -204,12 +191,8 @@ class TestJSONParser(unittest.TestCase):
         for datapoint in datapoints:
             self.assertTrue(all(value is None for value \
                                 in datapoints[datapoint].values()))
-            
-        
+
     def test_parse_station_history_when_station_not_found(self):
-        """
-        Test that method returns None when the specified meteostation is not found
-        """
         self.assertFalse(
              jsonparser.parse_station_history(STATION_WEATHER_HISTORY_NOT_FOUND_JSON,
              1234, "hour"))

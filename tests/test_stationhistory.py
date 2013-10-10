@@ -39,20 +39,16 @@ class TestStationHistory(unittest.TestCase):
                           self.__test_measurements)
         
     def test_init_fails_with_unknown_interval(self):
-        """
-        Test method failure providing a bad value for 'interval'
-        """
         self.assertRaises(ValueError, StationHistory, 1234, 'xyz', 1234567L, 
                           self.__test_measurements)
 
-    def test_getters_return_expected_data(self):
+    def test_getters_return_expected_3h_data(self):
         self.assertEqual(self.__test_instance.get_interval(), self.__test_interval)
         self.assertEqual(self.__test_instance.get_station_ID(), self.__test_station_ID)
         self.assertEqual(self.__test_instance.get_reception_time(),
                          self.__test_reception_time)
         self.assertEqual(self.__test_instance.get_measurements(),
                          self.__test_measurements)
-
 
     def test_returning_different_formats_for_reception_time(self):
         """
@@ -99,9 +95,6 @@ class TestStationHistory(unittest.TestCase):
         self.assertEqual(expected, self.__test_instance.wind_series())
         
     def test_JSON_dump(self):
-        """
-        Test correct object data dump to a JSON string
-        """
         expected_output = '{"reception_time": 1378684800, "interval": "tick", ' \
             '"measurements": {"1362934043": {"wind": 4.7, "pressure": 1010.09, ' \
             '"temperature": 266.85, "rain": null, "humidity": 27.7}, "1362933983": {"wind": ' \
@@ -110,9 +103,6 @@ class TestStationHistory(unittest.TestCase):
         self.assertEqual(expected_output, self.__test_instance.to_JSON())
         
     def test_XML_dump(self):
-        """
-        Test correct object data dump to a XML string
-        """
         expected_output = '<StationHistory><station_id>2865</station_id><interval>' \
             'tick</interval><reception_time>1378684800</reception_time>' \
             '<measurements><1362934043><wind>4.7</wind><pressure>1010.09</pressure>' \

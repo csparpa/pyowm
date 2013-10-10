@@ -24,8 +24,8 @@ class TestForecaster(unittest.TestCase):
     
     __test_location = Location(u'test', 12.3, 43.7, 987, u'IT')
     
-    __test_weather_rain = Weather(__test_time_1, 1378496400, 1378449600, 67, 
-            {"all": 30}, {}, {"deg": 252.002, "speed": 4.100}, 57, 
+    __test_weather_rainsnow = Weather(__test_time_1, 1378496400, 1378449600, 67, 
+            {"all": 30}, {"all": 1}, {"deg": 252.002, "speed": 4.100}, 57, 
             {"press": 1030.119, "sea_level": 1038.589},
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098, 
                 "temp_min": 294.199
@@ -56,7 +56,7 @@ class TestForecaster(unittest.TestCase):
             {}, {}, {}, 7, {"press": 1091.119, "sea_level": 1079.589},
             {"temp": 299.599, "temp_kf": -1.899},
             u"Clear", u"Sky is clear", 800, u"01d")
-    __test_weathers = [ __test_weather_rain, __test_weather_clouds, 
+    __test_weathers = [ __test_weather_rainsnow, __test_weather_clouds, 
                        __test_weather_sun_1, __test_weather_sun_2 ]
     
     __test_forecast = Forecast("daily", 1379089800L, __test_location,
@@ -68,18 +68,12 @@ class TestForecaster(unittest.TestCase):
         self.assertEqual(self.__test_instance.get_forecast(), self.__test_forecast)
       
     def test_when_starts_returning_different_timeformats(self):
-        """
-        Test forecaster.when_starts return timestamps in the expected formats
-        """
         self.assertEqual(self.__test_instance.when_starts(timeformat='iso'),
                             self.__test_start_coverage_iso)
         self.assertEqual(self.__test_instance.when_starts(timeformat='unix'),
                             self.__test_time_1)
         
     def test_when_ends_returning_different_timeformats(self):
-        """
-        Test forecaster.when_ends return timestamps in the expected formats
-        """
         self.assertEqual(self.__test_instance.when_ends(timeformat='iso'),
                             self.__test_end_coverage_iso)
         self.assertEqual(self.__test_instance.when_ends(timeformat='unix'),
@@ -101,7 +95,7 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_have_snow())
         
     def test_when_rain(self):
-        self.assertEqual([self.__test_weather_rain],
+        self.assertEqual([self.__test_weather_rainsnow],
                          self.__test_instance.when_rain())
         
     def test_when_sun(self):
@@ -118,26 +112,7 @@ class TestForecaster(unittest.TestCase):
     def test_when_snow(self):
         self.assertFalse(self.__test_instance.when_snow())
         
-    def test_all_will_be_at_methods_fail_with_bad_parameters(self):
-        """
-        Collector test that checks that all Forecaster.will_be_*_at methods
-        fail when provided with bad type parameters
-        """
-        self.assertRaises(TypeError, Forecaster.will_be_rainy_at, 
-                          self.__test_instance, 45.7)
-        self.assertRaises(TypeError, Forecaster.will_be_sunny_at, 
-                          self.__test_instance, 45.7)
-        self.assertRaises(TypeError, Forecaster.will_be_snowy_at, 
-                          self.__test_instance, 45.7)
-        self.assertRaises(TypeError, Forecaster.will_be_snowy_at, 
-                          self.__test_instance, 45.7)
-        self.assertRaises(TypeError, Forecaster.will_be_foggy_at, 
-                          self.__test_instance, 45.7)
-        
     def test_will_be_rainy_at(self):
-        """
-        Test providing three different time values and formats 
-        """
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110L
         time_3 = "2013-09-16 19:56:50+00"
@@ -145,10 +120,11 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_rainy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_rainy_at(time_3))
         
+    def test_will_be_rainy_at_method_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_rainy_at, 
+                          self.__test_instance, 45.7)
+        
     def test_will_be_sunny_at(self):
-        """
-        Test providing three different time values and formats 
-        """
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110L
         time_3 = "2013-09-16 19:56:50+00"
@@ -156,10 +132,11 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_sunny_at(time_2))
         self.assertTrue(self.__test_instance.will_be_sunny_at(time_3))
 
+    def test_will_be_sunny_at_method_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_sunny_at, 
+                          self.__test_instance, 45.7)
+
     def test_will_be_snowy_at(self):
-        """
-        Test providing three different time values and formats 
-        """
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110L
         time_3 = "2013-09-16 19:56:50+00"
@@ -167,34 +144,40 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_3))
         
+    def test_will_be_snowy_at_method_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_snowy_at, 
+                          self.__test_instance, 45.7)
+        
     def test_will_be_cloudy_at(self):
-        """
-        Test providing three different time values and formats 
-        """
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110L
         time_3 = "2013-09-16 19:56:50+00"
         self.assertFalse(self.__test_instance.will_be_cloudy_at(time_1))
         self.assertTrue(self.__test_instance.will_be_cloudy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_cloudy_at(time_3))
+        
+    def test_will_be_cloudy_at_method_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_cloudy_at, 
+                          self.__test_instance, 45.7)
 
     def test_will_be_foggy_at(self):
-        """
-        Test providing three different time values and formats 
-        """
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110L
         time_3 = "2013-09-16 19:56:50+00"
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_1))
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_3))
+        
+    def test_will_be_foggy_at_method_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_foggy_at, 
+                          self.__test_instance, 45.7)
 
     def test_get_weather_at(self):
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110L
         time_3 = "2013-09-16 19:56:50+00"
         self.assertEqual(self.__test_instance.get_weather_at(time_1),
-                         self.__test_weather_rain)
+                         self.__test_weather_rainsnow)
         self.assertEqual(self.__test_instance.get_weather_at(time_2),
                          self.__test_weather_clouds)
         self.assertEqual(self.__test_instance.get_weather_at(time_3),
@@ -206,34 +189,38 @@ class TestForecaster(unittest.TestCase):
         
     def test_most_hot(self):
         self.assertEqual(self.__test_weather_sun_2, self.__test_instance.most_hot())
-        # Test when None is returned
+
+    def test_most_hot_returning_None(self):
         fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
                                    [self.__test_none_values]))
         self.assertFalse(fcstr.most_hot())
         
     def test_most_cold(self):
-        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_cold())
-        # Test when None is returned
+        self.assertEqual(self.__test_weather_rainsnow, self.__test_instance.most_cold())
+
+    def test_most_cold_returning_None(self):
         fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
                                    [self.__test_none_values]))
         self.assertFalse(fcstr.most_hot())
         
     def test_most_humid(self):
-        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_humid())
+        self.assertEqual(self.__test_weather_rainsnow, self.__test_instance.most_humid())
         
     def test_most_rainy(self):
-        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_rainy())
-        # Test when None is returned
+        self.assertEqual(self.__test_weather_rainsnow, self.__test_instance.most_rainy())
+
+    def test_most_snowy(self):
+        self.assertEqual(self.__test_weather_rainsnow, self.__test_instance.most_snowy())
+    
+    def test_most_rainy_returning_None(self):        
         fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
                                    [self.__test_none_values]))
         self.assertFalse(fcstr.most_rainy())
         
-    def test_most_snowy(self):
-        self.assertFalse(self.__test_instance.most_snowy())
-        
     def test_most_windy(self):
-        self.assertEqual(self.__test_weather_rain, self.__test_instance.most_windy())
-        # Test when None is returned
+        self.assertEqual(self.__test_weather_rainsnow, self.__test_instance.most_windy())
+
+    def test_most_windy_returning_None(self):
         fcstr = Forecaster(Forecast("daily", 1379089800L, self.__test_location,
                                    [self.__test_none_values]))
         self.assertFalse(fcstr.most_windy())

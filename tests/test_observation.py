@@ -29,25 +29,20 @@ class TestObservation(unittest.TestCase):
                           self.__test_location, self.__test_weather)
         
     def test_getters_return_expected_data(self):
-        instance = self.__test_instance
-        self.assertEqual(instance.get_reception_time(), self.__test_reception_time)
-        self.assertEqual(instance.get_location(), self.__test_location)
-        self.assertEqual(instance.get_weather(), self.__test_weather)
+        self.assertEqual(self.__test_instance.get_reception_time(),
+                         self.__test_reception_time)
+        self.assertEqual(self.__test_instance.get_location(),
+                         self.__test_location)
+        self.assertEqual(self.__test_instance.get_weather(),
+                         self.__test_weather)
 
     def test_returning_different_formats_for_reception_time(self):
-        """
-        Test get_reception_time returns timestamps in the expected formats
-        """
-        instance = self.__test_instance
-        self.assertEqual(instance.get_reception_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), \
                          self.__test_iso_reception_time)
-        self.assertEqual(instance.get_reception_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
                          self.__test_reception_time)
 
     def test_JSON_dump(self):
-        """
-        Test correct object data dump to a JSON string
-        """
         expected_output = '{"reception_time": 1234567, "Location": {"country": "UK", ' \
             '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, "ID": 987}, '\
             '"Weather": {"status": "Clouds", "clouds": 67, "temperature": ' \
@@ -57,19 +52,14 @@ class TestObservation(unittest.TestCase):
             '20}, "weather_icon_name": "04d", "pressure": {"press": 1030.119, '\
             '"sea_level": 1038.589}, "sunrise_time": 1378449600, "sunset_time": ' \
             '1378496400, "humidity": 57, "wind": {"speed": 1.1, "deg": 252.002}}}'
-        instance = self.__test_instance
-        self.assertEqual(instance.to_JSON(), expected_output)
+        self.assertEqual(self.__test_instance.to_JSON(), expected_output)
         
     def test_XML_dump(self):
-        """
-        Test correct object data dump to an XML string
-        """
         expectedOutput = '<Observation><reception_time>%s</reception_time>%s%s' \
             '</Observation>' % (self.__test_reception_time,
                                 self.__test_location.to_XML(),
                                 self.__test_weather.to_XML())
-        instance = self.__test_instance
-        self.assertEqual(instance.to_XML(), expectedOutput)
+        self.assertEqual(self.__test_instance.to_XML(), expectedOutput)
         
 
 if __name__ == "__main__":

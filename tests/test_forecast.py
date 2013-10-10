@@ -49,29 +49,28 @@ class TestForecast(unittest.TestCase):
         self.assertEqual(self.__test_weathers[index],
                          self.__test_instance.get(index))    
     
-    def test_getters_return_expected_data(self):
+    def test_getters_return_expected_3h_data(self):
         """
         Test either for "3h" forecast and "daily" ones
         """
-        instance1 = Forecast("3h", self.__test_reception_time, 
+        instance = Forecast("3h", self.__test_reception_time, 
                              self.__test_location, self.__test_weathers)
-        self.assertEqual(instance1.get_interval(), "3h")
-        self.assertEqual(instance1.get_reception_time(), 
+        self.assertEqual(instance.get_interval(), "3h")
+        self.assertEqual(instance.get_reception_time(), 
                          self.__test_reception_time)
-        self.assertEqual(instance1.get_location(), self.__test_location)
-        self.assertEqual(instance1.get_weathers(), self.__test_weathers)
-        instance2 = Forecast("daily", self.__test_reception_time, 
+        self.assertEqual(instance.get_location(), self.__test_location)
+        self.assertEqual(instance.get_weathers(), self.__test_weathers)
+        
+    def test_getters_return_expected_daily_data(self):
+        instance = Forecast("daily", self.__test_reception_time, 
                              self.__test_location, self.__test_weathers)
-        self.assertEqual(instance2.get_interval(), "daily")
-        self.assertEqual(instance2.get_reception_time(), 
+        self.assertEqual(instance.get_interval(), "daily")
+        self.assertEqual(instance.get_reception_time(), 
                          self.__test_reception_time)
-        self.assertEqual(instance2.get_location(), self.__test_location)
-        self.assertEqual(instance2.get_weathers(), self.__test_weathers)
+        self.assertEqual(instance.get_location(), self.__test_location)
+        self.assertEqual(instance.get_weathers(), self.__test_weathers)
 
     def test_returning_different_formats_for_reception_time(self):
-        """
-        Test get_reception_time returns timestamps in the expected formats
-        """
         instance = self.__test_instance
         self.assertEqual(instance.get_reception_time(timeformat='iso'), 
                          self.__test_iso_reception_time)
@@ -83,10 +82,6 @@ class TestForecast(unittest.TestCase):
         self.assertEqual(instance.count_weathers(), self.__test_n_weathers)
 
     def test_forecast_iterator(self):
-        """
-        Test that the iterator of the class returns all the Weather objects that
-        the class instance encapsulates
-        """
         instance = self.__test_instance
         counter = 0
         for weather in instance:

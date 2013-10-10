@@ -50,12 +50,14 @@ class TestHTTPUtils(unittest.TestCase):
         API_subset_URL = 'http://test.com/api'
         API_key = 'test_API_key'
         params = {'a': 1, 'b': 2}
-        expected1 = 'http://test.com/api?a=1&b=2&APPID=test_API_key'
-        expected2 = 'http://test.com/api?a=1&b=2'
-        self.assertEqual(httputils.build_full_URL(API_subset_URL, params, API_key),
-                         expected1)
-        self.assertEqual(httputils.build_full_URL(API_subset_URL, params, None),
-                         expected2)
+        self.assertEqual('http://test.com/api?a=1&b=2&APPID=test_API_key', 
+                         httputils.build_full_URL(API_subset_URL, params, API_key))
+        
+    def test_build_full_URL_with_no_API_key(self):
+        API_subset_URL = 'http://test.com/api'
+        params = {'a': 1, 'b': 2}
+        self.assertEqual('http://test.com/api?a=1&b=2', 
+                         httputils.build_full_URL(API_subset_URL, params, None))
         
     def test_call_API(self):
         ref_to_original_urlopen = httputils.urllib2.urlopen

@@ -21,17 +21,17 @@ class IntegrationTest(unittest.TestCase):
         o2 = self.__owm.weather_at('Kiev')
         o3 = self.__owm.weather_at('QmFoPIlbf')  #Shall be None
         self.assertTrue(o1, "")
-        self.assertFalse(o1.get_reception_time() is None, "")
-        self.assertTrue(o1.get_location(), "")
-        self.assertNotIn(None, o1.get_location().__dict__.values(), "")
-        self.assertTrue(o1.get_weather(), "")
-        self.assertNotIn(None, o1.get_weather().__dict__.values(), "")
-        self.assertTrue(o2, "")
-        self.assertFalse(o2.get_reception_time() is None, "")
+        self.assertTrue(o1.get_reception_time())
+        self.assertTrue(o1.get_location())
+        self.assertNotIn(None, o1.get_location().__dict__.values())
+        self.assertTrue(o1.get_weather())
+        self.assertNotIn(None, o1.get_weather().__dict__.values())
+        self.assertTrue(o2)
+        self.assertTrue(o2.get_reception_time())
         self.assertTrue(o2.get_location(), "")
-        self.assertNotIn(None, o2.get_location().__dict__.values(), "")
+        self.assertNotIn(None, o2.get_location().__dict__.values())
         self.assertTrue(o2.get_weather(), "")
-        self.assertNotIn(None, o2.get_weather().__dict__.values(), "")
+        self.assertNotIn(None, o2.get_weather().__dict__.values())
         self.assertFalse(o3)
 
     def test_weather_at_coords(self):
@@ -40,18 +40,18 @@ class IntegrationTest(unittest.TestCase):
         """
         o1 = self.__owm.weather_at_coords(12.484589, 41.896144)  #Rome
         o2 = self.__owm.weather_at_coords(18.503723,-33.936524)  #Cape Town
-        self.assertTrue(o1, "")
-        self.assertFalse(o1.get_reception_time() is None, "")
-        self.assertTrue(o1.get_location(), "")
-        self.assertNotIn(None, o1.get_location().__dict__.values(), "")
-        self.assertTrue(o1.get_weather(), "")
-        self.assertNotIn(None, o1.get_weather().__dict__.values(), "")
-        self.assertTrue(o2, "")
-        self.assertFalse(o2.get_reception_time() is None, "")
-        self.assertTrue(o2.get_location(), "")
-        self.assertNotIn(None, o2.get_location().__dict__.values(), "")
-        self.assertTrue(o2.get_weather(), "")
-        self.assertNotIn(None, o2.get_weather().__dict__.values(), "")
+        self.assertTrue(o1)
+        self.assertTrue(o1.get_reception_time())
+        self.assertTrue(o1.get_location())
+        self.assertNotIn(None, o1.get_location().__dict__.values())
+        self.assertTrue(o1.get_weather())
+        self.assertNotIn(None, o1.get_weather().__dict__.values())
+        self.assertTrue(o2)
+        self.assertTrue(o2.get_reception_time())
+        self.assertTrue(o2.get_location())
+        self.assertNotIn(None, o2.get_location().__dict__.values())
+        self.assertTrue(o2.get_weather())
+        self.assertNotIn(None, o2.get_weather().__dict__.values())
         
     def test_find_weather_by_name(self):
         """
@@ -63,42 +63,42 @@ class IntegrationTest(unittest.TestCase):
         o2 = self.__owm.find_weather_by_name("Paris", "accurate", 2)
         self.assertTrue(isinstance(o1, list))
         for item in o1:
-            self.assertTrue(item, "")
-            self.assertTrue(item.get_reception_time(), "")
-            self.assertTrue(item.get_location(), "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertTrue(item.get_weather(), "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")
+            self.assertTrue(item)
+            self.assertTrue(item.get_reception_time())
+            self.assertTrue(item.get_location())
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertTrue(item.get_weather())
+            self.assertNotIn(None, item.get_weather().__dict__.values())
         self.assertTrue(isinstance(o2, list))
-        self.assertEqual(2, len(o2), "")
+        self.assertFalse(len(o2) > 2)
         for item in o2:
-            self.assertTrue(item, "")
-            self.assertTrue(item.get_reception_time(), "")
-            self.assertTrue(item.get_location(), "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertTrue(item.get_weather(), "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")
+            self.assertTrue(item)
+            self.assertTrue(item.get_reception_time())
+            self.assertTrue(item.get_location())
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertTrue(item.get_weather())
+            self.assertNotIn(None, item.get_weather().__dict__.values())
 
         # Test using searchtype=like
         o3 = self.__owm.find_weather_by_name("London", "like")
         o4 = self.__owm.find_weather_by_name("Paris", "like", 2)
         self.assertTrue(isinstance(o3, list))
         for item in o3:
-            self.assertTrue(item, "")
-            self.assertTrue(item.get_reception_time(), "")
-            self.assertTrue(item.get_location(), "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertTrue(item.get_weather(), "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")
+            self.assertTrue(item)
+            self.assertTrue(item.get_reception_time())
+            self.assertTrue(item.get_location())
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertTrue(item.get_weather())
+            self.assertNotIn(None, item.get_weather().__dict__.values())
         self.assertTrue(isinstance(o4, list))
-        self.assertEqual(2, len(o4), "")
+        self.assertFalse(len(o4) > 2)
         for item in o4:
-            self.assertTrue(item, "")
-            self.assertTrue(item.get_reception_time(), "")
-            self.assertTrue(item.get_location(), "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertTrue(item.get_weather(), "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")
+            self.assertTrue(item)
+            self.assertTrue(item.get_reception_time())
+            self.assertTrue(item.get_location())
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertTrue(item.get_weather())
+            self.assertNotIn(None, item.get_weather().__dict__.values())
 
     def test_find_weather_by_coords(self):
         """
@@ -109,21 +109,21 @@ class IntegrationTest(unittest.TestCase):
         self.assertTrue(isinstance(o2, list))
         for item in o2:
             self.assertTrue(item, "")
-            self.assertTrue(item.get_reception_time(), "")
-            self.assertTrue(item.get_location(), "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertTrue(item.get_weather(), "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")   
+            self.assertTrue(item.get_reception_time())
+            self.assertTrue(item.get_location())
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertTrue(item.get_weather())
+            self.assertNotIn(None, item.get_weather().__dict__.values())   
         o1 = self.__owm.find_weather_by_coords(-2.15, 57.0, 2)  # Scotland
         self.assertTrue(isinstance(o1, list))
-        self.assertEqual(2, len(o1), "")
+        self.assertEqual(2, len(o1))
         for item in o1:
-            self.assertTrue(item, "")
-            self.assertTrue(item.get_reception_time(), "")
-            self.assertTrue(item.get_location(), "")
-            self.assertNotIn(None, item.get_location().__dict__.values(), "")
-            self.assertTrue(item.get_weather(), "")
-            self.assertNotIn(None, item.get_weather().__dict__.values(), "")
+            self.assertTrue(item)
+            self.assertTrue(item.get_reception_time())
+            self.assertTrue(item.get_location())
+            self.assertNotIn(None, item.get_location().__dict__.values())
+            self.assertTrue(item.get_weather())
+            self.assertNotIn(None, item.get_weather().__dict__.values())
         
     def test_three_hours_forecast(self):
         """
@@ -224,7 +224,7 @@ class IntegrationTest(unittest.TestCase):
         sh2 = self.__owm.station_tick_history(39276, limit=2)
         data2 = sh2.get_measurements()
         self.assertTrue(data2)
-        self.assertEqual(2, len(data2))        
+        self.assertFalse(len(data2) > 2)        
         sh3 = self.__owm.station_tick_history(987654) #Shall be None
         self.assertFalse(sh3)
         
@@ -240,7 +240,7 @@ class IntegrationTest(unittest.TestCase):
         sh2 = self.__owm.station_hour_history(123, limit=2)
         data2 = sh2.get_measurements()
         self.assertTrue(data2)
-        self.assertEqual(2, len(data2))        
+        self.assertFalse(len(data2) > 2)        
         sh3 = self.__owm.station_hour_history(987654) #Shall be None
         self.assertFalse(sh3)
         
@@ -256,7 +256,7 @@ class IntegrationTest(unittest.TestCase):
         sh2 = self.__owm.station_day_history(123, limit=2)
         data2 = sh2.get_measurements()
         self.assertTrue(data2)
-        self.assertEqual(2, len(data2))        
+        self.assertFalse(len(data2) > 2)        
         sh3 = self.__owm.station_day_history(987654) #Shall be None
         self.assertFalse(sh3)
         

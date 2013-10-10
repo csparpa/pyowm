@@ -18,6 +18,7 @@ from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
     THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON, \
     STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_JSON
 from pyowm import OWM
+from pyowm.constants import OWM_API_VERSION, PYOWM_VERSION
 from pyowm.utils import httputils
 from pyowm.forecast import Forecast
 from pyowm.observation import Observation
@@ -71,21 +72,17 @@ class TestOWM(unittest.TestCase):
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
         owm = OWM()
-        self.assertEqual(owm.get_API_key(), None)
+        self.assertFalse(owm.get_API_key())
         owm.set_API_key(test_API_key)
         self.assertEqual(owm.get_API_key(), test_API_key)
         
-    def test_version_print_methods(self):
-        lib_version = self.__test_instance.get_version()
-        API_version = self.__test_instance.get_API_version()
-        self.assertIsInstance(lib_version, str)
-        self.assertIsInstance(API_version, str)
+    def test_get_API_version(self):
+        self.assertEquals(OWM_API_VERSION, self.__test_instance.get_API_version())
+        
+    def test_get_version(self):
+        self.assertEquals(PYOWM_VERSION, self.__test_instance.get_version())
 
     def test_weather_at(self):
-        """
-        Test that owm.weather_at returns a valid Observation object.
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_single_obs
         result = self.__test_instance.weather_at("London,uk")
@@ -98,10 +95,6 @@ class TestOWM(unittest.TestCase):
         self.assertNotIn(None, result.get_weather().__dict__.values())
     
     def test_weather_at_coords(self):
-        """
-        Test that owm.weather_at_coords returns a valid Observation object.
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_single_obs
         result = self.__test_instance.weather_at_coords(-2.15,57.0)
@@ -127,11 +120,6 @@ class TestOWM(unittest.TestCase):
                           self.__test_instance, 2.5, 200)
         
     def test_find_weather_by_name(self):
-        """
-        Test that owm.find_weather_by_name returns a list of valid 
-        Observation objects. We need to monkey patch the inner call to 
-        httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_multiple_obs
         result = self.__test_instance.find_weather_by_name("London","accurate")
@@ -147,21 +135,12 @@ class TestOWM(unittest.TestCase):
             self.assertNotIn(None, item.get_weather().__dict__.values())
         
     def test_find_weather_by_name_fails_with_wrong_params(self):
-        """
-        Test method failure providing: a bad value for 'searchtype' and a
-        negative value for 'limit'
-        """
         self.assertRaises(ValueError, OWM.find_weather_by_name, \
                           self.__test_instance, "London", "x")
         self.assertRaises(ValueError, OWM.find_weather_by_name, \
                           self.__test_instance, "London", "accurate", -5)
 
     def test_find_weather_by_coords(self):
-        """
-        Test that owm.find_weather_by_coords returns a list of valid 
-        Observation objects. We need to monkey patch the inner call to 
-        httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_multiple_obs
         result = self.__test_instance.find_weather_by_coords(-2.15,57.0)
@@ -189,17 +168,10 @@ class TestOWM(unittest.TestCase):
                           self.__test_instance, 2.5, 200)
         
     def test_find_weather_by_coords_fails_with_wrong_params(self):
-        """
-        Test method failure providing a negative value for 'limit'
-        """
         self.assertRaises(ValueError, OWM.find_weather_by_coords, \
                           self.__test_instance, 20.0, 43.7, -3)
 
     def test_three_hours_forecast(self):
-        """
-        Test that owm.three_hours_forecast returns a valid Forecast object. 
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_3h_forecast
         result = self.__test_instance.three_hours_forecast("London,uk")
@@ -216,10 +188,6 @@ class TestOWM(unittest.TestCase):
             self.assertNotIn(None, weather.__dict__.values())
             
     def test_daily_forecast(self):
-        """
-        Test that owm.daily_forecast returns a valid Forecast object. 
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_daily_forecast
         result = self.__test_instance.daily_forecast("London,uk")
@@ -236,17 +204,10 @@ class TestOWM(unittest.TestCase):
             self.assertNotIn(None, weather.__dict__.values())
             
     def test_daily_forecast_fails_with_wrong_params(self):
-        """
-        Test method failure providing a negative value for 'limit'
-        """
         self.assertRaises(ValueError, OWM.daily_forecast, self.__test_instance, \
                           "London,uk", -3)
         
     def test_weather_history(self):
-        """
-        Test that owm.weather_history returns a list of Weather objects. 
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_city_weather_history
         result = self.__test_instance.weather_history("London,uk")
@@ -286,10 +247,6 @@ class TestOWM(unittest.TestCase):
                   "London,uk", 1234567L, "test")
         
     def test_station_tick_history(self):
-        """
-        Test that method returns a StationHistory object 
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_station_tick_weather_history
         result = self.__test_instance.station_tick_history(1234, limit=4)
@@ -298,17 +255,10 @@ class TestOWM(unittest.TestCase):
         self.assertTrue(isinstance(result.get_measurements(), dict))
         
     def test_station_tick_history_fails_with_wrong_params(self):
-        """
-        Test method failure providing a negative value for 'limit'
-        """
         self.assertRaises(ValueError, OWM.station_tick_history, self.__test_instance, \
                           1234, -3)
         
     def test_station_hour_history(self):
-        """
-        Test that method returns a StationHistory object
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_station_hour_weather_history
         result = self.__test_instance.station_hour_history(1234, limit=4)
@@ -317,17 +267,10 @@ class TestOWM(unittest.TestCase):
         self.assertTrue(isinstance(result.get_measurements(), dict))
         
     def test_station_hour_history_fails_with_wrong_params(self):
-        """
-        Test method failure providing a negative value for 'limit'
-        """
         self.assertRaises(ValueError, OWM.station_hour_history, self.__test_instance, \
                           1234, -3)
         
     def test_station_day_history(self):
-        """
-        Test that method returns a StationHistory object
-        We need to monkey patch the inner call to httputils.call_API function
-        """
         ref_to_original_call_API = httputils.call_API
         httputils.call_API = self.mock_httputils_call_API_returning_station_day_weather_history
         result = self.__test_instance.station_day_history(1234, limit=4)
@@ -336,9 +279,6 @@ class TestOWM(unittest.TestCase):
         self.assertTrue(isinstance(result.get_measurements(), dict))
         
     def test_station_day_history_fails_with_wrong_params(self):
-        """
-        Test method failure providing a negative value for 'limit'
-        """
         self.assertRaises(ValueError, OWM.station_day_history, self.__test_instance, \
                           1234, -3)
  

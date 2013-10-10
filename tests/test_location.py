@@ -15,6 +15,8 @@ class TestLocation(unittest.TestCase):
     __test_lat = 43.7
     __test_ID = 1234
     __test_country = u'UK'
+    __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID, 
+                               __test_country)
 
     def test_init_fails_when_coordinates_are_out_of_bounds(self):
         """
@@ -35,28 +37,19 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(instance.get_country(), self.__test_country)
 
     def test_XML_dump(self):
-        """
-        Test correct object data dump to an XML string
-        """
         expectedOutput = '<Location><name>%s</name><coordinates><lon>%s</lon>' \
             '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country></Location>' % (
                                             self.__test_name, self.__test_lon,
                                             self.__test_lat, self.__test_ID,
                                             self.__test_country)
-        instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
-                            self.__test_ID, self.__test_country)
-        self.assertEqual(instance.to_XML(), expectedOutput)
+        self.assertEqual(self.__test_instance.to_XML(), expectedOutput)
         
     def test_JSON_dump(self):
-        """
-        Test correct object data dump to a JSON string
-        """
         expectedOutput = '{"country": "%s", "name": "%s", "coordinates": {"lat": %s, "lon": %s}, ' \
             '"ID": %s}' %  (self.__test_country, self.__test_name, self.__test_lat, 
                            self.__test_lon, self.__test_ID)
-        instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
-                            self.__test_ID, self.__test_country)
-        self.assertEqual(instance.to_JSON(), expectedOutput)
+
+        self.assertEqual(self.__test_instance.to_JSON(), expectedOutput)
         
 
 if __name__ == "__main__":
