@@ -2,11 +2,6 @@
 
 """
 Constants for the PyOWM library:
-
-  * OWM web API and PyOWM library versions
-  * OWM web API endpoints
-  * Keywords for weather status filtering
-  
 """
 
 # Version numbers

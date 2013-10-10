@@ -379,3 +379,7 @@ class OWM(object):
         json_data = httputils.call_API(STATION_WEATHER_HISTORY_URL, 
                                        params, self.__API_key)
         return jsonparser.parse_station_history(json_data, station_ID, interval)
+    
+    def __str__(self):
+        """Redefine __str__ hook for pretty-printing of OWM instances"""
+        return '[OWM: API_key=%s]' % self.__API_key

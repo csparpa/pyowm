@@ -5,8 +5,6 @@ Weather observation classes and data structures.
 """
 
 from json import dumps, loads
-from location import Location
-from weather import Weather
 from utils import converter
 
 class Observation(object):
@@ -29,14 +27,10 @@ class Observation(object):
     """
 
     def __init__(self, reception_time, location, weather):
-        assert type(reception_time) is long or type(reception_time) is int, \
-            "'reception_time' must be an int/long"
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self.__reception_time = long(reception_time)
-        assert isinstance(location, Location), "'location' must be a Location object"
         self.__location = location
-        assert isinstance(weather, Weather), "'weather' must be a Weather object"
         self.__weather = weather
 
     def get_reception_time(self, timeformat='unix'):
@@ -54,7 +48,7 @@ class Observation(object):
         """
         if timeformat == 'unix':
             return self.__reception_time
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(self.__reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -98,8 +92,3 @@ class Observation(object):
         return '<Observation><reception_time>%s</reception_time>%s%s</Observation>' % \
             (self.__reception_time, self.__location.to_XML(), 
              self.__weather.to_XML())
-    
-    def __str__(self):
-        """Redefine __str__ hook for pretty-printing of Observation instances"""
-        return "[Observation:\nreception time="+str(self.__reception_time)+ \
-            "\n"+str(self.__location)+"\n"+str(self.__weather)+"\n]"

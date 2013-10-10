@@ -32,23 +32,15 @@ class Location(object):
     """
     
     def __init__(self, name, lon, lat, ID, country=None):
-        assert type(name) is unicode, "'name' must be a Unicode str"
         self.__name = name
-        assert type(lon) is float or type(lon) is int,"'lon' must be a float"
         if lon < -180.0 or lon > 180.0:
             raise ValueError("'lon' value must be between -180 and 180")
         self.__lon = float(lon)
-        assert type(lat) is float or type(lat) is int,"'lat' must be a float"
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         self.__lat = float(lat)
-        assert type(ID) is int, "'ID' must be an int"
         self.__ID = ID
-        if country is not None:
-            assert type(name) is unicode, "'country' must be a Unicode str or None"
-            self.__country = country
-        else:
-            self.__country = None
+        self.__country = country
         
     def get_name(self):
         """
@@ -112,13 +104,6 @@ class Location(object):
         """
         return '<Location><name>%s</name><coordinates><lon>%s</lon><lat>%s</lat>' \
                 '</coordinates><ID>%s</ID><country>%s</country></Location>' % (
-                                                           self.__name, self.__lon,
+                                                          self.__name, self.__lon,
                                                           self.__lat, self.__ID,
                                                           self.__country)
-    
-    def __str__(self):
-        """Redefine __str__ hook for pretty-printing of Location instances"""
-        return '[Location: name=%s lon=%s lat=%s ID=%s country=%s]' % (
-                                                   self.__name.encode("utf-8"),
-                                                   self.__lon, self.__lat,
-                                                   self.__ID, self.__country)

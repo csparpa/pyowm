@@ -23,13 +23,9 @@ def UNIXtime_to_ISO8601(unixtime):
         negative values of UNIX time
         
     """
-    if isinstance(unixtime, (long,int)):
-        if unixtime < 0:
-            raise ValueError(__name__+": negative time values not allowed")
-        return datetime.utcfromtimestamp(unixtime). \
-            strftime('%Y-%m-%d %H:%M:%S+00')
-    else:
-        raise TypeError(__name__+": bad argument type")
+    if unixtime < 0:
+        raise ValueError(__name__+": negative time values not allowed")
+    return datetime.utcfromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S+00')
     
 def ISO8601_to_UNIXtime(iso):
     """
@@ -43,15 +39,12 @@ def ISO8601_to_UNIXtime(iso):
         the ISO8601 string is badly formatted
         
     """
-    if isinstance(iso, str):
-        try:
-            d = datetime.strptime(iso,'%Y-%m-%d %H:%M:%S+00')
-        except ValueError:
-            raise ValueError(__name__+": bad format for input ISO8601 string, ' \
-                'should have been: YYYY-MM-DD HH:MM:SS+00")
-        return datetime_to_UNIXtime(d)
-    else:
-        raise TypeError(__name__+": bad argument type")
+    try:
+        d = datetime.strptime(iso,'%Y-%m-%d %H:%M:%S+00')
+    except ValueError:
+        raise ValueError(__name__+": bad format for input ISO8601 string, ' \
+            'should have been: YYYY-MM-DD HH:MM:SS+00")
+    return datetime_to_UNIXtime(d)
 
 def to_UNIXtime(timeobject):
     """
@@ -88,10 +81,7 @@ def datetime_to_UNIXtime(date):
     :returns: a long UNIXtime
     :raises: *TypeError* when bad argument types are provided
     """
-    if isinstance(date, datetime):
-        return timegm(date.timetuple())
-    else:
-        raise TypeError(__name__+": bad argument type")
+    return timegm(date.timetuple())
 
 def kelvin_to_celsius(kelvintemp):
     """
@@ -103,13 +93,10 @@ def kelvin_to_celsius(kelvintemp):
     :raises: *TypeError* when bad argument types are provided
     
     """
-    if isinstance(kelvintemp, (long,int,float)):
-        if kelvintemp < 0:
-            raise ValueError(__name__+": negative temperature values not allowed")
-        celsiustemp = kelvintemp - __KELVIN_OFFSET__
-        return float("{0:.2f}".format(celsiustemp))
-    else:
-        raise TypeError(__name__+": bad argument type")
+    if kelvintemp < 0:
+        raise ValueError(__name__+": negative temperature values not allowed")
+    celsiustemp = kelvintemp - __KELVIN_OFFSET__
+    return float("{0:.2f}".format(celsiustemp))
 
 def kelvin_to_fahrenheit(kelvintemp):
     """
@@ -121,11 +108,8 @@ def kelvin_to_fahrenheit(kelvintemp):
     
     :raises: *TypeError* when bad argument types are provided
     """
-    if isinstance(kelvintemp, (long,int,float)):
-        if kelvintemp < 0:
-            raise ValueError(__name__+": negative temperature values not allowed")
-        fahrenheittemp = (kelvintemp - __KELVIN_OFFSET__)*__FAHRENHEIT_DEGREE_SCALE \
-            + __FAHRENHEIT_OFFSET
-        return float("{0:.2f}".format(fahrenheittemp))
-    else:
-        raise TypeError(__name__+": bad argument type")
+    if kelvintemp < 0:
+        raise ValueError(__name__+": negative temperature values not allowed")
+    fahrenheittemp = (kelvintemp - __KELVIN_OFFSET__)*__FAHRENHEIT_DEGREE_SCALE \
+        + __FAHRENHEIT_OFFSET
+    return float("{0:.2f}".format(fahrenheittemp))

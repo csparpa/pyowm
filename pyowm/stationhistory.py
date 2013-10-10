@@ -4,7 +4,6 @@
 Module containing classes and datastructures related to meteostation history data  
 """
 
-from os import linesep
 from json import dumps
 from utils import converter, xmlutils
 
@@ -30,18 +29,13 @@ class StationHistory(object):
     """
     
     def __init__(self, station_ID, interval, reception_time, measurements):
-        assert isinstance(station_ID, int), "'station_ID' must be int"
         self.__station_ID = station_ID
-        assert type(interval) is str, "'interval' must be a str"
         if interval is not "tick" and interval is not "hour" and interval is not "day":
             raise ValueError("'interval' value must be 'tick', 'hour' or 'day'")
         self.__interval = interval
-        assert isinstance(reception_time, long) or isinstance(reception_time, int), \
-            "'reception_time' must be an long/int"
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self.__reception_time = reception_time
-        assert isinstance(measurements, dict), "'measurements' must be a dict"
         self.__measurements = measurements
         
     def get_station_ID(self):
@@ -90,7 +84,7 @@ class StationHistory(object):
         """
         if timeformat == 'unix':
             return self.__reception_time
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(self.__reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -190,8 +184,3 @@ class StationHistory(object):
             (self.__station_ID, self.__interval, self.__reception_time,
              "".join([ "<"+str(item)+">"+xmlutils.dict_to_XML(self.__measurements[item])+ \
                       "</"+str(item)+">" for item in self.__measurements]))
-    
-    def __str__(self):
-        """Redefine __str__ hook for pretty-printing of StationHistory instances"""
-        return '[StationHistory: station_ID=%s reception_time= data='+linesep + \
-            str(self.__measurements) % self.__station_ID

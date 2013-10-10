@@ -113,7 +113,6 @@ class TestStationHistory(unittest.TestCase):
         """
         Test correct object data dump to a XML string
         """
-        print self.__test_instance.to_XML()
         expected_output = '<StationHistory><station_id>2865</station_id><interval>' \
             'tick</interval><reception_time>1378684800</reception_time>' \
             '<measurements><1362934043><wind>4.7</wind><pressure>1010.09</pressure>' \

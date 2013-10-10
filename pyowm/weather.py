@@ -48,47 +48,30 @@ class Weather(object):
     
     def __init__(self, reference_time, sunset_time, sunrise_time, clouds, rain, 
                  snow, wind, humidity, pressure, temperature, status, 
-                 detailed_status, weather_code, weather_icon_name):        
-        assert type(reference_time) is long or type(reference_time) is int, \
-            "'reference_time' must be an int/long"
+                 detailed_status, weather_code, weather_icon_name):
         if long(reference_time) < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self.__reference_time = long(reference_time)        
-        assert type(sunset_time) is long or type(sunset_time) is int, \
-            "'sunset_time' must be a int/long"
+        self.__reference_time = long(reference_time)
         if long(sunset_time) < 0:
             raise ValueError("'sunset_time' must be greatear than 0")
         self.__sunset_time = long(sunset_time)
-        assert type(sunrise_time) is long or type(sunrise_time) is int, \
-            "'sunrise_time' must be a int/long"
         if long(sunrise_time) < 0:
             raise ValueError("'sunrise_time' must be greatear than 0")
         self.__sunrise_time = long(sunrise_time)
-        assert type(clouds) is int, "'clouds' must be an int"
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
         self.__clouds = clouds
-        assert type(rain) is dict, "'rain' must be a dict"
         self.__rain = rain
-        assert type(snow) is dict, "'snow' must be a dict"
         self.__snow = snow
-        assert type(wind) is dict, "'wind' must be a dict"
         self.__wind = wind
-        assert type(humidity) is int, "'humidity' must be an int"
         if humidity < 0:
             raise ValueError("'humidity' must be greatear than 0")
         self.__humidity = humidity
-        assert type(pressure) is dict, "'pressure' must be a dict"
         self.__pressure = pressure
-        assert type(temperature) is dict, "'temperature' must be a dict"
         self.__temperature = temperature
-        assert type(status) is unicode, "'status' must be a Unicode str"
         self.__status = status
-        assert type(detailed_status) is unicode, "'detailed_status' must be a Unicode str"
         self.__detailed_status = detailed_status
-        assert type(weather_code) is int, "'weather_code' must be an int"
         self.__weather_code = weather_code
-        assert type(weather_icon_name) is unicode, "'iconName' must be a Unicode str"
         self.__weather_icon_name = weather_icon_name
 
         
@@ -105,7 +88,7 @@ class Weather(object):
         """
         if timeformat == 'unix':
             return self.__reference_time
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(self.__reference_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -124,7 +107,7 @@ class Weather(object):
         """
         if timeformat == 'unix':
             return self.__sunset_time
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(self.__sunset_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -143,7 +126,7 @@ class Weather(object):
         """
         if timeformat == 'unix':
             return self.__sunrise_time
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(self.__sunrise_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -215,11 +198,11 @@ class Weather(object):
         """
         if unit == 'kelvin':
             return self.__temperature
-        if unit == 'celsius':
+        elif unit == 'celsius':
             helper = lambda x: converter.kelvin_to_celsius(x) if x > 0.0 else x
             return dict((item, helper(self.__temperature[item])) 
                 for item in self.__temperature)
-        if unit == 'fahrenheit':
+        elif unit == 'fahrenheit':
             helper = lambda x: converter.kelvin_to_fahrenheit(x) if x > 0.0 else x
             return dict((item, helper(self.__temperature[item])) 
                 for item in self.__temperature)
@@ -297,18 +280,4 @@ class Weather(object):
                 xmlutils.dict_to_XML(self.__temperature), self.__detailed_status,
                 self.__reference_time, self.__sunset_time, self.__humidity,
                 xmlutils.dict_to_XML(self.__wind))
-    
-    def __str__(self):
-        """Redefine __str__ hook for pretty-printing of Weather instances"""
-        prop_names = ["reference_time","sunset_time","sunrise_time","clouds",
-                      "rain","snow","wind","humidity","pressure","temperature",
-                      "status","detailed_status","weather_code","weather_icon_name"]
-        prop_values = [self.__reference_time, self.__sunset_time, self.__sunrise_time,
-                 self.__clouds, self.__rain, self.__snow, self.__wind, self.__humidity,
-                 self.__pressure, self.__temperature, self.__status.encode("utf-8"), 
-                 self.__detailed_status.encode("utf-8"), self.__weather_code,
-                 self.__weather_icon_name.encode("utf-8")]
-        string_prop_values = map(str, prop_values)
-        return "[Weather:\n  "+"\n  ".join([ ": ".join([name,value]) for name,value \
-                                        in zip(prop_names,string_prop_values)])+"\n]"
     

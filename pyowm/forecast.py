@@ -5,8 +5,6 @@ Module containing weather forecast classes and data structures.
 """
 
 from json import loads, dumps
-from location import Location
-from weather import Weather
 from utils import converter
 
 class ForecastIterator(object):
@@ -66,20 +64,13 @@ class Forecast(object):
     """
 
     def __init__(self, interval, reception_time, location, weathers):
-        assert type(interval) is str, "'interval' must be a str"
         if interval is not "3h" and interval is not "daily":
             raise ValueError("'interval' value must be '3h' or 'daily'")
         self.__interval = interval
-        assert type(reception_time) is long or type(reception_time) is int, \
-            "'reception_time' must be an long/int"
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self.__reception_time = long(reception_time)
-        assert isinstance(location, Location), "'location' must be a Location object"
         self.__location = location
-        assert isinstance(weathers, list), "'weathers' must be a list"
-        for item in weathers:
-            assert isinstance(item, Weather), "items in 'weathers' must be of type Weather"
         self.__weathers = weathers
     
     def __iter__(self):
@@ -124,7 +115,7 @@ class Forecast(object):
         """
         if timeformat == 'unix':
             return self.__reception_time
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(self.__reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -179,14 +170,6 @@ class Forecast(object):
             '%s<weathers>%s</weathers></Forecast>' % \
             (self.__interval, self.__reception_time, self.__location.to_XML(), \
                 "".join([item.to_XML() for item in self]))
-    
-    def __str__(self):
-        """Redefine __str__ hook for pretty-printing of Forecast instances"""
-        return "".join(["[Forecast:\n",
-                        str(self.reception_time),
-                        str(self.__location), "\n",
-                        "".join([str(item)+'\n' for item in self.__weathers]),
-                        "\n]"])
     
     def __len__(self):
         """Redefine __len__ hook"""

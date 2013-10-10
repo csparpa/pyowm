@@ -72,7 +72,6 @@ def is_in_coverage(unixtime, weathers_list):
     :returns: ``True`` if the UNIX time is contained into the time range,
         ``False`` otherwise
     """
-    assert isinstance(unixtime, (int, long)), __name__+": 'unixtime' must be an int/float"
     if not weathers_list:
         return False
     else:
@@ -94,7 +93,6 @@ def find_closest_weather(weathers_list, unixtime):
     :returns: the *Weather* object which is closest in time or ``None`` if the
         list is empty
     """
-    assert isinstance(unixtime, (int, long)), __name__+": 'unixtime' must be an int/float"
     if not weathers_list:
         return None
     if not is_in_coverage(unixtime, weathers_list):

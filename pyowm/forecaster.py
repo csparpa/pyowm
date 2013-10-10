@@ -4,7 +4,6 @@
 Module containing weather forecast abstraction classes and data structures.
 """
 
-from forecast import Forecast
 from utils import converter, weatherutils
 from constants import CLOUDS_KEYWORDS, FOG_KEYWORDS, RAIN_KEYWORDS, \
     SNOW_KEYWORDS, SUN_KEYWORDS
@@ -24,7 +23,6 @@ class Forecaster(object):
     """
 
     def __init__(self, forecast):
-        assert isinstance(forecast, Forecast), "'forecast' must be a Forecast object"
         self.__forecast = forecast
         
     def get_forecast(self):
@@ -52,7 +50,7 @@ class Forecaster(object):
         start_coverage = min([item.get_reference_time() for item in self.__forecast])
         if timeformat == 'unix':
             return start_coverage
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(start_coverage)
         else:
             raise ValueError("Invalid value for parameter 'format'")
@@ -73,7 +71,7 @@ class Forecaster(object):
         end_coverage = max([item.get_reference_time() for item in self.__forecast])
         if timeformat == 'unix':
             return end_coverage
-        if timeformat == 'iso':
+        elif timeformat == 'iso':
             return converter.UNIXtime_to_ISO8601(end_coverage)
         else:
             raise ValueError("Invalid value for parameter 'format'")

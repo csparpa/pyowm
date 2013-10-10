@@ -16,9 +16,6 @@ class TestConverter(unittest.TestCase):
         expected = "2013-09-06 09:20:00+00" 
         self.assertEqual(expected, converter.UNIXtime_to_ISO8601(unixtime))
         
-    def test_UNIXtime_to_ISO8601_fails_with_bad_arugment(self):
-        self.assertRaises(TypeError, converter.UNIXtime_to_ISO8601, "test")
-        
     def test_UNIXtime_to_ISO8601_fails_with_negative_values(self):
         self.assertRaises(ValueError, converter.UNIXtime_to_ISO8601, -1378459200)
         
@@ -28,7 +25,6 @@ class TestConverter(unittest.TestCase):
         self.assertEqual(expected, converter.ISO8601_to_UNIXtime(iso))
 
     def test_ISO8601_to_UNIXtime_fails_with_bad_arugments(self):
-        self.assertRaises(TypeError, converter.ISO8601_to_UNIXtime, 1234)
         self.assertRaises(ValueError, converter.ISO8601_to_UNIXtime, "Tue, Sep 16 2013")
     
     def test_to_UNIXtime(self):
@@ -49,10 +45,6 @@ class TestConverter(unittest.TestCase):
         date = datetime(2013, 9, 19, 12, 0)
         expected = 1379592000L
         self.assertEqual(converter.datetime_to_UNIXtime(date), expected)
-        
-    def test_datetime_to_UNIXtime_fails_with_bad_argument(self):
-        self.assertRaises(TypeError, converter.datetime_to_UNIXtime, None)
-        self.assertRaises(TypeError, converter.datetime_to_UNIXtime, "test")
 
     def test_kelvin_to_celsius(self):
         kelvin = 301.0
@@ -63,9 +55,6 @@ class TestConverter(unittest.TestCase):
     def test_kelvin_to_celsius_fails_with_negative_values(self):
         self.assertRaises(ValueError, converter.kelvin_to_celsius, -137.0)
         
-    def test_kelvin_to_celsius_fails_with_bad_argument(self):
-        self.assertRaises(TypeError, converter.kelvin_to_celsius, "test")
-        
     def test_kelvin_to_fahrenheit(self):
         kelvin = 301.0
         expected = 82.13
@@ -74,9 +63,6 @@ class TestConverter(unittest.TestCase):
         
     def test_kelvin_to_fahrenheit_fails_with_negative_values(self):
         self.assertRaises(ValueError, converter.kelvin_to_fahrenheit, -137.0)
-        
-    def test_kelvin_to_fahrenheit_fails_with_bad_argument(self):
-        self.assertRaises(TypeError, converter.kelvin_to_fahrenheit, "test")
         
 if __name__ == "__main__":
     unittest.main()
