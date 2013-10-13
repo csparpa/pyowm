@@ -8,7 +8,8 @@ import time
 from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
     CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
-from utils import httputils, jsonparser, converter
+from utils import httputils, converter
+from parsers import jsonparser
 from forecaster import Forecaster
 
 class OWM(object):

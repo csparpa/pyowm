@@ -10,7 +10,7 @@ from json_test_responses import OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, \
     FORECAST_NOT_FOUND_JSON, THREE_HOURS_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON, \
     CITY_WEATHER_HISTORY_NO_RESULTS_JSON, CITY_WEATHER_HISTORY_NOT_FOUND_JSON, \
     STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_NOT_FOUND_JSON
-from pyowm.utils import jsonparser
+from pyowm.parsers import jsonparser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.location import Location
 from pyowm.weather import Weather
