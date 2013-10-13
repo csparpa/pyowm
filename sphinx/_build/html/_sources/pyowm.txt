@@ -9,6 +9,7 @@ Subpackages
 .. toctree::
 
     pyowm.exceptions
+    pyowm.parsers
     pyowm.utils
 
 Submodules

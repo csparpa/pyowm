@@ -20,14 +20,6 @@ pyowm.utils.httputils module
     :undoc-members:
     :show-inheritance:
 
-pyowm.utils.jsonparser module
------------------------------
-
-.. automodule:: pyowm.utils.jsonparser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.utils.timeutils module
 -------------------------------
 
