@@ -100,7 +100,10 @@ def build_weather_from(d):
             humidity = 0
         # -- snow is not a mandatory field
         if 'snow' in d:
-            snow = d['snow'].copy()
+            if isinstance(d['snow'], int) or isinstance(d['snow'], float):
+                snow = {'all': d['snow']}
+            else:
+                snow = d['snow'].copy()
         else:
             snow = {}
         # -- pressure
