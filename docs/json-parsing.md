@@ -35,7 +35,7 @@ DataDescriptor.py
 	class DataDescriptor():
 	    classe atratta, ha il solo metodo description(): è l'astrazione
 	    che disaccoppia il parsing dalle specificità dei formati JSON!
-	    E' il pattern "framework"
+	    E' il pattern "template method"
 	
 ObservationDataDescriptor.py (new class)
 ----------------------------------------
