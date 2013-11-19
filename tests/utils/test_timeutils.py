@@ -6,7 +6,7 @@ Test case for timeutils.py module
 
 import unittest
 from datetime import datetime, date, timedelta
-from pyowm.utils import timeutils
+from pyowm.utils import timeutils, converter
 
 class TestTimeUtils(unittest.TestCase):
 
@@ -60,7 +60,9 @@ class TestTimeUtils(unittest.TestCase):
     def test_next_three_hours(self):
         result = timeutils.next_three_hours()
         expected = datetime.now() + timedelta(hours=3)
-        self.assertAlmostEqual(expected, result)
+        self.assertAlmostEqual(
+           float(converter.to_UNIXtime(expected)),
+           float(converter.to_UNIXtime(result)))
         
     def test_next_three_hours_after_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12)
@@ -71,7 +73,9 @@ class TestTimeUtils(unittest.TestCase):
     def test_last_three_hours(self):
         result = timeutils.last_three_hours()
         expected = datetime.now() + timedelta(hours=-3)
-        self.assertAlmostEqual(expected, result)
+        self.assertAlmostEqual(
+           float(converter.to_UNIXtime(expected)),
+           float(converter.to_UNIXtime(result)))
         
     def test_last_three_hours_before_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12)
