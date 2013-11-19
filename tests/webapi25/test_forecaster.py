@@ -6,10 +6,10 @@ Test case for forecaster.py module
 
 import unittest
 from datetime import datetime
-from pyowm import Location
-from pyowm import Weather
-from pyowm import Forecast
-from pyowm import Forecaster
+from pyowm.webapi25.location import Location
+from pyowm.webapi25.weather import Weather
+from pyowm.webapi25.forecast import Forecast
+from pyowm.webapi25.forecaster import Forecaster
 
 class TestForecaster(unittest.TestCase):
 

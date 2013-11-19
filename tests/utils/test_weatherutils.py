@@ -5,7 +5,7 @@ Test case for weatherutils.py module
 """
 
 import unittest
-from pyowm.weather import Weather
+from pyowm.webapi25.weather import Weather
 from pyowm.utils import weatherutils
 from pyowm.exceptions.not_found_error import NotFoundError
 

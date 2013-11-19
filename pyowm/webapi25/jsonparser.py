@@ -8,13 +8,13 @@ web API responses
 from json import loads, dumps
 from time import time
 from os import linesep
-from pyowm.location import Location
-from pyowm.weather import Weather
-from pyowm.observation import Observation
+from pyowm.webapi25.location import Location
+from pyowm.webapi25.weather import Weather
+from pyowm.webapi25.observation import Observation
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
-from pyowm.forecast import Forecast
-from pyowm.stationhistory import StationHistory
+from pyowm.webapi25.forecast import Forecast
+from pyowm.webapi25.stationhistory import StationHistory
 
 def build_location_from(d):
     """

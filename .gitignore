@@ -7,3 +7,4 @@ pyowm.egg-info/*
 .settings/*
 .project
 .pydevproject
+.travis.yml

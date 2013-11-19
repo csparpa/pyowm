@@ -5,13 +5,12 @@ and running
 '''
 import unittest
 from datetime import datetime
-from pyowm import OWM
-from xmlrpclib import DateTime
+from pyowm.webapi25.owm25 import OWM25
 
 class IntegrationTest(unittest.TestCase):
     
     __API_key = 'b02f5370dfd0f398b5746e1a976021a0'
-    __owm = OWM(__API_key)
+    __owm = OWM25(__API_key)
 
     def test_weather_at(self):
         """

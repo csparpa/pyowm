@@ -5,7 +5,7 @@ Test case for stationhistory.py module
 """
 
 import unittest
-from pyowm import StationHistory
+from pyowm.webapi25.stationhistory import StationHistory
 
 
 class TestStationHistory(unittest.TestCase):

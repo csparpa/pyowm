@@ -5,7 +5,7 @@ Module containing classes and datastructures related to meteostation history dat
 """
 
 from json import dumps
-from utils import converter, xmlutils
+from pyowm.utils import converter, xmlutils
 
 class StationHistory(object):
 

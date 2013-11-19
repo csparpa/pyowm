@@ -6,6 +6,12 @@ Enter the main project directory and issue:
     
 The _.egg_ archive is located under the newly created _/dist_ folder
 
+Test library
+------------
+Enter the main project directory and issue:
+
+    $> python setup.py test
+
 Install library
 ---------------
 Enter the main project directory and issue:

@@ -5,7 +5,7 @@ Constants for the PyOWM library:
 """
 
 # Version numbers
-PYOWM_VERSION = '0.1'
+PYOWM_VERSION = '0.1.1'
 OWM_API_VERSION = '2.5'
 
 # OpenWeatherMap API URLs

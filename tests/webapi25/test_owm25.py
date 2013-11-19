@@ -17,15 +17,15 @@ import time
 from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
     THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON, \
     STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_JSON
-from pyowm import OWM25
+from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import OWM_API_VERSION, PYOWM_VERSION
 from pyowm.utils import httputils
-from pyowm.forecast import Forecast
-from pyowm.observation import Observation
-from pyowm.weather import Weather
-from pyowm.location import Location
-from pyowm.forecaster import Forecaster
-from pyowm.stationhistory import StationHistory
+from pyowm.webapi25.forecast import Forecast
+from pyowm.webapi25.observation import Observation
+from pyowm.webapi25.weather import Weather
+from pyowm.webapi25.location import Location
+from pyowm.webapi25.forecaster import Forecaster
+from pyowm.webapi25.stationhistory import StationHistory
 
 class TestOWM25(unittest.TestCase):
     

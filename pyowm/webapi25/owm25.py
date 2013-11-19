@@ -5,13 +5,13 @@ Module containing the PyOWM library main entry point
 """
 
 import time
-from constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
+from pyowm.constants import OWM_API_VERSION, PYOWM_VERSION, OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
     CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
-from utils import httputils, converter
-from parsers import jsonparser
-from forecaster import Forecaster
-from abstractions.owm import OWM
+from pyowm.utils import httputils, converter
+from pyowm.webapi25 import jsonparser
+from pyowm.webapi25.forecaster import Forecaster
+from pyowm.abstractions.owm import OWM
 
 class OWM25(OWM):
     """

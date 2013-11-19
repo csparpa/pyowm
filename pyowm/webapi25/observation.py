@@ -5,7 +5,7 @@ Weather observation classes and data structures.
 """
 
 from json import dumps, loads
-from utils import converter
+from pyowm.utils import converter
 
 class Observation(object):
     """

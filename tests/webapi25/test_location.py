@@ -5,7 +5,7 @@ Test case for location.py module
 """
 
 import unittest
-from pyowm import Location
+from pyowm.webapi25.location import Location
 
 
 class TestLocation(unittest.TestCase):

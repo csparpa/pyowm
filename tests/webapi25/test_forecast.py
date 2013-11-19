@@ -5,9 +5,9 @@ Test case for forecast.py module
 """
 
 import unittest
-from pyowm import Location
-from pyowm import Weather
-from pyowm import Forecast
+from pyowm.webapi25.location import Location
+from pyowm.webapi25.weather import Weather
+from pyowm.webapi25.forecast import Forecast
 
 class TestForecast(unittest.TestCase):
 

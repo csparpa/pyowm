@@ -4,7 +4,7 @@
 Module containing weather data classes and data structures.
 """
 
-from utils import converter, xmlutils
+from pyowm.utils import converter, xmlutils
 from json import dumps
 
 class Weather(object):    

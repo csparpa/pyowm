@@ -5,9 +5,9 @@ Test case for observation.py module
 """
 
 import unittest
-from pyowm import Location
-from pyowm import Weather
-from pyowm import Observation
+from pyowm.webapi25.location import Location
+from pyowm.webapi25.weather import Weather
+from pyowm.webapi25.observation import Observation
 
 class TestObservation(unittest.TestCase):
 

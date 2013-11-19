@@ -8,7 +8,7 @@ from abc import ABCMeta, abstractmethod
 
 class OWM(object):
     """
-    A global facade class representing the OWM web API. Every query to the API
+    A global abstract class representing the OWM web API. Every query to the API
     is done programmatically via a concrete instance of this class
     Subclasses should provide a method for every OWM web API endpoint.
     """

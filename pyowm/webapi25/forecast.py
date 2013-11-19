@@ -5,7 +5,7 @@ Module containing weather forecast classes and data structures.
 """
 
 from json import loads, dumps
-from utils import converter
+from pyowm.utils import converter
 
 class ForecastIterator(object):
     """

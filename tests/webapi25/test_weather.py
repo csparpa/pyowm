@@ -5,7 +5,7 @@ Test case for weather.py module
 """
 
 import unittest
-from pyowm import Weather
+from pyowm.webapi25.weather import Weather
 from pyowm.utils import xmlutils
 
 

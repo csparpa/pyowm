@@ -4,8 +4,8 @@
 Module containing weather forecast abstraction classes and data structures.
 """
 
-from utils import converter, weatherutils
-from constants import CLOUDS_KEYWORDS, FOG_KEYWORDS, RAIN_KEYWORDS, \
+from pyowm.utils import converter, weatherutils
+from pyowm.constants import CLOUDS_KEYWORDS, FOG_KEYWORDS, RAIN_KEYWORDS, \
     SNOW_KEYWORDS, SUN_KEYWORDS
 
 class Forecaster(object):
