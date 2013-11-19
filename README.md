@@ -11,7 +11,7 @@ and forecast) from Python applications via a simple object model.
 
 No additional libraries are requested: only the Python 2.6/2.7 standard library modules.
 
-PyOWM currently supports _version 2.5_ of the OWM API.
+For the moment only _version 2.5_ of the OWM API is supported.
 
 Install
 -------
@@ -19,6 +19,12 @@ You will need _setuptools_ installed - read [here](https://pypi.python.org/pypi/
 how to do it. Just run (superuser privileges might be needed):
 
     python setup.py install
+
+Test
+----
+As simple as:
+
+    python setup.py test
 
 Take off
 --------
@@ -42,6 +48,8 @@ Support
 The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
 
 Usage examples are available [here](https://github.com/csparpa/pyowm/wiki/Usage-examples).
+
+Continuous integration builds are available on [Travis](https://travis-ci.org/csparpa/pyowm).
 
 Technical and development documents are available in the [docs section](https://github.com/csparpa/pyowm/tree/master/docs/internals).
 
