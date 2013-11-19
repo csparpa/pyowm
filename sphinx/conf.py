@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyowm'
-copyright = u'2013, Claudio Sparpaglione (@csparpa)'
+copyright = u'2014, Claudio Sparpaglione (@csparpa)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -267,7 +267,7 @@ texinfo_documents = [
 epub_title = u'pyowm'
 epub_author = u'Claudio Sparpaglione (@csparpa)'
 epub_publisher = u'Claudio Sparpaglione (@csparpa)'
-epub_copyright = u'2013, Claudio Sparpaglione (@csparpa)'
+epub_copyright = u'2014, Claudio Sparpaglione (@csparpa)'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

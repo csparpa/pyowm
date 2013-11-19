@@ -8,9 +8,10 @@ Subpackages
 
 .. toctree::
 
+    pyowm.abstractions
     pyowm.exceptions
-    pyowm.parsers
     pyowm.utils
+    pyowm.webapi25
 
 Submodules
 ----------
@@ -22,55 +23,6 @@ pyowm.constants module
     :members:
     :undoc-members:
     :show-inheritance:
-
-pyowm.forecast module
----------------------
-
-.. automodule:: pyowm.forecast
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.forecaster module
------------------------
-
-.. automodule:: pyowm.forecaster
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.location module
----------------------
-
-.. automodule:: pyowm.location
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.observation module
-------------------------
-
-.. automodule:: pyowm.observation
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.owm module
-----------------
-
-.. automodule:: pyowm.owm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.weather module
---------------------
-
-.. automodule:: pyowm.weather
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------
