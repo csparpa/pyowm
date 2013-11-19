@@ -8,4 +8,3 @@ sphinx/_build/*
 .settings/*
 .project
 .pydevproject
-.travis.yml
