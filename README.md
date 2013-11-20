@@ -51,8 +51,6 @@ Usage examples are available [here](https://github.com/csparpa/pyowm/wiki/Usage-
 
 Continuous integration builds are available on [Travis](https://travis-ci.org/csparpa/pyowm).
 
-Technical and development documents are available in the [docs section](https://github.com/csparpa/pyowm/tree/master/docs/internals).
-
 License
 -------
 [MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
