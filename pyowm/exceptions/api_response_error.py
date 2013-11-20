@@ -4,6 +4,8 @@
 Module containing APIResponseError class
 """
 
+from os import linesep
+
 class APIResponseError(Exception):
     """
     Error class that represents HTTP error status codes in OWM web API responses.
@@ -17,5 +19,5 @@ class APIResponseError(Exception):
         
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
-        return 'An error HTTP status code was returned by the OWM API. Reason: %s' % \
-            self._message
+        return ''.join(['An error HTTP status code was returned by the OWM API', \
+                        linesep, 'Reason: ', self.message])

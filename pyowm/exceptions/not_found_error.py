@@ -4,6 +4,8 @@
 Module containing NotFoundError class
 """
 
+from os import linesep
+
 class NotFoundError(Exception):
     """
     Error class that represents the situation when an entity is not found into
@@ -18,5 +20,5 @@ class NotFoundError(Exception):
         
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
-        return 'The searched item was not found. Reason: %s' % \
-            self._message
+        return ''.join(['The searched item was not found.', linesep, 'Reason: ', \
+            self._message])

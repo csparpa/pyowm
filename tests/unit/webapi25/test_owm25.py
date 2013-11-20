@@ -18,7 +18,7 @@ from json_test_responses import OBSERVATION_JSON, SEARCH_RESULTS_JSON, \
     THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON, CITY_WEATHER_HISTORY_JSON, \
     STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_JSON
 from pyowm.webapi25.owm25 import OWM25
-from pyowm.constants import OWM_API_VERSION, PYOWM_VERSION
+from pyowm.constants import PYOWM_VERSION
 from pyowm.utils import httputils
 from pyowm.webapi25.forecast import Forecast
 from pyowm.webapi25.observation import Observation
@@ -77,7 +77,7 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(owm.get_API_key(), test_API_key)
         
     def test_get_API_version(self):
-        self.assertEquals(OWM_API_VERSION, self.__test_instance.get_API_version())
+        self.assertEquals("2.5", self.__test_instance.get_API_version())
         
     def test_get_version(self):
         self.assertEquals(PYOWM_VERSION, self.__test_instance.get_version())

@@ -76,6 +76,46 @@ class TestWeather(unittest.TestCase):
               self.__test_status, self.__test_detailed_status, 
               self.__test_weather_code, self.__test_weather_icon_name)
 
+    def test_from_dictionary(self):
+        dict1 = {'clouds': {'all': 92}, 'name': u'London',
+                 'coord': {'lat': 51.50853, 'lon': -0.12574},
+                 'sys': {'country': u'GB', 'sunset': 1378923812,
+                         'sunrise': 1378877413
+                         },
+                 'weather': [
+                 { 'main': u'Clouds', 'id': 804, 'icon': u'04d',
+                  'description': u'overcastclouds'}
+                 ],
+                 'cod': 200, 'base': u'gdpsstations', 'dt': 1378895177,
+                 'main': {
+                      'pressure': 1022,
+                      'humidity': 75,
+                      'temp_max': 289.82,
+                      'temp': 288.44,
+                      'temp_min': 287.59
+                  },
+                  'id': 2643743,
+                  'wind': { 'gust': 2.57, 'speed': 1.54, 'deg': 31}
+        }
+        dict2 = {"dt": 1378897200,
+                   "temp": { "day": 289.37,"min": 284.88, "max": 289.37,
+                             "night": 284.88, "eve": 287.53, "morn": 289.37
+                             },
+                   "pressure": 1025.35,
+                   "humidity": 71,
+                   "weather": [
+                   { "id": 500, "main": u"Rain", "description": u"light rain",
+                     "icon": u"u10d"}
+                   ],"speed": 3.76, "deg": 338, "clouds": 48,"rain": 3
+                }
+        result1 = Weather.from_dictionary(dict1)
+        self.assertTrue(isinstance(result1, Weather))
+        self.assertNotIn(None, result1.__dict__.values())
+        result2 = Weather.from_dictionary(dict2)
+        self.assertTrue(isinstance(result2, Weather))
+        self.assertNotIn(None, result2.__dict__.values())
+    
+    
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reference_time(),
                          self.__test_reference_time)

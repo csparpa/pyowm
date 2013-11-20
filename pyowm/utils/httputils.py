@@ -27,7 +27,7 @@ def call_API(API_endpoint_URL, params_dict, API_key):
     
     """
     # Build full HTTP request URL
-    url = build_full_URL(API_endpoint_URL, params_dict, API_key)
+    url = _build_full_URL(API_endpoint_URL, params_dict, API_key)
     
     # HTTP GET data
     try:
@@ -39,7 +39,7 @@ def call_API(API_endpoint_URL, params_dict, API_key):
     else:
         return response.read()
     
-def build_full_URL(API_endpoint_URL, params_dict, API_key):
+def _build_full_URL(API_endpoint_URL, params_dict, API_key):
     """
     Adds the API key and the query parameters dictionary to the specified API 
     endpoint URL, returning a complete HTTP request URL.
@@ -57,10 +57,10 @@ def build_full_URL(API_endpoint_URL, params_dict, API_key):
     params = params_dict.copy()
     if API_key is not None:
         params['APPID'] = API_key
-    return build_query_parameters(API_endpoint_URL, params)
+    return _build_query_parameters(API_endpoint_URL, params)
 
 
-def build_query_parameters(base_URL, params_dict):
+def _build_query_parameters(base_URL, params_dict):
     """
     Turns dictionary items into query parameters and adds them to the base URL
     

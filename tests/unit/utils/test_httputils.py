@@ -43,7 +43,7 @@ class TestHTTPUtils(unittest.TestCase):
         root = "http://test.com"
         params_dict = {"a": 1, "b": 2, "c": 3}
         expected = "http://test.com?a=1&c=3&b=2"
-        self.assertEqual(httputils.build_query_parameters(root, params_dict),
+        self.assertEqual(httputils._build_query_parameters(root, params_dict),
                          expected)
 
     def test_build_full_URL(self):
@@ -51,13 +51,13 @@ class TestHTTPUtils(unittest.TestCase):
         API_key = 'test_API_key'
         params = {'a': 1, 'b': 2}
         self.assertEqual('http://test.com/api?a=1&b=2&APPID=test_API_key', 
-                         httputils.build_full_URL(API_subset_URL, params, API_key))
+                         httputils._build_full_URL(API_subset_URL, params, API_key))
         
     def test_build_full_URL_with_no_API_key(self):
         API_subset_URL = 'http://test.com/api'
         params = {'a': 1, 'b': 2}
         self.assertEqual('http://test.com/api?a=1&b=2', 
-                         httputils.build_full_URL(API_subset_URL, params, None))
+                         httputils._build_full_URL(API_subset_URL, params, None))
         
     def test_call_API(self):
         ref_to_original_urlopen = httputils.urllib2.urlopen

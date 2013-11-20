@@ -74,6 +74,115 @@ class Weather(object):
         self.__weather_code = weather_code
         self.__weather_icon_name = weather_icon_name
 
+    @staticmethod
+    def from_dictionary(d):
+        """
+        Builds a *Weather* object out of a data dictionary. Only certain 
+        properties of the dictionary are used: if these properties are not found
+        or cannot be read, an error is issued.
+        
+        :param d: a data dictionary
+        :type d: dict
+        :returns: a *Weather* instance
+        :raises: *KeyError* if it is impossible to find or read the data
+            needed to build the instance
+            
+        """
+        # -- times
+        reference_time = d['dt']
+        if 'sys' in d and 'sunset' in d['sys']:
+            sunset_time = d['sys']['sunset']
+        else:
+            sunset_time = 0L
+        if 'sys' in d and 'sunrise' in d['sys']:
+            sunrise_time = d['sys']['sunrise']
+        else:
+            sunrise_time = 0L
+        # -- clouds
+        if 'clouds' in d:
+            if isinstance(d['clouds'], int) or isinstance(d['clouds'], float):
+                clouds = d['clouds']
+            elif 'all' in d['clouds']: 
+                clouds = d['clouds']['all']
+            else:
+                clouds = 0
+        else:
+            clouds = 0
+        # -- rain
+        if 'rain' in d:
+            if isinstance(d['rain'], int) or isinstance(d['rain'], float):
+                rain = {'all': d['rain']}
+            else:
+                rain = d['rain'].copy()
+        else:
+            rain = {}
+        # -- wind
+        if 'wind' in d:
+            wind = d['wind'].copy()
+        else:
+            wind = {}
+        # -- humidity
+        if 'humidity' in d:
+            humidity = d['humidity']
+        elif 'main' in d and 'humidity' in d['main']:
+            humidity = d['main']['humidity']
+        else:
+            humidity = 0
+        # -- snow
+        if 'snow' in d:
+            if isinstance(d['snow'], int) or isinstance(d['snow'], float):
+                snow = {'all': d['snow']}
+            else:
+                snow = d['snow'].copy()
+        else:
+            snow = {}
+        # -- pressure
+        if 'pressure' in d:
+            atm_press = d['pressure']
+        elif 'main' in d and 'pressure' in d['main']:
+            atm_press = d['main']['pressure']
+        else:
+            atm_press = None
+        if 'main' in d and 'sea_level' in d['main']:
+            sea_level_press = d['main']['sea_level']
+        else:
+            sea_level_press = None
+        pressure = {'press': atm_press,'sea_level': sea_level_press}
+        # -- temperature
+        if 'temp' in d:
+            temperature = d['temp'].copy()
+        elif 'main' in d and 'temp' in d['main']:
+            temp = d['main']['temp']
+            if 'temp_kf' in d['main']:
+                temp_kf = d['main']['temp_kf']
+            else:
+                temp_kf = None
+            temp_max = d['main']['temp_max']
+            temp_min = d['main']['temp_min']
+            temperature = {'temp': temp, 
+                           'temp_kf': temp_kf,
+                           'temp_max': temp_max,
+                           'temp_min': temp_min
+                           }
+        else:
+            temperature = {}
+        # -- weather status info
+        if 'weather' in d:
+            status = d['weather'][0]['main'].lower() #Sometimes provided with a leading upper case!
+            detailed_status = d['weather'][0]['description'].lower()
+            weather_code = d['weather'][0]['id']
+            weather_icon_name = d['weather'][0]['icon']
+        else:
+            status = u''
+            detailed_status = u''
+            weather_code = 0
+            weather_icon_name = u''
+        
+        return Weather(reference_time, sunset_time, sunrise_time, clouds,
+                    rain, snow, wind, humidity, pressure, temperature, 
+                    status, detailed_status, weather_code, 
+                    weather_icon_name)
+        
         
     def get_reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured

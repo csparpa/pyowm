@@ -42,6 +42,36 @@ class Location(object):
         self.__ID = ID
         self.__country = country
         
+    @staticmethod
+    def from_dictionary(d):
+        """
+        Builds a *Location* object out of a data dictionary. Only certain 
+        properties of the dictionary are used: if these properties are not found
+        or cannot be read, an error is issued.
+        
+        :param d: a data dictionary
+        :type d: dict
+        :returns: a *Location* instance
+        :raises: *KeyError* if it is impossible to find or read the data
+            needed to build the instance
+            
+        """
+        country = None
+        if 'sys' in d and 'country' in d['sys']:
+            country = d['sys']['country']
+        if 'city' in d:
+            data = d['city']
+        else:
+            data = d
+        name = data['name']
+        lon = data['coord']['lon']
+        lat = data['coord']['lat']
+        ID = int(data['id'])
+        if 'country' in data:
+            country = data['country']
+        return Location(name, lon, lat, ID, country)
+
+    
     def get_name(self):
         """
         Returns the toponym of the location
