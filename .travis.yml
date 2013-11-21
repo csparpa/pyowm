@@ -2,7 +2,7 @@ language: python
 python:
   - "2.7"
 script:
-  - ./run-unit-tests.bash
+  - bash run-unit-tests.bash
   - python setup.py install
 notifications:
   email:
