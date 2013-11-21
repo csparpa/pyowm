@@ -12,14 +12,6 @@ pyowm.utils.converter module
     :undoc-members:
     :show-inheritance:
 
-pyowm.utils.httputils module
-----------------------------
-
-.. automodule:: pyowm.utils.httputils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.utils.timeutils module
 -------------------------------
 
@@ -28,14 +20,6 @@ pyowm.utils.timeutils module
     :undoc-members:
     :show-inheritance:
     
-pyowm.utils.weatherutils module
--------------------------------
-
-.. automodule:: pyowm.utils.weatherutils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.utils.xmlutils module
 ---------------------------
 

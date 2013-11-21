@@ -10,7 +10,8 @@ from pyowm.webapi25.configuration25 import OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
     CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
 from pyowm.abstractions.owm import OWM
-from pyowm.utils import httputils, converter
+from pyowm.commons.owmhttpclient import OWMHTTPClient 
+from pyowm.utils import converter
 from pyowm.webapi25.forecaster import Forecaster
 
 
@@ -33,6 +34,7 @@ class OWM25(OWM):
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self.__API_key = API_key
+        self.__httpclient = OWMHTTPClient(API_key)
 
     def get_API_key(self):
         """
@@ -86,8 +88,7 @@ class OWM25(OWM):
             be parsed or *APICallException* when OWM web API can not be reached
         """
         assert type(name) is str, "'name' must be a str"
-        json_data = httputils.call_API(OBSERVATION_URL, 
-                                       {'q': name}, self.__API_key)
+        json_data = self.__httpclient.call_API(OBSERVATION_URL, {'q': name})
         return self.__parsers['observation'].parse_JSON(json_data)
 
     
@@ -111,8 +112,8 @@ class OWM25(OWM):
         assert type(lat) is float or type(lat) is int,"'lat' must be a float"
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        json_data = httputils.call_API(OBSERVATION_URL, {'lon': lon, 'lat': lat},
-                                       self.__API_key)
+        json_data = self.__httpclient.call_API(OBSERVATION_URL, 
+                                               {'lon': lon, 'lat': lat})
         return self.__parsers['observation'].parse_JSON(json_data)
     
     def find_weather_by_name(self, pattern, searchtype, limit=None):
@@ -149,8 +150,7 @@ class OWM25(OWM):
         params = {'q': pattern, 'type': searchtype}        
         if limit is not None:
             params['cnt'] = limit-1 # -1 is needed to fix a bug of the OWM 2.5 API!
-        json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
-           params, self.__API_key)
+        json_data = self.__httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self.__parsers['observation_list'].parse_JSON(json_data)
 
     def find_weather_by_coords(self, lon, lat, limit=None):
@@ -184,8 +184,7 @@ class OWM25(OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
             params['cnt'] = limit
-        json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
-           params, self.__API_key)
+        json_data = self.__httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self.__parsers['observation_list'].parse_JSON(json_data)
     
     def three_hours_forecast(self, name):
@@ -204,8 +203,7 @@ class OWM25(OWM):
             be parsed, *APICallException* when OWM web API can not be reached
         """
         assert type(name) is str, "'name' must be a str"
-        json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
-                                       {'q': name}, self.__API_key)
+        json_data = self.__httpclient.call_API(THREE_HOURS_FORECAST_URL, {'q': name})
         forecast = self.__parsers['forecast'].parse_JSON(json_data)
         if forecast:
             forecast.set_interval("3h")
@@ -240,8 +238,7 @@ class OWM25(OWM):
         params = {'q': name}
         if limit is not None:
             params['cnt'] = limit
-        json_data = httputils.call_API(DAILY_FORECAST_URL, 
-                                       params, self.__API_key)
+        json_data = self.__httpclient.call_API(DAILY_FORECAST_URL, params)
         forecast = self.__parsers['forecast'].parse_JSON(json_data)
         if forecast:
             forecast.set_interval("daily")
@@ -292,8 +289,7 @@ class OWM25(OWM):
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        json_data = httputils.call_API(CITY_WEATHER_HISTORY_URL, 
-           params, self.__API_key)
+        json_data = self.__httpclient.call_API(CITY_WEATHER_HISTORY_URL, params)
         return self.__parsers['weather_history'].parse_JSON(json_data)
     
     def station_tick_history(self, station_ID, limit=None):
@@ -384,9 +380,7 @@ class OWM25(OWM):
         params = {'id': station_ID, 'type': interval}
         if limit is not None:
             params['cnt'] = limit
-        json_data = httputils.call_API(STATION_WEATHER_HISTORY_URL, 
-                                       params, self.__API_key)
-        
+        json_data = self.__httpclient.call_API(STATION_WEATHER_HISTORY_URL, params)
         station_history = \
             self.__parsers['station_history'].parse_JSON(json_data)
         if station_history:

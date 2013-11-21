@@ -4,18 +4,10 @@ pyowm.abstractions package
 Submodules
 ----------
 
-pyowm.abstractions.owm
-----------------------
+pyowm.commons.owmhttpclient
+---------------------------
 
-.. automodule:: pyowm.abstractions.owm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    
-pyowm.abstractions.jsonparser
------------------------------
-
-.. automodule:: pyowm.abstractions.jsonparser
+.. automodule:: pyowm.commons.owmhttpclient
     :members:
     :undoc-members:
     :show-inheritance:

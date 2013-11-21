@@ -100,6 +100,14 @@ pyowm.webapi25.weatherhistoryparser module
     :undoc-members:
     :show-inheritance:
 
+pyowm.webapi25.weatherutils module
+----------------------------------
+
+.. automodule:: pyowm.webapi25.weatherutils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Module contents
 ---------------
 

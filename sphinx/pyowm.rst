@@ -9,6 +9,7 @@ Subpackages
 .. toctree::
 
     pyowm.abstractions
+    pyowm.commons
     pyowm.exceptions
     pyowm.utils
     pyowm.webapi25
