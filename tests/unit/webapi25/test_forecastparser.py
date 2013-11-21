@@ -14,13 +14,12 @@ class TestForecastParser(unittest.TestCase):
     
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __instance = ForecastParser()
-    __instance.set_interval("3h")
 
     def test_parse_JSON(self):
         result = self.__instance.parse_JSON(THREE_HOURS_FORECAST_JSON)
         self.assertTrue(result)
         self.assertTrue(result.get_reception_time())
-        self.assertTrue(result.get_interval())
+        self.assertFalse(result.get_interval())
         self.assertTrue(result.get_location())
         self.assertNotIn(None, result.get_location().__dict__.values())
         self.assertTrue(isinstance(result.get_weathers(),list))

@@ -8,21 +8,28 @@ from time import time
 from pyowm.constants import PYOWM_VERSION
 from pyowm.webapi25.configuration25 import OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
-    CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, observation_parser, \
-    observation_list_parser, forecast_parser, weather_history_parser, \
-    station_history_parser
+    CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
 from pyowm.abstractions.owm import OWM
 from pyowm.utils import httputils, converter
 from pyowm.webapi25.forecaster import Forecaster
-from pyowm.webapi25.stationhistoryparser import StationHistoryParser
 
 
 class OWM25(OWM):
     """
-    OWM subclass providing methods for each OWM web API 2.5 endpoint.
+    OWM subclass providing methods for each OWM web API 2.5 endpoint. The class
+    is instantiated with *jsonparser* subclasses, each one parsing the response
+    payload of a specific API endpoint
+    
+    :param parsers: the dictionary containing *jsonparser* concrete instances
+        to be used as parsers for OWM web API 2.5 reponses
+    :type parsers: dict 
+    :param API_key: the OWM web API key (can be ``None``)
+    :type API_key: str
+    :returns:  an *OWM25* instance 
     
     """
-    def __init__(self, API_key=None):
+    def __init__(self, parsers, API_key=None):
+        self.__parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self.__API_key = API_key
@@ -64,7 +71,6 @@ class OWM25(OWM):
         """
         return PYOWM_VERSION
 
-
     # Main OWM web API querying methods
 
     def weather_at(self, name):
@@ -82,7 +88,7 @@ class OWM25(OWM):
         assert type(name) is str, "'name' must be a str"
         json_data = httputils.call_API(OBSERVATION_URL, 
                                        {'q': name}, self.__API_key)
-        return observation_parser.parse_JSON(json_data)
+        return self.__parsers['observation'].parse_JSON(json_data)
 
     
     def weather_at_coords(self, lon, lat):
@@ -107,7 +113,7 @@ class OWM25(OWM):
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = httputils.call_API(OBSERVATION_URL, {'lon': lon, 'lat': lat},
                                        self.__API_key)
-        return observation_parser.parse_JSON(json_data)
+        return self.__parsers['observation'].parse_JSON(json_data)
     
     def find_weather_by_name(self, pattern, searchtype, limit=None):
         """
@@ -145,7 +151,7 @@ class OWM25(OWM):
             params['cnt'] = limit-1 # -1 is needed to fix a bug of the OWM 2.5 API!
         json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
            params, self.__API_key)
-        return observation_list_parser.parse_JSON(json_data)
+        return self.__parsers['observation_list'].parse_JSON(json_data)
 
     def find_weather_by_coords(self, lon, lat, limit=None):
         """
@@ -180,7 +186,7 @@ class OWM25(OWM):
             params['cnt'] = limit
         json_data = httputils.call_API(FIND_OBSERVATIONS_URL, 
            params, self.__API_key)
-        return observation_list_parser.parse_JSON(json_data)
+        return self.__parsers['observation_list'].parse_JSON(json_data)
     
     def three_hours_forecast(self, name):
         """
@@ -200,9 +206,9 @@ class OWM25(OWM):
         assert type(name) is str, "'name' must be a str"
         json_data = httputils.call_API(THREE_HOURS_FORECAST_URL, 
                                        {'q': name}, self.__API_key)
-        forecast_parser.set_interval("3h")
-        forecast = forecast_parser.parse_JSON(json_data)
+        forecast = self.__parsers['forecast'].parse_JSON(json_data)
         if forecast:
+            forecast.set_interval("3h")
             return Forecaster(forecast)
         else:
             return None
@@ -236,9 +242,9 @@ class OWM25(OWM):
             params['cnt'] = limit
         json_data = httputils.call_API(DAILY_FORECAST_URL, 
                                        params, self.__API_key)
-        forecast_parser.set_interval("daily")
-        forecast = forecast_parser.parse_JSON(json_data)
+        forecast = self.__parsers['forecast'].parse_JSON(json_data)
         if forecast:
+            forecast.set_interval("daily")
             return Forecaster(forecast)
         else:
             return None
@@ -288,7 +294,7 @@ class OWM25(OWM):
                              "while the other is not!")
         json_data = httputils.call_API(CITY_WEATHER_HISTORY_URL, 
            params, self.__API_key)
-        return weather_history_parser.parse_JSON(json_data)
+        return self.__parsers['weather_history'].parse_JSON(json_data)
     
     def station_tick_history(self, station_ID, limit=None):
         """
@@ -380,9 +386,13 @@ class OWM25(OWM):
             params['cnt'] = limit
         json_data = httputils.call_API(STATION_WEATHER_HISTORY_URL, 
                                        params, self.__API_key)
-        station_history_parser.set_station_ID(station_ID)
-        station_history_parser.set_interval(interval)
-        return station_history_parser.parse_JSON(json_data) 
+        
+        station_history = \
+            self.__parsers['station_history'].parse_JSON(json_data)
+        if station_history:
+            station_history.set_station_ID(station_ID)
+            station_history.set_interval(interval)
+        return  station_history
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of OWM instances"""

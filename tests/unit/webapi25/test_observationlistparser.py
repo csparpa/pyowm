@@ -4,7 +4,6 @@
 Test case for observationlistparser.py module
 """
 import unittest
-from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.webapi25.observationlistparser import ObservationListParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
@@ -13,7 +12,7 @@ from json_test_responses import SEARCH_RESULTS_JSON, SEARCH_WITH_NO_RESULTS_JSON
 
 class TestObservationListParser(unittest.TestCase):
     
-    __instance = ObservationListParser(ObservationParser())
+    __instance = ObservationListParser()
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     
     def test_parse_JSON(self):

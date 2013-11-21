@@ -52,6 +52,53 @@ pyowm.webapi25.weather module
     :undoc-members:
     :show-inheritance:
 
+pyowm.webapi25.stationhistory module
+------------------------------------
+
+.. automodule:: pyowm.webapi25.stationhistory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.forecastparser module
+------------------------------------
+
+.. automodule:: pyowm.webapi25.forecastparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.observationparser module
+---------------------------------------
+
+.. automodule:: pyowm.webapi25.observationparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.observationlistparser module
+-------------------------------------------
+
+.. automodule:: pyowm.webapi25.observationlistparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.stationhistoryparser module
+------------------------------------------
+
+.. automodule:: pyowm.webapi25.stationhistoryparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.weatherhistoryparser module
+------------------------------------------
+
+.. automodule:: pyowm.webapi25.weatherhistoryparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------

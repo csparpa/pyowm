@@ -64,8 +64,6 @@ class Forecast(object):
     """
 
     def __init__(self, interval, reception_time, location, weathers):
-        if interval is not "3h" and interval is not "daily":
-            raise ValueError("'interval' value must be '3h' or 'daily'")
         self.__interval = interval
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
@@ -100,6 +98,17 @@ class Forecast(object):
         
         """
         return self.__interval
+    
+    def set_interval(self, interval):
+        """
+        Sets the time granularity of the forecast
+        
+        :param interval: the time granularity of the forecast, may be "3h" or
+            "daily" 
+        :type interval: str
+
+        """
+        self.__interval = interval
     
     def get_reception_time(self, timeformat='unix'):
         """Returns the GMT time telling when the forecast was received 

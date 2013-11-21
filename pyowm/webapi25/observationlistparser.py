@@ -7,6 +7,7 @@ returning lists of Observation objects
 
 from json import loads, dumps
 from pyowm.abstractions.jsonparser import JSONParser
+from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 
@@ -21,8 +22,8 @@ class ObservationListParser(JSONParser):
     
     """
 
-    def __init__(self, observation_parser):
-        self._observation_parser = observation_parser
+    def __init__(self):
+        pass
     
     def parse_JSON(self, JSON_string):
         """
@@ -40,6 +41,7 @@ class ObservationListParser(JSONParser):
             
         """
         d = loads(JSON_string)
+        observation_parser = ObservationParser()
         if 'cod' not in d:
                 raise ParseResponseError(''.join([__name__,': impossible to read ' \
                   'JSON data']))
@@ -56,7 +58,7 @@ class ObservationListParser(JSONParser):
                 return []
             else:
                 if 'list' in d:
-                    return [self._observation_parser.parse_JSON(dumps(item)) \
+                    return [observation_parser.parse_JSON(dumps(item)) \
                              for item in d['list']]
                 else:
                     raise ParseResponseError(''.join([__name__,': impossible to read ' \

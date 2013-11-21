@@ -23,26 +23,6 @@ class StationHistoryParser(JSONParser):
     def __init__(self):
         pass
     
-    def set_station_ID(self, station_ID):
-        """
-        Sets the station ID whose historic weather dataset is expected to be parsed
-        
-        :param station_ID: the time granularity between "3h" and "daily"
-        :type station_ID: int
-        """
-        self.__station_ID = station_ID
-        
-    def set_interval(self, interval):
-        """        
-        Sets the time granularity for the historic weather dataset that is 
-        expected to be parsed
-
-        :param interval: the time granularity for this historic weather dataset
-        :type interval: string
-        """
-        self.__interval = interval
-    
-    
     def parse_JSON(self, JSON_string):
         """
         Parses a *StatioHistory* instance out of raw JSON data. Only certain 
@@ -109,5 +89,4 @@ class StationHistoryParser(JSONParser):
         except KeyError:
             raise ParseResponseError(__name__+': impossible to read JSON data')
         current_time = long(round(time()))
-        return StationHistory(self.__station_ID, self.__interval, current_time,
-                                  measurements)
+        return StationHistory(None, None, current_time, measurements)

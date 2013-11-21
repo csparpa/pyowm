@@ -26,10 +26,22 @@ from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.stationhistory import StationHistory
+from pyowm.webapi25.forecastparser import ForecastParser
+from pyowm.webapi25.observationparser import ObservationParser
+from pyowm.webapi25.observationlistparser import ObservationListParser
+from pyowm.webapi25.stationhistoryparser import StationHistoryParser
+from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
 
 class TestOWM25(unittest.TestCase):
     
-    __test_instance = OWM25('test_API_key')
+    __test_parsers = {
+      'observation': ObservationParser(),
+      'observation_list': ObservationListParser(),
+      'forecast': ForecastParser(),
+      'weather_history': WeatherHistoryParser(),
+      'station_history': StationHistoryParser()
+    }
+    __test_instance = OWM25(__test_parsers, 'test_API_key')
     
     # Mock functions
     def mock_httputils_call_API_returning_single_obs(self, API_subset_URL, 
@@ -71,7 +83,7 @@ class TestOWM25(unittest.TestCase):
     # Tests
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
-        owm = OWM25()
+        owm = OWM25({})
         self.assertFalse(owm.get_API_key())
         owm.set_API_key(test_API_key)
         self.assertEqual(owm.get_API_key(), test_API_key)

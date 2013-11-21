@@ -37,10 +37,6 @@ class TestStationHistory(unittest.TestCase):
     def test_init_fails_when_negative_reception_time(self):
         self.assertRaises(ValueError, StationHistory, 1234, 'tick', -1234567L, 
                           self.__test_measurements)
-        
-    def test_init_fails_with_unknown_interval(self):
-        self.assertRaises(ValueError, StationHistory, 1234, 'xyz', 1234567L, 
-                          self.__test_measurements)
 
     def test_getters_return_expected_3h_data(self):
         self.assertEqual(self.__test_instance.get_interval(), self.__test_interval)

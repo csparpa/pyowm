@@ -36,14 +36,7 @@ class TestForecast(unittest.TestCase):
     def test_init_fails_when_reception_time_is_negative(self):
         self.assertRaises(ValueError, Forecast, "3h", -1234567L, 
                           self.__test_location, self.__test_weathers)
-
-    def test_init_fails_with_unknown_interval(self):
-        """
-        Test method failure providing a bad value for 'interval'
-        """
-        self.assertRaises(ValueError, Forecast, "xyz", self.__test_reception_time,
-                          self.__test_location, self.__test_weathers)
-    
+   
     def test_get(self):
         index = 1
         self.assertEqual(self.__test_weathers[index],

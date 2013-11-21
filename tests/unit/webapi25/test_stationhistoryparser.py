@@ -15,8 +15,6 @@ class TestStationHistoryParser(unittest.TestCase):
     
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __instance = StationHistoryParser()
-    __instance.set_station_ID(1234)
-    __instance.set_interval("day")
     
     def test_parse_JSON(self):
         result = self.__instance.parse_JSON(STATION_TICK_WEATHER_HISTORY_JSON)

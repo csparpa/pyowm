@@ -16,8 +16,7 @@ class StationHistory(object):
        
     :param station_ID: the numeric ID of the meteostation
     :type station_ID: int
-    :param interval: the time granularity of the meteostation data history, must
-        be among 'tick','hour' and 'day'
+    :param interval: the time granularity of the meteostation data history
     :type interval: str
     :param reception_time: GMT UNIXtime of the data reception from the OWM web API
     :type reception_time: long/int
@@ -25,13 +24,10 @@ class StationHistory(object):
     :type measurements: dict
     :returns: a *StationHistory* instance
     :raises: *ValueError* when the supplied value for reception time is negative
-        or when bad values for history interval are given
     """
     
     def __init__(self, station_ID, interval, reception_time, measurements):
         self.__station_ID = station_ID
-        if interval is not "tick" and interval is not "hour" and interval is not "day":
-            raise ValueError("'interval' value must be 'tick', 'hour' or 'day'")
         self.__interval = interval
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
@@ -47,6 +43,16 @@ class StationHistory(object):
         """
         return self.__station_ID
     
+    def set_station_ID(self, station_ID):
+        """
+        Sets the numeric ID of the meteostation
+        
+        :param station_ID: the numeric ID of the meteostation
+        :type station_ID: int
+        
+        """
+        self.__station_ID = station_ID
+    
     def get_interval(self):
         """
         Returns the interval of the meteostation history data
@@ -55,6 +61,17 @@ class StationHistory(object):
         
         """
         return self.__interval
+    
+    def set_interval(self, interval):
+        """
+        Sets the interval of the meteostation history data
+        
+        :param interval: the time granularity of the meteostation history data,
+            may be among "tick","hour" and "day"
+        :type interval: string
+        
+        """
+        self.__interval = interval
     
     def get_measurements(self):
         """

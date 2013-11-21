@@ -21,11 +21,13 @@ CITY_WEATHER_HISTORY_URL = ROOT_API_URL+'/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL+'/history/station'
 
 # Parser objects injection for OWM web API responses parsing
-observation_parser = ObservationParser()
-observation_list_parser = ObservationListParser(observation_parser)
-forecast_parser = ForecastParser()
-weather_history_parser = WeatherHistoryParser()
-station_history_parser = StationHistoryParser()
+parsers = {
+  'observation': ObservationParser(),
+  'observation_list': ObservationListParser(),
+  'forecast': ForecastParser(),
+  'weather_history': WeatherHistoryParser(),
+  'station_history': StationHistoryParser()
+}
 
 # Weather status keywords
 RAIN_KEYWORDS = ['rain','drizzle']

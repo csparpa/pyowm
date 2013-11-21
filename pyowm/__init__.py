@@ -26,6 +26,7 @@ def OWM(API_key=None, version=LATEST_OWM_API_VERSION):
     :raises: *ValueError* when unsupported OWM API versions are provided
     """
     if version == "2.5":
+        from webapi25.configuration25 import parsers
         from webapi25.owm25 import OWM25
-        return OWM25(API_key)
+        return OWM25(parsers, API_key)
     raise ValueError("Unsupported OWM web API version")

@@ -25,16 +25,6 @@ class ForecastParser(JSONParser):
     def __init__(self):
         pass
     
-    def set_interval(self, interval):
-        """
-        Sets the time granularity for the expected forecast
-        
-        :param interval: the time granularity between "3h" and "daily"
-        :type interval: str
-        """
-        self.__interval = interval
-        
-    
     def parse_JSON(self, JSON_string):
         """
         Parses a *Forecast* instance out of raw JSON data. Only certain 
@@ -81,5 +71,5 @@ class ForecastParser(JSONParser):
                 raise ParseResponseError(''.join([__name__,': impossible to read ' \
                   'weather list from JSON data'])) 
         current_time = long(round(time()))
-        return Forecast(self.__interval, current_time, location, weathers)
+        return Forecast(None, current_time, location, weathers)
             
