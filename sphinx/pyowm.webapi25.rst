@@ -59,6 +59,14 @@ pyowm.webapi25.stationhistory module
     :members:
     :undoc-members:
     :show-inheritance:
+    
+pyowm.webapi25.historian module
+-------------------------------
+
+.. automodule:: pyowm.webapi25.historian
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 pyowm.webapi25.forecastparser module
 ------------------------------------

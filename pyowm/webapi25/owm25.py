@@ -13,6 +13,7 @@ from pyowm.abstractions.owm import OWM
 from pyowm.commons.owmhttpclient import OWMHTTPClient 
 from pyowm.utils import converter
 from pyowm.webapi25.forecaster import Forecaster
+from pyowm.webapi25.historian import Historian
 
 
 class OWM25(OWM):
@@ -317,7 +318,12 @@ class OWM25(OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        return self.__retrieve_station_history(station_ID, limit, "tick")
+        station_history = self.__retrieve_station_history(station_ID, limit, "tick")
+        if station_history:
+            return Historian(station_history)
+        else:
+            return None
+    
     
     def station_hour_history(self, station_ID, limit=None):
         """
@@ -344,7 +350,11 @@ class OWM25(OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        return self.__retrieve_station_history(station_ID, limit, "hour")
+        station_history = self.__retrieve_station_history(station_ID, limit, "hour")
+        if station_history:
+            return Historian(station_history)
+        else:
+            return None
     
     def station_day_history(self, station_ID, limit=None):
         """
@@ -371,7 +381,11 @@ class OWM25(OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        return self.__retrieve_station_history(station_ID, limit, "day")
+        station_history = self.__retrieve_station_history(station_ID, limit, "day")
+        if station_history:
+            return Historian(station_history)
+        else:
+            return None
     
     def __retrieve_station_history(self, station_ID, limit, interval):
         """
@@ -386,7 +400,7 @@ class OWM25(OWM):
         if station_history:
             station_history.set_station_ID(station_ID)
             station_history.set_interval(interval)
-        return  station_history
+        return station_history
     
     def __str__(self):
         """Redefine __str__ hook for pretty-printing of OWM instances"""

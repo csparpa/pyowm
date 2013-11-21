@@ -26,6 +26,7 @@ from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.stationhistory import StationHistory
+from pyowm.webapi25.historian import Historian
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.webapi25.observationlistparser import ObservationListParser
@@ -263,8 +264,10 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = self.mock_httputils_call_API_returning_station_tick_weather_history
         result = self.__test_instance.station_tick_history(1234, limit=4)
         OWMHTTPClient.call_API = ref_to_original_call_API
-        self.assertTrue(isinstance(result, StationHistory))
-        self.assertTrue(isinstance(result.get_measurements(), dict))
+        self.assertTrue(isinstance(result, Historian))
+        station_history = result.get_station_history()
+        self.assertTrue(isinstance(station_history, StationHistory))
+        self.assertTrue(isinstance(station_history.get_measurements(), dict))
         
     def test_station_tick_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.station_tick_history, self.__test_instance, \
@@ -275,8 +278,10 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = self.mock_httputils_call_API_returning_station_hour_weather_history
         result = self.__test_instance.station_hour_history(1234, limit=4)
         OWMHTTPClient.call_API = ref_to_original_call_API
-        self.assertTrue(isinstance(result, StationHistory))
-        self.assertTrue(isinstance(result.get_measurements(), dict))
+        self.assertTrue(isinstance(result, Historian))
+        station_history = result.get_station_history()
+        self.assertTrue(isinstance(station_history, StationHistory))
+        self.assertTrue(isinstance(station_history.get_measurements(), dict))
         
     def test_station_hour_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.station_hour_history, self.__test_instance, \
@@ -287,8 +292,10 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = self.mock_httputils_call_API_returning_station_day_weather_history
         result = self.__test_instance.station_day_history(1234, limit=4)
         OWMHTTPClient.call_API = ref_to_original_call_API
-        self.assertTrue(isinstance(result, StationHistory))
-        self.assertTrue(isinstance(result.get_measurements(), dict))
+        self.assertTrue(isinstance(result, Historian))
+        station_history = result.get_station_history()
+        self.assertTrue(isinstance(station_history, StationHistory))
+        self.assertTrue(isinstance(station_history.get_measurements(), dict))
         
     def test_station_day_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.station_day_history, self.__test_instance, \

@@ -215,49 +215,64 @@ class IntegrationTest(unittest.TestCase):
         """
         Test feature: get station tick weather history for a specific meteostation
         """
-        sh1 = self.__owm.station_tick_history(39276)
+        h1 = self.__owm.station_tick_history(39276)
+        self.assertTrue(h1)
+        sh1 = h1.get_station_history()
         self.assertTrue(sh1)
         data1 = sh1.get_measurements()
         self.assertTrue(data1)
         self.assertFalse(0, len(data1))
-        sh2 = self.__owm.station_tick_history(39276, limit=2)
+        h2 = self.__owm.station_tick_history(39276, limit=2)
+        self.assertTrue(h2)
+        sh2 = h2.get_station_history()
+        self.assertTrue(sh2)
         data2 = sh2.get_measurements()
         self.assertTrue(data2)
         self.assertFalse(len(data2) > 2)        
-        sh3 = self.__owm.station_tick_history(987654) #Shall be None
-        self.assertFalse(sh3)
+        h3 = self.__owm.station_tick_history(987654) #Shall be None
+        self.assertFalse(h3)
         
     def test_station_hour_history(self):
         """
         Test feature: get station hour weather history for a specific meteostation
         """
-        sh1 = self.__owm.station_hour_history(123)
+        h1 = self.__owm.station_hour_history(123)
+        self.assertTrue(h1)
+        sh1 = h1.get_station_history()
         self.assertTrue(sh1)
         data1 = sh1.get_measurements()
         self.assertTrue(data1)
         self.assertFalse(0, len(data1))
-        sh2 = self.__owm.station_hour_history(123, limit=2)
+        h2 = self.__owm.station_hour_history(123, limit=2)
+        self.assertTrue(h2)
+        sh2 = h2.get_station_history()
+        self.assertTrue(sh2)
         data2 = sh2.get_measurements()
         self.assertTrue(data2)
         self.assertFalse(len(data2) > 2)        
-        sh3 = self.__owm.station_hour_history(987654) #Shall be None
-        self.assertFalse(sh3)
+        h3 = self.__owm.station_hour_history(987654) #Shall be None
+        self.assertFalse(h3)
         
     def test_station_day_history(self):
         """
         Test feature: get station hour weather history for a specific meteostation
         """
-        sh1 = self.__owm.station_day_history(123)
+        h1 = self.__owm.station_day_history(123)
+        self.assertTrue(h1)
+        sh1 = h1.get_station_history()
         self.assertTrue(sh1)
         data1 = sh1.get_measurements()
         self.assertTrue(data1)
         self.assertFalse(0, len(data1))
-        sh2 = self.__owm.station_day_history(123, limit=2)
+        h2 = self.__owm.station_day_history(123, limit=2)
+        self.assertTrue(h2)
+        sh2 = h2.get_station_history()
+        self.assertTrue(sh2)
         data2 = sh2.get_measurements()
         self.assertTrue(data2)
         self.assertFalse(len(data2) > 2)        
-        sh3 = self.__owm.station_day_history(987654) #Shall be None
-        self.assertFalse(sh3)
+        h3 = self.__owm.station_day_history(987654) #Shall be None
+        self.assertFalse(h3)
         
 if __name__ == "__main__":
     unittest.main()
