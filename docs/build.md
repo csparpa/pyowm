@@ -45,3 +45,15 @@ Now you are ready to generate HTML docs by launching:
     $> make html
 
 HTML docs will be generated under sphinx/_build/html
+
+
+Upload to PyPy
+--------------
+Enter the main project directory and issue:
+
+    $> python setup.py sdist register upload  # Raw source dist
+    $> python setup.py bdist_egg upload       # Eggball
+    $> python setup.py bdist_wininst upload   # Windows .exe installer
+
+[Guide](http://pythonhosted.org/an_example_pypi_project/setuptools.html#intermezzo-pypirc-file-and-gpg)
+[Issue](http://stackoverflow.com/questions/1569315/setup-py-upload-is-failing-with-upload-failed-401-you-must-be-identified-t)
