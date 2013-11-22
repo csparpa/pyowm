@@ -2,8 +2,8 @@ language: python
 python:
   - "2.7"
 script:
-  - ./run-unit-tests.bash
   - python setup.py install
+  - python setup.py test -s tests.unit
 notifications:
   email:
     on_success: change
