@@ -20,12 +20,6 @@ how to do it. Just run (superuser privileges might be needed):
 
     python setup.py install
 
-Test
-----
-As simple as:
-
-    python setup.py test
-
 Take off
 --------
     from pyowm import OWM, timeutils
@@ -42,6 +36,12 @@ Take off
     w = obs.get_weather()
     w.get_detailed_status()           # 'Light rain'
     w.get_wind()                      # {'speed': 4.6, 'deg': 330}
+
+Test
+----
+As simple as:
+
+    python setup.py test -s tests.unit
 
 Support
 -------
