@@ -6,8 +6,7 @@ What is it?
 ------------
 PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
 
-It allows quick and easy consumption of OWM weather data (either observations 
-and forecast) from Python applications via a simple object model.
+It allows quick and easy consumption of OWM weather data from Python applications via a simple object model and in a human-friendly fashion.
 
 No additional libraries are requested: only the Python 2.6/2.7 standard library modules.
 
@@ -38,7 +37,7 @@ Install
        
        `python setup.py install`
 
-** .exe installer (Windows users)**
+**.exe installer (Windows users)**
 
 The installer is available on the [Python Package Index](https://pypi.python.org/pypi/pyowm) 
 
@@ -71,7 +70,7 @@ Test
 ----
 As simple as:
 
-    python setup.py test -s tests.unit
+`python setup.py test -s tests.unit`
 
 Development
 -----------
