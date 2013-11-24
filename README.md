@@ -43,7 +43,7 @@ The installer is available on the [Python Package Index](https://pypi.python.org
 
 Take off
 --------
-```
+```python
 from pyowm import OWM, timeutils
 
 owm = OWM('your-API-key')
