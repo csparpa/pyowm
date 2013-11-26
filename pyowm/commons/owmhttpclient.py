@@ -7,19 +7,24 @@ Module containing classes for HTTP client/server interactions
 import urllib2
 from urllib import urlencode
 from pyowm.exceptions import api_call_error
+from pyowm.caches.nullowmcache import NullCache
 
 class OWMHTTPClient(object):
     
     """
-    An HTTP client class.
+    An HTTP client class, that can leverage a cache mechanism.
     
     :param API_key: the OWM web API key (defaults to ``None``)
     :type API_key: str
+    :param cache: an OWMCache concrete instance (defaults to a NullCache 
+        instance) that will be used to cache OWM web API responses. 
+    :type cache: an OWMCache concrete instance
     
     """
     
-    def __init__(self, API_key=None):
+    def __init__(self, API_key=None, cache=NullCache()):
         self.__API_key = API_key
+        self.__cache = cache
 
     def call_API(self, API_endpoint_URL, params_dict):
         
@@ -37,14 +42,20 @@ class OWMHTTPClient(object):
         
         """
         url = self._build_full_URL(API_endpoint_URL, params_dict)
-        try:
-            response = urllib2.urlopen(url)
-        except urllib2.HTTPError as e:
-            raise api_call_error.APICallError(e.reason, e)
-        except urllib2.URLError as e:
-            raise api_call_error.APICallError(e.message, e)
+        cached = self.__cache.get(url)
+        if cached:
+            return cached
         else:
-            return response.read()
+            try:
+                response = urllib2.urlopen(url)
+            except urllib2.HTTPError as e:
+                raise api_call_error.APICallError(e.reason, e)
+            except urllib2.URLError as e:
+                raise api_call_error.APICallError(e.message, e)
+            else:
+                data = response.read()
+                self.__cache.set(url, data)
+                return data
         
     def _build_full_URL(self, API_endpoint_URL, params_dict):
         """
