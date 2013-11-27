@@ -205,3 +205,43 @@ class FrontLinkedList(LinkedList):
             if item.data() == data:
                 return True
         return False
+    
+    def index_of(self, data):
+        """
+        Finds the position of a node in the list. The index of the first 
+        occurrence of the data is returned (indexes start at 0)
+        
+        :param data: data of the seeked node
+        :type: object
+        :returns: the int index or -1 if the node is not in the list
+        
+        """
+        current_node = self.__first_node
+        pos = 0
+        while current_node:
+            if (current_node.data() == data):
+                return pos
+            else:
+                current_node = current_node.next()
+                pos += 1
+        return -1
+    
+    def pop(self):
+        """
+        Removes the last node from the list
+        
+        """
+        popped = False
+        result = None
+        current_node = self.__first_node
+        while not popped:
+            next_node = current_node.next()
+            next_next_node = next_node.next()
+            if not next_next_node:
+                self.__last_node = current_node
+                self.__last_node.update_next(None)
+                self.__size -= 1
+                result = next_node.data()
+                popped = True
+            current_node = next_node
+        return result

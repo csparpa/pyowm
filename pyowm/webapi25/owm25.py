@@ -10,6 +10,7 @@ from pyowm.webapi25.configuration25 import OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
     CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
 from pyowm.abstractions.owm import OWM
+from pyowm.caches.nullcache import NullCache
 from pyowm.commons.owmhttpclient import OWMHTTPClient 
 from pyowm.utils import converter
 from pyowm.webapi25.forecaster import Forecaster
@@ -30,12 +31,12 @@ class OWM25(OWM):
     :returns:  an *OWM25* instance 
     
     """
-    def __init__(self, parsers, API_key=None):
+    def __init__(self, parsers, API_key=None, cache=NullCache()):
         self.__parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self.__API_key = API_key
-        self.__httpclient = OWMHTTPClient(API_key)
+        self.__httpclient = OWMHTTPClient(API_key, cache)
 
     def get_API_key(self):
         """

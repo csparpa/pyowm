@@ -1,8 +1,16 @@
-pyowm.abstractions package
-==========================
+pyowm.commons package
+=====================
 
 Submodules
 ----------
+
+pyowm.commons.frontlinkedlist
+-----------------------------
+
+.. automodule:: pyowm.commons.frontlinkedlist
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 pyowm.commons.owmhttpclient
 ---------------------------
@@ -15,7 +23,7 @@ pyowm.commons.owmhttpclient
 Module contents
 ---------------
 
-.. automodule:: pyowm.exceptions
+.. automodule:: pyowm.commons
     :members:
     :undoc-members:
     :show-inheritance:

@@ -9,6 +9,7 @@ Subpackages
 .. toctree::
 
     pyowm.abstractions
+    pyowm.caches
     pyowm.commons
     pyowm.exceptions
     pyowm.utils

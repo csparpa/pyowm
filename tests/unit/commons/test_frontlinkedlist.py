@@ -52,4 +52,24 @@ class TestLinkedList(unittest.TestCase):
         instance.add(456)
         self.assertTrue(instance.contains(3))
         self.assertFalse(instance.contains("test"))
-                
+    
+    def test_index_of(self):
+        instance = FrontLinkedList()
+        instance.add("first")
+        instance.add("middle")
+        instance.add("last")
+        self.assertEquals(2, instance.index_of("first"))
+        self.assertEquals(1, instance.index_of("middle"))
+        self.assertEquals(0, instance.index_of("last"))
+        
+    def test_pop(self):
+        instance = FrontLinkedList()
+        expected = "popped"
+        instance.add(expected)
+        instance.add(4)
+        instance.add(3)
+        instance.add(2)
+        instance.add(1)
+        result = instance.pop()
+        self.assertFalse(instance.contains("popped"))
+        self.assertEquals(expected, result)

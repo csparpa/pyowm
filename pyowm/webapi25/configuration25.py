@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from pyowm.caches.nullcache import NullCache
 from observationparser import ObservationParser
 from observationlistparser import ObservationListParser
 from forecastparser import ForecastParser
@@ -28,6 +29,9 @@ parsers = {
   'weather_history': WeatherHistoryParser(),
   'station_history': StationHistoryParser()
 }
+
+# Cache provider to be used
+cache = NullCache()
 
 # Weather status keywords
 RAIN_KEYWORDS = ['rain','drizzle']

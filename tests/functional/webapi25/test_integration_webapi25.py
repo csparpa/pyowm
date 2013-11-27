@@ -273,6 +273,6 @@ class IntegrationTest(unittest.TestCase):
         self.assertFalse(len(data2) > 2)        
         h3 = self.__owm.station_day_history(987654) #Shall be None
         self.assertFalse(h3)
-        
+
 if __name__ == "__main__":
     unittest.main()
