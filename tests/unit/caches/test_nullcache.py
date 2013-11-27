@@ -5,7 +5,7 @@ Test case for nullowmcache.py module.
 """
 
 import unittest
-from pyowm.caches.nullowmcache import NullCache
+from pyowm.caches.nullcache import NullCache
 
 
 class TestNullCache(unittest.TestCase):
