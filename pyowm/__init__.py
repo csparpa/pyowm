@@ -10,6 +10,7 @@ The PyOWM init file
 """
 
 from constants import LATEST_OWM_API_VERSION
+from pyowm.utils import timeutils 
 
 def OWM(API_key=None, version=LATEST_OWM_API_VERSION):
     """

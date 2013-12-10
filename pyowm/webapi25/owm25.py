@@ -28,7 +28,7 @@ class OWM25(OWM):
     :type parsers: dict 
     :param API_key: the OWM web API key (can be ``None``)
     :type API_key: str
-    :returns:  an *OWM25* instance 
+    :returns: an *OWM25* instance 
     
     """
     def __init__(self, parsers, API_key=None, cache=NullCache()):

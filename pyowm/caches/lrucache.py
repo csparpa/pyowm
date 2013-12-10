@@ -9,44 +9,44 @@ from pyowm.abstractions.owmcache import OWMCache
 from pyowm.commons.frontlinkedlist import FrontLinkedList
 from pyowm.utils.converter import to_UNIXtime
 
-class LRUCache(OWMCache):
-
-    __CACHE_MAX_SIZE = 20  # Maximum number of elements that fit the cache
-    __ITEM_LIFETIME_MILLISECONDS = 1000*60*10 # Ten minutes
-    
+class LRUCache(OWMCache):   
     """
     This cache is made out of a 'table' dict and the 'usage_recency' linked list.
     'table' maps uses requests' URLs as keys and stores JSON raw responses
     as values. 'usage_recency' tracks down the "recency" of the OWM web API
-    requests: the more recent a request, the more the element will be far from 
-    the "death" point of the recency list. Items in 'usage_recency' are the 
+    requests: the more recent a request, the more the element will be far from
+    the "death" point of the recency list. Items in 'usage_recency' are the
     requests' URLs themselves.
     The implemented LRU caching mechanism is the following:
-      - cached elements must expire after a certain time passed into the cache.
-        So when an element is looked up and found in the cache, its insertion 
-        timestamp is compared to the current one: if the difference is higher 
-        than a prefixed value, then the lookup is considered a MISS: the 
-        element is removed either from 'table' and from 'usage_recency' and must
-        be requested again to the OWM web API. If the time difference is ok, 
-        then the lookup is considered a HIT.
-      - when a GET results in a HIT, promote the element to the front of the 
-        recency list updating its cache insertion timestamp and return the
-        data to the cache clients
-      - when a GET results in a MISS, return ``None``
-      - when a SET is issued, check if the maximum size of the cache has
-        been reached: if so, discard the least recently used item from the recency
-        list and the dict; then add the element to 'table' recording its 
-        timestamp and finally add it at the front of the recency list.
-
+    
+    - cached elements must expire after a certain time passed into the cache.
+      So when an element is looked up and found in the cache, its insertion
+      timestamp is compared to the current one: if the difference is higher
+      than a prefixed value, then the lookup is considered a MISS: the
+      element is removed either from 'table' and from 'usage_recency' and must
+      be requested again to the OWM web API. If the time difference is ok,
+      then the lookup is considered a HIT.
+    - when a GET results in a HIT, promote the element to the front of the
+      recency list updating its cache insertion timestamp and return the
+      data to the cache clients
+    - when a GET results in a MISS, return ``None``
+    - when a SET is issued, check if the maximum size of the cache has
+      been reached: if so, discard the least recently used item from the
+      recency list and the dict; then add the element to 'table' recording its
+      timestamp and finally add it at the front of the recency list.
+      
     :param cache_max_size: the maximum size of the cache in terms of cached
         OWM web API responses. A reasonable default value is provided. 
     :type cache_max_size: int
-    :param item_lifetime_millis: the maximum lifetime allowed for a cache item in 
-        milliseconds. A reasonable default value is provided. 
+    :param item_lifetime_millis: the maximum lifetime allowed for a cache item in
+        milliseconds. A reasonable default value is provided.
     :type item_lifetime_millis: int
     :returns: a new *LRUCache* instance
     
     """
+
+    __CACHE_MAX_SIZE = 20  # Maximum number of elements that fit the cache
+    __ITEM_LIFETIME_MILLISECONDS = 1000*60*10 # Ten minutes
     
     def __init__(self, cache_max_size=__CACHE_MAX_SIZE,
                  item_lifetime_millis=__ITEM_LIFETIME_MILLISECONDS):
