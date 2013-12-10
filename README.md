@@ -16,6 +16,13 @@ License
 -------
 [MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
 
+
+What's new
+----------
+_Release 0.4.0_
+* Added local cache support
+* Bug fixes
+
 Install
 -------
 **With [pip](https://pypi.python.org/pypi/pip)**
