@@ -49,7 +49,7 @@ class OWMHTTPClient(object):
             try:
                 response = urllib2.urlopen(url)
             except urllib2.HTTPError as e:
-                raise api_call_error.APICallError(e.reason, e)
+                raise api_call_error.APICallError(e.message, e)
             except urllib2.URLError as e:
                 raise api_call_error.APICallError(e.message, e)
             else:
