@@ -19,6 +19,11 @@ License
 
 What's new
 ----------
+_Release 0.4.1_
+* Pretty-printing of PyOWM main class entities
+* Introduced escaping for non-ASCII chars in URLs
+* Bug fixes
+
 _Release 0.4.0_
 * Added local cache support
 * Bug fixes
