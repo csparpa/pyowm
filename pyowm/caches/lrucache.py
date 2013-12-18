@@ -144,3 +144,8 @@ class LRUCache(OWMCache):
         
         """
         return len(self.__table)
+    
+    def __repr__(self):
+        return "<%s.%s - size=%s, max size=%s, item lifetime=%s>" % \
+            (__name__, self.__class__.__name__, str(self.size()), \
+             self.__max_size, self.__item_lifetime )

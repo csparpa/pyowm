@@ -6,7 +6,6 @@ Module containing classes for HTTP client/server interactions
 
 import urllib2
 from urllib import urlencode
-from pyowm.caches.nullcache import NullCache
 from pyowm.exceptions import api_call_error
 
 class OWMHTTPClient(object):
@@ -14,15 +13,15 @@ class OWMHTTPClient(object):
     """
     An HTTP client class, that can leverage a cache mechanism.
     
-    :param API_key: the OWM web API key (defaults to ``None``)
-    :type API_key: str
-    :param cache: an OWMCache concrete instance that will be used to 
+    :param API_key: a Unicode object representing the OWM web API key
+    :type API_key: Unicode
+    :param cache: an *OWMCache* concrete instance that will be used to 
          cache OWM web API responses. 
-    :type cache: an OWMCache concrete instance
+    :type cache: an *OWMCache* concrete instance
     
     """
     
-    def __init__(self, API_key=None, cache=NullCache()):
+    def __init__(self, API_key, cache):
         self.__API_key = API_key
         self.__cache = cache
 
@@ -91,3 +90,7 @@ class OWMHTTPClient(object):
         
         """
         return base_URL + '?' + urlencode(params_dict)
+
+    def __repr__(self):
+        return "<%s.%s - cache=%s>" % \
+            (__name__, self.__class__.__name__, repr(self.__cache))

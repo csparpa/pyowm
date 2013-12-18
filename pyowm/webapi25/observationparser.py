@@ -64,4 +64,6 @@ class ObservationParser(JSONParser):
               'weather info from JSON data']))
         current_time = long(round(time()))
         return Observation(current_time, location, weather)
-            
+
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

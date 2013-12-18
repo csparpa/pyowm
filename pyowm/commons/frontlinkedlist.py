@@ -48,6 +48,10 @@ class LinkedListNode:
         """
         self.__next = linked_list_node
 
+    def __repr__(self):
+        return "<%s.%s - data=%s>" % \
+            (__name__, self.__class__.__name__, repr(self.__data))
+
 class FrontLinkedListIterator(object):
     """
     Iterator over the LinkedListNode elements of a LinkedList class instance.
@@ -245,3 +249,8 @@ class FrontLinkedList(LinkedList):
                 popped = True
             current_node = next_node
         return result
+
+    def __repr__(self):
+        return "<%s.%s - size=%s, first node=%s, last node=%s>" % \
+            (__name__, self.__class__.__name__, str(self.__size), \
+             repr(self.__first_node), repr(self.__last_node))

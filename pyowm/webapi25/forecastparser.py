@@ -72,4 +72,6 @@ class ForecastParser(JSONParser):
                   'weather list from JSON data'])) 
         current_time = long(round(time()))
         return Forecast(None, current_time, location, weathers)
-            
+
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

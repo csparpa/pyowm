@@ -103,3 +103,6 @@ class Historian(object):
         return [(timestamp, \
                 self.__station_history.get_measurements()[timestamp]['wind']) \
                 for timestamp in self.__station_history.get_measurements()]
+
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

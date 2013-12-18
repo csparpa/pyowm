@@ -60,3 +60,6 @@ class WeatherHistoryParser(JSONParser):
             else:
                 raise ParseResponseError(''.join([__name__,': impossible to read ' \
                   'weather list from JSON data']))
+                
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

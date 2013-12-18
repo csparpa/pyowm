@@ -26,8 +26,11 @@ class OWM25(OWM):
     :param parsers: the dictionary containing *jsonparser* concrete instances
         to be used as parsers for OWM web API 2.5 reponses
     :type parsers: dict 
-    :param API_key: the OWM web API key (can be ``None``)
+    :param API_key: the OWM web API key (defaults to ``None``)
     :type API_key: str
+    :param cache: a concrete implementation of class *OWMCache* serving as the
+        cache provider (defaults to a *NullCache* instance)
+    :type cache: an *OWMCache* concrete instance
     :returns: an *OWM25* instance 
     
     """
@@ -35,23 +38,23 @@ class OWM25(OWM):
         self.__parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
-        self.__API_key = API_key
+        self.__API_key = API_key 
         self.__httpclient = OWMHTTPClient(API_key, cache)
 
     def get_API_key(self):
         """
-        Returns the OWM API key
+        Returns the str OWM API key
         
-        :returns: the OWM API key string
+        :returns: a str
         
         """
         return self.__API_key
 
     def set_API_key(self, API_key):
         """
-        Updates the OWM API key
+        Updates the str OWM API key
         
-        :param API_key: the new value for the OWM API key
+        :param API_key: the new str API key
         :type API_key: str
         
         """
@@ -402,7 +405,8 @@ class OWM25(OWM):
             station_history.set_station_ID(station_ID)
             station_history.set_interval(interval)
         return station_history
-    
-    def __str__(self):
-        """Redefine __str__ hook for pretty-printing of OWM instances"""
-        return '[OWM25: API_key=%s]' % self.__API_key
+
+    def __repr__(self):
+        return "<%s.%s - API key=%s, OWM web API version=%s, PyOWM version=%s>" % \
+            (__name__, self.__class__.__name__, self.__API_key, self.get_API_version(), \
+             self.get_version())

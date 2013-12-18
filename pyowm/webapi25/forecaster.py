@@ -397,3 +397,6 @@ class Forecaster(object):
                     max_wind_speed = d['speed']
                     most_windy = weather
         return most_windy
+    
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

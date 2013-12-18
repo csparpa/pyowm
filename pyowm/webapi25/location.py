@@ -137,3 +137,8 @@ class Location(object):
                                                           self.__name, self.__lon,
                                                           self.__lat, self.__ID,
                                                           self.__country)
+
+    def __repr__(self):
+        return "<%s.%s - id=%s, name=%s, lon=%s, lat=%s>" % (__name__, \
+          self.__class__.__name__, self.__ID, self.__name, str(self.__lon), \
+          str(self.__lat))

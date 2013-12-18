@@ -38,3 +38,6 @@ class NullCache(OWMCache):
 
         """
         pass
+
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

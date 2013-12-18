@@ -90,3 +90,6 @@ class StationHistoryParser(JSONParser):
             raise ParseResponseError(__name__+': impossible to read JSON data')
         current_time = long(round(time()))
         return StationHistory(None, None, current_time, measurements)
+
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

@@ -92,3 +92,7 @@ class Observation(object):
         return '<Observation><reception_time>%s</reception_time>%s%s</Observation>' % \
             (self.__reception_time, self.__location.to_XML(), 
              self.__weather.to_XML())
+            
+    def __repr__(self):
+        return "<%s.%s - reception time=%s>" % (__name__, \
+              self.__class__.__name__, self.get_reception_time('iso'))

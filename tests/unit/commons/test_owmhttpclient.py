@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
 Test case for httputils.py module. 
-Here we don't use mock objects because we don't want to rely on exeternal 
+Here we don't use mock objects because we don't want to rely on external 
 mocking libraries; we use monkey patching instead.
 Monkey patching pattern:
   1. Keep a reference to the original function to be patched
@@ -16,10 +17,12 @@ import unittest
 import urllib2
 from pyowm.commons.owmhttpclient import OWMHTTPClient
 from pyowm.exceptions.api_call_error import APICallError 
+from pyowm.caches.nullcache import NullCache
 
 class TestHTTPUtils(unittest.TestCase):
     
-    __instance = OWMHTTPClient()
+    __test_cache = NullCache()
+    __instance = OWMHTTPClient(None, __test_cache)
     __test_output = "this is a test HTTP response payload"
     
     def mock_urllib2_urlopen(self, url):
@@ -49,7 +52,7 @@ class TestHTTPUtils(unittest.TestCase):
                          expected)
 
     def test_build_full_URL(self):
-        instance = OWMHTTPClient('test_API_key')
+        instance = OWMHTTPClient('test_API_key', self.__test_cache)
         API_subset_URL = 'http://test.com/api'
         params = {'a': 1, 'b': 2}
         self.assertEqual('http://test.com/api?a=1&b=2&APPID=test_API_key', 
@@ -60,6 +63,13 @@ class TestHTTPUtils(unittest.TestCase):
         params = {'a': 1, 'b': 2}
         self.assertEqual('http://test.com/api?a=1&b=2', 
                          self.__instance._build_full_URL(API_subset_URL, params))
+        
+    def test_build_full_URL_with_unicode_chars_in_API_key(self):
+        instance = OWMHTTPClient('£°test££', self.__test_cache)
+        API_subset_URL = 'http://test.com/api'
+        params = {'a': 1, 'b': 2}
+        self.assertEqual('http://test.com/api?a=1&b=2&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3', \
+                          instance._build_full_URL(API_subset_URL, params))
         
     def test_call_API(self):
         ref_to_original_urlopen = urllib2.urlopen

@@ -131,3 +131,12 @@ class StationHistory(object):
             (self.__station_ID, self.__interval, self.__reception_time,
              "".join([ "<"+str(item)+">"+xmlutils.dict_to_XML(self.__measurements[item])+ \
                       "</"+str(item)+">" for item in self.__measurements]))
+    
+    def __len__(self):
+        return len(self.__measurements)
+          
+    def __repr__(self):
+        return "<%s.%s - station ID=%s, reception time=%s, interval=%s, measurements:%s>" % \
+            (__name__, self.__class__.__name__, self.__station_ID, \
+             self.get_reception_time('iso'), self.__interval, \
+             str(len(self)))

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 '''
 Functional tests for the PyOWM library
 These are "live" executions, that of course need the OWM web API to be up
@@ -10,7 +13,7 @@ from pyowm.webapi25.owm25 import OWM25
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
     
-    __owm = OWM25(parsers, 'b02f5370dfd0f398b5746e1a976021a0')
+    __owm = OWM25(parsers, '�b02f5370d�76021a0')
 
     def test_weather_at(self):
         """

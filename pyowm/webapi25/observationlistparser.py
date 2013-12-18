@@ -64,3 +64,6 @@ class ObservationListParser(JSONParser):
                     raise ParseResponseError(''.join([__name__,': impossible to read ' \
                       'observation list from JSON data']))
         raise APIResponseError("OWM API: error - response payload: "+dumps(d))
+    
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)
