@@ -14,6 +14,9 @@ from pyowm.webapi25.owm25 import OWM25
 class IntegrationTestsWebAPI25(unittest.TestCase):
     
     __owm = OWM25(parsers, '�b02f5370d�76021a0')
+    
+    def API_online(self):
+        self.assertTrue(self.__owm.API_online())
 
     def test_weather_at(self):
         """

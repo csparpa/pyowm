@@ -8,7 +8,7 @@ from time import time
 from pyowm.constants import PYOWM_VERSION
 from pyowm.webapi25.configuration25 import OBSERVATION_URL, \
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
-    CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL
+    CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, API_AVAILABILITY_TIMEOUT
 from pyowm.abstractions.owm import OWM
 from pyowm.caches.nullcache import NullCache
 from pyowm.commons.owmhttpclient import OWMHTTPClient 
@@ -77,6 +77,21 @@ class OWM25(OWM):
         
         """
         return PYOWM_VERSION
+
+    def API_online(self):
+        """
+        Returns True if the OWM web API is currently online. A short timeout
+        is used to determine API service availability.
+        
+        :returns: bool
+        
+        """
+        data = self.__httpclient.call_API(OBSERVATION_URL, {},
+                                          API_AVAILABILITY_TIMEOUT)
+        if data:
+            return True
+        return False
+       
 
     # Main OWM web API querying methods
 

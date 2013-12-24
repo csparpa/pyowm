@@ -55,3 +55,13 @@ class OWM(object):
         
         """
         pass
+    
+    @abstractmethod
+    def API_online(self):
+        """
+        Returns ``True`` if the OWM web API is currently online. A short timeout
+        is used to determine API service availability.
+        
+        :returns: bool
+        
+        """

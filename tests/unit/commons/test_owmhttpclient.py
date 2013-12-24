@@ -25,7 +25,7 @@ class TestHTTPUtils(unittest.TestCase):
     __instance = OWMHTTPClient(None, __test_cache)
     __test_output = "this is a test HTTP response payload"
     
-    def mock_urllib2_urlopen(self, url):
+    def mock_urllib2_urlopen(self, url, data, timeout):
         """Mock implementation of urllib2.urlopen method for testing purposes"""
         
         class Mock_Response(object):
@@ -36,11 +36,11 @@ class TestHTTPUtils(unittest.TestCase):
         
         return Mock_Response(self.__test_output)
     
-    def mock_urllib2_urlopen_raising_HTTPError(self, url):
+    def mock_urllib2_urlopen_raising_HTTPError(self, url, data, timeout):
         """Mock implementation of urllib2.urlopen raising HTTPError"""
         raise urllib2.HTTPError(None, 404, "Failure", None, None)
     
-    def mock_urllib2_urlopen_raising_URLError(self, url):
+    def mock_urllib2_urlopen_raising_URLError(self, url, data, timeout):
         """Mock implementation of urllib2.urlopen raising URLError"""
         raise urllib2.URLError("Failure")
     

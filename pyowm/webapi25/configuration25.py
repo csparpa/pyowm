@@ -33,6 +33,9 @@ parsers = {
 # Cache provider to be used
 cache = NullCache()
 
+# OWM web API availability test timeout in seconds
+API_AVAILABILITY_TIMEOUT = 2
+
 # Weather status keywords
 RAIN_KEYWORDS = ['rain','drizzle']
 SUN_KEYWORDS = ['clear']

@@ -22,6 +22,7 @@ The .egg will be installed into the system-dependent Python libraries folder:
 
     C:\PythonXY\Lib\site-packages            # Windows
     /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
+    /usr/local/lib/python2.7/dist-packages   # MacOS 10.5.4
 
 Build documentation
 -------------------

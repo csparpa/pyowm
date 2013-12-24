@@ -6,6 +6,7 @@ Module containing classes for HTTP client/server interactions
 
 import urllib2
 from urllib import urlencode
+from socket import _GLOBAL_DEFAULT_TIMEOUT
 from pyowm.exceptions import api_call_error
 
 class OWMHTTPClient(object):
@@ -25,7 +26,7 @@ class OWMHTTPClient(object):
         self.__API_key = API_key
         self.__cache = cache
 
-    def call_API(self, API_endpoint_URL, params_dict):
+    def call_API(self, API_endpoint_URL, params_dict, timeout=_GLOBAL_DEFAULT_TIMEOUT):
         
         """
         Invokes a specific OWM web API endpoint URL, returning raw JSON data.
@@ -36,6 +37,9 @@ class OWMHTTPClient(object):
         :param params_dict: a dictionary containing the query parameters to be used
             in the HTTP request (given as key-value couples in the dict)
         :type params_dict: dict
+        :param timeout: how many seconds to wait for connection establishment
+            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
+        :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *APICallError* in chain to exceptions raised by ``urllib2``
         
@@ -46,7 +50,7 @@ class OWMHTTPClient(object):
             return cached
         else:
             try:
-                response = urllib2.urlopen(url)
+                response = urllib2.urlopen(url, None, timeout)
             except urllib2.HTTPError as e:
                 raise api_call_error.APICallError(e.message, e)
             except urllib2.URLError as e:
