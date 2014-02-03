@@ -195,27 +195,27 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         end_unix = 1378499200L
         end_date = datetime(2013, 9, 6, 20, 26, 40)
         l1 = self.__owm.weather_history("London")
-        self.assertTrue(l1)
-        for weather in l1:
-            self.assertTrue(weather)
-            self.assertNotIn(None, weather.__dict__.values())
+        if l1 is not None:
+            for weather in l1:
+                self.assertTrue(weather)
+                self.assertNotIn(None, weather.__dict__.values())
         l2 = self.__owm.weather_history('Kiev', start_unix, end_unix)
-        self.assertTrue(l2)
-        for weather in l2:
-            self.assertTrue(weather)
-            self.assertNotIn(None, weather.__dict__.values())
+        if l2 is not None:
+            for weather in l2:
+                self.assertTrue(weather)
+                self.assertNotIn(None, weather.__dict__.values())
         l3 = self.__owm.weather_history('Rome', start_iso, end_iso)
-        self.assertTrue(l3)
-        for weather in l3:
-            self.assertTrue(weather)
-            self.assertNotIn(None, weather.__dict__.values())
+        if l3 is not None:
+            for weather in l3:
+                self.assertTrue(weather)
+                self.assertNotIn(None, weather.__dict__.values())
         l4 = self.__owm.weather_history('Berlin', start_date, end_date)
-        self.assertTrue(l4)
-        for weather in l4:
-            self.assertTrue(weather)
-            self.assertNotIn(None, weather.__dict__.values())
+        if l4 is not None:
+            for weather in l4:
+                self.assertTrue(weather)
+                self.assertNotIn(None, weather.__dict__.values())
         l5 = self.__owm.weather_history('QmFoPIlbf')  #Shall be None
-        self.assertFalse(l5)
+        self.assertTrue(l5 is None)
 
     def test_station_tick_history(self):
         """
