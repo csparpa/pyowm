@@ -92,6 +92,7 @@ As simple as:
 Development
 -----------
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm).
+[![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 
 _Contributors (code enhancement, issue/bug reporting) are welcome!_
 
