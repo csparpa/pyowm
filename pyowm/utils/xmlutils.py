@@ -22,8 +22,8 @@ def make_tag(tag_name, tag_content):
         raise ValueError
     if tag_content is None:
         tag_content = ""
-    return "<" + str(tag_name) + ">" + str(tag_content) + \
-           "</" + str(tag_name) + ">"
+    return "".join(["<", str(tag_name), ">", str(tag_content), "</",
+                    str(tag_name), ">"])
 
 
 def dict_to_XML(d):

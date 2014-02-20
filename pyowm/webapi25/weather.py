@@ -52,28 +52,28 @@ class Weather(object):
                  detailed_status, weather_code, weather_icon_name):
         if long(reference_time) < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self.__reference_time = long(reference_time)
+        self._reference_time = long(reference_time)
         if long(sunset_time) < 0:
             raise ValueError("'sunset_time' must be greatear than 0")
-        self.__sunset_time = long(sunset_time)
+        self._sunset_time = long(sunset_time)
         if long(sunrise_time) < 0:
             raise ValueError("'sunrise_time' must be greatear than 0")
-        self.__sunrise_time = long(sunrise_time)
+        self._sunrise_time = long(sunrise_time)
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
-        self.__clouds = clouds
-        self.__rain = rain
-        self.__snow = snow
-        self.__wind = wind
+        self._clouds = clouds
+        self._rain = rain
+        self._snow = snow
+        self._wind = wind
         if humidity < 0:
             raise ValueError("'humidity' must be greatear than 0")
-        self.__humidity = humidity
-        self.__pressure = pressure
-        self.__temperature = temperature
-        self.__status = status
-        self.__detailed_status = detailed_status
-        self.__weather_code = weather_code
-        self.__weather_icon_name = weather_icon_name
+        self._humidity = humidity
+        self._pressure = pressure
+        self._temperature = temperature
+        self._status = status
+        self._detailed_status = detailed_status
+        self._weather_code = weather_code
+        self._weather_icon_name = weather_icon_name
 
     def get_reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
@@ -87,9 +87,9 @@ class Weather(object):
 
         """
         if timeformat == 'unix':
-            return self.__reference_time
+            return self._reference_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self.__reference_time)
+            return converter.UNIXtime_to_ISO8601(self._reference_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -105,9 +105,9 @@ class Weather(object):
 
         """
         if timeformat == 'unix':
-            return self.__sunset_time
+            return self._sunset_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self.__sunset_time)
+            return converter.UNIXtime_to_ISO8601(self._sunset_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -123,9 +123,9 @@ class Weather(object):
 
         """
         if timeformat == 'unix':
-            return self.__sunrise_time
+            return self._sunrise_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self.__sunrise_time)
+            return converter.UNIXtime_to_ISO8601(self._sunrise_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -135,7 +135,7 @@ class Weather(object):
         :returns: the cloud coverage percentage
 
         """
-        return self.__clouds
+        return self._clouds
 
     def get_rain(self):
         """Returns a dict containing precipitation info
@@ -143,7 +143,7 @@ class Weather(object):
         :returns: a dict containing rain info
 
         """
-        return self.__rain
+        return self._rain
 
     def get_snow(self):
         """Returns a dict containing snow info
@@ -151,7 +151,7 @@ class Weather(object):
         :returns: a dict containing snow info
 
         """
-        return self.__snow
+        return self._snow
 
     def get_wind(self):
         """Returns a dict containing wind info
@@ -159,7 +159,7 @@ class Weather(object):
         :returns: a dict containing wind info
 
         """
-        return self.__wind
+        return self._wind
 
     def get_humidity(self):
         """Returns the atmospheric humidity as an int
@@ -167,7 +167,7 @@ class Weather(object):
         :returns: the humidity
 
         """
-        return self.__humidity
+        return self._humidity
 
     def get_pressure(self):
         """Returns a dict containing atmospheric pressure info
@@ -175,7 +175,7 @@ class Weather(object):
         :returns: a dict containing pressure info
 
         """
-        return self.__pressure
+        return self._pressure
 
     def get_temperature(self, unit='kelvin'):
         """Returns a dict with temperature info
@@ -188,16 +188,16 @@ class Weather(object):
 
         """
         if unit == 'kelvin':
-            return self.__temperature
+            return self._temperature
         elif unit == 'celsius':
             helper = lambda x: converter.kelvin_to_celsius(x) if x > 0.0 else x
-            return dict((item, helper(self.__temperature[item]))
-                for item in self.__temperature)
+            return dict((item, helper(self._temperature[item]))
+                for item in self._temperature)
         elif unit == 'fahrenheit':
             helper = lambda x: converter.kelvin_to_fahrenheit(x) \
                 if x > 0.0 else x
-            return dict((item, helper(self.__temperature[item]))
-                for item in self.__temperature)
+            return dict((item, helper(self._temperature[item]))
+                for item in self._temperature)
         else:
             raise ValueError("Invalid value for parameter 'unit'")
 
@@ -207,7 +207,7 @@ class Weather(object):
         :returns: the short weather status
 
         """
-        return self.__status
+        return self._status
 
     def get_detailed_status(self):
         """Returns the detailed weather status as a Unicode string
@@ -215,7 +215,7 @@ class Weather(object):
         :returns: the detailed weather status
 
         """
-        return self.__detailed_status
+        return self._detailed_status
 
     def get_weather_code(self):
         """Returns the OWM weather condition code as an int
@@ -223,7 +223,7 @@ class Weather(object):
         :returns: the OWM weather condition code
 
         """
-        return self.__weather_code
+        return self._weather_code
 
     def get_weather_icon_name(self):
         """Returns weather-related icon name as a Unicode string.
@@ -231,7 +231,7 @@ class Weather(object):
         :returns: the icon name.
 
         """
-        return self.__weather_icon_name
+        return self._weather_icon_name
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
@@ -239,19 +239,19 @@ class Weather(object):
         :returns: the JSON string
 
         """
-        return json.dumps({'reference_time': self.__reference_time,
-                           'sunset_time': self.__sunset_time,
-                           'sunrise_time': self.__sunrise_time,
-                           'clouds': self.__clouds,
-                           'rain': self.__rain, 'snow': self.__snow,
-                           'wind': self.__wind,
-                           'humidity': self.__humidity,
-                           'pressure': self.__pressure,
-                           'temperature': self.__temperature,
-                           'status': self.__status,
-                           'detailed_status': self.__detailed_status,
-                           'weather_code': self.__weather_code,
-                           'weather_icon_name': self.__weather_icon_name})
+        return json.dumps({'reference_time': self._reference_time,
+                           'sunset_time': self._sunset_time,
+                           'sunrise_time': self._sunrise_time,
+                           'clouds': self._clouds,
+                           'rain': self._rain, 'snow': self._snow,
+                           'wind': self._wind,
+                           'humidity': self._humidity,
+                           'pressure': self._pressure,
+                           'temperature': self._temperature,
+                           'status': self._status,
+                           'detailed_status': self._detailed_status,
+                           'weather_code': self._weather_code,
+                           'weather_icon_name': self._weather_icon_name})
 
     def to_XML(self):
         """Dumps object fields into a XML formatted string
@@ -266,23 +266,23 @@ class Weather(object):
                '</temperature><detailed_status>%s</detailed_status>' \
                '<reference_time>%s</reference_time><sunset_time>%s' \
                '</sunset_time><humidity>%s</humidity><wind>%s</wind>' \
-               '</Weather>' % (self.__status, self.__weather_code,
-                               xmlutils.dict_to_XML(self.__rain),
-                               xmlutils.dict_to_XML(self.__snow),
-                               xmlutils.dict_to_XML(self.__pressure),
-                               self.__sunrise_time, self.__weather_icon_name,
-                               self.__clouds,
-                               xmlutils.dict_to_XML(self.__temperature),
-                               self.__detailed_status,
-                               self.__reference_time,
-                               self.__sunset_time,
-                               self.__humidity,
-                               xmlutils.dict_to_XML(self.__wind))
+               '</Weather>' % (self._status, self._weather_code,
+                               xmlutils.dict_to_XML(self._rain),
+                               xmlutils.dict_to_XML(self._snow),
+                               xmlutils.dict_to_XML(self._pressure),
+                               self._sunrise_time, self._weather_icon_name,
+                               self._clouds,
+                               xmlutils.dict_to_XML(self._temperature),
+                               self._detailed_status,
+                               self._reference_time,
+                               self._sunset_time,
+                               self._humidity,
+                               xmlutils.dict_to_XML(self._wind))
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, status=%s>" % (__name__, \
               self.__class__.__name__, self.get_reference_time('iso'),
-              self.__status)
+              self._status)
 
 
 def weather_from_dictionary(d):

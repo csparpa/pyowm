@@ -25,7 +25,7 @@ class Forecaster(object):
     """
 
     def __init__(self, forecast):
-        self.__forecast = forecast
+        self._forecast = forecast
 
     def get_forecast(self):
         """
@@ -33,7 +33,7 @@ class Forecaster(object):
 
         :returns: the *Forecast* instance
         """
-        return self.__forecast
+        return self._forecast
 
     def when_starts(self, timeformat='unix'):
         """
@@ -49,7 +49,7 @@ class Forecaster(object):
 
         """
         start_coverage = min([item.get_reference_time() \
-                              for item in self.__forecast])
+                              for item in self._forecast])
         if timeformat == 'unix':
             return start_coverage
         elif timeformat == 'iso':
@@ -71,7 +71,7 @@ class Forecaster(object):
 
         """
         end_coverage = max([item.get_reference_time() \
-                            for item in self.__forecast])
+                            for item in self._forecast])
         if timeformat == 'unix':
             return end_coverage
         elif timeformat == 'iso':
@@ -88,7 +88,7 @@ class Forecaster(object):
 
         """
         return weatherutils.statuses_match_any(RAIN_KEYWORDS,
-                                               self.__forecast.get_weathers())
+                                               self._forecast.get_weathers())
 
     def will_have_sun(self):
         """
@@ -99,7 +99,7 @@ class Forecaster(object):
 
         """
         return weatherutils.statuses_match_any(SUN_KEYWORDS,
-                                               self.__forecast.get_weathers())
+                                               self._forecast.get_weathers())
 
     def will_have_fog(self):
         """
@@ -110,7 +110,7 @@ class Forecaster(object):
 
         """
         return weatherutils.statuses_match_any(FOG_KEYWORDS,
-                                   self.__forecast.get_weathers())
+                                   self._forecast.get_weathers())
 
     def will_have_clouds(self):
         """
@@ -121,7 +121,7 @@ class Forecaster(object):
 
         """
         return weatherutils.statuses_match_any(CLOUDS_KEYWORDS,
-                                   self.__forecast.get_weathers())
+                                   self._forecast.get_weathers())
 
     def will_have_snow(self):
         """
@@ -132,7 +132,7 @@ class Forecaster(object):
 
         """
         return weatherutils.statuses_match_any(SNOW_KEYWORDS,
-                                   self.__forecast.get_weathers())
+                                   self._forecast.get_weathers())
 
     def when_rain(self):
         """
@@ -142,7 +142,7 @@ class Forecaster(object):
         :returns: a list of *Weather* objects
         """
         return weatherutils.filter_by_matching_statuses(RAIN_KEYWORDS,
-                                           self.__forecast.get_weathers())
+                                           self._forecast.get_weathers())
 
     def when_sun(self):
         """
@@ -152,7 +152,7 @@ class Forecaster(object):
         :returns: a list of *Weather* objects
         """
         return weatherutils.filter_by_matching_statuses(SUN_KEYWORDS,
-                                           self.__forecast.get_weathers())
+                                           self._forecast.get_weathers())
 
     def when_fog(self):
         """
@@ -162,7 +162,7 @@ class Forecaster(object):
         :returns: a list of *Weather* objects
         """
         return weatherutils.filter_by_matching_statuses(FOG_KEYWORDS,
-                                           self.__forecast.get_weathers())
+                                           self._forecast.get_weathers())
 
     def when_clouds(self):
         """
@@ -172,7 +172,7 @@ class Forecaster(object):
         :returns: a list of *Weather* objects
         """
         return weatherutils.filter_by_matching_statuses(CLOUDS_KEYWORDS,
-                                           self.__forecast.get_weathers())
+                                           self._forecast.get_weathers())
 
     def when_snow(self):
         """
@@ -182,7 +182,7 @@ class Forecaster(object):
         :returns: a list of *Weather* objects
         """
         return weatherutils.filter_by_matching_statuses(SNOW_KEYWORDS,
-                                           self.__forecast.get_weathers())
+                                           self._forecast.get_weathers())
 
     def will_be_rainy_at(self, timeobject):
         """
@@ -199,7 +199,7 @@ class Forecaster(object):
         """
         time = converter.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
-                                        self.__forecast.get_weathers(), time)
+                                        self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(RAIN_KEYWORDS, weather)
 
     def will_be_sunny_at(self, timeobject):
@@ -217,7 +217,7 @@ class Forecaster(object):
         """
         time = converter.to_UNIXtime(timeobject)
         closest_weather = weatherutils.find_closest_weather(
-                                        self.__forecast.get_weathers(), time)
+                                        self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(SUN_KEYWORDS, closest_weather)
 
     def will_be_snowy_at(self, timeobject):
@@ -235,7 +235,7 @@ class Forecaster(object):
         """
         time = converter.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
-                                        self.__forecast.get_weathers(), time)
+                                        self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(SNOW_KEYWORDS, weather)
 
     def will_be_cloudy_at(self, timeobject):
@@ -253,7 +253,7 @@ class Forecaster(object):
         """
         time = converter.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
-                                        self.__forecast.get_weathers(), time)
+                                        self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(CLOUDS_KEYWORDS, weather)
 
     def will_be_foggy_at(self, timeobject):
@@ -271,7 +271,7 @@ class Forecaster(object):
         """
         time = converter.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
-                                        self.__forecast.get_weathers(), time)
+                                        self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(FOG_KEYWORDS, weather)
 
     def get_weather_at(self, timeobject):
@@ -287,7 +287,7 @@ class Forecaster(object):
 
         """
         return weatherutils. \
-            find_closest_weather(self.__forecast.get_weathers(),
+            find_closest_weather(self._forecast.get_weathers(),
                                  converter.to_UNIXtime(timeobject))
 
     def most_hot(self):
@@ -302,7 +302,7 @@ class Forecaster(object):
         """
         maxtemp = -270.0  # No one would survive that...
         hottest = None
-        for weather in self.__forecast.get_weathers():
+        for weather in self._forecast.get_weathers():
             d = weather.get_temperature()
             if 'temp_max' in d:
                 if d['temp_max'] > maxtemp:
@@ -322,7 +322,7 @@ class Forecaster(object):
         """
         mintemp = 1000.0  # No one would survive that...
         coldest = None
-        for weather in self.__forecast.get_weathers():
+        for weather in self._forecast.get_weathers():
             d = weather.get_temperature()
             if 'temp_min' in d:
                 if d['temp_min'] < mintemp:
@@ -340,7 +340,7 @@ class Forecaster(object):
         """
         max_humidity = 0
         most_humid = None
-        for weather in self.__forecast.get_weathers():
+        for weather in self._forecast.get_weathers():
             h = weather.get_humidity()
             if h > max_humidity:
                 max_humidity = h
@@ -359,7 +359,7 @@ class Forecaster(object):
         """
         max_rain = 0
         most_rainy = None
-        for weather in self.__forecast.get_weathers():
+        for weather in self._forecast.get_weathers():
             d = weather.get_rain()
             if 'all' in d:
                 if d['all'] > max_rain:
@@ -379,7 +379,7 @@ class Forecaster(object):
         """
         max_snow = 0
         most_snowy = None
-        for weather in self.__forecast.get_weathers():
+        for weather in self._forecast.get_weathers():
             d = weather.get_snow()
             if 'all' in d:
                 if d['all'] > max_snow:
@@ -399,7 +399,7 @@ class Forecaster(object):
         """
         max_wind_speed = 0
         most_windy = None
-        for weather in self.__forecast.get_weathers():
+        for weather in self._forecast.get_weathers():
             d = weather.get_wind()
             if 'speed' in d:
                 if d['speed'] > max_wind_speed:

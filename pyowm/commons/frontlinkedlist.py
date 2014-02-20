@@ -145,7 +145,7 @@ class FrontLinkedList(linkedlist.LinkedList):
 
         """
         node = LinkedListNode(data, None)
-        if self.__size is 0:
+        if self.__size == 0:
             self.__first_node = node
             self.__last_node = node
         else:
@@ -167,7 +167,7 @@ class FrontLinkedList(linkedlist.LinkedList):
         current_node = self.__first_node
         deleted = False
 
-        if self.__size is 0:
+        if self.__size == 0:
             return
 
         if data == current_node.data():
@@ -183,7 +183,7 @@ class FrontLinkedList(linkedlist.LinkedList):
             self.__size -= 1
             return
 
-        while True:
+        while 1:
             if not current_node:
                 deleted = False
                 break
@@ -227,7 +227,7 @@ class FrontLinkedList(linkedlist.LinkedList):
         current_node = self.__first_node
         pos = 0
         while current_node:
-            if (current_node.data() == data):
+            if current_node.data() == data:
                 return pos
             else:
                 current_node = current_node.next()

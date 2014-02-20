@@ -75,10 +75,10 @@ class LRUCache(owmcache.OWMCache):
             cur_time = converter.to_UNIXtime(datetime.now())
             if cur_time - cached_item['insertion_time'] > self.__item_lifetime:
                 # Cache item has expired
-                self.__clean_item(request_url)
+                self._clean_item(request_url)
                 return None
             cached_item['insertion_time'] = cur_time  # Update insertion time
-            self.__promote(request_url)
+            self._promote(request_url)
             return cached_item['data']
         except:
             return None
@@ -108,9 +108,9 @@ class LRUCache(owmcache.OWMCache):
             self.__usage_recency.add(request_url)
         else:
             self.__table[request_url]['insertion_time'] = current_time
-            self.__promote(request_url)
+            self._promote(request_url)
 
-    def __promote(self, request_url):
+    def _promote(self, request_url):
         """
         Moves the cache item specified by request_url to the front of the
         'usage_recency' list
@@ -118,7 +118,7 @@ class LRUCache(owmcache.OWMCache):
         self.__usage_recency.remove(request_url)
         self.__usage_recency.add(request_url)
 
-    def __clean_item(self, request_url):
+    def _clean_item(self, request_url):
         """
         Removes the specified item from the cache's datastructures
 

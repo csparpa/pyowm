@@ -32,12 +32,12 @@ class StationHistory(object):
     """
 
     def __init__(self, station_ID, interval, reception_time, measurements):
-        self.__station_ID = station_ID
-        self.__interval = interval
+        self._station_ID = station_ID
+        self._interval = interval
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self.__reception_time = reception_time
-        self.__measurements = measurements
+        self._reception_time = reception_time
+        self._measurements = measurements
 
     def get_station_ID(self):
         """
@@ -46,7 +46,7 @@ class StationHistory(object):
         :returns: the int station ID
 
         """
-        return self.__station_ID
+        return self._station_ID
 
     def set_station_ID(self, station_ID):
         """
@@ -56,7 +56,7 @@ class StationHistory(object):
         :type station_ID: int
 
         """
-        self.__station_ID = station_ID
+        self._station_ID = station_ID
 
     def get_interval(self):
         """
@@ -65,7 +65,7 @@ class StationHistory(object):
         :returns: the int interval
 
         """
-        return self.__interval
+        return self._interval
 
     def set_interval(self, interval):
         """
@@ -76,7 +76,7 @@ class StationHistory(object):
         :type interval: string
 
         """
-        self.__interval = interval
+        self._interval = interval
 
     def get_measurements(self):
         """
@@ -90,7 +90,7 @@ class StationHistory(object):
         :returns: the dict containing the meteostation's measurements
 
         """
-        return self.__measurements
+        return self._measurements
 
     def get_reception_time(self, timeformat='unix'):
         """Returns the GMT time telling when the meteostation history data was
@@ -105,9 +105,9 @@ class StationHistory(object):
 
         """
         if timeformat == 'unix':
-            return self.__reception_time
+            return self._reception_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self.__reception_time)
+            return converter.UNIXtime_to_ISO8601(self._reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -117,10 +117,10 @@ class StationHistory(object):
         :returns: the JSON string
 
         """
-        d = {"station_ID": self.__station_ID,
-             "interval": self.__interval,
-             "reception_time": self.__reception_time,
-             "measurements": self.__measurements
+        d = {"station_ID": self._station_ID,
+             "interval": self._interval,
+             "reception_time": self._reception_time,
+             "measurements": self._measurements
              }
         return json.dumps(d)
 
@@ -133,19 +133,19 @@ class StationHistory(object):
         return '<StationHistory><station_id>%s</station_id>' \
             '<interval>%s</interval><reception_time>%s</reception_time>' \
             '<measurements>%s</measurements></StationHistory>' % \
-            (self.__station_ID, self.__interval, self.__reception_time,
+            (self._station_ID, self._interval, self._reception_time,
              "".join([xmlutils.make_tag(str(item),
-                            xmlutils.dict_to_XML(self.__measurements[item])) \
-                      for item in self.__measurements])
+                            xmlutils.dict_to_XML(self._measurements[item])) \
+                      for item in self._measurements])
                     )
 
     def __len__(self):
-        return len(self.__measurements)
+        return len(self._measurements)
 
     def __repr__(self):
         return '<%s.%s - station ID=%s, reception time=%s, interval=%s, ' \
                'measurements:%s>' % (__name__, self.__class__.__name__,
-                                     self.__station_ID,
+                                     self._station_ID,
                                      self.get_reception_time('iso'),
-                                     self.__interval, str(len(self))
+                                     self._interval, str(len(self))
                                      )

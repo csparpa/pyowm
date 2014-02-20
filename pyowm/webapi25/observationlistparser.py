@@ -14,7 +14,7 @@ from pyowm.exceptions.api_response_error import APIResponseError
 
 class ObservationListParser(JSONParser):
     """
-    Concrete *JSONParser* implementation building a list of *Observation* 
+    Concrete *JSONParser* implementation building a list of *Observation*
     instances out of raw JSON data coming from OWM web API responses.
 
     :param observation_parser: a servant ObservationParser object
@@ -56,7 +56,7 @@ class ObservationListParser(JSONParser):
             return None
         if d['cod'] == "200":
             # Handle the case when no results are found
-            if 'count' in d and d['count'] is "0":
+            if 'count' in d and d['count'] == "0":
                 return []
             else:
                 if 'list' in d:

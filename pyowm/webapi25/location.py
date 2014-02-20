@@ -33,15 +33,15 @@ class Location(object):
     """
 
     def __init__(self, name, lon, lat, ID, country=None):
-        self.__name = name
+        self._name = name
         if lon < -180.0 or lon > 180.0:
             raise ValueError("'lon' value must be between -180 and 180")
-        self.__lon = float(lon)
+        self._lon = float(lon)
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        self.__lat = float(lat)
-        self.__ID = ID
-        self.__country = country
+        self._lat = float(lat)
+        self._ID = ID
+        self._country = country
 
     def get_name(self):
         """
@@ -50,7 +50,7 @@ class Location(object):
         :returns: the Unicode toponym
 
         """
-        return self.__name
+        return self._name
 
     def get_lon(self):
         """
@@ -59,7 +59,7 @@ class Location(object):
         :returns: the float longitude
 
         """
-        return self.__lon
+        return self._lon
 
     def get_lat(self):
         """
@@ -68,7 +68,7 @@ class Location(object):
         :returns: the float latitude
 
         """
-        return self.__lat
+        return self._lat
 
     def get_ID(self):
         """
@@ -77,7 +77,7 @@ class Location(object):
         :returns: the int OWM city ID
 
         """
-        return self.__ID
+        return self._ID
 
     def get_country(self):
         """
@@ -86,7 +86,7 @@ class Location(object):
         :returns: the Unicode country
 
         """
-        return self.__country
+        return self._country
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
@@ -94,9 +94,9 @@ class Location(object):
         :returns:  the JSON string
 
         """
-        return json.dumps({'name': self.__name,
-                         'coordinates': {'lon': self.__lon, 'lat': self.__lat},
-                         'ID': self.__ID, 'country': self.__country})
+        return json.dumps({'name': self._name,
+                         'coordinates': {'lon': self._lon, 'lat': self._lat},
+                         'ID': self._ID, 'country': self._country})
 
     def to_XML(self):
         """Dumps object fields into a XML formatted string
@@ -106,13 +106,13 @@ class Location(object):
         """
         return '<Location><name>%s</name><coordinates><lon>%s</lon>' \
                 '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country>' \
-                '</Location>' % (self.__name, self.__lon, self.__lat,
-                                 self.__ID, self.__country)
+                '</Location>' % (self._name, self._lon, self._lat,
+                                 self._ID, self._country)
 
     def __repr__(self):
         return "<%s.%s - id=%s, name=%s, lon=%s, lat=%s>" % (__name__, \
-          self.__class__.__name__, self.__ID, self.__name, str(self.__lon), \
-          str(self.__lat))
+          self.__class__.__name__, self._ID, self._name, str(self._lon), \
+          str(self._lat))
 
 
 def location_from_dictionary(d):

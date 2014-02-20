@@ -67,12 +67,12 @@ class Forecast(object):
     """
 
     def __init__(self, interval, reception_time, location, weathers):
-        self.__interval = interval
+        self._interval = interval
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self.__reception_time = long(reception_time)
-        self.__location = location
-        self.__weathers = weathers
+        self._reception_time = long(reception_time)
+        self._location = location
+        self._weathers = weathers
 
     def __iter__(self):
         """
@@ -91,7 +91,7 @@ class Forecast(object):
         :type index: int
         :returns: a *Weather* object
         """
-        return self.__weathers[index]
+        return self._weathers[index]
 
     def get_interval(self):
         """
@@ -100,7 +100,7 @@ class Forecast(object):
         :returns: str
 
         """
-        return self.__interval
+        return self._interval
 
     def set_interval(self, interval):
         """
@@ -111,7 +111,7 @@ class Forecast(object):
         :type interval: str
 
         """
-        self.__interval = interval
+        self._interval = interval
 
     def get_reception_time(self, timeformat='unix'):
         """Returns the GMT time telling when the forecast was received
@@ -126,9 +126,9 @@ class Forecast(object):
 
         """
         if timeformat == 'unix':
-            return self.__reception_time
+            return self._reception_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self.__reception_time)
+            return converter.UNIXtime_to_ISO8601(self._reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -139,7 +139,7 @@ class Forecast(object):
         :returns: a *Location* object
 
         """
-        return self.__location
+        return self._location
 
     def get_weathers(self):
         """
@@ -148,7 +148,7 @@ class Forecast(object):
         :returns: a list of *Weather* objects
 
         """
-        return list(self.__weathers)
+        return list(self._weathers)
 
     def count_weathers(self):
         """
@@ -157,7 +157,7 @@ class Forecast(object):
         :returns: the *Weather* objects total
 
         """
-        return len(self.__weathers)
+        return len(self._weathers)
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
@@ -165,9 +165,9 @@ class Forecast(object):
         :returns: the JSON string
 
         """
-        d = {"interval": self.__interval,
-             "reception_time": self.__reception_time,
-             "Location": json.loads(self.__location.to_JSON()),
+        d = {"interval": self._interval,
+             "reception_time": self._reception_time,
+             "Location": json.loads(self._location.to_JSON()),
              "weathers": json.loads("[" + \
                                 ",".join([w.to_JSON() for w in self]) + "]")
              }
@@ -182,7 +182,7 @@ class Forecast(object):
         return '<Forecast><interval>%s</interval>' \
             '<reception_time>%s</reception_time>' \
             '%s<weathers>%s</weathers></Forecast>' % \
-            (self.__interval, self.__reception_time, self.__location.to_XML(),
+            (self._interval, self._reception_time, self._location.to_XML(),
              "".join([item.to_XML() for item in self]))
 
     def __len__(self):
@@ -192,4 +192,4 @@ class Forecast(object):
     def __repr__(self):
         return "<%s.%s - reception time=%s, interval=%s>" % (__name__, \
               self.__class__.__name__, self.get_reception_time('iso'),
-              self.__interval)
+              self._interval)

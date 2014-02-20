@@ -57,9 +57,9 @@ class ForecastParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError(''.join([__name__,
                       ': impossible to read location info from JSON data']))
         # Handle the case when no results are found
-        if 'count' in d and d['count'] is "0":
+        if 'count' in d and d['count'] == "0":
             weathers = []
-        elif 'cnt' in d and d['cnt'] is 0:
+        elif 'cnt' in d and d['cnt'] == 0:
             weathers = []
         else:
             if 'list' in d:

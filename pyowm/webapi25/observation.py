@@ -30,9 +30,9 @@ class Observation(object):
     def __init__(self, reception_time, location, weather):
         if long(reception_time) < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self.__reception_time = long(reception_time)
-        self.__location = location
-        self.__weather = weather
+        self._reception_time = long(reception_time)
+        self._location = location
+        self._weather = weather
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -48,9 +48,9 @@ class Observation(object):
 
         """
         if timeformat == 'unix':
-            return self.__reception_time
+            return self._reception_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self.__reception_time)
+            return converter.UNIXtime_to_ISO8601(self._reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -61,7 +61,7 @@ class Observation(object):
         :returns: the *Location* object
 
         """
-        return self.__location
+        return self._location
 
     def get_weather(self):
         """
@@ -70,7 +70,7 @@ class Observation(object):
         :returns: the *Weather* object
 
         """
-        return self.__weather
+        return self._weather
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
@@ -78,10 +78,10 @@ class Observation(object):
         :returns:  the JSON string
 
         """
-        d = {"reception_time": self.__reception_time,
-              "Location": json.loads(self.__location.to_JSON()),
-              "Weather": json.loads(self.__weather.to_JSON())
-              }
+        d = {"reception_time": self._reception_time,
+              "Location": json.loads(self._location.to_JSON()),
+              "Weather": json.loads(self._weather.to_JSON())
+            }
         return json.dumps(d)
 
     def to_XML(self):
@@ -91,9 +91,9 @@ class Observation(object):
 
         """
         return '<Observation><reception_time>%s</reception_time>%s' \
-            '%s</Observation>' % (self.__reception_time,
-                                  self.__location.to_XML(),
-                                  self.__weather.to_XML())
+            '%s</Observation>' % (self._reception_time,
+                                  self._location.to_XML(),
+                                  self._weather.to_XML())
 
     def __repr__(self):
         return "<%s.%s - reception time=%s>" % (__name__, \

@@ -64,7 +64,7 @@ def to_UNIXtime(timeobject):
         when negative UNIXtimes are provided
     """
     if isinstance(timeobject, (long, int)):
-        if(timeobject < 0):
+        if timeobject < 0:
             raise ValueError("The time value is a negative number")
         return timeobject
     elif isinstance(timeobject, datetime):

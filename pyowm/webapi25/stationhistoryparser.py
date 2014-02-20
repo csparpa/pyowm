@@ -51,7 +51,7 @@ class StationHistoryParser(jsonparser.JSONParser):
                     raise api_response_error.APIResponseError(
                                               "OWM API: error - response " + \
                                               "payload: " + json.dumps(d))
-            if str(d['cnt']) is "0":
+            if str(d['cnt']) == "0":
                 return None
             else:
                 for item in d['list']:
@@ -83,13 +83,12 @@ class StationHistoryParser(jsonparser.JSONParser):
                         wind = item['wind']['speed']['v']
                     else:
                         wind = None
-                    measurements[item['dt']] = {
-                     "temperature": temp,
-                     "humidity": hum,
-                     "pressure": pres,
-                     "rain": rain,
-                     "wind": wind
-                    }
+                    measurements[item['dt']] = {"temperature": temp,
+                                                "humidity": hum,
+                                                "pressure": pres,
+                                                "rain": rain,
+                                                "wind": wind
+                                                }
         except KeyError:
             raise parse_response_error.ParseResponseError(__name__ + \
                                      ': impossible to read JSON data')

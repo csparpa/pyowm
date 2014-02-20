@@ -51,7 +51,7 @@ class WeatherHistoryParser(jsonparser.JSONParser):
                                       "OWM API: error - response payload: " + \
                                        json.dumps(d))
         # Handle the case when no results are found
-        if 'cnt' in d and d['cnt'] is "0":
+        if 'cnt' in d and d['cnt'] == "0":
             return []
         else:
             if 'list' in d:

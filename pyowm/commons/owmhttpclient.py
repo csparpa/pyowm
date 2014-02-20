@@ -24,7 +24,7 @@ class OWMHTTPClient(object):
     """
 
     def __init__(self, API_key, cache):
-        self.__API_key = API_key
+        self._API_key = API_key
         self.__cache = cache
 
     def call_API(self, API_endpoint_URL, params_dict,
@@ -78,8 +78,8 @@ class OWMHTTPClient(object):
 
         """
         params = params_dict.copy()
-        if self.__API_key is not None:
-            params['APPID'] = self.__API_key
+        if self._API_key is not None:
+            params['APPID'] = self._API_key
         return self._build_query_parameters(API_endpoint_URL, params)
 
     def _build_query_parameters(self, base_URL, params_dict):
