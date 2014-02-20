@@ -6,10 +6,11 @@ Module containing an abstract base class for JSON OWM web API responses parsing
 
 from abc import ABCMeta, abstractmethod
 
+
 class JSONParser(object):
     """
     A global abstract class representing a JSON to object parser.
-    
+
     """
 
     __metaclass__ = ABCMeta

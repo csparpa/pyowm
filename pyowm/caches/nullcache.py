@@ -6,13 +6,14 @@ Module containing a null-object cache for OWM web API responses
 
 from pyowm.abstractions.owmcache import OWMCache
 
+
 class NullCache(OWMCache):
-    
+
     """
     A null-object implementation of the OWMCache abstract class
-    
+
     """
-    
+
     def __init__(self):
         pass
 
@@ -26,7 +27,7 @@ class NullCache(OWMCache):
 
         """
         return None
-    
+
     def set(self, request_url, response_json):
         """
         Does nothing.

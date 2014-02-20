@@ -9,7 +9,7 @@ from pyowm.webapi25.stationhistory import StationHistory
 
 
 class TestStationHistory(unittest.TestCase):
-    
+
     __test_station_ID = 2865
     __test_interval = "tick"
     __test_reception_time = 1378684800L
@@ -30,10 +30,10 @@ class TestStationHistory(unittest.TestCase):
              "wind": 4.7
         }
     }
-    
+
     __test_instance = StationHistory(__test_station_ID, 'tick', __test_reception_time,
                                      __test_measurements)
-    
+
     def test_init_fails_when_negative_reception_time(self):
         self.assertRaises(ValueError, StationHistory, 1234, 'tick', -1234567L, 
                           self.__test_measurements)
@@ -54,7 +54,7 @@ class TestStationHistory(unittest.TestCase):
                          self.__test_reception_time_iso)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), 
                          self.__test_reception_time)
-        
+
     def test_JSON_dump(self):
         expected_output = '{"reception_time": 1378684800, "interval": "tick", ' \
             '"measurements": {"1362934043": {"wind": 4.7, "pressure": 1010.09, ' \
@@ -62,7 +62,7 @@ class TestStationHistory(unittest.TestCase):
             '4.7, "pressure": 1010.02, "temperature": 266.25, "rain": null, "humidity": ' \
             '27.3}}, "station_ID": 2865}'
         self.assertEqual(expected_output, self.__test_instance.to_JSON())
-        
+
     def test_XML_dump(self):
         expected_output = '<StationHistory><station_id>2865</station_id><interval>' \
             'tick</interval><reception_time>1378684800</reception_time>' \

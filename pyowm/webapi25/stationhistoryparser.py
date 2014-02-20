@@ -15,40 +15,42 @@ from pyowm.exceptions.api_response_error import APIResponseError
 
 class StationHistoryParser(JSONParser):
     """
-    Concrete *JSONParser* implementation building a *StatioHistory* instance 
+    Concrete *JSONParser* implementation building a *StatioHistory* instance
     out of raw JSON data coming from OWM web API responses.
-    
+
     """
-    
+
     def __init__(self):
         pass
-    
+
     def parse_JSON(self, JSON_string):
         """
-        Parses a *StatioHistory* instance out of raw JSON data. Only certain 
-        properties of the data are used: if these properties are not found or 
+        Parses a *StatioHistory* instance out of raw JSON data. Only certain
+        properties of the data are used: if these properties are not found or
         cannot be parsed, an error is issued.
-        
+
         :param JSON_string: a raw JSON string
         :type JSON_string: str
-        :returns: a *StatioHistory* instance or ``None`` if no data is available
+        :returns: a *StatioHistory* instance or ``None`` if no data is
+            available
         :raises: *ParseResponseError* if it is impossible to find or parse the
-            data needed to build the result, *APIResponseError* if the JSON 
+            data needed to build the result, *APIResponseError* if the JSON
             string embeds an HTTP status error (this is an OWM web API 2.5 bug)
-            
+
         """
         d = loads(JSON_string)
-        # Check if server returned errors: this check overcomes the lack of use of 
-        # HTTP error status codes by the OWM API but it's supposed to be deprecated 
-        # as soon as the API implements a correct HTTP mechanism for communicating 
-        # errors to the clients. In addition, in this specific case the OWM API 
-        # responses are the very same either when no results are found for a station
-        # and when the station does not exist!
+        # Check if server returned errors: this check overcomes the lack of use
+        # of HTTP error status codes by the OWM API but it's supposed to be
+        # deprecated as soon as the API implements a correct HTTP mechanism for
+        # communicating errors to the clients. In addition, in this specific
+        # case the OWM API responses are the very same either when no results
+        # are found for a station and when the station does not exist!
         measurements = {}
         try:
             if 'cod' in d:
                 if d['cod'] != "200":
-                    raise APIResponseError("OWM API: error - response payload: "+dumps(d))
+                    raise APIResponseError("OWM API: error - response " + \
+                                           "payload: " + dumps(d))
             if str(d['cnt']) is "0":
                 return None
             else:
@@ -71,11 +73,13 @@ class StationHistoryParser(JSONParser):
                         pres = item['pressure']['v']
                     else:
                         pres = item['pressure']
-                    if 'rain' in item and isinstance(item['rain']['today'], dict):
+                    if 'rain' in item and isinstance(item['rain']['today'],
+                                                     dict):
                         rain = item['rain']['today']['v']
                     else:
                         rain = None
-                    if 'wind' in item and isinstance(item['wind']['speed'], dict):
+                    if 'wind' in item and isinstance(item['wind']['speed'],
+                                                     dict):
                         wind = item['wind']['speed']['v']
                     else:
                         wind = None
@@ -87,7 +91,8 @@ class StationHistoryParser(JSONParser):
                      "wind": wind
                     }
         except KeyError:
-            raise ParseResponseError(__name__+': impossible to read JSON data')
+            raise ParseResponseError(__name__ + \
+                                     ': impossible to read JSON data')
         current_time = long(round(time()))
         return StationHistory(None, None, current_time, measurements)
 

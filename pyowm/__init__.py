@@ -11,14 +11,15 @@ The PyOWM init file
 """
 
 from constants import LATEST_OWM_API_VERSION
-from pyowm.utils import timeutils 
+from pyowm.utils import timeutils
+
 
 def OWM(API_key=None, version=LATEST_OWM_API_VERSION):
     """
-    A parametrized factory method returning a global OWM instance that represents
-    the desired OWM web API version (or the currently supported one if no version
-    number is specified
-    
+    A parametrized factory method returning a global OWM instance that
+    represents the desired OWM web API version (or the currently supported one
+    if no version number is specified
+
     :param API_key: the OWM web API key (``None`` by default)
     :type API_key: str
     :param version: the OWM web API version. Defaults to ``None``, which means

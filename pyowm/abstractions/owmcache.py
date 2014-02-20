@@ -6,20 +6,21 @@ Module containing the abstract PyOWM cache provider
 
 from abc import ABCMeta, abstractmethod
 
+
 class OWMCache(object):
     """
     A global abstract class representing a caching provider which can be used
-    to lookup the JSON responses to the most recently or most frequently issued 
-    OWM web API requests. 
+    to lookup the JSON responses to the most recently or most frequently issued
+    OWM web API requests.
     The purpose of the caching mechanism is to avoid OWM web API requests and
-    therefore network traffic: the implementations should be adapted to the 
-    time/memory requirements of the OWM data clients (i.e: a "slimmer" cache 
+    therefore network traffic: the implementations should be adapted to the
+    time/memory requirements of the OWM data clients (i.e: a "slimmer" cache
     with lower lookup times but higher miss rates or a "fatter" cache with
-    higher memory consumption and higher hit rates?)
-    Subclasses should implement a proper caching algorithms bearing in mind 
-    that different weather data types may have different change rates: in example,
-    observed weather can change very frequently while long-period weather 
-    forecasts change less frequently.
+    higher memory consumption and higher hit rates?).
+    Subclasses should implement a proper caching algorithms bearing in mind
+    that different weather data types may have different change rates: in
+    example, observed weather can change very frequently while long-period
+    weather forecasts change less frequently.
     External caching mechanisms (eg: memcached, redis, etc..) can be used by
     extending this class into a proper decorator for the correspondent Python
     bindings.
@@ -40,7 +41,7 @@ class OWMCache(object):
 
         """
         pass
-    
+
     @abstractmethod
     def set(self, request_url, response_json):
         """
