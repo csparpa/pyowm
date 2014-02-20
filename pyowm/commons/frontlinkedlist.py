@@ -5,8 +5,8 @@ Module containing class related to the implementation of linked-list data
 structure
 """
 
-from copy import deepcopy
-from pyowm.abstractions.linkedlist import LinkedList
+import copy
+from pyowm.abstractions import linkedlist
 
 
 class LinkedListNode:
@@ -67,7 +67,7 @@ class FrontLinkedListIterator(object):
 
     """
     def __init__(self, obj):
-        self.__obj = deepcopy(obj)
+        self.__obj = copy.deepcopy(obj)
         self.__current_item = self.__obj.first_node()
         self.__cnt = 0
 
@@ -93,7 +93,7 @@ class FrontLinkedListIterator(object):
         return result
 
 
-class FrontLinkedList(LinkedList):
+class FrontLinkedList(linkedlist.LinkedList):
 
     """
     Implementation of a linked-list data structure. Insertions are performed at

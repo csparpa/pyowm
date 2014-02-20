@@ -5,17 +5,16 @@ Module containing a concrete implementation for JSONParser abstract class,
 returning Forecast objects
 """
 
-from json import loads, dumps
-from time import time
-from location import Location
-from weather import Weather
-from forecast import Forecast
-from pyowm.abstractions.jsonparser import JSONParser
-from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
+import json
+import time
+import location
+import weather
+import forecast
+from pyowm.abstractions import jsonparser
+from pyowm.exceptions import parse_response_error, api_response_error
 
 
-class ForecastParser(JSONParser):
+class ForecastParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building a *Forecast* instance out
     of raw JSON data coming from OWM web API responses.
@@ -39,22 +38,23 @@ class ForecastParser(JSONParser):
             string embeds an HTTP status error (this is an OWM web API 2.5 bug)
 
         """
-        d = loads(JSON_string)
+        d = json.loads(JSON_string)
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API 2.5. This mechanism is
         # supposed to be deprecated as soon as the API fully adopts HTTP for
         # conveying errors to the clients
         if 'message' in d and 'cod' in d:
             if d['cod'] == "404":
-                print "OWM API: data not found - response payload: " + dumps(d)
+                print "OWM API: data not found - response payload: " + \
+                    json.dumps(d)
                 return None
             elif d['cod'] != "200":
-                raise APIResponseError("OWM API: error - response payload: " + \
-                                       dumps(d))
+                raise api_response_error.APIResponseError("OWM API: error " \
+                                        " - response payload: " + json.dumps(d))
         try:
-            location = Location.from_dictionary(d)
+            place = location.location_from_dictionary(d)
         except KeyError:
-            raise ParseResponseError(''.join([__name__,
+            raise parse_response_error.ParseResponseError(''.join([__name__,
                       ': impossible to read location info from JSON data']))
         # Handle the case when no results are found
         if 'count' in d and d['count'] is "0":
@@ -64,16 +64,20 @@ class ForecastParser(JSONParser):
         else:
             if 'list' in d:
                 try:
-                    weathers = [Weather.from_dictionary(item) \
+                    weathers = [weather.weather_from_dictionary(item) \
                                 for item in d['list']]
                 except KeyError:
-                    raise ParseResponseError(''.join([__name__,
-                          ': impossible to read weather info from JSON data']))
+                    raise parse_response_error.ParseResponseError(
+                          ''.join([__name__, ': impossible to read weather ' \
+                                   'info from JSON data'])
+                                  )
             else:
-                raise ParseResponseError(''.join([__name__,
-                          ': impossible to read weather list from JSON data']))
-        current_time = long(round(time()))
-        return Forecast(None, current_time, location, weathers)
+                raise parse_response_error.ParseResponseError(
+                          ''.join([__name__, ': impossible to read weather ' \
+                                   'list from JSON data'])
+                          )
+        current_time = long(round(time.time()))
+        return forecast.Forecast(None, current_time, place, weathers)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)

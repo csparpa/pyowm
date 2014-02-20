@@ -5,7 +5,7 @@ Module containing a concrete implementation for JSONParser abstract class,
 returning lists of Observation objects
 """
 
-from json import loads, dumps
+import json
 from pyowm.abstractions.jsonparser import JSONParser
 from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
@@ -41,7 +41,7 @@ class ObservationListParser(JSONParser):
             returns a HTTP status error (this is an OWM web API 2.5 bug)
 
         """
-        d = loads(JSON_string)
+        d = json.loads(JSON_string)
         observation_parser = ObservationParser()
         if 'cod' not in d:
                 raise ParseResponseError(''.join([__name__,
@@ -51,7 +51,8 @@ class ObservationListParser(JSONParser):
         # supposed to be deprecated as soon as the API fully adopts HTTP for
         # conveying errors to the clients
         if d['cod'] == "404":
-            print "OWM API: data not found - response payload: " + dumps(d)
+            print "OWM API: data not found - response payload: " + \
+                json.dumps(d)
             return None
         if d['cod'] == "200":
             # Handle the case when no results are found
@@ -59,13 +60,14 @@ class ObservationListParser(JSONParser):
                 return []
             else:
                 if 'list' in d:
-                    return [observation_parser.parse_JSON(dumps(item)) \
+                    return [observation_parser.parse_JSON(json.dumps(item)) \
                              for item in d['list']]
                 else:
                     raise ParseResponseError(''.join([__name__,
                                             ': impossible to read ' \
                                             'observation list from JSON data']))
-        raise APIResponseError("OWM API: error - response payload: " + dumps(d))
+        raise APIResponseError("OWM API: error - response payload: " + \
+                               json.dumps(d))
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)

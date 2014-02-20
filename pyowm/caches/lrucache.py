@@ -5,12 +5,12 @@ Module containing LRU cache related class
 """
 
 from datetime import datetime
-from pyowm.abstractions.owmcache import OWMCache
-from pyowm.commons.frontlinkedlist import FrontLinkedList
-from pyowm.utils.converter import to_UNIXtime
+from pyowm.abstractions import owmcache
+from pyowm.commons import frontlinkedlist
+from pyowm.utils import converter
 
 
-class LRUCache(OWMCache):
+class LRUCache(owmcache.OWMCache):
     """
     This cache is made out of a 'table' dict and the 'usage_recency' linked
     list.'table' maps uses requests' URLs as keys and stores JSON raw responses
@@ -47,14 +47,14 @@ class LRUCache(OWMCache):
     """
 
     __CACHE_MAX_SIZE = 20  # Maximum number of elements that fit the cache
-    __ITEM_LIFETIME_MILLISECONDS = 1000*60*10  # Ten minutes
+    __ITEM_LIFETIME_MILLISECONDS = 1000 * 60 * 10  # Ten minutes
 
     def __init__(self, cache_max_size=__CACHE_MAX_SIZE,
                  item_lifetime_millis=__ITEM_LIFETIME_MILLISECONDS):
         assert cache_max_size > 0 and item_lifetime_millis > 0, "wrong cache" \
             " init parameters"
         self.__table = {}
-        self.__usage_recency = FrontLinkedList()
+        self.__usage_recency = frontlinkedlist.FrontLinkedList()
         self.__max_size = cache_max_size
         self.__item_lifetime = item_lifetime_millis
 
@@ -72,12 +72,12 @@ class LRUCache(OWMCache):
         """
         try:
             cached_item = self.__table[request_url]
-            curr_time = to_UNIXtime(datetime.now())
-            if curr_time - cached_item['insertion_time'] > self.__item_lifetime:
+            cur_time = converter.to_UNIXtime(datetime.now())
+            if cur_time - cached_item['insertion_time'] > self.__item_lifetime:
                 # Cache item has expired
                 self.__clean_item(request_url)
                 return None
-            cached_item['insertion_time'] = curr_time  # Update insertion time
+            cached_item['insertion_time'] = cur_time  # Update insertion time
             self.__promote(request_url)
             return cached_item['data']
         except:
@@ -101,7 +101,7 @@ class LRUCache(OWMCache):
         if (self.size() == self.__max_size):
             popped = self.__usage_recency.pop()
             del self.__table[popped]
-        current_time = to_UNIXtime(datetime.now())
+        current_time = converter.to_UNIXtime(datetime.now())
         if request_url not in self.__table:
             self.__table[request_url] = {'data': response_json,
                                          'insertion_time': current_time}

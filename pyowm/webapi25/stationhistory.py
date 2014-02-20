@@ -5,7 +5,7 @@ Module containing classes and datastructures related to meteostation history
 data
 """
 
-from json import dumps
+import json
 from pyowm.utils import converter, xmlutils
 
 
@@ -122,7 +122,7 @@ class StationHistory(object):
              "reception_time": self.__reception_time,
              "measurements": self.__measurements
              }
-        return dumps(d)
+        return json.dumps(d)
 
     def to_XML(self):
         """Dumps object fields into a XML formatted string

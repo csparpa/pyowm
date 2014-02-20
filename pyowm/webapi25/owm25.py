@@ -5,20 +5,20 @@ Module containing the PyOWM library main entry point
 """
 
 from time import time
-from pyowm.constants import PYOWM_VERSION
-from pyowm.webapi25.configuration25 import OBSERVATION_URL, \
-    FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL, DAILY_FORECAST_URL, \
-    CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, \
-    API_AVAILABILITY_TIMEOUT
-from pyowm.abstractions.owm import OWM
-from pyowm.caches.nullcache import NullCache
-from pyowm.commons.owmhttpclient import OWMHTTPClient
+from pyowm import constants
+from pyowm.webapi25.configuration25 import (
+    OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
+    DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
+    API_AVAILABILITY_TIMEOUT)
+from pyowm.abstractions import owm
+from pyowm.caches import nullcache
+from pyowm.commons import owmhttpclient
 from pyowm.utils import converter
-from pyowm.webapi25.forecaster import Forecaster
-from pyowm.webapi25.historian import Historian
+from pyowm.webapi25 import forecaster
+from pyowm.webapi25 import historian
 
 
-class OWM25(OWM):
+class OWM25(owm.OWM):
     """
     OWM subclass providing methods for each OWM web API 2.5 endpoint. The class
     is instantiated with *jsonparser* subclasses, each one parsing the response
@@ -35,12 +35,12 @@ class OWM25(OWM):
     :returns: an *OWM25* instance
 
     """
-    def __init__(self, parsers, API_key=None, cache=NullCache()):
+    def __init__(self, parsers, API_key=None, cache=nullcache.NullCache()):
         self.__parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self.__API_key = API_key
-        self.__httpclient = OWMHTTPClient(API_key, cache)
+        self.__httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
 
     def get_API_key(self):
         """
@@ -77,7 +77,7 @@ class OWM25(OWM):
         :returns: the current PyOWM library version string
 
         """
-        return PYOWM_VERSION
+        return constants.PYOWM_VERSION
 
     def API_online(self):
         """
@@ -230,7 +230,7 @@ class OWM25(OWM):
         forecast = self.__parsers['forecast'].parse_JSON(json_data)
         if forecast:
             forecast.set_interval("3h")
-            return Forecaster(forecast)
+            return forecaster.Forecaster(forecast)
         else:
             return None
 
@@ -266,7 +266,7 @@ class OWM25(OWM):
         forecast = self.__parsers['forecast'].parse_JSON(json_data)
         if forecast:
             forecast.set_interval("daily")
-            return Forecaster(forecast)
+            return forecaster.Forecaster(forecast)
         else:
             return None
 
@@ -348,7 +348,7 @@ class OWM25(OWM):
         station_history = self.__retrieve_station_history(station_ID, limit,
                                                           "tick")
         if station_history:
-            return Historian(station_history)
+            return historian.Historian(station_history)
         else:
             return None
 
@@ -381,7 +381,7 @@ class OWM25(OWM):
         station_history = self.__retrieve_station_history(station_ID, limit,
                                                           "hour")
         if station_history:
-            return Historian(station_history)
+            return historian.Historian(station_history)
         else:
             return None
 
@@ -414,7 +414,7 @@ class OWM25(OWM):
         station_history = self.__retrieve_station_history(station_ID, limit,
                                                           "day")
         if station_history:
-            return Historian(station_history)
+            return historian.Historian(station_history)
         else:
             return None
 

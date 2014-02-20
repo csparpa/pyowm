@@ -7,7 +7,7 @@ setup(
     version='0.4.1',
     description='A Python wrapper around the OpenWeatherMap web API',
     author='Claudio Sparpaglione (@csparpa)',
-    author_email='claspock@hotmail.com',
+    author_email='csparpa@gmail.com',
     url='http://github.com/csparpa/pyowm',
     packages=['pyowm','pyowm.abstractions', 'pyowm.caches', 'pyowm.commons',
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25', 'tests.unit',

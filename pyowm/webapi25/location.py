@@ -4,7 +4,7 @@
 Module containing location-related classes and data structures.
 """
 
-from json import dumps
+import json
 
 
 class Location(object):
@@ -42,35 +42,6 @@ class Location(object):
         self.__lat = float(lat)
         self.__ID = ID
         self.__country = country
-
-    @staticmethod
-    def from_dictionary(d):
-        """
-        Builds a *Location* object out of a data dictionary. Only certain
-        properties of the dictionary are used: if these properties are not
-        found or cannot be read, an error is issued.
-
-        :param d: a data dictionary
-        :type d: dict
-        :returns: a *Location* instance
-        :raises: *KeyError* if it is impossible to find or read the data
-            needed to build the instance
-
-        """
-        country = None
-        if 'sys' in d and 'country' in d['sys']:
-            country = d['sys']['country']
-        if 'city' in d:
-            data = d['city']
-        else:
-            data = d
-        name = data['name']
-        lon = data['coord']['lon']
-        lat = data['coord']['lat']
-        ID = int(data['id'])
-        if 'country' in data:
-            country = data['country']
-        return Location(name, lon, lat, ID, country)
 
     def get_name(self):
         """
@@ -123,8 +94,9 @@ class Location(object):
         :returns:  the JSON string
 
         """
-        return dumps({'name': self.__name, 'coordinates': {'lon': self.__lon,
-            'lat': self.__lat}, 'ID': self.__ID, 'country': self.__country})
+        return json.dumps({'name': self.__name,
+                         'coordinates': {'lon': self.__lon, 'lat': self.__lat},
+                         'ID': self.__ID, 'country': self.__country})
 
     def to_XML(self):
         """Dumps object fields into a XML formatted string
@@ -141,3 +113,32 @@ class Location(object):
         return "<%s.%s - id=%s, name=%s, lon=%s, lat=%s>" % (__name__, \
           self.__class__.__name__, self.__ID, self.__name, str(self.__lon), \
           str(self.__lat))
+
+
+def location_from_dictionary(d):
+    """
+    Builds a *Location* object out of a data dictionary. Only certain
+    properties of the dictionary are used: if these properties are not
+    found or cannot be read, an error is issued.
+
+    :param d: a data dictionary
+    :type d: dict
+    :returns: a *Location* instance
+    :raises: *KeyError* if it is impossible to find or read the data
+        needed to build the instance
+
+    """
+    country = None
+    if 'sys' in d and 'country' in d['sys']:
+        country = d['sys']['country']
+    if 'city' in d:
+        data = d['city']
+    else:
+        data = d
+    name = data['name']
+    lon = data['coord']['lon']
+    lat = data['coord']['lat']
+    ID = int(data['id'])
+    if 'country' in data:
+        country = data['country']
+    return Location(name, lon, lat, ID, country)

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-from pyowm.caches.nullcache import NullCache
-from observationparser import ObservationParser
-from observationlistparser import ObservationListParser
-from forecastparser import ForecastParser
-from weatherhistoryparser import WeatherHistoryParser
-from stationhistoryparser import StationHistoryParser
+from pyowm.caches import nullcache
+import observationparser
+import observationlistparser
+import forecastparser
+import weatherhistoryparser
+import stationhistoryparser
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
@@ -23,15 +23,15 @@ STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
 # Parser objects injection for OWM web API responses parsing
 parsers = {
-  'observation': ObservationParser(),
-  'observation_list': ObservationListParser(),
-  'forecast': ForecastParser(),
-  'weather_history': WeatherHistoryParser(),
-  'station_history': StationHistoryParser()
+  'observation': observationparser.ObservationParser(),
+  'observation_list': observationlistparser.ObservationListParser(),
+  'forecast': forecastparser.ForecastParser(),
+  'weather_history': weatherhistoryparser.WeatherHistoryParser(),
+  'station_history': stationhistoryparser.StationHistoryParser()
 }
 
 # Cache provider to be used
-cache = NullCache()
+cache = nullcache.NullCache()
 
 # OWM web API availability test timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2

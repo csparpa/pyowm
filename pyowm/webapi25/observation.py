@@ -4,7 +4,7 @@
 Weather observation classes and data structures.
 """
 
-from json import dumps, loads
+import json
 from pyowm.utils import converter
 
 
@@ -79,10 +79,10 @@ class Observation(object):
 
         """
         d = {"reception_time": self.__reception_time,
-              "Location": loads(self.__location.to_JSON()),
-              "Weather": loads(self.__weather.to_JSON())
+              "Location": json.loads(self.__location.to_JSON()),
+              "Weather": json.loads(self.__weather.to_JSON())
               }
-        return dumps(d)
+        return json.dumps(d)
 
     def to_XML(self):
         """Dumps object fields into a XML formatted string

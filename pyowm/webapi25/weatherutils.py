@@ -4,7 +4,7 @@
 Module containing search and filter utilities for *Weather* objects lists
 management
 """
-from pyowm.exceptions.not_found_error import NotFoundError
+from pyowm.exceptions import not_found_error
 
 
 def status_matches_any(word_list, weather):
@@ -103,8 +103,8 @@ def find_closest_weather(weathers_list, unixtime):
     if not weathers_list:
         return None
     if not is_in_coverage(unixtime, weathers_list):
-        raise NotFoundError('Error: the specified time is not included in ' \
-                            'the weather coverage range')
+        raise not_found_error.NotFoundError('Error: the specified time is ' + \
+                                'not included in the weather coverage range')
     closest_weather = weathers_list[0]
     time_distance = abs(closest_weather.get_reference_time() - unixtime)
     for weather in weathers_list:

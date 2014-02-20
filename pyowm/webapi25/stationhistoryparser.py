@@ -5,15 +5,14 @@ Module containing a concrete implementation for JSONParser abstract class,
 returning a StatioHistory instance
 """
 
-from json import loads, dumps
-from time import time
-from stationhistory import StationHistory
-from pyowm.abstractions.jsonparser import JSONParser
-from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
+import json
+import time
+import stationhistory
+from pyowm.abstractions import jsonparser
+from pyowm.exceptions import parse_response_error, api_response_error
 
 
-class StationHistoryParser(JSONParser):
+class StationHistoryParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building a *StatioHistory* instance
     out of raw JSON data coming from OWM web API responses.
@@ -38,7 +37,7 @@ class StationHistoryParser(JSONParser):
             string embeds an HTTP status error (this is an OWM web API 2.5 bug)
 
         """
-        d = loads(JSON_string)
+        d = json.loads(JSON_string)
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API but it's supposed to be
         # deprecated as soon as the API implements a correct HTTP mechanism for
@@ -49,8 +48,9 @@ class StationHistoryParser(JSONParser):
         try:
             if 'cod' in d:
                 if d['cod'] != "200":
-                    raise APIResponseError("OWM API: error - response " + \
-                                           "payload: " + dumps(d))
+                    raise api_response_error.APIResponseError(
+                                              "OWM API: error - response " + \
+                                              "payload: " + json.dumps(d))
             if str(d['cnt']) is "0":
                 return None
             else:
@@ -91,10 +91,11 @@ class StationHistoryParser(JSONParser):
                      "wind": wind
                     }
         except KeyError:
-            raise ParseResponseError(__name__ + \
+            raise parse_response_error.ParseResponseError(__name__ + \
                                      ': impossible to read JSON data')
-        current_time = long(round(time()))
-        return StationHistory(None, None, current_time, measurements)
+        current_time = long(round(time.time()))
+        return stationhistory.StationHistory(None, None, current_time,
+                                             measurements)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)

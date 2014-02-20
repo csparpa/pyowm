@@ -100,7 +100,8 @@ def kelvin_to_celsius(kelvintemp):
 
     """
     if kelvintemp < 0:
-        raise ValueError(__name__ + ": negative temperature values not allowed")
+        raise ValueError(__name__ + \
+                         ": negative temperature values not allowed")
     celsiustemp = kelvintemp - __KELVIN_OFFSET__
     return float("{0:.2f}".format(celsiustemp))
 
@@ -116,7 +117,8 @@ def kelvin_to_fahrenheit(kelvintemp):
     :raises: *TypeError* when bad argument types are provided
     """
     if kelvintemp < 0:
-        raise ValueError(__name__ + ": negative temperature values not allowed")
+        raise ValueError(__name__ + \
+                         ": negative temperature values not allowed")
     fahrenheittemp = (kelvintemp - __KELVIN_OFFSET__) * \
         __FAHRENHEIT_DEGREE_SCALE + __FAHRENHEIT_OFFSET
     return float("{0:.2f}".format(fahrenheittemp))

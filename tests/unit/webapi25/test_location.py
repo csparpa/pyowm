@@ -5,7 +5,7 @@ Test case for location.py module
 """
 
 import unittest
-from pyowm.webapi25.location import Location
+from pyowm.webapi25.location import Location, location_from_dictionary
 
 
 class TestLocation(unittest.TestCase):
@@ -34,8 +34,8 @@ class TestLocation(unittest.TestCase):
                   "country" : "GB", "id" : 2643743, "name" : u"London",
                   "population" : 1000000 }
                  }
-        result1 = Location.from_dictionary(dict1)
-        result2 = Location.from_dictionary(dict2)
+        result1 = location_from_dictionary(dict1)
+        result2 = location_from_dictionary(dict2)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
         self.assertFalse(result1.get_country())

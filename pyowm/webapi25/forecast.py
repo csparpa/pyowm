@@ -4,7 +4,7 @@
 Module containing weather forecast classes and data structures.
 """
 
-from json import loads, dumps
+import json
 from pyowm.utils import converter
 
 
@@ -167,11 +167,11 @@ class Forecast(object):
         """
         d = {"interval": self.__interval,
              "reception_time": self.__reception_time,
-             "Location": loads(self.__location.to_JSON()),
-             "weathers": loads("[" + ",".join([w.to_JSON() for w in self]) + \
-                               "]")
+             "Location": json.loads(self.__location.to_JSON()),
+             "weathers": json.loads("[" + \
+                                ",".join([w.to_JSON() for w in self]) + "]")
              }
-        return dumps(d)
+        return json.dumps(d)
 
     def to_XML(self):
         """Dumps object fields into a XML formatted string

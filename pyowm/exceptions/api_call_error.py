@@ -4,7 +4,7 @@
 Module containing APICallError class
 """
 
-from os import linesep
+import os
 
 
 class APICallError(Exception):
@@ -24,6 +24,6 @@ class APICallError(Exception):
 
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
-        return ''.join(['Exception in calling OWM web API.', linesep,
-                       'Reason: ', self.message, linesep, 'Caused by: ',
+        return ''.join(['Exception in calling OWM web API.', os.linesep,
+                       'Reason: ', self.message, os.linesep, 'Caused by: ',
                        str(self._triggering_error)])

@@ -56,25 +56,29 @@ The installer is available on the [Python Package Index](https://pypi.python.org
 Take off
 --------
 ```python
-from pyowm import OWM, timeutils
+import pyowm
 
-owm = OWM('your-API-key')
+owm = pyowm.OWM('your-API-key')
     
 # Will it be sunny tomorrow at this time in Milan (Italy) ?
-f = owm.daily_forecast("Milan,it")
-tomorrow = timeutils.tomorrow()
-f.will_be_sunny_at(tomorrow)  # True
-    
+forecast = owm.daily_forecast("Milan,it")
+tomorrow = pyowm.timeutils.tomorrow()
+forecast.will_be_sunny_at(tomorrow)  # True
+
 # Search for current weather in London (UK)
-obs = owm.weather_at('London,uk')
-w = obs.get_weather()
+observation = owm.weather_at('London,uk')
+w = observation.get_weather()
 print w                       # <Weather - reference time=2013-12-18 09:20, 
-                              #  status=Clouds>
+                              # status=Clouds>
 
 # Weather details
 w.get_wind()                  # {'speed': 4.6, 'deg': 330}
 w.get_humidity()              # 87
 w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
+
+# Search current weather observations in the surroundings of 
+# lon= 22.57 W, -43.12 S (Rio de Janeiro, BR)
+observation_list = owm.find_weather_by_coords(-22.57, -43.12)
 ```
 
 Documentation

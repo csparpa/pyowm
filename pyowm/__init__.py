@@ -4,17 +4,17 @@
 """
 The PyOWM init file
 
-**Author**: Claudio Sparpaglione, @csparpa <claspock@hotmail.com>
+**Author**: Claudio Sparpaglione, @csparpa <csparpa@gmail.com>
 
 **Platform**: platform independent
 
 """
 
-from constants import LATEST_OWM_API_VERSION
-from pyowm.utils import timeutils
+from pyowm import constants
+from pyowm.utils import timeutils  # Convenience import
 
 
-def OWM(API_key=None, version=LATEST_OWM_API_VERSION):
+def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION):
     """
     A parametrized factory method returning a global OWM instance that
     represents the desired OWM web API version (or the currently supported one

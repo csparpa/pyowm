@@ -7,15 +7,14 @@ returning Observation objects
 
 from json import loads, dumps
 from time import time
-from observation import Observation
-from location import Location
-from weather import Weather
-from pyowm.abstractions.jsonparser import JSONParser
-from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
+import observation
+import location
+import weather
+from pyowm.abstractions import jsonparser
+from pyowm.exceptions import parse_response_error, api_response_error
 
 
-class ObservationParser(JSONParser):
+class ObservationParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building an *Observation* instance out
     of raw JSON data coming from OWM web API responses.
@@ -50,20 +49,23 @@ class ObservationParser(JSONParser):
                     "payload: " + dumps(d)
                 return None
             else:
-                raise APIResponseError("OWM API: error - response payload: " + \
+                raise api_response_error.APIResponseError(
+                                      "OWM API: error - response payload: " + \
                                        dumps(d))
         try:
-            location = Location.from_dictionary(d)
+            place = location.location_from_dictionary(d)
         except KeyError:
-            raise ParseResponseError(''.join([__name__, ': impossible to ' \
-              'read location info from JSON data']))
+            raise parse_response_error.ParseResponseError(
+                                      ''.join([__name__, ': impossible to ' \
+                                       'read location info from JSON data']))
         try:
-            weather = Weather.from_dictionary(d)
+            w = weather.weather_from_dictionary(d)
         except KeyError:
-            raise ParseResponseError(''.join([__name__, ': impossible to ' \
-              'read weather info from JSON data']))
+            raise parse_response_error.ParseResponseError(
+                                      ''.join([__name__, ': impossible to ' \
+                                       'read weather info from JSON data']))
         current_time = long(round(time()))
-        return Observation(current_time, location, weather)
+        return observation.Observation(current_time, place, w)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)

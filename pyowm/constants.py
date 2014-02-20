@@ -4,6 +4,5 @@
 Constants for the PyOWM library
 """
 
-# Version numbers
 PYOWM_VERSION = '0.4.1'
-LATEST_OWM_API_VERSION = '2.5'  # Latest web API version
+LATEST_OWM_API_VERSION = '2.5'

@@ -4,7 +4,7 @@
 Module containing NotFoundError class
 """
 
-from os import linesep
+import os
 
 
 class NotFoundError(Exception):
@@ -21,5 +21,5 @@ class NotFoundError(Exception):
 
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
-        return ''.join(['The searched item was not found.', linesep, 'Reason: ', \
-            self._message])
+        return ''.join(['The searched item was not found.', os.linesep,
+                        'Reason: ', self._message])

@@ -5,7 +5,7 @@ Test case for weather.py module
 """
 
 import unittest
-from pyowm.webapi25.weather import Weather
+from pyowm.webapi25.weather import Weather, weather_from_dictionary
 from pyowm.utils import xmlutils
 
 
@@ -108,10 +108,10 @@ class TestWeather(unittest.TestCase):
                      "icon": u"u10d"}
                    ],"speed": 3.76, "deg": 338, "clouds": 48,"rain": 3
                 }
-        result1 = Weather.from_dictionary(dict1)
+        result1 = weather_from_dictionary(dict1)
         self.assertTrue(isinstance(result1, Weather))
         self.assertNotIn(None, result1.__dict__.values())
-        result2 = Weather.from_dictionary(dict2)
+        result2 = weather_from_dictionary(dict2)
         self.assertTrue(isinstance(result2, Weather))
         self.assertNotIn(None, result2.__dict__.values())
     
