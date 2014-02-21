@@ -31,11 +31,12 @@ class TestStationHistory(unittest.TestCase):
         }
     }
 
-    __test_instance = StationHistory(__test_station_ID, 'tick', __test_reception_time,
+    __test_instance = StationHistory(__test_station_ID, 'tick',
+                                     __test_reception_time,
                                      __test_measurements)
 
     def test_init_fails_when_negative_reception_time(self):
-        self.assertRaises(ValueError, StationHistory, 1234, 'tick', -1234567L, 
+        self.assertRaises(ValueError, StationHistory, 1234, 'tick', -1234567L,
                           self.__test_measurements)
 
     def test_getters_return_expected_3h_data(self):
@@ -50,9 +51,9 @@ class TestStationHistory(unittest.TestCase):
         """
         Test get_reception_time returns timestamps in the expected formats
         """
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), 
+        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'),
                          self.__test_reception_time_iso)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), 
+        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'),
                          self.__test_reception_time)
 
     def test_JSON_dump(self):
@@ -64,11 +65,11 @@ class TestStationHistory(unittest.TestCase):
         self.assertEqual(expected_output, self.__test_instance.to_JSON())
 
     def test_XML_dump(self):
-        expected_output = '<StationHistory><station_id>2865</station_id><interval>' \
+        expected_output = '<station_history><station_id>2865</station_id><interval>' \
             'tick</interval><reception_time>1378684800</reception_time>' \
             '<measurements><1362934043><wind>4.7</wind><pressure>1010.09</pressure>' \
             '<temperature>266.85</temperature><humidity>27.7</humidity></1362934043>' \
             '<1362933983><wind>4.7</wind><pressure>1010.02</pressure><temperature>' \
             '266.25</temperature><humidity>27.3</humidity></1362933983>' \
-            '</measurements></StationHistory>'
+            '</measurements></station_history>'
         self.assertEqual(expected_output, self.__test_instance.to_XML())

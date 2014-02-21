@@ -130,9 +130,9 @@ class StationHistory(object):
         :returns: the XML string
 
         """
-        return '<StationHistory><station_id>%s</station_id>' \
+        return '<station_history><station_id>%s</station_id>' \
             '<interval>%s</interval><reception_time>%s</reception_time>' \
-            '<measurements>%s</measurements></StationHistory>' % \
+            '<measurements>%s</measurements></station_history>' % \
             (self._station_ID, self._interval, self._reception_time,
              "".join([xmlutils.make_tag(str(item),
                             xmlutils.dict_to_XML(self._measurements[item])) \

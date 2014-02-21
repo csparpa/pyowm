@@ -90,8 +90,8 @@ class Observation(object):
         :returns:  the XML string
 
         """
-        return '<Observation><reception_time>%s</reception_time>%s' \
-            '%s</Observation>' % (self._reception_time,
+        return '<observation><reception_time>%s</reception_time>%s' \
+            '%s</observation>' % (self._reception_time,
                                   self._location.to_XML(),
                                   self._weather.to_XML())
 

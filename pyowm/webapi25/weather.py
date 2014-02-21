@@ -259,14 +259,14 @@ class Weather(object):
         :returns:  the XML string
 
         """
-        return '<Weather><status>%s</status><weather_code>%s</weather_code>' \
+        return '<weather><status>%s</status><weather_code>%s</weather_code>' \
                '<rain>%s</rain><snow>%s</snow><pressure>%s</pressure>' \
                '<sunrise_time>%s</sunrise_time><weather_icon_name>%s' \
                '</weather_icon_name><clouds>%s</clouds><temperature>%s' \
                '</temperature><detailed_status>%s</detailed_status>' \
                '<reference_time>%s</reference_time><sunset_time>%s' \
                '</sunset_time><humidity>%s</humidity><wind>%s</wind>' \
-               '</Weather>' % (self._status, self._weather_code,
+               '</weather>' % (self._status, self._weather_code,
                                xmlutils.dict_to_XML(self._rain),
                                xmlutils.dict_to_XML(self._snow),
                                xmlutils.dict_to_XML(self._pressure),

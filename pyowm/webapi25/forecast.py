@@ -179,9 +179,9 @@ class Forecast(object):
         :returns: the XML string
 
         """
-        return '<Forecast><interval>%s</interval>' \
+        return '<forecast><interval>%s</interval>' \
             '<reception_time>%s</reception_time>' \
-            '%s<weathers>%s</weathers></Forecast>' % \
+            '%s<weathers>%s</weathers></forecast>' % \
             (self._interval, self._reception_time, self._location.to_XML(),
              "".join([item.to_XML() for item in self]))
 

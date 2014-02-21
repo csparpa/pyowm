@@ -7,6 +7,17 @@ chunk it in little pieces so that they can be stored into the object model.
 
 + Never try to forecast/presume the ways the library clients will use the data.
 
++ Design decision: for the moment, we admittedly don't support the following
+  OWM web API features regarding endpoints invocation:
+
+   * specification of metric/imperial units - the library itself provides this
+       capability
+   * specification of output locale: unsupported at the moment
+   * specification of output format (XML, HTML, ...) - the library itself
+       provides this capability, but only limited to XML and JSON as HTML is
+       presentation-oriented and therefore less suitable for data markup
+   * specification of JSONP callbacks - only applies to Javascript codes 
+
 + The JSON documents that come into the OWM web API responses' payloads does not
 show a uniform structure: this means that for API endpoints returning similar
 data, different JSON structuring of these data must be expected and therefore

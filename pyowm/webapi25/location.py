@@ -104,9 +104,9 @@ class Location(object):
         :returns:  the XML string
 
         """
-        return '<Location><name>%s</name><coordinates><lon>%s</lon>' \
+        return '<location><name>%s</name><coordinates><lon>%s</lon>' \
                 '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country>' \
-                '</Location>' % (self._name, self._lon, self._lat,
+                '</location>' % (self._name, self._lon, self._lat,
                                  self._ID, self._country)
 
     def __repr__(self):
