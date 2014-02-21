@@ -18,12 +18,12 @@ class CacheWrapper(OWMCache):
     Wrapper class whose aim is to track down real API calls and cache hits.
     """
     def __init__(self, cache):
-        self.__cache = cache
+        self._cache = cache
         self.__api_calls = 0
         self.__last_request_was_hit = False
         
     def get(self, request_url):
-        result = self.__cache.get(request_url)
+        result = self._cache.get(request_url)
         if result:
             self.__last_request_was_hit = True
         else:
@@ -32,7 +32,7 @@ class CacheWrapper(OWMCache):
         return result
 
     def set(self, request_url, response_json):
-        return self.__cache.set(request_url, response_json)
+        return self._cache.set(request_url, response_json)
     
     def last_request_was_hit(self):
         return self.__last_request_was_hit

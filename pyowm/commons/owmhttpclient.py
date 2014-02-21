@@ -25,7 +25,7 @@ class OWMHTTPClient(object):
 
     def __init__(self, API_key, cache):
         self._API_key = API_key
-        self.__cache = cache
+        self._cache = cache
 
     def call_API(self, API_endpoint_URL, params_dict,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
@@ -47,7 +47,7 @@ class OWMHTTPClient(object):
 
         """
         url = self._build_full_URL(API_endpoint_URL, params_dict)
-        cached = self.__cache.get(url)
+        cached = self._cache.get(url)
         if cached:
             return cached
         else:
@@ -59,7 +59,7 @@ class OWMHTTPClient(object):
                 raise api_call_error.APICallError(e.message, e)
             else:
                 data = response.read()
-                self.__cache.set(url, data)
+                self._cache.set(url, data)
                 return data
 
     def _build_full_URL(self, API_endpoint_URL, params_dict):
@@ -100,4 +100,4 @@ class OWMHTTPClient(object):
 
     def __repr__(self):
         return "<%s.%s - cache=%s>" % \
-            (__name__, self.__class__.__name__, repr(self.__cache))
+            (__name__, self.__class__.__name__, repr(self._cache))

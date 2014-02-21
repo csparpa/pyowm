@@ -21,8 +21,8 @@ class LinkedListNode:
     """
 
     def __init__(self, data, next_node):
-        self.__data = data
-        self.__next = next_node
+        self._data = data
+        self._next = next_node
 
     def data(self):
         """
@@ -30,7 +30,7 @@ class LinkedListNode:
 
         :returns: an object
         """
-        return self.__data
+        return self._data
 
     def next(self):
         """
@@ -38,7 +38,7 @@ class LinkedListNode:
 
         :returns: a LinkedListNode instance
         """
-        return self.__next
+        return self._next
 
     def update_next(self, linked_list_node):
         """
@@ -47,11 +47,11 @@ class LinkedListNode:
         :type linked_list_node: LinkedListNode
 
         """
-        self.__next = linked_list_node
+        self._next = linked_list_node
 
     def __repr__(self):
         return "<%s.%s - data=%s>" % \
-            (__name__, self.__class__.__name__, repr(self.__data))
+            (__name__, self.__class__.__name__, repr(self._data))
 
 
 class FrontLinkedListIterator(object):
@@ -67,9 +67,9 @@ class FrontLinkedListIterator(object):
 
     """
     def __init__(self, obj):
-        self.__obj = copy.deepcopy(obj)
-        self.__current_item = self.__obj.first_node()
-        self.__cnt = 0
+        self._obj = copy.deepcopy(obj)
+        self._current_item = self._obj.first_node()
+        self._cnt = 0
 
     def __iter__(self):
         """
@@ -86,10 +86,10 @@ class FrontLinkedListIterator(object):
         :returns: the data encapuslated into the next LinkedListNode item
 
         """
-        if not self.__current_item:
+        if not self._current_item:
             raise StopIteration
-        result = self.__current_item
-        self.__current_item = result.next()
+        result = self._current_item
+        self._current_item = result.next()
         return result
 
 
@@ -110,12 +110,12 @@ class FrontLinkedList(linkedlist.LinkedList):
 
     """
     def __init__(self):
-        self.__first_node = LinkedListNode(None, None)
-        self.__last_node = self.__first_node
-        self.__size = 0
+        self._first_node = LinkedListNode(None, None)
+        self._last_node = self._first_node
+        self._size = 0
 
     def first_node(self):
-        return self.__first_node
+        return self._first_node
 
     def size(self):
         """
@@ -124,7 +124,7 @@ class FrontLinkedList(linkedlist.LinkedList):
         :returns: an int
 
         """
-        return self.__size
+        return self._size
 
     def __iter__(self):
         """
@@ -145,14 +145,14 @@ class FrontLinkedList(linkedlist.LinkedList):
 
         """
         node = LinkedListNode(data, None)
-        if self.__size == 0:
-            self.__first_node = node
-            self.__last_node = node
+        if self._size == 0:
+            self._first_node = node
+            self._last_node = node
         else:
-            second_node = self.__first_node
-            self.__first_node = node
-            self.__first_node.update_next(second_node)
-        self.__size += 1
+            second_node = self._first_node
+            self._first_node = node
+            self._first_node.update_next(second_node)
+        self._size += 1
 
     def remove(self, data):
         """
@@ -164,23 +164,23 @@ class FrontLinkedList(linkedlist.LinkedList):
         :type data: object
 
         """
-        current_node = self.__first_node
+        current_node = self._first_node
         deleted = False
 
-        if self.__size == 0:
+        if self._size == 0:
             return
 
         if data == current_node.data():
             # case 1: the list has only one item
             if not current_node.next():
-                self.__first_node = LinkedListNode(None, None)
-                self.__last_node = self.__first_node
-                self.__size = 0
+                self._first_node = LinkedListNode(None, None)
+                self._last_node = self._first_node
+                self._size = 0
                 return
             # case 2: the list has more than one item
             current_node = current_node.next()
-            self.__first_node = current_node
-            self.__size -= 1
+            self._first_node = current_node
+            self._size -= 1
             return
 
         while 1:
@@ -198,7 +198,7 @@ class FrontLinkedList(linkedlist.LinkedList):
                     break
             current_node = current_node.next()
         if deleted:
-            self.__size -= 1
+            self._size -= 1
 
     def contains(self, data):
         """
@@ -224,7 +224,7 @@ class FrontLinkedList(linkedlist.LinkedList):
         :returns: the int index or -1 if the node is not in the list
 
         """
-        current_node = self.__first_node
+        current_node = self._first_node
         pos = 0
         while current_node:
             if current_node.data() == data:
@@ -241,14 +241,14 @@ class FrontLinkedList(linkedlist.LinkedList):
         """
         popped = False
         result = None
-        current_node = self.__first_node
+        current_node = self._first_node
         while not popped:
             next_node = current_node.next()
             next_next_node = next_node.next()
             if not next_next_node:
-                self.__last_node = current_node
-                self.__last_node.update_next(None)
-                self.__size -= 1
+                self._last_node = current_node
+                self._last_node.update_next(None)
+                self._size -= 1
                 result = next_node.data()
                 popped = True
             current_node = next_node
@@ -256,5 +256,5 @@ class FrontLinkedList(linkedlist.LinkedList):
 
     def __repr__(self):
         return "<%s.%s - size=%s, first node=%s, last node=%s>" % \
-            (__name__, self.__class__.__name__, str(self.__size),
-             repr(self.__first_node), repr(self.__last_node))
+            (__name__, self.__class__.__name__, str(self._size),
+             repr(self._first_node), repr(self._last_node))

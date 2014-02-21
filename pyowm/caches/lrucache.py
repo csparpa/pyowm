@@ -46,17 +46,17 @@ class LRUCache(owmcache.OWMCache):
 
     """
 
-    __CACHE_MAX_SIZE = 20  # Maximum number of elements that fit the cache
-    __ITEM_LIFETIME_MILLISECONDS = 1000 * 60 * 10  # Ten minutes
+    _CACHE_MAX_SIZE = 20  # Maximum number of elements that fit the cache
+    _ITEM_LIFETIME_MILLISECONDS = 1000 * 60 * 10  # Ten minutes
 
-    def __init__(self, cache_max_size=__CACHE_MAX_SIZE,
-                 item_lifetime_millis=__ITEM_LIFETIME_MILLISECONDS):
-        assert cache_max_size > 0 and item_lifetime_millis > 0, "wrong cache" \
-            " init parameters"
-        self.__table = {}
-        self.__usage_recency = frontlinkedlist.FrontLinkedList()
-        self.__max_size = cache_max_size
-        self.__item_lifetime = item_lifetime_millis
+    def __init__(self, cache_max_size=_CACHE_MAX_SIZE,
+                 item_lifetime_millis=_ITEM_LIFETIME_MILLISECONDS):
+        assert cache_max_size > 0 and item_lifetime_millis > 0, \
+            "wrong cache init parameters"
+        self._table = {}
+        self._usage_recency = frontlinkedlist.FrontLinkedList()
+        self._max_size = cache_max_size
+        self._item_lifetime = item_lifetime_millis
 
     def get(self, request_url):
         """
@@ -71,9 +71,9 @@ class LRUCache(owmcache.OWMCache):
 
         """
         try:
-            cached_item = self.__table[request_url]
+            cached_item = self._table[request_url]
             cur_time = converter.to_UNIXtime(datetime.now())
-            if cur_time - cached_item['insertion_time'] > self.__item_lifetime:
+            if cur_time - cached_item['insertion_time'] > self._item_lifetime:
                 # Cache item has expired
                 self._clean_item(request_url)
                 return None
@@ -98,16 +98,16 @@ class LRUCache(owmcache.OWMCache):
         :type response_json: str
 
         """
-        if (self.size() == self.__max_size):
-            popped = self.__usage_recency.pop()
-            del self.__table[popped]
+        if self.size() == self._max_size:
+            popped = self._usage_recency.pop()
+            del self._table[popped]
         current_time = converter.to_UNIXtime(datetime.now())
-        if request_url not in self.__table:
-            self.__table[request_url] = {'data': response_json,
-                                         'insertion_time': current_time}
-            self.__usage_recency.add(request_url)
+        if request_url not in self._table:
+            self._table[request_url] = {'data': response_json,
+                                        'insertion_time': current_time}
+            self._usage_recency.add(request_url)
         else:
-            self.__table[request_url]['insertion_time'] = current_time
+            self._table[request_url]['insertion_time'] = current_time
             self._promote(request_url)
 
     def _promote(self, request_url):
@@ -115,8 +115,8 @@ class LRUCache(owmcache.OWMCache):
         Moves the cache item specified by request_url to the front of the
         'usage_recency' list
         """
-        self.__usage_recency.remove(request_url)
-        self.__usage_recency.add(request_url)
+        self._usage_recency.remove(request_url)
+        self._usage_recency.add(request_url)
 
     def _clean_item(self, request_url):
         """
@@ -126,17 +126,17 @@ class LRUCache(owmcache.OWMCache):
         :type request_url: str
 
         """
-        del self.__table[request_url]
-        self.__usage_recency.remove(request_url)
+        del self._table[request_url]
+        self._usage_recency.remove(request_url)
 
     def clean(self):
         """
         Empties the cache
 
         """
-        self.__table.clear()
-        for item in self.__usage_recency:
-            self.__usage_recency.remove(item)
+        self._table.clear()
+        for item in self._usage_recency:
+            self._usage_recency.remove(item)
 
     def size(self):
         """
@@ -145,9 +145,9 @@ class LRUCache(owmcache.OWMCache):
         :returns: an int
 
         """
-        return len(self.__table)
+        return len(self._table)
 
     def __repr__(self):
         return "<%s.%s - size=%s, max size=%s, item lifetime=%s>" % \
             (__name__, self.__class__.__name__, str(self.size()),
-             self.__max_size, self.__item_lifetime)
+             self._max_size, self._item_lifetime)

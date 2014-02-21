@@ -19,8 +19,8 @@ class ForecastIterator(object):
 
     """
     def __init__(self, obj):
-        self.__obj = obj
-        self.__cnt = 0
+        self._obj = obj
+        self._cnt = 0
 
     def __iter__(self):
         """
@@ -38,8 +38,8 @@ class ForecastIterator(object):
 
         """
         try:
-            result = self.__obj.get(self.__cnt)
-            self.__cnt += 1
+            result = self._obj.get(self._cnt)
+            self._cnt += 1
             return result
         except IndexError:
             raise StopIteration

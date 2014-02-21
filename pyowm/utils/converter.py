@@ -7,9 +7,9 @@ Module containing utility functions for time and temperature units conversion
 from datetime import datetime
 from calendar import timegm
 
-__KELVIN_OFFSET__ = 273.15
-__FAHRENHEIT_OFFSET = 32.0
-__FAHRENHEIT_DEGREE_SCALE = 1.8
+KELVIN_OFFSET = 273.15
+FAHRENHEIT_OFFSET = 32.0
+FAHRENHEIT_DEGREE_SCALE = 1.8
 
 
 def UNIXtime_to_ISO8601(unixtime):
@@ -102,7 +102,7 @@ def kelvin_to_celsius(kelvintemp):
     if kelvintemp < 0:
         raise ValueError(__name__ + \
                          ": negative temperature values not allowed")
-    celsiustemp = kelvintemp - __KELVIN_OFFSET__
+    celsiustemp = kelvintemp - KELVIN_OFFSET
     return float("{0:.2f}".format(celsiustemp))
 
 
@@ -119,6 +119,6 @@ def kelvin_to_fahrenheit(kelvintemp):
     if kelvintemp < 0:
         raise ValueError(__name__ + \
                          ": negative temperature values not allowed")
-    fahrenheittemp = (kelvintemp - __KELVIN_OFFSET__) * \
-        __FAHRENHEIT_DEGREE_SCALE + __FAHRENHEIT_OFFSET
+    fahrenheittemp = (kelvintemp - KELVIN_OFFSET) * \
+        FAHRENHEIT_DEGREE_SCALE + FAHRENHEIT_OFFSET
     return float("{0:.2f}".format(fahrenheittemp))
