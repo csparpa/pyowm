@@ -1,3 +1,8 @@
+Filling in of main setup.py file
+---------------------------------
+[guide](https://pythonhosted.org/an_example_pypi_project/setuptools.html)
+[quick reference](https://pypi.python.org/pypi?%3Aaction=list_classifiers)
+
 Build .egg archive
 ------------------
 Enter the main project directory and issue:
