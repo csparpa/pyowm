@@ -356,9 +356,10 @@ class OWM25(owm.OWM):
         """
         Queries the OWM web API for historic weather data measurements for the
         specified meteostation (eg: 2865), sampled once a hour.
-        A *StationHistory* object instance is returned, encapsulating the
-        measurements: the total number of data points can be limited using the
-        appropriate parameter
+        A *Historian* object instance is returned, encapsulating a
+        *StationHistory* objects which contains the measurements. The total
+        number of retrieved data points can be limited using the appropriate
+        parameter
 
         :param station_ID: the numeric ID of the meteostation
         :type station_ID: int
@@ -366,7 +367,7 @@ class OWM25(owm.OWM):
             contain (default is ``None``, which stands for any number of data
             points)
         :type limit: int or ``None``
-        :returns: a *StationHistory* instance or ``None`` if data is not
+        :returns: a *Historian* instance or ``None`` if data is not
             available for the specified meteostation
         :raises: *ParseResponseException* when OWM web API responses' data
             cannot be parsed, *APICallException* when OWM web API can not be
@@ -389,9 +390,10 @@ class OWM25(owm.OWM):
         """
         Queries the OWM web API for historic weather data measurements for the
         specified meteostation (eg: 2865), sampled once a day.
-        A *StationHistory* object instance is returned, encapsulating the
-        measurements: the total number of data points can be limited using the
-        appropriate parameter
+        A *Historian* object instance is returned, encapsulating a
+        *StationHistory* objects which contains the measurements. The total
+        number of retrieved data points can be limited using the appropriate
+        parameter
 
         :param station_ID: the numeric ID of the meteostation
         :type station_ID: int
@@ -399,7 +401,7 @@ class OWM25(owm.OWM):
             contain (default is ``None``, which stands for any number of data
             points)
         :type limit: int or ``None``
-        :returns: a *StationHistory* instance or ``None`` if data is not
+        :returns: a *Historian* instance or ``None`` if data is not
             available for the specified meteostation
         :raises: *ParseResponseException* when OWM web API responses' data
             cannot be parsed, *APICallException* when OWM web API can not be
