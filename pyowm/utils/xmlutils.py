@@ -11,8 +11,9 @@ def create_DOM_node_from_dict(d, name, parent_node):
     """
     Dumps dict data to an ``xml.etree.ElementTree.SubElement`` DOM subtree
     object and attaches it to the specified DOM parent node. The created
-    subtree object is named after the specified name. No DOM node is generated
-    for eventual ``None`` values found inside the dict
+    subtree object is named after the specified name. If the supplied dict is
+    ``None`` no DOM node is created for it as well as no DOM subnodes are
+    generated  for eventual ``None`` values found inside the dict
 
     :param d: the input dictionary
     :type d: dict
@@ -24,12 +25,13 @@ def create_DOM_node_from_dict(d, name, parent_node):
     :returns: a ``xml.etree.ElementTree.SubElementTree`` object
 
     """
-    root_dict_node = ET.SubElement(parent_node, name)
-    for key, value in d.items():
-        if value is not None:
-            node = ET.SubElement(root_dict_node, key)
-            node.text = str(value)
-    return root_dict_node
+    if d is not None:
+        root_dict_node = ET.SubElement(parent_node, name)
+        for key, value in d.items():
+            if value is not None:
+                node = ET.SubElement(root_dict_node, key)
+                node.text = str(value)
+        return root_dict_node
 
 
 def DOM_node_to_XML(node):

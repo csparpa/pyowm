@@ -22,6 +22,17 @@ class TestXMLUtils(unittest.TestCase):
                                                 encoding='utf8',
                                                 method='html'))
 
+    def test_create_DOM_node_from_dict_when_input_is_None(self):
+        d = None
+        name = "test"
+        test_root_node = ET.Element("root")
+        expected = "<root></root>"
+        xmlutils.create_DOM_node_from_dict(d, name, test_root_node)
+        result_DOM_tree = ET.ElementTree(test_root_node)
+        self.assertEquals(expected, ET.tostring(result_DOM_tree.getroot(),
+                                                encoding='utf8',
+                                                method='html'))
+
     def test_DOM_node_to_XML(self):
         expected = "<root><x><a>2</a><b>3</b></x></root>"
         test_root_node = ET.Element("root")
