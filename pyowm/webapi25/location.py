@@ -5,6 +5,7 @@ Module containing location-related classes and data structures.
 """
 
 import json
+import xml.etree.ElementTree as ET
 
 
 class Location(object):
@@ -95,19 +96,50 @@ class Location(object):
 
         """
         return json.dumps({'name': self._name,
-                         'coordinates': {'lon': self._lon, 'lat': self._lat},
-                         'ID': self._ID, 'country': self._country})
+                         'coordinates': {'lon': self._lon,
+                                         'lat': self._lat
+                                        },
+                         'ID': self._ID,
+                         'country': self._country})
 
-    def to_XML(self):
-        """Dumps object fields into a XML formatted string
+    def to_XML(self, preamble=True):
+        """
+        Dumps object fields to an XML-formatted string. The 'preamble' switch
+        enables printing of a leading standard XML line containing XML version
+        and encoding.
 
-        :returns:  the XML string
+        :param preamble: if ``True`` (default) prints a standard XML preamble
+        :type preamble: bool
+        :returns: an XML-formatted string
 
         """
-        return '<location><name>%s</name><coordinates><lon>%s</lon>' \
-                '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country>' \
-                '</location>' % (self._name, self._lon, self._lat,
-                                 self._ID, self._country)
+        root_node = self._to_DOM()
+        result = ET.tostring(root_node, encoding='utf8', method='xml')
+        if not preamble:
+            result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
+        return unicode(result)
+
+    def _to_DOM(self):
+        """
+        Dumps object data to a fully traversable DOM representation of the
+        object.
+
+        :returns: a ``xml.etree.Element`` object
+
+        """
+        root_node = ET.Element("location")
+        name_node = ET.SubElement(root_node, "name")
+        name_node.text = self._name
+        coords_node = ET.SubElement(root_node, "coordinates")
+        lon_node = ET.SubElement(coords_node, "lon")
+        lon_node.text = str(self._lon)
+        lat_node = ET.SubElement(coords_node, "lat")
+        lat_node.text = str(self._lat)
+        id_node = ET.SubElement(root_node, "ID")
+        id_node.text = str(self._ID)
+        country_node = ET.SubElement(root_node, "country")
+        country_node.text = self._country
+        return root_node
 
     def __repr__(self):
         return "<%s.%s - id=%s, name=%s, lon=%s, lat=%s>" % (__name__, \

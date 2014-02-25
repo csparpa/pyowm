@@ -6,6 +6,7 @@ data
 """
 
 import json
+import xml.etree.ElementTree as ET
 from pyowm.utils import converter, xmlutils
 
 
@@ -117,27 +118,49 @@ class StationHistory(object):
         :returns: the JSON string
 
         """
-        d = {"station_ID": self._station_ID,
-             "interval": self._interval,
-             "reception_time": self._reception_time,
-             "measurements": self._measurements
-             }
-        return json.dumps(d)
+        return json.dumps({"station_ID": self._station_ID,
+                            "interval": self._interval,
+                            "reception_time": self._reception_time,
+                            "measurements": self._measurements
+                           })
 
-    def to_XML(self):
-        """Dumps object fields into a XML formatted string
+    def to_XML(self, preamble=True):
+        """
+        Dumps object fields to an XML-formatted string. The 'preamble' switch
+        enables printing of a leading standard XML line containing XML version
+        and encoding.
 
-        :returns: the XML string
+        :param preamble: if ``True`` (default) prints a standard XML preamble
+        :type preamble: bool
+        :returns: an XML-formatted string
 
         """
-        return '<station_history><station_id>%s</station_id>' \
-            '<interval>%s</interval><reception_time>%s</reception_time>' \
-            '<measurements>%s</measurements></station_history>' % \
-            (self._station_ID, self._interval, self._reception_time,
-             "".join([xmlutils.make_tag(str(item),
-                            xmlutils.dict_to_XML(self._measurements[item])) \
-                      for item in self._measurements])
-                    )
+        root_node = self._to_DOM()
+        result = ET.tostring(root_node, encoding='utf8', method='xml')
+        if not preamble:
+            result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
+        return unicode(result)
+
+    def _to_DOM(self):
+        """
+        Dumps object data to a fully traversable DOM representation of the
+        object.
+
+        :returns: a ``xml.etree.Element`` object
+
+        """
+        root_node = ET.Element("station_history")
+        station_id_node = ET.SubElement(root_node, "station_id")
+        station_id_node.text = str(self._station_ID)
+        interval_node = ET.SubElement(root_node, "interval")
+        interval_node.text = self._interval
+        reception_time_node = ET.SubElement(root_node, "reception_time")
+        reception_time_node.text = str(self._reception_time)
+        measurements_node = ET.SubElement(root_node, "measurements")
+        for m in self._measurements:
+            xmlutils.create_DOM_node_from_dict(self._measurements[m], str(m),
+                                               measurements_node)
+        return root_node
 
     def __len__(self):
         return len(self._measurements)

@@ -5,6 +5,7 @@ Module containing weather forecast classes and data structures.
 """
 
 import json
+import xml.etree.ElementTree as ET
 from pyowm.utils import converter
 
 
@@ -165,25 +166,48 @@ class Forecast(object):
         :returns: the JSON string
 
         """
-        d = {"interval": self._interval,
-             "reception_time": self._reception_time,
-             "Location": json.loads(self._location.to_JSON()),
-             "weathers": json.loads("[" + \
+        return json.dumps({"interval": self._interval,
+                           "reception_time": self._reception_time,
+                           "Location": json.loads(self._location.to_JSON()),
+                           "weathers": json.loads("[" + \
                                 ",".join([w.to_JSON() for w in self]) + "]")
-             }
-        return json.dumps(d)
+                           })
 
-    def to_XML(self):
-        """Dumps object fields into a XML formatted string
+    def to_XML(self, preamble=True):
+        """
+        Dumps object fields to an XML-formatted string. The 'preamble' switch
+        enables printing of a leading standard XML line containing XML version
+        and encoding.
 
-        :returns: the XML string
+        :param preamble: if ``True`` (default) prints a standard XML preamble
+        :type preamble: bool
+        :returns: an XML-formatted string
 
         """
-        return '<forecast><interval>%s</interval>' \
-            '<reception_time>%s</reception_time>' \
-            '%s<weathers>%s</weathers></forecast>' % \
-            (self._interval, self._reception_time, self._location.to_XML(),
-             "".join([item.to_XML() for item in self]))
+        root_node = self._to_DOM()
+        result = ET.tostring(root_node, encoding='utf8', method='xml')
+        if not preamble:
+            result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
+        return unicode(result)
+
+    def _to_DOM(self):
+        """
+        Dumps object data to a fully traversable DOM representation of the
+        object.
+
+        :returns: a ``xml.etree.Element`` object
+
+        """
+        root_node = ET.Element("forecast")
+        interval_node = ET.SubElement(root_node, "interval")
+        interval_node.text = self._interval
+        reception_time_node = ET.SubElement(root_node, "reception_time")
+        reception_time_node.text = str(self._reception_time)
+        root_node.append(self._location._to_DOM())
+        weathers_node = ET.SubElement(root_node, "weathers")
+        for weather in self:
+            weathers_node.append(weather._to_DOM())
+        return root_node
 
     def __len__(self):
         """Redefine __len__ hook"""

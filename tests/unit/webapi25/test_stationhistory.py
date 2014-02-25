@@ -65,7 +65,8 @@ class TestStationHistory(unittest.TestCase):
         self.assertEqual(expected_output, self.__test_instance.to_JSON())
 
     def test_XML_dump(self):
-        expected_output = '<station_history><station_id>2865</station_id><interval>' \
+        expected_output = "<?xml version='1.0' encoding='utf8'?>\n" \
+            '<station_history><station_id>2865</station_id><interval>' \
             'tick</interval><reception_time>1378684800</reception_time>' \
             '<measurements><1362934043><wind>4.7</wind><pressure>1010.09</pressure>' \
             '<temperature>266.85</temperature><humidity>27.7</humidity></1362934043>' \

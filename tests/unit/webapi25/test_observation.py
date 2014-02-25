@@ -56,10 +56,11 @@ class TestObservation(unittest.TestCase):
         self.assertEqual(self.__test_instance.to_JSON(), expected_output)
 
     def test_XML_dump(self):
-        expectedOutput = '<observation><reception_time>%s</reception_time>%s%s' \
+        expectedOutput = "<?xml version='1.0' encoding='utf8'?>\n" \
+            '<observation><reception_time>%s</reception_time>%s%s' \
             '</observation>' % (self.__test_reception_time,
-                                self.__test_location.to_XML(),
-                                self.__test_weather.to_XML())
+                                self.__test_location.to_XML(False),
+                                self.__test_weather.to_XML(False))
         self.assertEqual(self.__test_instance.to_XML(), expectedOutput)
 
 

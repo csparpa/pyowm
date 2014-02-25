@@ -5,6 +5,7 @@ Weather observation classes and data structures.
 """
 
 import json
+import xml.etree.ElementTree as ET
 from pyowm.utils import converter
 
 
@@ -78,22 +79,42 @@ class Observation(object):
         :returns:  the JSON string
 
         """
-        d = {"reception_time": self._reception_time,
-              "Location": json.loads(self._location.to_JSON()),
-              "Weather": json.loads(self._weather.to_JSON())
-            }
-        return json.dumps(d)
+        return json.dumps({"reception_time": self._reception_time,
+                           "Location": json.loads(self._location.to_JSON()),
+                           "Weather": json.loads(self._weather.to_JSON())
+                           })
 
-    def to_XML(self):
-        """Dumps object fields into a XML formatted string
+    def to_XML(self, preamble=True):
+        """
+        Dumps object fields to an XML-formatted string. The 'preamble' switch
+        enables printing of a leading standard XML line containing XML version
+        and encoding.
 
-        :returns:  the XML string
+        :param preamble: if ``True`` (default) prints a standard XML preamble
+        :type preamble: bool
+        :returns: an XML-formatted string
 
         """
-        return '<observation><reception_time>%s</reception_time>%s' \
-            '%s</observation>' % (self._reception_time,
-                                  self._location.to_XML(),
-                                  self._weather.to_XML())
+        root_node = self._to_DOM()
+        result = ET.tostring(root_node, encoding='utf8', method='xml')
+        if not preamble:
+            result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
+        return unicode(result)
+
+    def _to_DOM(self):
+        """
+        Dumps object data to a fully traversable DOM representation of the
+        object.
+
+        :returns: a ``xml.etree.Element`` object
+
+        """
+        root_node = ET.Element("observation")
+        reception_time_node = ET.SubElement(root_node, "reception_time")
+        reception_time_node.text = str(self._reception_time)
+        root_node.append(self._location._to_DOM())
+        root_node.append(self._weather._to_DOM())
+        return root_node
 
     def __repr__(self):
         return "<%s.%s - reception time=%s>" % (__name__, \

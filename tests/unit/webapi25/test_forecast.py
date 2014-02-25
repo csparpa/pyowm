@@ -110,7 +110,8 @@ class TestForecast(unittest.TestCase):
         """
         Test correct object data dump to an XML string
         """
-        expectedOutput = '<forecast><interval>daily</interval><reception_time>' \
+        expectedOutput = "<?xml version='1.0' encoding='utf8'?>\n" \
+            '<forecast><interval>daily</interval><reception_time>' \
             '1234567</reception_time><location><name>test</name><coordinates>' \
             '<lon>12.3</lon><lat>43.7</lat></coordinates><ID>987</ID><country>IT</country></location>' \
             '<weathers><weather><status>Clouds</status><weather_code>804</weather_code>' \

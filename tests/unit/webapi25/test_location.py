@@ -15,7 +15,7 @@ class TestLocation(unittest.TestCase):
     __test_lat = 43.7
     __test_ID = 1234
     __test_country = u'UK'
-    __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID, 
+    __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID,
                                __test_country)
 
     def test_init_fails_when_coordinates_are_out_of_bounds(self):
@@ -30,9 +30,9 @@ class TestLocation(unittest.TestCase):
     def test_from_dictionary(self):
         dict1 = {"coord": {"lon": -0.12574, "lat": 51.50853}, "id": 2643743,
                  "name": u"London", "cnt": 9}
-        dict2 = {"city": {"coord": {"lat": 51.50853, "lon": -0.125739 },
+        dict2 = {"city": {"coord": {"lat": 51.50853, "lon": -0.125739},
                  "country": "GB", "id": 2643743, "name": u"London",
-                 "population": 1000000 }
+                 "population": 1000000}
                 }
         result1 = location_from_dictionary(dict1)
         result2 = location_from_dictionary(dict2)
@@ -46,7 +46,7 @@ class TestLocation(unittest.TestCase):
         self.assertNotIn(None, result2.__dict__.values())
 
     def test_getters_return_expected_data(self):
-        instance = Location(self.__test_name, self.__test_lon, self.__test_lat, 
+        instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
                             self.__test_ID, self.__test_country)
         self.assertEqual(instance.get_name(), self.__test_name)
         self.assertEqual(instance.get_lon(), self.__test_lon)
@@ -55,7 +55,8 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(instance.get_country(), self.__test_country)
 
     def test_XML_dump(self):
-        expectedOutput = '<location><name>%s</name><coordinates><lon>%s</lon>' \
+        expectedOutput = "<?xml version='1.0' encoding='utf8'?>\n" \
+            '<location><name>%s</name><coordinates><lon>%s</lon>' \
             '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country></location>' % (
                                             self.__test_name, self.__test_lon,
                                             self.__test_lat, self.__test_ID,

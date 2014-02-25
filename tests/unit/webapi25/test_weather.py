@@ -206,22 +206,20 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(self.__test_instance.to_JSON(), expectedOutput)
 
     def test_XML_dump(self):
-        expectedOutput = '<weather><status>%s</status><weather_code>%s' \
-            '</weather_code><rain>%s</rain><snow>%s</snow><pressure>%s</pressure>' \
-            '<sunrise_time>%s</sunrise_time><weather_icon_name>%s</weather_icon_name>' \
-            '<clouds>%s</clouds><temperature>%s</temperature><detailed_status>%s' \
-            '</detailed_status><reference_time>%s</reference_time><sunset_time>%s' \
-            '</sunset_time><humidity>%s</humidity><wind>%s</wind></weather>' % (
-                self.__test_status, self.__test_weather_code,
-                xmlutils.dict_to_XML(self.__test_rain),
-                xmlutils.dict_to_XML(self.__test_snow),
-                xmlutils.dict_to_XML(self.__test_pressure),
-                self.__test_sunrise_time, self.__test_weather_icon_name,
-                self.__test_clouds, xmlutils.dict_to_XML(self.__test_temperature),
-                self.__test_detailed_status, self.__test_reference_time,
-                self.__test_sunset_time, self.__test_humidity,
-                xmlutils.dict_to_XML(self.__test_wind))
-
+        expectedOutput = "<?xml version='1.0' encoding='utf8'?>\n<weather>" \
+            "<status>Clouds</status><weather_code>804</weather_code>" \
+            "<rain><all>20</all></rain><snow><all>0</all></snow>" \
+            "<pressure><press>1030.119</press>" \
+            "<sea_level>1038.589</sea_level></pressure>" \
+            "<sunrise_time>1378449600</sunrise_time>" \
+            "<weather_icon_name>04d</weather_icon_name><clouds>67</clouds>" \
+            "<temperature><temp_kf>-1.899</temp_kf>" \
+            "<temp_min>294.199</temp_min><temp>294.199</temp>" \
+            "<temp_max>296.098</temp_max></temperature>" \
+            "<detailed_status>Overcast clouds</detailed_status>" \
+            "<reference_time>1378459200</reference_time>" \
+            "<sunset_time>1378496400</sunset_time><humidity>57</humidity>" \
+            "<wind><speed>1.1</speed><deg>252.002</deg></wind></weather>"
         self.assertEqual(self.__test_instance.to_XML(), expectedOutput)
 
 if __name__ == "__main__":
