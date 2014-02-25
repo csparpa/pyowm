@@ -158,7 +158,9 @@ class StationHistory(object):
         reception_time_node.text = str(self._reception_time)
         measurements_node = ET.SubElement(root_node, "measurements")
         for m in self._measurements:
-            xmlutils.create_DOM_node_from_dict(self._measurements[m], str(m),
+            d = self._measurements[m].copy()
+            d['reference_time'] = m
+            xmlutils.create_DOM_node_from_dict(d, "measurement",
                                                measurements_node)
         return root_node
 

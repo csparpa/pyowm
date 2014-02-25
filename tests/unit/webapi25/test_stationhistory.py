@@ -66,11 +66,13 @@ class TestStationHistory(unittest.TestCase):
 
     def test_XML_dump(self):
         expected_output = "<?xml version='1.0' encoding='utf8'?>\n" \
-            '<station_history><station_id>2865</station_id><interval>' \
-            'tick</interval><reception_time>1378684800</reception_time>' \
-            '<measurements><1362934043><wind>4.7</wind><pressure>1010.09</pressure>' \
-            '<temperature>266.85</temperature><humidity>27.7</humidity></1362934043>' \
-            '<1362933983><wind>4.7</wind><pressure>1010.02</pressure><temperature>' \
-            '266.25</temperature><humidity>27.3</humidity></1362933983>' \
+            '<station_history><station_id>2865</station_id>' \
+            '<interval>tick</interval><reception_time>1378684800</reception_time>' \
+            '<measurements><measurement><temperature>266.85</temperature>' \
+            '<reference_time>1362934043</reference_time><humidity>27.7</humidity>' \
+            '<pressure>1010.09</pressure><wind>4.7</wind></measurement>' \
+            '<measurement><temperature>266.25</temperature>' \
+            '<reference_time>1362933983</reference_time><humidity>27.3</humidity>' \
+            '<pressure>1010.02</pressure><wind>4.7</wind></measurement>' \
             '</measurements></station_history>'
         self.assertEqual(expected_output, self.__test_instance.to_XML())
