@@ -6,7 +6,7 @@ Module containing weather data classes and data structures.
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.utils import converter, xmlutils
+from pyowm.utils import converter, temputils, xmlutils
 
 
 class Weather(object):
@@ -191,11 +191,11 @@ class Weather(object):
         if unit == 'kelvin':
             return self._temperature
         elif unit == 'celsius':
-            helper = lambda x: converter.kelvin_to_celsius(x) if x > 0.0 else x
+            helper = lambda x: temputils.kelvin_to_celsius(x) if x > 0.0 else x
             return dict((item, helper(self._temperature[item]))
                 for item in self._temperature)
         elif unit == 'fahrenheit':
-            helper = lambda x: converter.kelvin_to_fahrenheit(x) \
+            helper = lambda x: temputils.kelvin_to_fahrenheit(x) \
                 if x > 0.0 else x
             return dict((item, helper(self._temperature[item]))
                 for item in self._temperature)

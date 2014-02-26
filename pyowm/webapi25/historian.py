@@ -4,7 +4,7 @@
 Module containing weather history abstraction classes and data structures.
 """
 
-from pyowm.utils import converter
+from pyowm.utils import temputils
 
 
 class Historian(object):
@@ -50,9 +50,9 @@ class Historian(object):
             if unit == 'kelvin':
                 temp = t
             if unit == 'celsius':
-                temp = converter.kelvin_to_celsius(t)
+                temp = temputils.kelvin_to_celsius(t)
             if unit == 'fahrenheit':
-                temp = converter.kelvin_to_fahrenheit(t)
+                temp = temputils.kelvin_to_fahrenheit(t)
             result.append((tstamp, temp))
         return result
 

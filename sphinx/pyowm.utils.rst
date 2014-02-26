@@ -12,6 +12,14 @@ pyowm.utils.converter module
     :undoc-members:
     :show-inheritance:
 
+pyowm.utils.temputils module
+----------------------------
+
+.. automodule:: pyowm.utils.temputils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.utils.timeutils module
 -------------------------------
 
