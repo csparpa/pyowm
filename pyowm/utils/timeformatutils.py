@@ -28,7 +28,38 @@ def timeformat(timeobject, timeformat):
         return to_UNIXtime(timeobject)
     elif timeformat == "iso":
         return to_ISO8601(timeobject)
-    raise ValueError("Invalid value for timeformat parameter")
+    elif timeformat == "date":
+        return to_date(timeobject)
+    else:
+        raise ValueError("Invalid value for timeformat parameter")
+
+
+def to_date(timeobject):
+    """
+    Returns the ``datetime.datetime`` object corresponding to the time value
+    conveyed by the specified object, which can be either a UNIXtime, a
+    ``datetime.datetime`` object or an ISO8601-formatted string in the format
+    `YYYY-MM-DD HH:MM:SS+00``.
+
+    :param timeobject: the object conveying the time value
+    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+        string
+    :returns: a ``datetime.datetime`` object
+    :raises: *TypeError* when bad argument types are provided, *ValueError*
+        when negative UNIXtimes are provided
+    """
+    if isinstance(timeobject, (long, int)):
+        if timeobject < 0:
+            raise ValueError("The time value is a negative number")
+        return datetime.utcfromtimestamp(timeobject)
+    elif isinstance(timeobject, datetime):
+        return timeobject
+    elif isinstance(timeobject, str):
+        return datetime.strptime(timeobject, '%Y-%m-%d %H:%M:%S+00')
+    else:
+        raise TypeError('The time value must be espressed either by a long ' \
+                         'UNIX time, a datetime.datetime object or an ' \
+                         'ISO8601-formatted string')
 
 
 def to_ISO8601(timeobject):
@@ -41,7 +72,8 @@ def to_ISO8601(timeobject):
     :param timeobject: the object conveying the time value
     :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
         string
-    :returns: a long UNIXtime
+    :returns: an ISO8601-formatted string with pattern
+        `YYYY-MM-DD HH:MM:SS+00``
     :raises: *TypeError* when bad argument types are provided, *ValueError*
         when negative UNIXtimes are provided
     """
@@ -118,12 +150,3 @@ def _datetime_to_UNIXtime(date):
     :raises: *TypeError* when bad argument types are provided
     """
     return timegm(date.timetuple())
-
-
-def UNIX_now():
-    """
-    Gives the current UNIXtime
-
-    :returns: a long UNIXtime
-    """
-    return to_UNIXtime(datetime.now())
