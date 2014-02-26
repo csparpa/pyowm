@@ -4,7 +4,7 @@
 Module containing weather forecast abstraction classes and data structures.
 """
 
-from pyowm.utils import converter
+from pyowm.utils import timeformatutils
 from pyowm.webapi25 import weatherutils
 from pyowm.webapi25.configuration25 import (
     CLOUDS_KEYWORDS, FOG_KEYWORDS, RAIN_KEYWORDS, SNOW_KEYWORDS, SUN_KEYWORDS)
@@ -53,7 +53,7 @@ class Forecaster(object):
         if timeformat == 'unix':
             return start_coverage
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(start_coverage)
+            return timeformatutils.UNIXtime_to_ISO8601(start_coverage)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -75,7 +75,7 @@ class Forecaster(object):
         if timeformat == 'unix':
             return end_coverage
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(end_coverage)
+            return timeformatutils.UNIXtime_to_ISO8601(end_coverage)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -197,7 +197,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = converter.to_UNIXtime(timeobject)
+        time = timeformatutils.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(RAIN_KEYWORDS, weather)
@@ -215,7 +215,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = converter.to_UNIXtime(timeobject)
+        time = timeformatutils.to_UNIXtime(timeobject)
         closest_weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(SUN_KEYWORDS, closest_weather)
@@ -233,7 +233,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = converter.to_UNIXtime(timeobject)
+        time = timeformatutils.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(SNOW_KEYWORDS, weather)
@@ -251,7 +251,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = converter.to_UNIXtime(timeobject)
+        time = timeformatutils.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(CLOUDS_KEYWORDS, weather)
@@ -269,7 +269,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = converter.to_UNIXtime(timeobject)
+        time = timeformatutils.to_UNIXtime(timeobject)
         weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
         return weatherutils.status_matches_any(FOG_KEYWORDS, weather)
@@ -288,7 +288,7 @@ class Forecaster(object):
         """
         return weatherutils. \
             find_closest_weather(self._forecast.get_weathers(),
-                                 converter.to_UNIXtime(timeobject))
+                                 timeformatutils.to_UNIXtime(timeobject))
 
     def most_hot(self):
         """

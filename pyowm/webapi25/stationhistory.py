@@ -7,7 +7,7 @@ data
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.utils import converter, xmlutils
+from pyowm.utils import timeformatutils, xmlutils
 
 
 class StationHistory(object):
@@ -108,7 +108,7 @@ class StationHistory(object):
         if timeformat == 'unix':
             return self._reception_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self._reception_time)
+            return timeformatutils.UNIXtime_to_ISO8601(self._reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 

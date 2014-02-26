@@ -13,7 +13,7 @@ from pyowm.webapi25.configuration25 import (
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
 from pyowm.commons import owmhttpclient
-from pyowm.utils import converter
+from pyowm.utils import timeformatutils
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
 
@@ -301,8 +301,8 @@ class OWM25(owm.OWM):
         if start is None and end is None:
             pass
         elif start is not None and end is not None:
-            unix_start = converter.to_UNIXtime(start)
-            unix_end = converter.to_UNIXtime(end)
+            unix_start = timeformatutils.to_UNIXtime(start)
+            unix_end = timeformatutils.to_UNIXtime(end)
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must " \
                                  "precede the end time!")

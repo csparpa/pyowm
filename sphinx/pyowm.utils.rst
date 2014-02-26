@@ -20,8 +20,16 @@ pyowm.utils.temputils module
     :undoc-members:
     :show-inheritance:
 
+pyowm.utils.timeformatutils module
+----------------------------------
+
+.. automodule:: pyowm.utils.timeutils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.utils.timeutils module
--------------------------------
+----------------------------
 
 .. automodule:: pyowm.utils.timeutils
     :members:

@@ -6,7 +6,7 @@ Weather observation classes and data structures.
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.utils import converter
+from pyowm.utils import timeformatutils
 
 
 class Observation(object):
@@ -51,7 +51,7 @@ class Observation(object):
         if timeformat == 'unix':
             return self._reception_time
         elif timeformat == 'iso':
-            return converter.UNIXtime_to_ISO8601(self._reception_time)
+            return timeformatutils.UNIXtime_to_ISO8601(self._reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
