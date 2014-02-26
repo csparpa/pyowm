@@ -11,6 +11,18 @@ from pyowm.utils import timeformatutils
 
 class TestTimeFormatUtils(unittest.TestCase):
 
+    def test_timeformat(self):
+        unixtime = 1378459200
+        iso = "2013-09-06 09:20:00+00"
+        self.assertEqual(unixtime, timeformatutils.timeformat(unixtime, "unix"))
+        self.assertEqual(iso, timeformatutils.timeformat(unixtime, "iso"))
+        self.assertEqual(unixtime, timeformatutils.timeformat(iso, "unix"))
+        self.assertEqual(iso, timeformatutils.timeformat(iso, "iso"))
+
+    def test_timeformat_when_bad_timeformat_values(self):
+        self.assertRaises(ValueError,
+                          timeformatutils.timeformat, 1378459200, "xyz")
+
     def test_to_ISO8601(self):
         unixtime = 1378459200
         iso = "2013-09-06 09:20:00+00"
@@ -23,8 +35,6 @@ class TestTimeFormatUtils(unittest.TestCase):
         self.assertRaises(ValueError,
                           timeformatutils.to_ISO8601,
                           -1378459200)
-
-    #===
 
     def test_ISO8601_to_UNIXtime(self):
         iso = "2013-09-06 09:20:00+00"

@@ -50,12 +50,7 @@ class Forecaster(object):
         """
         start_coverage = min([item.get_reference_time() \
                               for item in self._forecast])
-        if timeformat == 'unix':
-            return start_coverage
-        elif timeformat == 'iso':
-            return timeformatutils.to_ISO8601(start_coverage)
-        else:
-            raise ValueError("Invalid value for parameter 'format'")
+        return timeformatutils.timeformat(start_coverage, timeformat)
 
     def when_ends(self, timeformat='unix'):
         """
@@ -72,12 +67,7 @@ class Forecaster(object):
         """
         end_coverage = max([item.get_reference_time() \
                             for item in self._forecast])
-        if timeformat == 'unix':
-            return end_coverage
-        elif timeformat == 'iso':
-            return timeformatutils.to_ISO8601(end_coverage)
-        else:
-            raise ValueError("Invalid value for parameter 'format'")
+        return timeformatutils.timeformat(end_coverage, timeformat)
 
     def will_have_rain(self):
         """

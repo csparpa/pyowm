@@ -105,12 +105,7 @@ class StationHistory(object):
         :raises: ValueError
 
         """
-        if timeformat == 'unix':
-            return self._reception_time
-        elif timeformat == 'iso':
-            return timeformatutils.to_ISO8601(self._reception_time)
-        else:
-            raise ValueError("Invalid value for parameter 'format'")
+        return timeformatutils.timeformat(self._reception_time, timeformat)
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string

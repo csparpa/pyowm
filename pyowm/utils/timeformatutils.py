@@ -8,6 +8,29 @@ from datetime import datetime
 from calendar import timegm
 
 
+def timeformat(timeobject, timeformat):
+    """
+    Formats the specified time object to the target format type.
+
+    :param timeobject: the object conveying the time value
+    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+        string with pattern ``YYYY-MM-DD HH:MM:SS+00``
+    :param timeformat: the target format for the time conversion. May be:
+        '*unix*' (outputs a long UNIXtime), '*date*' (outputs a
+        ``datetime.datetime`` object) or '*iso*' (outputs an ISO8601-formatted
+        string with pattern ``YYYY-MM-DD HH:MM:SS+00``)
+    :type timeformat: str
+    :returns: the formatted time
+    :raises: ValueError when unknown timeformat switches are provided or
+        when negative time values are provided
+    """
+    if timeformat == "unix":
+        return to_UNIXtime(timeobject)
+    elif timeformat == "iso":
+        return to_ISO8601(timeobject)
+    raise ValueError("Invalid value for timeformat parameter")
+
+
 def to_ISO8601(timeobject):
     """
     Returns the ISO8601-formatted string corresponding to the time value
@@ -95,3 +118,12 @@ def _datetime_to_UNIXtime(date):
     :raises: *TypeError* when bad argument types are provided
     """
     return timegm(date.timetuple())
+
+
+def UNIX_now():
+    """
+    Gives the current UNIXtime
+
+    :returns: a long UNIXtime
+    """
+    return to_UNIXtime(datetime.now())

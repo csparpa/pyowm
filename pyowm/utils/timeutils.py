@@ -3,7 +3,7 @@
 """
 Module containing utility functions for time values generation/management
 """
-
+import timeformatutils
 from datetime import datetime, date, timedelta
 
 
@@ -96,3 +96,19 @@ def last_three_hours(date=None):
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
         return date + timedelta(hours=-3)
+
+
+def now(timeformat='date'):
+    """
+    Returns the current time in the specified timeformat.
+
+    :param timeformat: the target format for the time conversion. May be:
+        '*date*' (default - outputs a ``datetime.datetime`` object), '*unix*'
+        (outputs a long UNIXtime) or '*iso*' (outputs an ISO8601-formatted
+        string with pattern ``YYYY-MM-DD HH:MM:SS+00``)
+    :type timeformat: str
+    :returns: the current time value
+    :raises: ValueError when unknown timeformat switches are provided or
+        when negative time values are provided
+    """
+    return timeformatutils.timeformat(datetime.now(), timeformat)

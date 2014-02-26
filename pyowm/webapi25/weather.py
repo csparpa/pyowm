@@ -87,12 +87,7 @@ class Weather(object):
         :raises: ValueError when negative values are provided
 
         """
-        if timeformat == 'unix':
-            return self._reference_time
-        elif timeformat == 'iso':
-            return timeformatutils.to_ISO8601(self._reference_time)
-        else:
-            raise ValueError("Invalid value for parameter 'format'")
+        return timeformatutils.timeformat(self._reference_time, timeformat)
 
     def get_sunset_time(self, timeformat='unix'):
         """Returns the GMT time of sunset
@@ -105,12 +100,7 @@ class Weather(object):
         :raises: ValueError
 
         """
-        if timeformat == 'unix':
-            return self._sunset_time
-        elif timeformat == 'iso':
-            return timeformatutils.to_ISO8601(self._sunset_time)
-        else:
-            raise ValueError("Invalid value for parameter 'format'")
+        return timeformatutils.timeformat(self._sunset_time, timeformat)
 
     def get_sunrise_time(self, timeformat='unix'):
         """Returns the GMT time of sunrise
@@ -123,12 +113,7 @@ class Weather(object):
         :raises: ValueError
 
         """
-        if timeformat == 'unix':
-            return self._sunrise_time
-        elif timeformat == 'iso':
-            return timeformatutils.to_ISO8601(self._sunrise_time)
-        else:
-            raise ValueError("Invalid value for parameter 'format'")
+        return timeformatutils.timeformat(self._sunrise_time, timeformat)
 
     def get_clouds(self):
         """Returns the cloud coverage percentage as an int
