@@ -4,14 +4,6 @@ pyowm.utils package
 Submodules
 ----------
 
-pyowm.utils.converter module
-----------------------------
-
-.. automodule:: pyowm.utils.converter
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.utils.temputils module
 ----------------------------
 
@@ -23,7 +15,7 @@ pyowm.utils.temputils module
 pyowm.utils.timeformatutils module
 ----------------------------------
 
-.. automodule:: pyowm.utils.timeutils
+.. automodule:: pyowm.utils.timeformatutils
     :members:
     :undoc-members:
     :show-inheritance:
