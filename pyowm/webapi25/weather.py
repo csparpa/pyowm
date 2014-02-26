@@ -170,22 +170,18 @@ class Weather(object):
             '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
         :type unit: str
         :returns: a dict containing temperature values.
-        :raises: ValueError
+        :raises: ValueError when unknown temperature units are provided
 
         """
-        if unit == 'kelvin':
-            return self._temperature
-        elif unit == 'celsius':
-            helper = lambda x: temputils.kelvin_to_celsius(x) if x > 0.0 else x
-            return dict((item, helper(self._temperature[item]))
-                for item in self._temperature)
-        elif unit == 'fahrenheit':
-            helper = lambda x: temputils.kelvin_to_fahrenheit(x) \
-                if x > 0.0 else x
-            return dict((item, helper(self._temperature[item]))
-                for item in self._temperature)
-        else:
-            raise ValueError("Invalid value for parameter 'unit'")
+        # This is due to the fact that the OWM web API responses are mixing
+        # absolute temperatures and temperature deltas together
+        to_be_converted = self._temperature.copy()
+        not_to_be_converted = dict()
+        for label, temp in to_be_converted.items():
+            if temp < 0:
+                not_to_be_converted[label] = to_be_converted.pop(label)
+        converted = temputils.kelvin_dict_to(to_be_converted, unit)
+        return dict(converted.items() + not_to_be_converted.items())
 
     def get_status(self):
         """Returns the short weather status as a Unicode string

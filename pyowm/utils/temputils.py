@@ -9,6 +9,32 @@ FAHRENHEIT_OFFSET = 32.0
 FAHRENHEIT_DEGREE_SCALE = 1.8
 
 
+def kelvin_dict_to(d, target_temperature_unit):
+    """
+    Converts all the values in a dict from Kelvin temperatures to the
+    specified temperature format.
+
+    :param d: the dictionary containing Kelvin temperature values
+    :type dict
+    :param target_temperature_unit: the target temperature unit, may be:
+        'celsius' or 'fahrenheit'
+    :type str
+    :returns: a dict with the same keys as the input dict and converted
+        temperature values as values
+    :raises: *ValueError* when unknown target temperature units are provided
+
+    """
+    if target_temperature_unit == 'kelvin':
+        return d
+    elif target_temperature_unit == 'celsius':
+        return {key: kelvin_to_celsius(d[key]) for key in d}
+    elif target_temperature_unit == 'fahrenheit':
+        return {key: kelvin_to_fahrenheit(d[key]) for key in d}
+    else:
+        raise ValueError("Invalid value for target temperature conversion \
+                         unit")
+
+
 def kelvin_to_celsius(kelvintemp):
     """
     Converts a numeric temperature from Kelvin degrees to Celsius degrees

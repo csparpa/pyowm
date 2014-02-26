@@ -6,7 +6,6 @@ Test case for weather.py module
 
 import unittest
 from pyowm.webapi25.weather import Weather, weather_from_dictionary
-from pyowm.utils import xmlutils
 
 
 class TestWeather(unittest.TestCase):
