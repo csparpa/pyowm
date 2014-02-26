@@ -53,7 +53,7 @@ class Forecaster(object):
         if timeformat == 'unix':
             return start_coverage
         elif timeformat == 'iso':
-            return timeformatutils.UNIXtime_to_ISO8601(start_coverage)
+            return timeformatutils.to_ISO8601(start_coverage)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -75,7 +75,7 @@ class Forecaster(object):
         if timeformat == 'unix':
             return end_coverage
         elif timeformat == 'iso':
-            return timeformatutils.UNIXtime_to_ISO8601(end_coverage)
+            return timeformatutils.to_ISO8601(end_coverage)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 

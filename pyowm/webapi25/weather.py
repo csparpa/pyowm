@@ -90,7 +90,7 @@ class Weather(object):
         if timeformat == 'unix':
             return self._reference_time
         elif timeformat == 'iso':
-            return timeformatutils.UNIXtime_to_ISO8601(self._reference_time)
+            return timeformatutils.to_ISO8601(self._reference_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -108,7 +108,7 @@ class Weather(object):
         if timeformat == 'unix':
             return self._sunset_time
         elif timeformat == 'iso':
-            return timeformatutils.UNIXtime_to_ISO8601(self._sunset_time)
+            return timeformatutils.to_ISO8601(self._sunset_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 
@@ -126,7 +126,7 @@ class Weather(object):
         if timeformat == 'unix':
             return self._sunrise_time
         elif timeformat == 'iso':
-            return timeformatutils.UNIXtime_to_ISO8601(self._sunrise_time)
+            return timeformatutils.to_ISO8601(self._sunrise_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 

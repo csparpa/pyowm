@@ -8,21 +8,33 @@ from datetime import datetime
 from calendar import timegm
 
 
-def UNIXtime_to_ISO8601(unixtime):
+def to_ISO8601(timeobject):
     """
-    Converts a UNIXtime to the correspondant ISO8601-formatted string
-    The result string is in the format ``YYYY-MM-DD HH:MM:SS+00``
+    Returns the ISO8601-formatted string corresponding to the time value
+    conveyed by the specified object, which can be either a UNIXtime, a
+    ``datetime.datetime`` object or an ISO8601-formatted string in the format
+    `YYYY-MM-DD HH:MM:SS+00``.
 
-    :param unixtime: the UNIXtime
-    :type unixtime: int/long
-    :returns: an ISO8601-formatted string
-    :raises: *TypeError* when bad argument types are provided, *ValueError* for
-        negative values of UNIX time
-
+    :param timeobject: the object conveying the time value
+    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+        string
+    :returns: a long UNIXtime
+    :raises: *TypeError* when bad argument types are provided, *ValueError*
+        when negative UNIXtimes are provided
     """
-    if unixtime < 0:
-        raise ValueError(__name__ + ": negative time values not allowed")
-    return datetime.utcfromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S+00')
+    if isinstance(timeobject, (long, int)):
+        if timeobject < 0:
+            raise ValueError("The time value is a negative number")
+        return datetime.utcfromtimestamp(timeobject). \
+            strftime('%Y-%m-%d %H:%M:%S+00')
+    elif isinstance(timeobject, datetime):
+        return timeobject.strftime('%Y-%m-%d %H:%M:%S+00')
+    elif isinstance(timeobject, str):
+        return timeobject
+    else:
+        raise TypeError('The time value must be espressed either by a long ' \
+                         'UNIX time, a datetime.datetime object or an ' \
+                         'ISO8601-formatted string')
 
 
 def to_UNIXtime(timeobject):

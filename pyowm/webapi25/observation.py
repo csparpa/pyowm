@@ -51,7 +51,7 @@ class Observation(object):
         if timeformat == 'unix':
             return self._reception_time
         elif timeformat == 'iso':
-            return timeformatutils.UNIXtime_to_ISO8601(self._reception_time)
+            return timeformatutils.to_ISO8601(self._reception_time)
         else:
             raise ValueError("Invalid value for parameter 'format'")
 

@@ -11,21 +11,31 @@ from pyowm.utils import timeformatutils
 
 class TestTimeFormatUtils(unittest.TestCase):
 
-    def test_UNIXtime_to_ISO8601(self):
+    def test_to_ISO8601(self):
         unixtime = 1378459200
-        expected = "2013-09-06 09:20:00+00"
-        self.assertEqual(expected,
-                         timeformatutils.UNIXtime_to_ISO8601(unixtime))
+        iso = "2013-09-06 09:20:00+00"
+        date = datetime(2013, 9, 6, 9, 20, 0)
+        self.assertEqual(iso, timeformatutils.to_ISO8601(unixtime))
+        self.assertEqual(iso, timeformatutils.to_ISO8601(iso))
+        self.assertEqual(iso, timeformatutils.to_ISO8601(date))
 
-    def test_UNIXtime_to_ISO8601_fails_with_negative_values(self):
+    def test_to_ISO8601_fails_with_negative_values(self):
         self.assertRaises(ValueError,
-                          timeformatutils.UNIXtime_to_ISO8601, -1378459200)
+                          timeformatutils.to_ISO8601,
+                          -1378459200)
+
+    #===
 
     def test_ISO8601_to_UNIXtime(self):
         iso = "2013-09-06 09:20:00+00"
         expected = 1378459200
         self.assertEqual(expected,
                          timeformatutils._ISO8601_to_UNIXtime(iso))
+
+    def test_datetime_to_UNIXtime(self):
+        date = datetime(2013, 9, 19, 12, 0)
+        expected = 1379592000L
+        self.assertEqual(timeformatutils._datetime_to_UNIXtime(date), expected)
 
     def test_ISO8601_to_UNIXtime_fails_with_bad_arugments(self):
         self.assertRaises(ValueError,
@@ -45,11 +55,6 @@ class TestTimeFormatUtils(unittest.TestCase):
 
     def test_to_UNIXtime_fails_with_negative_unixtime(self):
         self.assertRaises(ValueError, timeformatutils.to_UNIXtime, -1234L)
-
-    def test_datetime_to_UNIXtime(self):
-        date = datetime(2013, 9, 19, 12, 0)
-        expected = 1379592000L
-        self.assertEqual(timeformatutils._datetime_to_UNIXtime(date), expected)
 
 if __name__ == "__main__":
     unittest.main()
