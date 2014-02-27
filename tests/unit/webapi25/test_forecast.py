@@ -134,7 +134,8 @@ class TestForecast(unittest.TestCase):
             '<reference_time>1378459690</reference_time><sunset_time>1378496480' \
             '</sunset_time><humidity>12</humidity><wind><speed>4.2</speed><deg>' \
             '103.4</deg></wind></weather></weathers></forecast>'
-        self.assertEqual(expectedOutput, self.__test_instance.to_XML())
+        self.assertEqual(expectedOutput,
+                         self.__test_instance.to_XML(True, False))
 
 if __name__ == "__main__":
     unittest.main()

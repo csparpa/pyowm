@@ -61,7 +61,7 @@ class TestLocation(unittest.TestCase):
                                             self.__test_name, self.__test_lon,
                                             self.__test_lat, self.__test_ID,
                                             self.__test_country)
-        self.assertEqual(self.__test_instance.to_XML(), expectedOutput)
+        self.assertEqual(self.__test_instance.to_XML(True, False), expectedOutput)
 
     def test_JSON_dump(self):
         expectedOutput = '{"country": "%s", "name": "%s", "coordinates": {"lat": %s, "lon": %s}, ' \

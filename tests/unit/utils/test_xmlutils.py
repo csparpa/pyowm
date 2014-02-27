@@ -34,6 +34,7 @@ class TestXMLUtils(unittest.TestCase):
                                                 method='html'))
 
     def test_DOM_node_to_XML(self):
+        XML_declaration_line = "<?xml version='1.0' encoding='utf8'?>\n"
         expected = "<root><x><a>2</a><b>3</b></x></root>"
         test_root_node = ET.Element("root")
         test_child_node = ET.SubElement(test_root_node, "x")
@@ -41,9 +42,34 @@ class TestXMLUtils(unittest.TestCase):
         test_grand_child_node_1.text = "2"
         test_grand_child_node_1 = ET.SubElement(test_child_node, "b")
         test_grand_child_node_1.text = "3"
-        result = xmlutils.DOM_node_to_XML(test_root_node)
-        self.assertEquals(expected, result)
+        self.assertEquals(expected,
+                          xmlutils.DOM_node_to_XML(test_root_node, False))
+        self.assertEquals(XML_declaration_line + expected,
+                          xmlutils.DOM_node_to_XML(test_root_node))
 
+    def test_annotate_with_XMLNS_with_ElementTree_as_input(self):
+        expected = '<root xmlns:p="http://test.com/schemas/f.xsd">' + \
+                    '<p:c1><p:gc1>test</p:gc1></p:c1></root>'
+        root_node = ET.Element("root")
+        c1_node = ET.SubElement(root_node, "c1")
+        gc1_node = ET.SubElement(c1_node, "gc1")
+        gc1_node.text = "test"
+        tree = ET.ElementTree(root_node)
+        xmlutils.annotate_with_XMLNS(tree, 'p',
+                                     'http://test.com/schemas/f.xsd')
+        self.assertEqual(expected, xmlutils.DOM_node_to_XML(tree.getroot(),
+                                                            False))
+
+    def test_annotate_with_XMLNS_with_Element_as_input(self):
+        expected = '<root xmlns:p="http://test.com/schemas/f.xsd">' + \
+                    '<p:c1><p:gc1>test</p:gc1></p:c1></root>'
+        root_node = ET.Element("root")
+        c1_node = ET.SubElement(root_node, "c1")
+        gc1_node = ET.SubElement(c1_node, "gc1")
+        gc1_node.text = "test"
+        xmlutils.annotate_with_XMLNS(root_node, 'p',
+                                     'http://test.com/schemas/f.xsd')
+        self.assertEqual(expected, xmlutils.DOM_node_to_XML(root_node, False))
 
 if __name__ == "__main__":
     unittest.main()

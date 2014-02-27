@@ -21,21 +21,6 @@ DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
-# XML Schemas URLs for PyOWM model entities
-ROOT_XMLNS_URL = 'http://github.com/csparpa/pyowm/tree/master/pyowm/webapi25/xsd'
-LOCATION_XMLNS_URL = ROOT_XMLNS_URL + '/location.xsd'
-WEATHER_XMLNS_URL = ROOT_XMLNS_URL + '/weather.xsd'
-OBSERVATION_XMLNS_URL = ROOT_XMLNS_URL + '/observation.xsd'
-FORECAST_XMLNS_URL = ROOT_XMLNS_URL + '/forecast.xsd'
-STATION_HISTORY_XMLNS_URL = ROOT_XMLNS_URL + '/station_history.xsd'
-
-# XML Schema prefixes for PyOWM model entities
-LOCATION_XMLNS_PREFIX = 'l'
-WEATHER_XMLNS_PREFIX = 'w'
-OBSERVATION_XMLNS_PREFIX = 'o'
-FORECAST_XMLNS_PREFIX = 'f'
-STATION_HISTORY_XMLNS_PREFIX = 'sh'
-
 # Parser objects injection for OWM web API responses parsing
 parsers = {
   'observation': observationparser.ObservationParser(),

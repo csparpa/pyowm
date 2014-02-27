@@ -15,10 +15,10 @@ def kelvin_dict_to(d, target_temperature_unit):
     specified temperature format.
 
     :param d: the dictionary containing Kelvin temperature values
-    :type dict
+    :type d: dict
     :param target_temperature_unit: the target temperature unit, may be:
         'celsius' or 'fahrenheit'
-    :type str
+    :type target_temperature_unit: str
     :returns: a dict with the same keys as the input dict and converted
         temperature values as values
     :raises: *ValueError* when unknown target temperature units are provided

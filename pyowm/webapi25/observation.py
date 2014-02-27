@@ -6,7 +6,9 @@ Weather observation classes and data structures.
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.utils import timeformatutils
+from pyowm.webapi25.xsd.xmlnsconfig import (
+    OBSERVATION_XMLNS_URL, OBSERVATION_XMLNS_PREFIX)
+from pyowm.utils import timeformatutils, xmlutils
 
 
 class Observation(object):
@@ -79,22 +81,27 @@ class Observation(object):
                            "Weather": json.loads(self._weather.to_JSON())
                            })
 
-    def to_XML(self, preamble=True):
+    def to_XML(self, xml_declaration=True, xmlns=True):
         """
-        Dumps object fields to an XML-formatted string. The 'preamble' switch
-        enables printing of a leading standard XML line containing XML version
-        and encoding.
+        Dumps object fields to an XML-formatted string. The 'xml_declaration'
+        switch  enables printing of a leading standard XML line containing XML
+        version and encoding. The 'xmlns' switch enables printing of qualified
+        XMLNS prefixes.
 
-        :param preamble: if ``True`` (default) prints a standard XML preamble
-        :type preamble: bool
+        :param XML_declaration: if ``True`` (default) prints a leading XML
+            declaration line
+        :type XML_declaration: bool
+        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
+        :type xmlns: bool
         :returns: an XML-formatted string
 
         """
         root_node = self._to_DOM()
-        result = ET.tostring(root_node, encoding='utf8', method='xml')
-        if not preamble:
-            result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
-        return unicode(result)
+        if xmlns:
+            xmlutils.annotate_with_XMLNS(root_node,
+                                         OBSERVATION_XMLNS_PREFIX,
+                                         OBSERVATION_XMLNS_URL)
+        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """

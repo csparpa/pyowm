@@ -75,4 +75,5 @@ class TestStationHistory(unittest.TestCase):
             '<reference_time>1362933983</reference_time><humidity>27.3</humidity>' \
             '<pressure>1010.02</pressure><wind>4.7</wind></measurement>' \
             '</measurements></station_history>'
-        self.assertEqual(expected_output, self.__test_instance.to_XML())
+        self.assertEqual(expected_output,
+                         self.__test_instance.to_XML(True, False))

@@ -59,9 +59,9 @@ class TestObservation(unittest.TestCase):
         expectedOutput = "<?xml version='1.0' encoding='utf8'?>\n" \
             '<observation><reception_time>%s</reception_time>%s%s' \
             '</observation>' % (self.__test_reception_time,
-                                self.__test_location.to_XML(False),
-                                self.__test_weather.to_XML(False))
-        self.assertEqual(self.__test_instance.to_XML(), expectedOutput)
+                                self.__test_location.to_XML(False, False),
+                                self.__test_weather.to_XML(False, False))
+        self.assertEqual(self.__test_instance.to_XML(True, False), expectedOutput)
 
 
 if __name__ == "__main__":

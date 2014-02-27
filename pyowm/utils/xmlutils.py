@@ -22,7 +22,7 @@ def create_DOM_node_from_dict(d, name, parent_node):
     :param parent_node: the parent DOM node the newly created subtree must be
         attached to
     :type parent_node: ``xml.etree.ElementTree.Element`` or derivative objects
-    :returns: a ``xml.etree.ElementTree.SubElementTree`` object
+    :returns: ``xml.etree.ElementTree.SubElementTree`` object
 
     """
     if d is not None:
@@ -34,15 +34,42 @@ def create_DOM_node_from_dict(d, name, parent_node):
         return root_dict_node
 
 
-def DOM_node_to_XML(node):
+def DOM_node_to_XML(tree, xml_declaration=True):
     """
-    Prints a DOM node to its Unicode representation.
+    Prints a DOM tree to its Unicode representation.
 
-    :param node: the input DOM node
-    :type node: an ``xml.etree.ElementTree.Element`` object
-    :returns: a Unicode object
+    :param tree: the input DOM tree
+    :type tree: an ``xml.etree.ElementTree.Element`` object
+    :param xml_declaration: if ``True`` (default) prints a leading XML
+        declaration line
+    :type xml_declaration: bool
+    :returns: Unicode object
 
     """
-    xml_chunk = ET.tostring(node, encoding='utf8', method='xml')
-    result = xml_chunk.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
+    result = ET.tostring(tree, encoding='utf8', method='xml')
+    if not xml_declaration:
+        result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
     return unicode(result)
+
+
+def annotate_with_XMLNS(tree, prefix, URI):
+    """
+    Annotates the provided DOM tree with XMLNS attributes and adds XMLNS
+    prefixes to the tags of the tree nodes.
+
+    :param tree: the input DOM tree
+    :type tree: an ``xml.etree.ElementTree.ElementTree`` or
+        ``xml.etree.ElementTree.Element`` object
+    :param prefix: XMLNS prefix for tree nodes' tags
+    :type prefix: str
+    :param URI: the URI for the XMLNS definition file
+    :type URI: str
+
+    """
+    if not ET.iselement(tree):
+        tree = tree.getroot()
+    tree.attrib['xmlns:' + prefix] = URI
+    iterator = tree.iter()
+    iterator.next()  # Don't add XMLNS prefix to the root node
+    for e in iterator:
+        e.tag = prefix + ":" + e.tag
