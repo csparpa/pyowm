@@ -14,11 +14,12 @@ from pyowm import constants
 from pyowm.utils import timeutils  # Convenience import
 
 
-def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION):
+def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
+        config_module=None):
     """
     A parametrized factory method returning a global OWM instance that
     represents the desired OWM web API version (or the currently supported one
-    if no version number is specified
+    if no version number is specified)
 
     :param API_key: the OWM web API key (``None`` by default)
     :type API_key: str
@@ -29,8 +30,9 @@ def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION):
     :raises: *ValueError* when unsupported OWM API versions are provided
     """
     if version == "2.5":
-        from webapi25.configuration25 import parsers
-        from webapi25.configuration25 import cache
+        if config_module is None:
+            config_module = "pyowm.webapi25.configuration25"
+        cfg_module = __import__(config_module,  fromlist=[''])
         from webapi25.owm25 import OWM25
-        return OWM25(parsers, API_key, cache)
+        return OWM25(cfg_module.parsers, API_key, cfg_module.cache)
     raise ValueError("Unsupported OWM web API version")
