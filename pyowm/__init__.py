@@ -26,6 +26,12 @@ def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
     :param version: the OWM web API version. Defaults to ``None``, which means
         use the latest web API version
     :type version: str
+    :param config_module: the Python path of the configuration module you want
+        to provide for instantiating the library. Defaults to ``None``, which
+        means use the default configuration values for the web API version
+        support you are currently requesting. Please be aware that malformed
+        user-defined configuration modules can lead to unwanted behaviour!
+    :type config_module: str (eg: 'mypackage.mysubpackage.myconfigmodule')
     :returns: an instance of a proper *OWM* subclass
     :raises: *ValueError* when unsupported OWM API versions are provided
     """

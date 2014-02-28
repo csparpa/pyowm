@@ -63,7 +63,7 @@ owm = pyowm.OWM('your-API-key')
 # Will it be sunny tomorrow at this time in Milan (Italy) ?
 forecast = owm.daily_forecast("Milan,it")
 tomorrow = pyowm.timeutils.tomorrow()
-forecast.will_be_sunny_at(tomorrow)  # True
+forecast.will_be_sunny_at(tomorrow)  # Always True in Italy, right? ;-)
 
 # Search for current weather in London (UK)
 observation = owm.weather_at('London,uk')

@@ -2,16 +2,15 @@
 # -*- coding: utf-8 -*-
 
 '''
-Functional tests for the PyOWM library
-These are "live" executions, that of course need the OWM web API to be up
-and running
+Functional tests for checking PyOWM caching features
 '''
 import unittest
 from time import time
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.caches.lrucache import LRUCache
-from pyowm.abstractions.owmcache import OWMCache 
+from pyowm.abstractions.owmcache import OWMCache
+
 
 class CacheWrapper(OWMCache):
     """
@@ -21,7 +20,7 @@ class CacheWrapper(OWMCache):
         self._cache = cache
         self.__api_calls = 0
         self.__last_request_was_hit = False
-        
+
     def get(self, request_url):
         result = self._cache.get(request_url)
         if result:
@@ -33,18 +32,18 @@ class CacheWrapper(OWMCache):
 
     def set(self, request_url, response_json):
         return self._cache.set(request_url, response_json)
-    
+
     def last_request_was_hit(self):
         return self.__last_request_was_hit
-    
+
     def api_calls(self):
         return self.__api_calls
 
-   
+
 class CacheTestWebAPI25(unittest.TestCase):
-    
+
     def test_caching_prevents_API_calls(self):
-        cache = LRUCache(20, 1000*60*60)
+        cache = LRUCache(20, 1000 * 60 * 60)
         wrapped_cache = CacheWrapper(cache)
         owm = OWM25(parsers, '5746e1a976021a0', wrapped_cache)
         self.assertFalse(wrapped_cache.last_request_was_hit())
@@ -67,13 +66,13 @@ class CacheTestWebAPI25(unittest.TestCase):
         owm.weather_at('London,uk')  # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
         self.assertEquals(2, wrapped_cache.api_calls())
-        
+
     def test_cache_limits(self):
         """
         Test that when cache is full, cached elements undergo a turnover and
         the real OWM web API is invoked
         """
-        cache = LRUCache(3, 1000*60*60) # Only three cacheable elements!
+        cache = LRUCache(3, 1000 * 60 * 60)  # Only three cacheable elements!
         wrapped_cache = CacheWrapper(cache)
         owm = OWM25(parsers, '5746e1a976021a0', wrapped_cache)
         owm.weather_at('London,uk')  # Comes from OWM web API
@@ -82,19 +81,19 @@ class CacheTestWebAPI25(unittest.TestCase):
         self.assertEquals(3, wrapped_cache.api_calls())
         owm.weather_at('London,uk')  # Comes from cache
         owm.weather_at('Kiev')  # Comes from cache
-        self.assertEquals(3, wrapped_cache.api_calls())        
+        self.assertEquals(3, wrapped_cache.api_calls())
         owm.weather_at('Tokyo')
         self.assertEquals(4, wrapped_cache.api_calls())
-        owm.weather_at('Madrid') # Now Madrid should have been pulled out of cache
+        owm.weather_at('Madrid')  # Now Madrid should have been pulled out of cache
         self.assertEquals(5, wrapped_cache.api_calls())
-        
+
     def test_caching_times(self):
         """
         Test that subsequent calls to the same endpoint and with the same
         query parameters are cached if OWM instance is configured with a 
         non-null cache.
         """
-        cache = LRUCache(20, 1000*60*60)
+        cache = LRUCache(20, 1000 * 60 * 60)
         owm = OWM25(parsers, '5746e1a976021a0', cache)
         before_request = time()
         o1 = owm.weather_at('London,uk')  # Comes from OWM web API
@@ -102,15 +101,19 @@ class CacheTestWebAPI25(unittest.TestCase):
         o2 = owm.weather_at('London,uk')  # Comes from cache
         after_cache_hit_1 = time()
         owm.weather_at('Kiev')       # Comes from OWM web API
-        owm.weather_at_coords(18.503723,-33.936524)  # Comes from OWM web API
-        owm.weather_at_coords(18.503723,-33.936524)  # Cached, we don't care
-        owm.weather_at_coords(18.503723,-33.936524)  # Cached, we don't care
+        owm.weather_at_coords(18.503723, -33.936524)  # Comes from OWM web API
+        owm.weather_at_coords(18.503723, -33.936524)  # Cached, we don't care
+        owm.weather_at_coords(18.503723, -33.936524)  # Cached, we don't care
         before_cache_hit_2 = time()
         o3 = owm.weather_at('London,uk')  # Comes from cache
         after_cache_hit_2 = time()
         #Check results: difference in reception time should not be less than 20 sec
-        self.assertAlmostEquals(o1.get_reception_time(), o2.get_reception_time(), places=None, msg=None, delta=20)
-        self.assertAlmostEquals(o1.get_reception_time(), o3.get_reception_time(), places=None, msg=None, delta=20)
+        self.assertAlmostEquals(o1.get_reception_time(),
+                                o2.get_reception_time(),
+                                places=None, msg=None, delta=20)
+        self.assertAlmostEquals(o1.get_reception_time(),
+                                o3.get_reception_time(),
+                                places=None, msg=None, delta=20)
         #Check times: all cache hit times must be less than the former OWM web
         #API request time and ratio between cache hit times and request time
         #should be far less than 1
@@ -119,5 +122,5 @@ class CacheTestWebAPI25(unittest.TestCase):
         cache_hit_2_delay = after_cache_hit_2 - before_cache_hit_2
         self.assertTrue(cache_hit_1_delay < req_delay)
         self.assertTrue(cache_hit_2_delay < req_delay)
-        self.assertTrue(cache_hit_1_delay/req_delay < 1)
-        self.assertTrue(cache_hit_2_delay/req_delay < 1)
+        self.assertTrue(cache_hit_1_delay / req_delay < 1)
+        self.assertTrue(cache_hit_2_delay / req_delay < 1)
