@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='pyowm',
-    version='0.4.1',
+    version='1.0.0',
     description='A Python wrapper around the OpenWeatherMap web API',
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
@@ -22,11 +22,11 @@ setup(
           "Programming Language :: Python",
           "Natural Language :: English",
           "Operating System :: OS Independent",
-          "Development Status :: 4 - Beta",
+          "Development Status :: 5 - Production/Stable",
           "Intended Audience :: Developers",
           "Topic :: Software Development :: Libraries",
     ],
-    keywords='openweathermap api wrapper weather forecast data OWM',
+    keywords='openweathermap web api client wrapper weather forecast data OWM',
     license='MIT',
     test_suite='tests'
 )

@@ -19,14 +19,13 @@ License
 
 What's new
 ----------
-_Release 0.4.1_
-* Pretty-printing of PyOWM main class entities
-* Introduced escaping for non-ASCII chars in URLs
+_Release 1.0.0_
+* Users can inject configuration when instantiating the library
+* Code is now compliant to PEP-8 guidelines
+* Added XMLNS support to printed XML
+* Refactoring of low-level utility functions
 * Bug fixes
 
-_Release 0.4.0_
-* Added local cache support
-* Bug fixes
 
 Install
 -------

@@ -1,3 +1,12 @@
+PyOWM release checklist
+-----------------------
+* update setup.py
+* update constants.py
+* update README.md
+* update github wiki pagese
+* tag release on github
+* upload release on pypi
+
 Filling in of main setup.py file
 ---------------------------------
 [guide](https://pythonhosted.org/an_example_pypi_project/setuptools.html)
@@ -27,7 +36,7 @@ The .egg will be installed into the system-dependent Python libraries folder:
 
     C:\PythonXY\Lib\site-packages            # Windows
     /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
-    /usr/local/lib/python2.7/dist-packages   # MacOS 10.5.4
+    /usr/local/lib/pythonX.Y/dist-packages   # MacOS 10.5.4
 
 Build documentation
 -------------------
