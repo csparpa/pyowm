@@ -7,6 +7,7 @@ PyOWM release checklist
 * tag release on github
 * upload release on pypi
 
+
 Filling in of main setup.py file
 ---------------------------------
 [guide](https://pythonhosted.org/an_example_pypi_project/setuptools.html)
@@ -72,3 +73,7 @@ Enter the main project directory and issue:
 
 [Guide](http://pythonhosted.org/an_example_pypi_project/setuptools.html#intermezzo-pypirc-file-and-gpg)
 [Issue](http://stackoverflow.com/questions/1569315/setup-py-upload-is-failing-with-upload-failed-401-you-must-be-identified-t)
+
+Awesome guide on setting up open source Python projects
+-------------------------------------------------------
+[Jeff Knupp's blog](http://www.jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/)
