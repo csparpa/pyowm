@@ -14,7 +14,7 @@ class TestForecast(unittest.TestCase):
 
     __test_reception_time = 1234567
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
-    __test_location = Location(u'test', 12.3, 43.7, 987, 'IT')
+    __test_location = Location('test', 12.3, 43.7, 987, 'IT')
     __test_weathers = [Weather(1378459200, 1378496400, 1378449600, 67,
             {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
             {"press": 1030.119, "sea_level": 1038.589},
@@ -28,7 +28,7 @@ class TestForecast(unittest.TestCase):
             {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
              "temp_min": 295.6
              },
-            "Clear", "Sky is clear", 804, u"02d")
+            "Clear", "Sky is clear", 804, "02d")
        ]
     __test_n_weathers = len(__test_weathers)
     __test_instance = Forecast("daily", __test_reception_time, __test_location,
