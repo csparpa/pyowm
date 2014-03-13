@@ -69,7 +69,7 @@ def is_in_coverage(unixtime, weathers_list):
     in the supplied list
 
     :param unixtime: the UNIX time to be searched in the time range
-    :type unixtime: int/long
+    :type unixtime: int
     :param weathers_list: the list of *Weather* objects to be scanned for
         global time coverage
     :type weathers_list: list
@@ -96,7 +96,7 @@ def find_closest_weather(weathers_list, unixtime):
     :param weathers_list: a list of *Weather* objects
     :type weathers_list: list
     :param unixtime: a UNIX time
-    :type unixtime: long
+    :type unixtime: int
     :returns: the *Weather* object which is closest in time or ``None`` if the
         list is empty
     """

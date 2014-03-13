@@ -38,7 +38,7 @@ DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '284.88,"eve": 287.53,"morn": 289.37},"pressure": 1025.35,"humidity": 71,' \
     '"weather": [{"id": 500,"main": "Rain","description": "light rain","icon"' \
     ': "10d"}],"speed": 3.76,"deg": 338,"clouds": 48,"rain": 3}]}'
-    
+
 CITY_WEATHER_HISTORY_JSON = '{"message": "","cod": "200","city_id": 2643743,' \
     '"calctime": 0.5363,"cnt": 1,"list": [{"weather": [{"id": 500,"main": "Rain"' \
     ',"description": "light rain","icon": "10d"}],"base": "gdps stations","main":' \
@@ -67,7 +67,7 @@ CITY_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"no data","cod":"404"}'
 
 CITY_WEATHER_HISTORY_NO_RESULTS_JSON = '{"calctime" : 1.9337,"city_id" : 4219762,' \
     '"cnt" : 0,"cod" : "200","list" : [],"message" : ""}'
-    
+
 STATION_TICK_WEATHER_HISTORY_JSON = '{"message": "", "cod": "200", "type": "tick", ' \
     '"station_id": 39276, "calctime": "tick=0.0128total=1.1367", "cnt": 30, ' \
     '"list": [{"temp": 266.25, "main": {"temp": 266.25, "humidity": 27.1, ' \

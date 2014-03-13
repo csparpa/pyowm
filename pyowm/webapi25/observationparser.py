@@ -7,9 +7,9 @@ returning Observation objects
 
 from json import loads, dumps
 from time import time
-import observation
-import location
-import weather
+from pyowm.webapi25 import observation
+from pyowm.webapi25 import location
+from pyowm.webapi25 import weather
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error, api_response_error
 
@@ -45,8 +45,8 @@ class ObservationParser(jsonparser.JSONParser):
         # conveying errors to the clients
         if 'message' in d and 'cod' in d:
             if d['cod'] == "404":
-                print "OWM API: observation data not available - response " \
-                    "payload: " + dumps(d)
+                print("OWM API: observation data not available - response " \
+                    "payload: " + dumps(d))
                 return None
             else:
                 raise api_response_error.APIResponseError(
@@ -64,7 +64,7 @@ class ObservationParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError(
                                       ''.join([__name__, ': impossible to ' \
                                        'read weather info from JSON data']))
-        current_time = long(round(time()))
+        current_time = int(round(time()))
         return observation.Observation(current_time, place, w)
 
     def __repr__(self):

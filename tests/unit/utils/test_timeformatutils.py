@@ -63,7 +63,7 @@ class TestTimeFormatUtils(unittest.TestCase):
 
     def test_datetime_to_UNIXtime(self):
         date = datetime(2013, 9, 19, 12, 0)
-        expected = 1379592000L
+        expected = 1379592000
         self.assertEqual(timeformatutils._datetime_to_UNIXtime(date), expected)
 
     def test_ISO8601_to_UNIXtime_fails_with_bad_arugments(self):
@@ -83,7 +83,4 @@ class TestTimeFormatUtils(unittest.TestCase):
         self.assertRaises(TypeError, timeformatutils.to_UNIXtime, None)
 
     def test_to_UNIXtime_fails_with_negative_unixtime(self):
-        self.assertRaises(ValueError, timeformatutils.to_UNIXtime, -1234L)
-
-if __name__ == "__main__":
-    unittest.main()
+        self.assertRaises(ValueError, timeformatutils.to_UNIXtime, -1234)

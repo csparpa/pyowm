@@ -62,6 +62,36 @@ Now you are ready to generate HTML docs by launching:
 HTML docs will be generated under sphinx/_build/html
 
 
+Test against Python X.Y
+-----------------------
+1. Install the interpreter for Python X.Y
+2. Setup a virtualenv:
+
+    $> mkdir venv
+    #Create virtualenv (Setuptools and Pip also will be installed)
+    $> virtualenv -p <PATH_TO_X.Y_INTERPRETER> venv
+    $> cd venv
+    #Activate virtualenv
+    $> bin/activate    # On Linux: source bin/activate
+
+3. Now you can unit/functional test with:
+
+   (venv) $> cd <PYOWM_ROOT>
+   # The following lines recall the X.Y interpreter
+   (venv) $> python setup.py test -s tests.unit
+   (venv) $> python setup.py test -s tests.functional 
+
+4. Test PyOWM installation with:
+
+   (venv) $> python setup.py install
+   (venv) $> python
+   >>>  # Test imports etc..
+
+5. Leave the virtualenv with:
+
+   (venv) $> deactivate
+
+
 Upload to PyPy
 --------------
 Enter the main project directory and issue:

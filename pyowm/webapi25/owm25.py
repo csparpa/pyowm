@@ -281,11 +281,11 @@ class OWM25(owm.OWM):
         :type name: str
         :param start: the object conveying the time value for the start query
             boundary (defaults to ``None``)
-        :type start: int/long, ``datetime.datetime`` or ISO8601-formatted
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
             string
         :param end: the object conveying the time value for the end query
             boundary (defaults to ``None``)
-        :type end: int/long, ``datetime.datetime`` or ISO8601-formatted string
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
         :returns: a list of *Weather* instances or ``None`` if history data is
             not available for the specified location
         :raises: *ParseResponseException* when OWM web API responses' data
@@ -306,7 +306,7 @@ class OWM25(owm.OWM):
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must " \
                                  "precede the end time!")
-            current_time = long(time())
+            current_time = time()
             if unix_start > current_time:
                 raise ValueError("Error: the start time boundary must " \
                                  "precede the current time!")

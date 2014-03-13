@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 from pyowm.caches import nullcache
-import observationparser
-import observationlistparser
-import forecastparser
-import weatherhistoryparser
-import stationhistoryparser
+from pyowm.webapi25 import observationparser
+from pyowm.webapi25 import observationlistparser
+from pyowm.webapi25 import forecastparser
+from pyowm.webapi25 import weatherhistoryparser
+from pyowm.webapi25 import stationhistoryparser
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5

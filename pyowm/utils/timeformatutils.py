@@ -13,10 +13,10 @@ def timeformat(timeobject, timeformat):
     Formats the specified time object to the target format type.
 
     :param timeobject: the object conveying the time value
-    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+    :type timeobject: int, ``datetime.datetime`` or ISO8601-formatted
         string with pattern ``YYYY-MM-DD HH:MM:SS+00``
     :param timeformat: the target format for the time conversion. May be:
-        '*unix*' (outputs a long UNIXtime), '*date*' (outputs a
+        '*unix*' (outputs an int UNIXtime), '*date*' (outputs a
         ``datetime.datetime`` object) or '*iso*' (outputs an ISO8601-formatted
         string with pattern ``YYYY-MM-DD HH:MM:SS+00``)
     :type timeformat: str
@@ -42,13 +42,13 @@ def to_date(timeobject):
     `YYYY-MM-DD HH:MM:SS+00``.
 
     :param timeobject: the object conveying the time value
-    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+    :type timeobject: int, ``datetime.datetime`` or ISO8601-formatted
         string
     :returns: a ``datetime.datetime`` object
     :raises: *TypeError* when bad argument types are provided, *ValueError*
         when negative UNIXtimes are provided
     """
-    if isinstance(timeobject, (long, int)):
+    if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
         return datetime.utcfromtimestamp(timeobject)
@@ -57,7 +57,7 @@ def to_date(timeobject):
     elif isinstance(timeobject, str):
         return datetime.strptime(timeobject, '%Y-%m-%d %H:%M:%S+00')
     else:
-        raise TypeError('The time value must be espressed either by a long ' \
+        raise TypeError('The time value must be espressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 
@@ -70,14 +70,14 @@ def to_ISO8601(timeobject):
     `YYYY-MM-DD HH:MM:SS+00``.
 
     :param timeobject: the object conveying the time value
-    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+    :type timeobject: int, ``datetime.datetime`` or ISO8601-formatted
         string
     :returns: an ISO8601-formatted string with pattern
         `YYYY-MM-DD HH:MM:SS+00``
     :raises: *TypeError* when bad argument types are provided, *ValueError*
         when negative UNIXtimes are provided
     """
-    if isinstance(timeobject, (long, int)):
+    if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
         return datetime.utcfromtimestamp(timeobject). \
@@ -87,7 +87,7 @@ def to_ISO8601(timeobject):
     elif isinstance(timeobject, str):
         return timeobject
     else:
-        raise TypeError('The time value must be espressed either by a long ' \
+        raise TypeError('The time value must be espressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 
@@ -100,13 +100,13 @@ def to_UNIXtime(timeobject):
     `YYYY-MM-DD HH:MM:SS+00``.
 
     :param timeobject: the object conveying the time value
-    :type timeobject: int/long, ``datetime.datetime`` or ISO8601-formatted
+    :type timeobject: int, ``datetime.datetime`` or ISO8601-formatted
         string
-    :returns: a long UNIXtime
+    :returns: an int UNIXtime
     :raises: *TypeError* when bad argument types are provided, *ValueError*
         when negative UNIXtimes are provided
     """
-    if isinstance(timeobject, (long, int)):
+    if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
         return timeobject
@@ -115,7 +115,7 @@ def to_UNIXtime(timeobject):
     elif isinstance(timeobject, str):
         return _ISO8601_to_UNIXtime(timeobject)
     else:
-        raise TypeError('The time value must be espressed either by a long ' \
+        raise TypeError('The time value must be espressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 
@@ -127,7 +127,7 @@ def _ISO8601_to_UNIXtime(iso):
 
     :param iso: the ISO8601-formatted string
     :type iso: string
-    :returns: a long UNIXtime
+    :returns: an int UNIXtime
     :raises: *TypeError* when bad argument types are provided, *ValueError*
         when the ISO8601 string is badly formatted
 
@@ -146,7 +146,7 @@ def _datetime_to_UNIXtime(date):
 
     :param date: the ``datetime.datetime`` object
     :type date: ``datetime.datetime``
-    :returns: a long UNIXtime
+    :returns: an int UNIXtime
     :raises: *TypeError* when bad argument types are provided
     """
     return timegm(date.timetuple())

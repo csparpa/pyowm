@@ -15,8 +15,8 @@ class LinkedListNode:
 
     :param data: the actual data that this node holds
     :type data: object
-    :param next_node: reference to the next LinkedListNode instance in the list
-    :type next_node: LinkedListNode
+    :param next: reference to the next LinkedListNode instance in the list
+    :type next: LinkedListNode
 
     """
 
@@ -71,22 +71,24 @@ class FrontLinkedListIterator(object):
         self._current_item = self._obj.first_node()
         self._cnt = 0
 
-    def __iter__(self):
-        """
-        When called on a LinkedList object, returns an instance of the iterator
-
-        :returns: a FrontLinkedListIterator instance
-        """
-        return self
-
     def next(self):
+        """
+        Compatibility for Python 2.x, delegates to function: `__next__()`
+        Returns the next *Weather* item
+
+        :returns: the next *Weather* item
+
+        """
+        return self.__next__()
+
+    def __next__(self):
         """
         Returns the next LinkedListNode item in the list
 
         :returns: the data encapuslated into the next LinkedListNode item
 
         """
-        if not self._current_item:
+        if self._current_item is None:
             raise StopIteration
         result = self._current_item
         self._current_item = result.next()
@@ -172,7 +174,7 @@ class FrontLinkedList(linkedlist.LinkedList):
 
         if data == current_node.data():
             # case 1: the list has only one item
-            if not current_node.next():
+            if current_node.next() is None:
                 self._first_node = LinkedListNode(None, None)
                 self._last_node = self._first_node
                 self._size = 0
@@ -183,13 +185,13 @@ class FrontLinkedList(linkedlist.LinkedList):
             self._size -= 1
             return
 
-        while 1:
-            if not current_node:
+        while True:
+            if current_node is None:
                 deleted = False
                 break
             # Check next element's data
             next_node = current_node.next()
-            if next_node:
+            if next_node is not None:
                 if data == next_node.data():
                     next_next_node = next_node.next()
                     current_node.update_next(next_next_node)

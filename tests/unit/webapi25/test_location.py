@@ -10,11 +10,11 @@ from pyowm.webapi25.location import Location, location_from_dictionary
 
 class TestLocation(unittest.TestCase):
 
-    __test_name = u'London'
+    __test_name = 'London'
     __test_lon = 12.3
     __test_lat = 43.7
     __test_ID = 1234
-    __test_country = u'UK'
+    __test_country = 'UK'
     __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID,
                                __test_country)
 
@@ -22,28 +22,32 @@ class TestLocation(unittest.TestCase):
         """
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90
         """
-        self.assertRaises(ValueError, Location, u'London', -200.0, 43.7, 1234)
-        self.assertRaises(ValueError, Location, u'London', 200.0, 43.7, 1234)
-        self.assertRaises(ValueError, Location, u'London', 12.3, -100.0, 1234)
-        self.assertRaises(ValueError, Location, u'London', 12.3, 100.0, 1234)
+        self.assertRaises(ValueError, Location, 'London', -200.0, 43.7, 1234)
+        self.assertRaises(ValueError, Location, 'London', 200.0, 43.7, 1234)
+        self.assertRaises(ValueError, Location, 'London', 12.3, -100.0, 1234)
+        self.assertRaises(ValueError, Location, 'London', 12.3, 100.0, 1234)
 
     def test_from_dictionary(self):
         dict1 = {"coord": {"lon": -0.12574, "lat": 51.50853}, "id": 2643743,
-                 "name": u"London", "cnt": 9}
+                 "name": "London", "cnt": 9}
         dict2 = {"city": {"coord": {"lat": 51.50853, "lon": -0.125739},
-                 "country": "GB", "id": 2643743, "name": u"London",
+                 "country": "GB", "id": 2643743, "name": "London",
                  "population": 1000000}
                 }
         result1 = location_from_dictionary(dict1)
         result2 = location_from_dictionary(dict2)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
-        self.assertFalse(result1.get_country())
-        self.assertTrue(result1.get_ID())
-        self.assertTrue(result1.get_lat())
-        self.assertTrue(result1.get_lon())
-        self.assertTrue(result1.get_name())
-        self.assertNotIn(None, result2.__dict__.values())
+        self.assertFalse(result1.get_country() is not None)
+        self.assertTrue(result1.get_ID() is not None)
+        self.assertTrue(result1.get_lat() is not None)
+        self.assertTrue(result1.get_lon() is not None)
+        self.assertTrue(result1.get_name() is not None)
+        self.assertTrue(result2.get_country() is not None)
+        self.assertTrue(result2.get_ID() is not None)
+        self.assertTrue(result2.get_lat() is not None)
+        self.assertTrue(result2.get_lon() is not None)
+        self.assertTrue(result2.get_name() is not None)
 
     def test_getters_return_expected_data(self):
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
@@ -53,23 +57,3 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(instance.get_lat(), self.__test_lat)
         self.assertEqual(instance.get_ID(), self.__test_ID)
         self.assertEqual(instance.get_country(), self.__test_country)
-
-    def test_XML_dump(self):
-        expectedOutput = "<?xml version='1.0' encoding='utf8'?>\n" \
-            '<location><name>%s</name><coordinates><lon>%s</lon>' \
-            '<lat>%s</lat></coordinates><ID>%s</ID><country>%s</country></location>' % (
-                                            self.__test_name, self.__test_lon,
-                                            self.__test_lat, self.__test_ID,
-                                            self.__test_country)
-        self.assertEqual(self.__test_instance.to_XML(True, False), expectedOutput)
-
-    def test_JSON_dump(self):
-        expectedOutput = '{"country": "%s", "name": "%s", "coordinates": {"lat": %s, "lon": %s}, ' \
-            '"ID": %s}' %  (self.__test_country, self.__test_name, self.__test_lat, 
-                           self.__test_lon, self.__test_ID)
-
-        self.assertEqual(self.__test_instance.to_JSON(), expectedOutput)
-
-
-if __name__ == "__main__":
-    unittest.main()

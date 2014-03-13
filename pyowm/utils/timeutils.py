@@ -3,7 +3,7 @@
 """
 Module containing utility functions for time values generation/management
 """
-import timeformatutils
+from pyowm.utils import timeformatutils
 from datetime import datetime, date, timedelta
 
 

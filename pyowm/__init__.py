@@ -39,6 +39,6 @@ def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
         if config_module is None:
             config_module = "pyowm.webapi25.configuration25"
         cfg_module = __import__(config_module,  fromlist=[''])
-        from webapi25.owm25 import OWM25
+        from pyowm.webapi25.owm25 import OWM25
         return OWM25(cfg_module.parsers, API_key, cfg_module.cache)
     raise ValueError("Unsupported OWM web API version")

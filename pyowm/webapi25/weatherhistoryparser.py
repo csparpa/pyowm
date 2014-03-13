@@ -6,7 +6,7 @@ returning a list of Weather objects
 """
 
 import json
-import weather
+from pyowm.webapi25 import weather
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error, api_response_error
 
@@ -43,8 +43,8 @@ class WeatherHistoryParser(jsonparser.JSONParser):
         # conveying errors to the clients
         if 'message' in d and 'cod' in d:
             if d['cod'] == "404":
-                print "OWM API: data not found - response payload: " + \
-                    json.dumps(d)
+                print("OWM API: data not found - response payload: " + \
+                    json.dumps(d))
                 return None
             elif d['cod'] != "200":
                 raise api_response_error.APIResponseError(

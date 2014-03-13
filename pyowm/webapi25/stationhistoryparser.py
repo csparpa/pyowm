@@ -7,7 +7,7 @@ returning a StatioHistory instance
 
 import json
 import time
-import stationhistory
+from pyowm.webapi25 import stationhistory
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error, api_response_error
 
@@ -50,7 +50,7 @@ class StationHistoryParser(jsonparser.JSONParser):
                 if d['cod'] != "200":
                     raise api_response_error.APIResponseError(
                                               "OWM API: error - response " + \
-                                              "payload: " + json.dumps(d))
+                                              "payload: " + str(d))
             if str(d['cnt']) == "0":
                 return None
             else:
@@ -92,7 +92,7 @@ class StationHistoryParser(jsonparser.JSONParser):
         except KeyError:
             raise parse_response_error.ParseResponseError(__name__ + \
                                      ': impossible to read JSON data')
-        current_time = long(round(time.time()))
+        current_time = round(time.time())
         return stationhistory.StationHistory(None, None, current_time,
                                              measurements)
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 """
 Module containing a concrete implementation for JSONParser abstract class,
 returning Forecast objects
@@ -7,9 +8,9 @@ returning Forecast objects
 
 import json
 import time
-import location
-import weather
-import forecast
+from pyowm.webapi25 import location
+from pyowm.webapi25 import weather
+from pyowm.webapi25 import forecast
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error, api_response_error
 
@@ -45,12 +46,12 @@ class ForecastParser(jsonparser.JSONParser):
         # conveying errors to the clients
         if 'message' in d and 'cod' in d:
             if d['cod'] == "404":
-                print "OWM API: data not found - response payload: " + \
-                    json.dumps(d)
+                print("OWM API: data not found - response payload: " + \
+                    json.dumps(d))
                 return None
             elif d['cod'] != "200":
                 raise api_response_error.APIResponseError("OWM API: error " \
-                                        " - response payload: " + json.dumps(d))
+                                    " - response payload: " + json.dumps(d))
         try:
             place = location.location_from_dictionary(d)
         except KeyError:
@@ -76,7 +77,7 @@ class ForecastParser(jsonparser.JSONParser):
                           ''.join([__name__, ': impossible to read weather ' \
                                    'list from JSON data'])
                           )
-        current_time = long(round(time.time()))
+        current_time = int(round(time.time()))
         return forecast.Forecast(None, current_time, place, weathers)
 
     def __repr__(self):

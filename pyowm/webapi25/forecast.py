@@ -25,15 +25,17 @@ class ForecastIterator(object):
         self._obj = obj
         self._cnt = 0
 
-    def __iter__(self):
-        """
-        When called on a Forecast object, returns an instance of the iterator
-
-        :returns: a *ForecastIterator* instance
-        """
-        return self
-
     def next(self):
+        """
+        Compatibility for Python 2.x, delegates to function: `__next__()`
+        Returns the next *Weather* item
+
+        :returns: the next *Weather* item
+
+        """
+        return self.__next__()
+
+    def __next__(self):
         """
         Returns the next *Weather* item
 
@@ -59,7 +61,7 @@ class Forecast(object):
     :type interval: str
     :param reception_time: GMT UNIXtime of the forecast reception from the OWM
         web API
-    :type reception_time: long/int
+    :type reception_time: int
     :param location: the *Location* object relative to the forecast
     :type location: Location
     :param weathers: the list of *Weather* objects composing the forecast
@@ -71,9 +73,9 @@ class Forecast(object):
 
     def __init__(self, interval, reception_time, location, weathers):
         self._interval = interval
-        if long(reception_time) < 0:
+        if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = long(reception_time)
+        self._reception_time = reception_time
         self._location = location
         self._weathers = weathers
 
@@ -124,7 +126,7 @@ class Forecast(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: a long or a str
+        :returns: an int or a str
         :raises: ValueError
 
         """

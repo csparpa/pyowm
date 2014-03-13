@@ -26,7 +26,7 @@ class StationHistory(object):
     :type interval: str
     :param reception_time: GMT UNIXtime of the data reception from the OWM web
          API
-    :type reception_time: long/int
+    :type reception_time: int
     :param measurements: a dictionary containing raw weather measurements
     :type measurements: dict
     :returns: a *StationHistory* instance
@@ -37,7 +37,7 @@ class StationHistory(object):
     def __init__(self, station_ID, interval, reception_time, measurements):
         self._station_ID = station_ID
         self._interval = interval
-        if long(reception_time) < 0:
+        if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self._reception_time = reception_time
         self._measurements = measurements
@@ -103,7 +103,7 @@ class StationHistory(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: a long or a str
+        :returns: an int or a str
         :raises: ValueError
 
         """

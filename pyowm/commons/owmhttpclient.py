@@ -4,8 +4,14 @@
 Module containing classes for HTTP client/server interactions
 """
 
-import urllib2
-import urllib
+# Python 2.x/3.x compatibility imports
+try:
+    from urllib.error import HTTPError, URLError
+    from urllib.parse import urlencode
+except ImportError:
+    from urllib2 import HTTPError, URLError
+    from urllib import urlencode
+
 import socket
 from pyowm.exceptions import api_call_error
 
@@ -32,7 +38,6 @@ class OWMHTTPClient(object):
 
         """
         Invokes a specific OWM web API endpoint URL, returning raw JSON data.
-        The functionality is built on the top of Python's ``urllib2`` library.
 
         :param API_endpoint_URL: the API endpoint to be invoked
         :type API_endpoint_URL: str
@@ -43,7 +48,7 @@ class OWMHTTPClient(object):
             (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
         :type timeout: int
         :returns: a string containing raw JSON data
-        :raises: *APICallError* in chain to exceptions raised by ``urllib2``
+        :raises: *APICallError*
 
         """
         url = self._build_full_URL(API_endpoint_URL, params_dict)
@@ -52,13 +57,17 @@ class OWMHTTPClient(object):
             return cached
         else:
             try:
-                response = urllib2.urlopen(url, None, timeout)
-            except urllib2.HTTPError as e:
-                raise api_call_error.APICallError(e.message, e)
-            except urllib2.URLError as e:
-                raise api_call_error.APICallError(e.message, e)
+                try:
+                    from urllib.request import urlopen
+                except ImportError:
+                    from urllib2 import urlopen
+                response = urlopen(url, None, timeout)
+            except HTTPError as e:
+                raise api_call_error.APICallError(str(e.reason), e)
+            except URLError as e:
+                raise api_call_error.APICallError(str(e.reason), e)
             else:
-                data = response.read()
+                data = response.read().decode('utf-8')
                 self._cache.set(url, data)
                 return data
 
@@ -96,7 +105,7 @@ class OWMHTTPClient(object):
         :returns: a full string HTTP request URL
 
         """
-        return base_URL + '?' + urllib.urlencode(params_dict)
+        return base_URL + '?' + urlencode(params_dict)
 
     def __repr__(self):
         return "<%s.%s - cache=%s>" % \

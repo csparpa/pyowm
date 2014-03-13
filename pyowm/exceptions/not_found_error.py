@@ -22,4 +22,4 @@ class NotFoundError(Exception):
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
         return ''.join(['The searched item was not found.', os.linesep,
-                        'Reason: ', self._message])
+                        'Reason: ', self._message.decode('utf-8')])

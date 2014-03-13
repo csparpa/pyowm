@@ -12,15 +12,15 @@ from pyowm.utils import xmlutils
 class TestXMLUtils(unittest.TestCase):
 
     def test_create_DOM_node_from_dict(self):
-        d = {"a": 43.2, "b": None, "c": 3, "d": "try"}
+        d = {"a": 43.2, "b": None}
         name = "test"
         test_root_node = ET.Element("root")
-        expected = "<root><test><a>43.2</a><c>3</c><d>try</d></test></root>"
+        expected = "<root><test><a>43.2</a></test></root>"
         xmlutils.create_DOM_node_from_dict(d, name, test_root_node)
         result_DOM_tree = ET.ElementTree(test_root_node)
-        self.assertEquals(expected, ET.tostring(result_DOM_tree.getroot(),
+        self.assertEqual(expected, ET.tostring(result_DOM_tree.getroot(),
                                                 encoding='utf8',
-                                                method='html'))
+                                                method='html').decode('utf-8'))
 
     def test_create_DOM_node_from_dict_when_input_is_None(self):
         d = None
@@ -29,9 +29,9 @@ class TestXMLUtils(unittest.TestCase):
         expected = "<root></root>"
         xmlutils.create_DOM_node_from_dict(d, name, test_root_node)
         result_DOM_tree = ET.ElementTree(test_root_node)
-        self.assertEquals(expected, ET.tostring(result_DOM_tree.getroot(),
+        self.assertEqual(expected, ET.tostring(result_DOM_tree.getroot(),
                                                 encoding='utf8',
-                                                method='html'))
+                                                method='html').decode('utf-8'))
 
     def test_DOM_node_to_XML(self):
         XML_declaration_line = "<?xml version='1.0' encoding='utf8'?>\n"
@@ -42,9 +42,9 @@ class TestXMLUtils(unittest.TestCase):
         test_grand_child_node_1.text = "2"
         test_grand_child_node_1 = ET.SubElement(test_child_node, "b")
         test_grand_child_node_1.text = "3"
-        self.assertEquals(expected,
+        self.assertEqual(expected,
                           xmlutils.DOM_node_to_XML(test_root_node, False))
-        self.assertEquals(XML_declaration_line + expected,
+        self.assertEqual(XML_declaration_line + expected,
                           xmlutils.DOM_node_to_XML(test_root_node))
 
     def test_annotate_with_XMLNS_with_ElementTree_as_input(self):
@@ -70,6 +70,3 @@ class TestXMLUtils(unittest.TestCase):
         xmlutils.annotate_with_XMLNS(root_node, 'p',
                                      'http://test.com/schemas/f.xsd')
         self.assertEqual(expected, xmlutils.DOM_node_to_XML(root_node, False))
-
-if __name__ == "__main__":
-    unittest.main()

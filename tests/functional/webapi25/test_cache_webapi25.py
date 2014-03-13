@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 '''
 Functional tests for checking PyOWM caching features
@@ -47,25 +46,25 @@ class CacheTestWebAPI25(unittest.TestCase):
         wrapped_cache = CacheWrapper(cache)
         owm = OWM25(parsers, '5746e1a976021a0', wrapped_cache)
         self.assertFalse(wrapped_cache.last_request_was_hit())
-        self.assertEquals(0, wrapped_cache.api_calls())
+        self.assertEqual(0, wrapped_cache.api_calls())
         owm.weather_at('London,uk')  # Comes from OWM web API
         self.assertFalse(wrapped_cache.last_request_was_hit())
-        self.assertEquals(1, wrapped_cache.api_calls())
+        self.assertEqual(1, wrapped_cache.api_calls())
         owm.weather_at('London,uk')  # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
-        self.assertEquals(1, wrapped_cache.api_calls())
+        self.assertEqual(1, wrapped_cache.api_calls())
         owm.weather_at('London,uk')  # Comes from cache again
         self.assertTrue(wrapped_cache.last_request_was_hit())
-        self.assertEquals(1, wrapped_cache.api_calls())
+        self.assertEqual(1, wrapped_cache.api_calls())
         owm.weather_at('Kiev')       # Comes from OWM web API
         self.assertFalse(wrapped_cache.last_request_was_hit())
-        self.assertEquals(2, wrapped_cache.api_calls())
+        self.assertEqual(2, wrapped_cache.api_calls())
         owm.weather_at('Kiev')       # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
-        self.assertEquals(2, wrapped_cache.api_calls())
+        self.assertEqual(2, wrapped_cache.api_calls())
         owm.weather_at('London,uk')  # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
-        self.assertEquals(2, wrapped_cache.api_calls())
+        self.assertEqual(2, wrapped_cache.api_calls())
 
     def test_cache_limits(self):
         """
@@ -78,14 +77,14 @@ class CacheTestWebAPI25(unittest.TestCase):
         owm.weather_at('London,uk')  # Comes from OWM web API
         owm.weather_at('Kiev')       # Comes from OWM web API
         owm.weather_at('Madrid')     # Comes from OWM web API
-        self.assertEquals(3, wrapped_cache.api_calls())
+        self.assertEqual(3, wrapped_cache.api_calls())
         owm.weather_at('London,uk')  # Comes from cache
         owm.weather_at('Kiev')  # Comes from cache
-        self.assertEquals(3, wrapped_cache.api_calls())
+        self.assertEqual(3, wrapped_cache.api_calls())
         owm.weather_at('Tokyo')
-        self.assertEquals(4, wrapped_cache.api_calls())
+        self.assertEqual(4, wrapped_cache.api_calls())
         owm.weather_at('Madrid')  # Now Madrid should have been pulled out of cache
-        self.assertEquals(5, wrapped_cache.api_calls())
+        self.assertEqual(5, wrapped_cache.api_calls())
 
     def test_caching_times(self):
         """

@@ -18,11 +18,11 @@ class Weather(object):
     http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
 
     :param reference_time: GMT UNIX time of weather measurement
-    :type reference_time: long
+    :type reference_time: int
     :param sunset_time: GMT UNIX time of sunset
-    :type sunset_time: long
+    :type sunset_time: int
     :param sunrise_time: GMT UNIX time of sunrise
-    :type sunrise_time: long
+    :type sunrise_time: int
     :param clouds: cloud coverage percentage
     :type clouds: int
     :param rain: precipitation info
@@ -53,15 +53,15 @@ class Weather(object):
     def __init__(self, reference_time, sunset_time, sunrise_time, clouds, rain,
                  snow, wind, humidity, pressure, temperature, status,
                  detailed_status, weather_code, weather_icon_name):
-        if long(reference_time) < 0:
+        if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self._reference_time = long(reference_time)
-        if long(sunset_time) < 0:
+        self._reference_time = reference_time
+        if sunset_time < 0:
             raise ValueError("'sunset_time' must be greatear than 0")
-        self._sunset_time = long(sunset_time)
-        if long(sunrise_time) < 0:
+        self._sunset_time = sunset_time
+        if sunrise_time < 0:
             raise ValueError("'sunrise_time' must be greatear than 0")
-        self._sunrise_time = long(sunrise_time)
+        self._sunrise_time = sunrise_time
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
         self._clouds = clouds
@@ -85,7 +85,7 @@ class Weather(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: a long or a str
+        :returns: an int or a str
         :raises: ValueError when negative values are provided
 
         """
@@ -98,7 +98,7 @@ class Weather(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: a long or a str
+        :returns: an int or a str
         :raises: ValueError
 
         """
@@ -111,7 +111,7 @@ class Weather(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: a long or a str
+        :returns: an int or a str
         :raises: ValueError
 
         """
@@ -177,13 +177,16 @@ class Weather(object):
         """
         # This is due to the fact that the OWM web API responses are mixing
         # absolute temperatures and temperature deltas together
-        to_be_converted = self._temperature.copy()
+        to_be_converted = dict()
         not_to_be_converted = dict()
-        for label, temp in to_be_converted.items():
-            if temp < 0:
-                not_to_be_converted[label] = to_be_converted.pop(label)
+        for label, temp in self._temperature.items():
+            if temp is None or temp < 0:
+                not_to_be_converted[label] = temp
+            else:
+                to_be_converted[label] = temp
         converted = temputils.kelvin_dict_to(to_be_converted, unit)
-        return dict(converted.items() + not_to_be_converted.items())
+        return dict(list(converted.items()) + \
+                    list(not_to_be_converted.items()))
 
     def get_status(self):
         """Returns the short weather status as a Unicode string
@@ -320,11 +323,11 @@ def weather_from_dictionary(d):
     if 'sys' in d and 'sunset' in d['sys']:
         sunset_time = d['sys']['sunset']
     else:
-        sunset_time = 0L
+        sunset_time = 0
     if 'sys' in d and 'sunrise' in d['sys']:
         sunrise_time = d['sys']['sunrise']
     else:
-        sunrise_time = 0L
+        sunrise_time = 0
     # -- clouds
     if 'clouds' in d:
         if isinstance(d['clouds'], int) or isinstance(d['clouds'], float):
@@ -401,10 +404,10 @@ def weather_from_dictionary(d):
         weather_code = d['weather'][0]['id']
         weather_icon_name = d['weather'][0]['icon']
     else:
-        status = u''
-        detailed_status = u''
+        status = ''
+        detailed_status = ''
         weather_code = 0
-        weather_icon_name = u''
+        weather_icon_name = ''
 
     return Weather(reference_time, sunset_time, sunrise_time, clouds,
                 rain, snow, wind, humidity, pressure, temperature,

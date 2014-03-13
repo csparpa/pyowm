@@ -8,20 +8,22 @@ from pyowm.webapi25.stationhistoryparser import StationHistoryParser
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
-from json_test_responses import STATION_TICK_WEATHER_HISTORY_JSON, \
-    STATION_WEATHER_HISTORY_NOT_FOUND_JSON, INTERNAL_SERVER_ERROR_JSON
+from tests.unit.webapi25.json_test_responses import (
+     STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_NOT_FOUND_JSON,
+     INTERNAL_SERVER_ERROR_JSON)
+
 
 class TestStationHistoryParser(unittest.TestCase):
-    
+
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __instance = StationHistoryParser()
-    
+
     def test_parse_JSON(self):
         result = self.__instance.parse_JSON(STATION_TICK_WEATHER_HISTORY_JSON)
         self.assertTrue(result)
         self.assertTrue(isinstance(result, StationHistory))
         self.assertTrue(result.get_measurements())
-        
+
     def test_parse_JSON_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, StationHistoryParser.parse_JSON, 
                           self.__instance, self.__bad_json)
@@ -39,7 +41,7 @@ class TestStationHistoryParser(unittest.TestCase):
     def test_parse_station_history_when_station_not_found(self):
         self.assertFalse(
              self.__instance.parse_JSON(STATION_WEATHER_HISTORY_NOT_FOUND_JSON))
-        
+
     def test_parse_station_history_when_server_error(self):
         self.assertRaises(APIResponseError, StationHistoryParser.parse_JSON, \
-                          self.__instance, INTERNAL_SERVER_ERROR_JSON,)
+                          self.__instance, INTERNAL_SERVER_ERROR_JSON)

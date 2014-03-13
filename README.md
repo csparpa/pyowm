@@ -67,7 +67,7 @@ forecast.will_be_sunny_at(tomorrow)  # Always True in Italy, right? ;-)
 # Search for current weather in London (UK)
 observation = owm.weather_at('London,uk')
 w = observation.get_weather()
-print w                       # <Weather - reference time=2013-12-18 09:20, 
+print(w)                      # <Weather - reference time=2013-12-18 09:20, 
                               # status=Clouds>
 
 # Weather details

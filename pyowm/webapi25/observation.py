@@ -20,7 +20,7 @@ class Observation(object):
 
     :param reception_time: GMT UNIXtime telling when the weather obervation has
         been received from the OWM web API
-    :type reception_time: long/int
+    :type reception_time: int
     :param location: the *Location* relative to this observation
     :type location: *Location*
     :param weather: the *Weather* relative to this observation
@@ -31,9 +31,9 @@ class Observation(object):
     """
 
     def __init__(self, reception_time, location, weather):
-        if long(reception_time) < 0:
+        if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = long(reception_time)
+        self._reception_time = reception_time
         self._location = location
         self._weather = weather
 
@@ -46,7 +46,7 @@ class Observation(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: a long or a str
+        :returns: an int or a str
         :raises: ValueError when negative values are provided
 
         """

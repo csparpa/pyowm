@@ -46,10 +46,10 @@ def DOM_node_to_XML(tree, xml_declaration=True):
     :returns: Unicode object
 
     """
-    result = ET.tostring(tree, encoding='utf8', method='xml')
+    result = ET.tostring(tree, encoding='utf8', method='xml').decode('utf-8')
     if not xml_declaration:
         result = result.split("<?xml version='1.0' encoding='utf8'?>\n")[1]
-    return unicode(result)
+    return result
 
 
 def annotate_with_XMLNS(tree, prefix, URI):
@@ -70,6 +70,6 @@ def annotate_with_XMLNS(tree, prefix, URI):
         tree = tree.getroot()
     tree.attrib['xmlns:' + prefix] = URI
     iterator = tree.iter()
-    iterator.next()  # Don't add XMLNS prefix to the root node
+    next(iterator)  # Don't add XMLNS prefix to the root node
     for e in iterator:
         e.tag = prefix + ":" + e.tag
