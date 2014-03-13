@@ -4,5 +4,5 @@
 Constants for the PyOWM library
 """
 
-PYOWM_VERSION = '1.0.0'
+PYOWM_VERSION = '1.2.0'
 LATEST_OWM_API_VERSION = '2.5'

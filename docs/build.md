@@ -3,7 +3,7 @@ PyOWM release checklist
 * update setup.py
 * update constants.py
 * update README.md
-* update github wiki pagese
+* update github wiki pages
 * tag release on github
 * upload release on pypi
 
