@@ -1,4 +1,4 @@
 Thanks to the contributors
 ==========================
 
-  * `Samuel Yap` (code testing)
+  * [Samuel Yap] (https://github.com/samuelyap) (code testing)
