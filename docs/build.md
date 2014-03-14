@@ -93,13 +93,16 @@ Test against Python X.Y
    (venv) $> deactivate
 
 
-Upload to PyPy
---------------
+Upload to PyPi (Cheeseshop)
+---------------------------
+The following commands are to be issued using a specific Python interpreter (eg: if you launch them using Python 3.3 it will result in 3.3-compatible artifacts (.zip with sources, .egg and win installer) being uploaded to the Cheesehop.
 Enter the main project directory and issue:
 
-    $> python setup.py sdist register upload  # Raw source dist
-    $> python setup.py bdist_egg upload       # Eggball
-    $> python setup.py bdist_wininst upload   # Windows .exe installer
+    $> <path-to-python-interpreter> setup.py sdist register upload  # Raw source dist
+    $> <path-to-python-interpreter> setup.py bdist_egg upload       # Eggball
+    $> <path-to-python-interpreter> setup.py bdist_wininst upload   # Windows .exe installer
+
+If you don't want artifacts to be uploaded but just be created locally, omit the `upload` switch.
 
 [Guide](http://pythonhosted.org/an_example_pypi_project/setuptools.html#intermezzo-pypirc-file-and-gpg)
 [Issue](http://stackoverflow.com/questions/1569315/setup-py-upload-is-failing-with-upload-failed-401-you-must-be-identified-t)
