@@ -108,6 +108,7 @@ Development
 Contributors (code enhancement, issue/bug reporting) are __welcome!__
 
 *Branching model*
+
 The project adopts [@nvie's branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 
 The "develop" branch contains work-in-progress code: the unit of branching is a feature/enhancement.
