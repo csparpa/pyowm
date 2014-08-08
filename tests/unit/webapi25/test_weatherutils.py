@@ -7,7 +7,9 @@ Test case for weatherutils.py module
 import unittest
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25 import weatherutils
+from pyowm.webapi25.weathercoderegistry import WeatherCodeRegistry
 from pyowm.exceptions.not_found_error import NotFoundError
+
 
 
 class TestWeatherUtils(unittest.TestCase):
@@ -16,6 +18,21 @@ class TestWeatherUtils(unittest.TestCase):
     __test_time_low_iso = "2013-09-13 16:46:40+00"
     __test_time_high = 1379361400
     __test_time_high_iso = "2013-09-16 19:56:40+00"
+
+    __test_registry = WeatherCodeRegistry({
+        "rain": [{
+            "start": 1,
+            "end": 100
+        },
+        {
+            "start": 200,
+            "end": 600
+        }],
+        "sun": [{
+            "start": 750,
+            "end": 850
+        }]
+    })
 
     __test_weather_rain = Weather(__test_time_low, 1378496400, 1378449600, 67,
             {"all": 30}, {"all": 0}, {"deg": 252.002, "speed": 4.100}, 57,
