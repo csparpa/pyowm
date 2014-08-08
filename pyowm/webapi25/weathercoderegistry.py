@@ -35,7 +35,4 @@ class WeatherCodeRegistry(object):
                     return status
         return None
 
-    def statuses(self):
-        return self._code_ranges_dict.keys()
-
 

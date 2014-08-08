@@ -28,6 +28,3 @@ class TestWeatherCodeRegistry(unittest.TestCase):
         self.assertTrue(self._test_instance.status_for(999) is None)
         self.assertEquals("abc", self._test_instance.status_for(150))
         self.assertEquals("xyz", self._test_instance.status_for(345))
-
-    def test_statuses(self):
-        self.assertItemsEqual(['abc', 'xyz'], self._test_instance.statuses())
