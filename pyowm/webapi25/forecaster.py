@@ -9,10 +9,6 @@ from pyowm.webapi25 import weatherutils
 from pyowm.webapi25.configuration25 import weather_code_registry
 
 
-from pyowm.webapi25.configuration25 import (
-    CLOUDS_KEYWORDS, FOG_KEYWORDS, RAIN_KEYWORDS, SNOW_KEYWORDS, SUN_KEYWORDS)
-
-
 class Forecaster(object):
 
     """
@@ -136,8 +132,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(RAIN_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "rain",
+                                             weather_code_registry)
 
     def when_sun(self):
         """
@@ -146,8 +143,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(SUN_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "sun",
+                                             weather_code_registry)
 
     def when_fog(self):
         """
@@ -156,8 +154,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(FOG_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "fog",
+                                             weather_code_registry)
 
     def when_clouds(self):
         """
@@ -166,8 +165,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(CLOUDS_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "clouds",
+                                             weather_code_registry)
 
     def when_snow(self):
         """
@@ -176,8 +176,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(SNOW_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "snow",
+                                             weather_code_registry)
 
     def will_be_rainy_at(self, timeobject):
         """

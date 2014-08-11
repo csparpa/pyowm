@@ -16,6 +16,8 @@ def status_is(weather, status, weather_code_registry):
     :type weather: *Weather*
     :param status: a string indicating a detailed weather status
     :type status: str
+    :param weather_code_registry: a *WeatherCodeRegistry* object
+    :type weather_code_registry: *WeatherCodeRegistry*
     :returns: ``True`` if the check is positive, ``False`` otherwise
 
     """
@@ -33,6 +35,8 @@ def any_status_is(weather_list, status, weather_code_registry):
     :type weathers: list
     :param status: a string indicating a detailed weather status
     :type status: str
+    :param weather_code_registry: a *WeatherCodeRegistry* object
+    :type weather_code_registry: *WeatherCodeRegistry*
     :returns: ``True`` if the check is positive, ``False`` otherwise
     
     """
@@ -41,43 +45,24 @@ def any_status_is(weather_list, status, weather_code_registry):
             return True
     return False
 
-def status_matches_any(word_list, weather):
+
+def filter_by_status(weather_list, status, weather_code_registry):
     """
-    Checks if one or more keywords in a given list matches the
-    detailed weather status of a *Weather* object
+    Filters out from the provided list of *Weather* objects a sublist of items
+    having a status corresponding to the provided one. The lookup is performed
+    against the provided *WeatherCodeRegistry* object.
 
-    :param word_list: a list of string keywords
-    :type word_list: list
-    :param weather: a *Weather* object
-    :type weather: *Weather*
-    :returns: ``True`` if one or more matchings are found, ``False`` otherwise
-
+    :param weathers: a list of *Weather* objects
+    :type weathers: list
+    :param status: a string indicating a detailed weather status
+    :type status: str
+    :param weather_code_registry: a *WeatherCodeRegistry* object
+    :type weather_code_registry: *WeatherCodeRegistry*
+    :returns: ``True`` if the check is positive, ``False`` otherwise
+    
     """
-    detailed_status = weather.get_detailed_status().lower()
-    for word in word_list:
-        if word in detailed_status:
-            return True
-    return False
-
-
-def filter_by_matching_statuses(word_list, weathers_list):
-    """
-    Returns a sublist of the given list of *Weather* objects, whose items
-    have at least one of the keywords from the given list as part of their
-    detailed statuses.
-
-    :param word_list: a list of string keywords
-    :type word_list: list
-    :param weathers_list: a list of *Weather* objects
-    :type weathers_list: list
-    :returns: a list of *Weather* objects
-    """
-    result = []
-    for weather in weathers_list:
-        if status_matches_any(word_list, weather):
-            result.append(weather)
-    return result
-
+    return filter(lambda w: status_is(w, status, weather_code_registry),
+                  weather_list)
 
 def is_in_coverage(unixtime, weathers_list):
     """

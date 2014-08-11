@@ -37,13 +37,7 @@ cache = nullcache.NullCache()
 # OWM web API availability test timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 
-# Weather status keywords
-RAIN_KEYWORDS = ['rain', 'drizzle'] # will be range: [300-321] + [500-531]
-SUN_KEYWORDS = ['clear'] # will be range: [800-800]
-CLOUDS_KEYWORDS = ['clouds'] # will be range: [801-804]
-FOG_KEYWORDS = ['fog', 'haze', 'mist']  # mist=701  haze=721 fog=741
-SNOW_KEYWORDS = ['snow', 'sleet'] # will be range: [600-622]
-
+# Weather status code registry
 weather_code_registry = weathercoderegistry.WeatherCodeRegistry({
     "rain": [{
         "start": 500,

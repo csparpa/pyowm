@@ -63,24 +63,20 @@ class TestWeatherUtils(unittest.TestCase):
                                                    "storm",
                                                    self.__test_registry))
 
-
-
-
-    def test_status_matches_any(self):
-        self.assertTrue(weatherutils.status_matches_any(['rain'],
-                                                    self.__test_weather_rain))
-        self.assertFalse(weatherutils.status_matches_any(['sunnyday'],
-                                                    self.__test_weather_rain))
-
-    def test_filter_by_matching_statuses(self):
-        self.assertEqual([self.__test_weather_rain],
-             weatherutils.filter_by_matching_statuses(['rain'],
-                                          self.__test_weathers))
-        self.assertEqual([self.__test_weather_sun],
-             weatherutils.filter_by_matching_statuses(['clear'],
-                                          self.__test_weathers))
-        self.assertFalse(weatherutils.filter_by_matching_statuses(['test'],
-                                          self.__test_weathers))
+    def test_filter_by_status(self):
+        result_1 = weatherutils.filter_by_status(self.__test_weathers,
+                                                 "rain",
+                                                 self.__test_registry)
+        self.assertEquals(1, len(result_1))
+        self.assertTrue(weatherutils.status_is(result_1[0], "rain",
+                                               self.__test_registry))
+        
+        result_2 = weatherutils.filter_by_status(self.__test_weathers,
+                                                 "sun",
+                                                 self.__test_registry)
+        self.assertEquals(1, len(result_2))
+        self.assertTrue(weatherutils.status_is(result_2[0], "sun",
+                                               self.__test_registry))
 
     def test_find_closest_weather(self):
         self.assertEqual(self.__test_weather_rain,
