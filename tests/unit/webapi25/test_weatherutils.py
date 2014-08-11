@@ -50,17 +50,27 @@ class TestWeatherUtils(unittest.TestCase):
             "Clear", "Sky is clear", 800, "01d")
     __test_weathers = [__test_weather_rain, __test_weather_sun]
 
+    def test_status_is(self):
+        self.assertTrue(weatherutils.status_is(self.__test_weather_rain,
+                                               "rain", self.__test_registry))
+        self.assertFalse(weatherutils.status_is(self.__test_weather_sun,
+                                               "rain", self.__test_registry))
+
+    def test_any_status_is(self):
+        self.assertTrue(weatherutils.any_status_is(self.__test_weathers,
+                                                   "sun", self.__test_registry))
+        self.assertFalse(weatherutils.any_status_is(self.__test_weathers,
+                                                   "storm",
+                                                   self.__test_registry))
+
+
+
+
     def test_status_matches_any(self):
         self.assertTrue(weatherutils.status_matches_any(['rain'],
                                                     self.__test_weather_rain))
         self.assertFalse(weatherutils.status_matches_any(['sunnyday'],
                                                     self.__test_weather_rain))
-
-    def test_statuses_match_any(self):
-        self.assertTrue(weatherutils.statuses_match_any(['rain'],
-                                                    self.__test_weathers))
-        self.assertFalse(weatherutils.statuses_match_any(['sandstorm'],
-                                                    self.__test_weathers))
 
     def test_filter_by_matching_statuses(self):
         self.assertEqual([self.__test_weather_rain],

@@ -6,10 +6,44 @@ management
 """
 from pyowm.exceptions import not_found_error
 
+def status_is(weather, status, weather_code_registry):
+    """
+    Checks if the weather status code of a *Weather* object corresponds to the
+    detailed status indicated. The lookup is performed against the provided 
+    *WeatherCodeRegistry* object.
+
+    :param weather: the *Weather* object whose status code is to be checked
+    :type weather: *Weather*
+    :param status: a string indicating a detailed weather status
+    :type status: str
+    :returns: ``True`` if the check is positive, ``False`` otherwise
+
+    """
+    weather_status = weather_code_registry. \
+        status_for(weather.get_weather_code()).lower()
+    return weather_status == status
+
+def any_status_is(weather_list, status, weather_code_registry):
+    """
+    Checks if the weather status code of any of the *Weather* objects in the
+    provided list corresponds to the detailed status indicated. The lookup is
+    performed against the provided *WeatherCodeRegistry* object.
+
+    :param weathers: a list of *Weather* objects
+    :type weathers: list
+    :param status: a string indicating a detailed weather status
+    :type status: str
+    :returns: ``True`` if the check is positive, ``False`` otherwise
+    
+    """
+    for weather in weather_list:
+        if status_is(weather, status, weather_code_registry):
+            return True
+    return False
 
 def status_matches_any(word_list, weather):
     """
-    Checks if one or more keywords in a given list is contained into the
+    Checks if one or more keywords in a given list matches the
     detailed weather status of a *Weather* object
 
     :param word_list: a list of string keywords
@@ -22,23 +56,6 @@ def status_matches_any(word_list, weather):
     detailed_status = weather.get_detailed_status().lower()
     for word in word_list:
         if word in detailed_status:
-            return True
-    return False
-
-
-def statuses_match_any(word_list, weathers_list):
-    """
-    Checks if one or more of the detailed statuses of the *Weather* objects
-    into the given list contain at least one of the keywords in the given list
-
-    :param word_list: a list of string keywords
-    :type word_list: list
-    :param weathers_list: a list of *Weather* objects
-    :type weathers_list: list
-    :returns: ``True`` if one or more matchings are found, ``False`` otherwise
-    """
-    for weather in weathers_list:
-        if status_matches_any(word_list, weather):
             return True
     return False
 
