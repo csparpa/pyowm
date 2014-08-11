@@ -6,6 +6,7 @@ from pyowm.webapi25 import observationlistparser
 from pyowm.webapi25 import forecastparser
 from pyowm.webapi25 import weatherhistoryparser
 from pyowm.webapi25 import stationhistoryparser
+from pyowm.webapi25 import weathercoderegistry
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
@@ -36,9 +37,38 @@ cache = nullcache.NullCache()
 # OWM web API availability test timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 
-# Weather status keywords
-RAIN_KEYWORDS = ['rain', 'drizzle']
-SUN_KEYWORDS = ['clear']
-CLOUDS_KEYWORDS = ['clouds']
-FOG_KEYWORDS = ['fog', 'haze', 'mist']
-SNOW_KEYWORDS = ['snow', 'sleet']
+# Weather status code registry
+weather_code_registry = weathercoderegistry.WeatherCodeRegistry({
+    "rain": [{
+        "start": 500,
+        "end": 531
+    },
+    {
+        "start": 300,
+        "end": 321
+    }],
+    "sun": [{
+        "start": 800,
+        "end": 800
+    }],
+    "clouds": [{
+        "start": 801,
+        "end": 804
+    }],
+    "fog": [{
+        "start": 741,
+        "end": 741
+    }],
+    "haze": [{
+        "start": 721,
+        "end": 721
+    }],
+    "mist": [{
+        "start": 701,
+        "end": 701
+    }],
+    "snow": [{
+        "start": 600,
+        "end": 622
+    }]
+})
