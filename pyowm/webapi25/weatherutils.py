@@ -61,8 +61,11 @@ def filter_by_status(weather_list, status, weather_code_registry):
     :returns: ``True`` if the check is positive, ``False`` otherwise
     
     """
-    return filter(lambda w: status_is(w, status, weather_code_registry),
-                  weather_list)
+    result = []
+    for weather in weather_list:
+        if status_is(weather, status, weather_code_registry):
+            result.append(weather)
+    return result
 
 def is_in_coverage(unixtime, weathers_list):
     """
