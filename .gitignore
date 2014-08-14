@@ -8,3 +8,4 @@ sphinx/_build/*
 .settings/*
 .project
 .pydevproject
+.idea/*
