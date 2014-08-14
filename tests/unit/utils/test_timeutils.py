@@ -82,3 +82,55 @@ class TestTimeUtils(unittest.TestCase):
         expected = d + timedelta(hours=-3)
         result = timeutils.last_three_hours(d)
         self.assertAlmostEqual(expected, result)
+
+    def test_next_hour(self):
+        result = timeutils.next_hour()
+        expected = datetime.now() + timedelta(hours=1)
+        self.assertAlmostEqual(
+           float(timeformatutils.to_UNIXtime(expected)),
+           float(timeformatutils.to_UNIXtime(result)))
+
+    def test_next_hour_after_specified_time(self):
+        d = datetime(2013, 12, 7, 15, 46, 12)
+        expected = d + timedelta(hours=1)
+        result = timeutils.next_hour(d)
+        self.assertAlmostEqual(expected, result)
+
+    def test_next_week(self):
+        result = timeutils.next_week()
+        expected = datetime.now() + timedelta(days=7)
+        self.assertAlmostEqual(
+           float(timeformatutils.to_UNIXtime(expected)),
+           float(timeformatutils.to_UNIXtime(result)))
+
+    def test_next_week_after_specified_time(self):
+        d = datetime(2013, 12, 7, 15, 46, 12)
+        expected = d + timedelta(days=7)
+        result = timeutils.next_week(d)
+        self.assertAlmostEqual(expected, result)
+
+    def test_last_week(self):
+        result = timeutils.last_week()
+        expected = datetime.now() + timedelta(days=-7)
+        self.assertAlmostEqual(
+           float(timeformatutils.to_UNIXtime(expected)),
+           float(timeformatutils.to_UNIXtime(result)))
+
+    def test_last_week_after_specified_time(self):
+        d = datetime(2013, 12, 7, 15, 46, 12)
+        expected = d + timedelta(days=-7)
+        result = timeutils.last_week(d)
+        self.assertAlmostEqual(expected, result)
+
+    def test_last_hour(self):
+        result = timeutils.last_hour()
+        expected = datetime.now() + timedelta(hours=-1)
+        self.assertAlmostEqual(
+           float(timeformatutils.to_UNIXtime(expected)),
+           float(timeformatutils.to_UNIXtime(result)))
+
+    def test_last_hour_after_specified_time(self):
+        d = datetime(2013, 12, 7, 15, 46, 12)
+        expected = d + timedelta(hours=-1)
+        result = timeutils.last_hour(d)
+        self.assertAlmostEqual(expected, result)
