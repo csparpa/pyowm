@@ -112,3 +112,20 @@ def now(timeformat='date'):
         when negative time values are provided
     """
     return timeformatutils.timeformat(datetime.now(), timeformat)
+
+def next_hour(date=None):
+    """
+    Gives the ``datetime.datetime`` object corresponding to the next hour
+    from now or from the specified ``datetime.datetime`` object.
+
+    :param date: the date you want an hour to be added (if left ``None``,
+        the current date and time will be used)
+    :type date: ``datetime.datetime`` object
+    :returns: a ``datetime.datetime`` object
+    """
+    if date is None:
+        return datetime.now() + timedelta(hours=1)
+    else:
+        assert isinstance(date, datetime), __name__ + \
+            ": 'date' must be a datetime.datetime object"
+        return date + timedelta(hours=1)
