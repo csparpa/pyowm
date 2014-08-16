@@ -100,9 +100,9 @@ class CacheTestWebAPI25(unittest.TestCase):
         o2 = owm.weather_at('London,uk')  # Comes from cache
         after_cache_hit_1 = time()
         owm.weather_at('Kiev')       # Comes from OWM web API
-        owm.weather_at_coords(18.503723, -33.936524)  # Comes from OWM web API
-        owm.weather_at_coords(18.503723, -33.936524)  # Cached, we don't care
-        owm.weather_at_coords(18.503723, -33.936524)  # Cached, we don't care
+        owm.weather_at_coords(-33.936524, 18.503723)  # Comes from OWM web API
+        owm.weather_at_coords(-33.936524, 18.503723)  # Cached, we don't care
+        owm.weather_at_coords(-33.936524, 18.503723)  # Cached, we don't care
         before_cache_hit_2 = time()
         o3 = owm.weather_at('London,uk')  # Comes from cache
         after_cache_hit_2 = time()

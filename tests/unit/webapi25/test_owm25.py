@@ -116,7 +116,7 @@ class TestOWM25(unittest.TestCase):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_single_obs
-        result = self.__test_instance.weather_at_coords(-2.15, 57.0)
+        result = self.__test_instance.weather_at_coords(57.0, -2.15)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)
@@ -132,13 +132,13 @@ class TestOWM25(unittest.TestCase):
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90
         """
         self.assertRaises(ValueError, OWM25.weather_at_coords, \
-                          self.__test_instance, -200.0, 43.7)
+                          self.__test_instance, 43.7, -200.0)
         self.assertRaises(ValueError, OWM25.weather_at_coords, \
-                          self.__test_instance, 200.0, 43.7)
+                          self.__test_instance, 43.7, 200.0)
         self.assertRaises(ValueError, OWM25.weather_at_coords, \
-                          self.__test_instance, 2.5, -200)
+                          self.__test_instance, -200, 2.5)
         self.assertRaises(ValueError, OWM25.weather_at_coords, \
-                          self.__test_instance, 2.5, 200)
+                          self.__test_instance, 200, 2.5)
 
     def test_find_weather_by_name(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -169,7 +169,7 @@ class TestOWM25(unittest.TestCase):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_multiple_obs
-        result = self.__test_instance.find_weather_by_coords(-2.15, 57.0)
+        result = self.__test_instance.find_weather_by_coords(57.0, -2.15)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, list))
         for item in result:
@@ -187,17 +187,17 @@ class TestOWM25(unittest.TestCase):
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90
         """
         self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
-                          self.__test_instance, -200.0, 43.7)
+                          self.__test_instance, 43.7, -200.0)
         self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
-                          self.__test_instance, 200.0, 43.7)
+                          self.__test_instance, 43.7, 200.0)
         self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
-                          self.__test_instance, 2.5, -200)
+                          self.__test_instance, -200, 2.5)
         self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
-                          self.__test_instance, 2.5, 200)
+                          self.__test_instance, 200, 2.5)
 
     def test_find_weather_by_coords_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
-                          self.__test_instance, 20.0, 43.7, -3)
+                          self.__test_instance, 43.7, 20.0, -3)
 
     def test_three_hours_forecast(self):
         ref_to_original_call_API = OWMHTTPClient.call_API

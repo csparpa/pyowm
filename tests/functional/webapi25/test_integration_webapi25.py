@@ -48,8 +48,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get currently observed weather at specific coordinates
         """
-        o1 = self.__owm.weather_at_coords(12.484589, 41.896144)  # Rome
-        o2 = self.__owm.weather_at_coords(18.503723, -33.936524)  # Cape Town
+        o1 = self.__owm.weather_at_coords(41.896144, 12.484589)  # Rome
+        o2 = self.__owm.weather_at_coords(-33.936524, 18.503723)  # Cape Town
         self.assertTrue(o1)
         self.assertTrue(o1.get_reception_time())
         loc = o1.get_location()
@@ -127,7 +127,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         Test feature: find currently observed weather for locations that are
         nearby the specified coordinates
         """
-        o2 = self.__owm.find_weather_by_coords(-2.15, 57.0)  # Scotland
+        o2 = self.__owm.find_weather_by_coords(57.0, -2.15)  # Scotland
         self.assertTrue(isinstance(o2, list))
         for item in o2:
             self.assertTrue(item is not None)
@@ -138,7 +138,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             weat = item.get_weather()
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
-        o1 = self.__owm.find_weather_by_coords(-2.15, 57.0, 2)  # Scotland
+        o1 = self.__owm.find_weather_by_coords(57.0, -2.15, 2)  # Scotland
         self.assertTrue(isinstance(o1, list))
         for item in o1:
             self.assertTrue(item is not None)
