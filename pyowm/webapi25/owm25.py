@@ -88,7 +88,7 @@ class OWM25(owm.OWM):
 
         """
         data = self._httpclient.call_API(OBSERVATION_URL, {},
-                                          API_AVAILABILITY_TIMEOUT)
+                                         API_AVAILABILITY_TIMEOUT)
         if data is not None:
             return True
         return False
@@ -111,15 +111,15 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(OBSERVATION_URL, {'q': name})
         return self._parsers['observation'].parse_JSON(json_data)
 
-    def weather_at_coords(self, lon, lat):
+    def weather_at_coords(self, lat, lon):
         """
         Queries the OWM web API for the currently observed weather at the
-        specified geographic (eg: -0.107331,51.503614).
+        specified geographic (eg: 51.503614, -0.107331).
 
-        :param lon: the location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
         :param lat: the location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
         :returns: an *Observation* instance or ``None`` if no weather data is
             available
         :raises: *ParseResponseException* when OWM web API responses' data
@@ -174,15 +174,15 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
-    def find_weather_by_coords(self, lon, lat, limit=None):
+    def find_weather_by_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations in the proximity of the specified coordinates.
 
-        :param lon: location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
         :param lat: location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
         :param limit: the maximum number of *Observation* items in the returned
             list (default is ``None``, which stands for any number of items)
         :param limit: int or ``None``
