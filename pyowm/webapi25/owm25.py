@@ -29,23 +29,23 @@ class OWM25(owm.OWM):
     :type parsers: dict
     :param API_key: the OWM web API key (defaults to ``None``)
     :type API_key: str
-    :param language: the language in which you want text results to be returned.
-          It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
-    :type language: str
     :param cache: a concrete implementation of class *OWMCache* serving as the
         cache provider (defaults to a *NullCache* instance)
     :type cache: an *OWMCache* concrete instance
+    :param language: the language in which you want text results to be returned.
+          It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
+    :type language: str
     :returns: an *OWM25* instance
 
     """
-    def __init__(self, parsers, API_key=None, language="en",
-                 cache=nullcache.NullCache()):
-        self._language = language
+    def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
+                 language="en"):
         self._parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self._API_key = API_key
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
+        self._language = language
 
     def get_API_key(self):
         """
