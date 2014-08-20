@@ -261,7 +261,8 @@ class Weather(object):
             xmlutils.annotate_with_XMLNS(root_node,
                                          WEATHER_XMLNS_PREFIX,
                                          WEATHER_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+        return xmlutils.DOM_node_to_XML(root_node, xml_declaration). \
+            encode('utf-8')
 
     def _to_DOM(self):
         """

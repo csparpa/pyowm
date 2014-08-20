@@ -34,6 +34,9 @@ parsers = {
 # Cache provider to be used
 cache = nullcache.NullCache()
 
+# Default language for OWM web API queries text results
+language = 'en'
+
 # OWM web API availability test timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 

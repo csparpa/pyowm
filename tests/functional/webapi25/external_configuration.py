@@ -26,6 +26,9 @@ parsers = {
 # Cache provider to be used
 cache = None
 
+# Default language for OWM web API queries text results
+language = 'ru'
+
 # OWM web API availability test timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 

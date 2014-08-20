@@ -283,15 +283,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         data1 = sh1.get_measurements()
         self.assertTrue(data1 is not None)
         self.assertFalse(0, len(data1))
-        h2 = self.__owm.station_hour_history(123, limit=2)
-        self.assertTrue(h2 is not None)
-        sh2 = h2.get_station_history()
-        self.assertTrue(sh2 is not None)
-        data2 = sh2.get_measurements()
-        self.assertTrue(data2 is not None)
-        self.assertFalse(len(data2) > 2)
-        h3 = self.__owm.station_hour_history(987654)  # Shall be None
-        self.assertFalse(h3 is not None)
+        h2 = self.__owm.station_hour_history(987654)  # Shall be None
+        self.assertFalse(h2 is not None)
 
     def test_station_day_history(self):
         """
@@ -305,13 +298,13 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         data1 = sh1.get_measurements()
         self.assertTrue(data1 is not None)
         self.assertFalse(0, len(data1))
-        h2 = self.__owm.station_day_history(123, limit=2)
+        h2 = self.__owm.station_day_history(123, limit=3)
         self.assertTrue(h2 is not None)
         sh2 = h2.get_station_history()
         self.assertTrue(sh2 is not None)
         data2 = sh2.get_measurements()
         self.assertTrue(data2 is not None)
-        self.assertFalse(len(data2) > 2)
+        self.assertFalse(len(data2) > 3)
         h3 = self.__owm.station_day_history(987654)  # Shall be None
         self.assertFalse(h3 is not None)
 
