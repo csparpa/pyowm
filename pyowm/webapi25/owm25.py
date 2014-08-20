@@ -25,17 +25,22 @@ class OWM25(owm.OWM):
     payload of a specific API endpoint
 
     :param parsers: the dictionary containing *jsonparser* concrete instances
-        to be used as parsers for OWM web API 2.5 reponses
+        to be used as parsers for OWM web API 2.5 responses
     :type parsers: dict
     :param API_key: the OWM web API key (defaults to ``None``)
     :type API_key: str
+    :param language: the language in which you want text results to be returned.
+          It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
+    :type language: str
     :param cache: a concrete implementation of class *OWMCache* serving as the
         cache provider (defaults to a *NullCache* instance)
     :type cache: an *OWMCache* concrete instance
     :returns: an *OWM25* instance
 
     """
-    def __init__(self, parsers, API_key=None, cache=nullcache.NullCache()):
+    def __init__(self, parsers, API_key=None, language="en",
+                 cache=nullcache.NullCache()):
+        self._language = language
         self._parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
@@ -78,6 +83,25 @@ class OWM25(owm.OWM):
 
         """
         return constants.PYOWM_VERSION
+
+    def get_language(self):
+        """
+        Returns the language in which the OWM web API shall return text results
+
+        :returns: the language
+
+        """
+        return self._language
+
+    def set_language(self, language):
+        """
+        Sets the language in which the OWM web API shall return text results
+
+        :param language: the new two-characters language (eg: "ru")
+        :type API_key: str
+
+        """
+        self._language = language
 
     def API_online(self):
         """
@@ -133,7 +157,7 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                               {'lon': lon, 'lat': lat})
+                                              {'lon': lon, 'lat': lat})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def find_weather_by_name(self, pattern, searchtype, limit=None):
@@ -226,7 +250,7 @@ class OWM25(owm.OWM):
         """
         assert type(name) is str, "'name' must be a str"
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                               {'q': name})
+                                              {'q': name})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -316,7 +340,7 @@ class OWM25(owm.OWM):
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
         json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
-                                               params)
+                                              params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
@@ -346,7 +370,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         station_history = self._retrieve_station_history(station_ID, limit,
-                                                          "tick")
+                                                         "tick")
         if station_history is not None:
             return historian.Historian(station_history)
         else:
@@ -380,7 +404,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         station_history = self._retrieve_station_history(station_ID, limit,
-                                                          "hour")
+                                                         "hour")
         if station_history is not None:
             return historian.Historian(station_history)
         else:
@@ -414,7 +438,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         station_history = self._retrieve_station_history(station_ID, limit,
-                                                          "day")
+                                                         "day")
         if station_history is not None:
             return historian.Historian(station_history)
         else:
@@ -428,7 +452,7 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(STATION_WEATHER_HISTORY_URL,
-                                               params)
+                                              params)
         station_history = \
             self._parsers['station_history'].parse_JSON(json_data)
         if station_history is not None:

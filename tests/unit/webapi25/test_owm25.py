@@ -97,6 +97,11 @@ class TestOWM25(unittest.TestCase):
     def test_get_version(self):
         self.assertEqual(PYOWM_VERSION, self.__test_instance.get_version())
 
+    def test_language_accessors(self):
+        self.assertEqual("en", self.__test_instance.get_language())
+        self.__test_instance.set_language("ru")
+        self.assertEqual("ru", self.__test_instance.get_language())
+
     def test_weather_at(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
