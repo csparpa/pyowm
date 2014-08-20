@@ -132,7 +132,8 @@ class OWM25(owm.OWM):
             reached
         """
         assert type(name) is str, "'name' must be a str"
-        json_data = self._httpclient.call_API(OBSERVATION_URL, {'q': name})
+        json_data = self._httpclient.call_API(OBSERVATION_URL,
+                                          {'q': name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_coords(self, lat, lon):
@@ -157,7 +158,8 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                              {'lon': lon, 'lat': lat})
+                                              {'lon': lon, 'lat': lat, 
+                                               'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def find_weather_by_name(self, pattern, searchtype, limit=None):
@@ -191,7 +193,7 @@ class OWM25(owm.OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        params = {'q': pattern, 'type': searchtype}
+        params = {'q': pattern, 'type': searchtype, 'lang': self._language}
         if limit is not None:
             # fix for OWM 2.5 API bug!
             params['cnt'] = limit - 1
@@ -223,7 +225,7 @@ class OWM25(owm.OWM):
         assert type(lat) is float or type(lat) is int, "'lat' must be a float"
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        params = {'lon': lon, 'lat': lat}
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -250,7 +252,7 @@ class OWM25(owm.OWM):
         """
         assert type(name) is str, "'name' must be a str"
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                              {'q': name})
+                                          {'q': name, 'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -283,7 +285,7 @@ class OWM25(owm.OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        params = {'q': name}
+        params = {'q': name, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
@@ -321,7 +323,7 @@ class OWM25(owm.OWM):
 
         """
         assert type(name) is str, "'name' must be a str"
-        params = {'q': name}
+        params = {'q': name, 'lang': self._language}
         if start is None and end is None:
             pass
         elif start is not None and end is not None:
@@ -448,7 +450,7 @@ class OWM25(owm.OWM):
         """
         Helper method for station_X_history functions.
         """
-        params = {'id': station_ID, 'type': interval}
+        params = {'id': station_ID, 'type': interval, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(STATION_WEATHER_HISTORY_URL,
@@ -462,6 +464,8 @@ class OWM25(owm.OWM):
 
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \
-               "PyOWM version=%s>" % (__name__, self.__class__.__name__,
+               "PyOWM version=%s, language=%s>" % (__name__,
+                                      self.__class__.__name__,
                                       self._API_key, self.get_API_version(),
-                                      self.get_version())
+                                      self.get_version(),
+                                      self._language)
