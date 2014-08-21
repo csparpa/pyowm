@@ -101,31 +101,73 @@ class Historian(object):
                 self._station_history.get_measurements()[timestamp]['wind']) \
                 for timestamp in self._station_history.get_measurements()]
 
-    def max_temperature(self):
+    def max_temperature(self,  unit='kelvin'):
         """Returns a tuple containing the max value in the temperature
         series preceeded by its timestamp
-
-        :returns: a tuple
-        """
-        return max(self._purge_none_samples(self.temperature_series()),
-                   key=itemgetter(1))
         
-    def min_temperature(self):
+        :param unit: the unit of measure for the temperature values. May be
+            among: '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
+        :type unit: str
+        :returns: a tuple
+        :raises: ValueError when invalid values are provided for the unit of
+            measure
+        """
+        if unit not in ('kelvin', 'celsius', 'fahrenheit'):
+            raise ValueError("Invalid value for parameter 'unit'")
+        maximum = max(self._purge_none_samples(self.temperature_series()),
+                   key=itemgetter(1))
+        if unit == 'kelvin':
+            result = maximum
+        if unit == 'celsius':
+            result = (maximum[0], temputils.kelvin_to_celsius(maximum[1]))
+        if unit == 'fahrenheit':
+            result = (maximum[0], temputils.kelvin_to_fahrenheit(maximum[1]))
+        return result
+        
+    def min_temperature(self, unit='kelvin'):
         """Returns a tuple containing the min value in the temperature
         series preceeded by its timestamp
-
-        :returns: a tuple
-        """
-        return min(self._purge_none_samples(self.temperature_series()),
-                   key=itemgetter(1))
         
-    def average_temperature(self):
-        """Returns the average value in the temperature series
-
-        :returns: a float
+        :param unit: the unit of measure for the temperature values. May be
+            among: '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
+        :type unit: str
+        :returns: a tuple
+        :raises: ValueError when invalid values are provided for the unit of
+            measure
         """
-        return self._average(self._purge_none_samples(
+        if unit not in ('kelvin', 'celsius', 'fahrenheit'):
+            raise ValueError("Invalid value for parameter 'unit'")
+        minimum = min(self._purge_none_samples(self.temperature_series()),
+                   key=itemgetter(1))
+        if unit == 'kelvin':
+            result = minimum
+        if unit == 'celsius':
+            result = (minimum[0], temputils.kelvin_to_celsius(minimum[1]))
+        if unit == 'fahrenheit':
+            result = (minimum[0], temputils.kelvin_to_fahrenheit(minimum[1]))
+        return result
+        
+    def average_temperature(self, unit='kelvin'):
+        """Returns the average value in the temperature series
+        
+        :param unit: the unit of measure for the temperature values. May be
+            among: '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
+        :type unit: str
+        :returns: a float
+        :raises: ValueError when invalid values are provided for the unit of
+            measure
+        """
+        if unit not in ('kelvin', 'celsius', 'fahrenheit'):
+            raise ValueError("Invalid value for parameter 'unit'")
+        average = self._average(self._purge_none_samples(
                                                   self.temperature_series()))
+        if unit == 'kelvin':
+            result = average
+        if unit == 'celsius':
+            result = temputils.kelvin_to_celsius(average)
+        if unit == 'fahrenheit':
+            result = temputils.kelvin_to_fahrenheit(average)
+        return result
     
     def max_humidity(self):
         """Returns a tuple containing the max value in the humidity

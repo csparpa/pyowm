@@ -7,6 +7,7 @@ Test case for historian.py module
 import unittest
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.webapi25.historian import Historian
+from pyowm.utils import temputils
 
 
 class TestHistorian(unittest.TestCase):
@@ -74,14 +75,60 @@ class TestHistorian(unittest.TestCase):
         expected = (1362934043, 266.85)
         self.assertEqual(expected, self.__instance.max_temperature())
         
+    def test_max_temperature_with_different_temperature_units(self):
+        expected_kelvin = (1362934043, 266.85)
+        expected_celsius = (1362934043, -6.3)
+        expected_fahrenheit = (1362934043, 20.66)
+        self.assertEqual(expected_kelvin,
+                         self.__instance.max_temperature(unit='kelvin'))
+        self.assertEqual(expected_celsius,
+                         self.__instance.max_temperature(unit='celsius'))
+        self.assertEqual(expected_fahrenheit,
+                         self.__instance.max_temperature(unit='fahrenheit'))
+
+    def test_max_temperature_fails_with_unknown_temperature_unit(self):
+        self.assertRaises(ValueError, Historian.max_temperature,
+                          self.__instance, 'xyz')
+        
     def test_min_temperature(self):
         expected = (1362933983, 266.25)
         self.assertEqual(expected, self.__instance.min_temperature())
+        
+    def test_min_temperature_with_different_temperature_units(self):
+        expected_kelvin = (1362933983, 266.25)
+        expected_celsius = (1362933983, -6.9)
+        expected_fahrenheit = (1362933983, 19.58)
+        self.assertEqual(expected_kelvin,
+                         self.__instance.min_temperature(unit='kelvin'))
+        self.assertEqual(expected_celsius,
+                         self.__instance.min_temperature(unit='celsius'))
+        self.assertEqual(expected_fahrenheit,
+                         self.__instance.min_temperature(unit='fahrenheit'))
+        
+    def test_min_temperature_fails_with_unknown_temperature_unit(self):
+        self.assertRaises(ValueError, Historian.min_temperature,
+                          self.__instance, 'xyz')
 
     def test_average_temperature(self):
         expected = (266.85 + 266.25)/2.0
         self.assertEqual(expected, self.__instance.average_temperature())
+
+    def test_average_temperature_with_different_temperature_units(self):
+        avg = (266.85 + 266.25)/2.0
+        expected_kelvin = avg
+        expected_celsius = temputils.kelvin_to_celsius(avg)
+        expected_fahrenheit = temputils.kelvin_to_fahrenheit(avg)
+        self.assertEqual(expected_kelvin,
+                         self.__instance.average_temperature(unit='kelvin'))
+        self.assertEqual(expected_celsius,
+                         self.__instance.average_temperature(unit='celsius'))
+        self.assertEqual(expected_fahrenheit,
+                         self.__instance.average_temperature(unit='fahrenheit'))
         
+    def test_average_temperature_fails_with_unknown_temperature_unit(self):
+        self.assertRaises(ValueError, Historian.average_temperature,
+                          self.__instance, 'xyz')
+
     def test_max_humidity(self):
         expected = (1362934043, 27.7)
         self.assertEqual(expected, self.__instance.max_humidity())
