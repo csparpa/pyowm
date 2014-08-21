@@ -8,9 +8,9 @@ install:
 script:
   - python setup.py install
   - python setup.py test -s tests.unit
-  - coverage run --source=pyowm setup.py test -s tests.unit
+  - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
 after_success:
-  coveralls --rcfile=.coveragerc
+  coveralls
 notifications:
   email:
     on_failure: change
