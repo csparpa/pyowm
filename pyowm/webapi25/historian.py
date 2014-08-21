@@ -110,7 +110,7 @@ class Historian(object):
         :type unit: str
         :returns: a tuple
         :raises: ValueError when invalid values are provided for the unit of
-            measure
+            measure or the measurement series is empty
         """
         if unit not in ('kelvin', 'celsius', 'fahrenheit'):
             raise ValueError("Invalid value for parameter 'unit'")
@@ -133,7 +133,7 @@ class Historian(object):
         :type unit: str
         :returns: a tuple
         :raises: ValueError when invalid values are provided for the unit of
-            measure
+            measure or the measurement series is empty
         """
         if unit not in ('kelvin', 'celsius', 'fahrenheit'):
             raise ValueError("Invalid value for parameter 'unit'")
@@ -155,7 +155,7 @@ class Historian(object):
         :type unit: str
         :returns: a float
         :raises: ValueError when invalid values are provided for the unit of
-            measure
+            measure or the measurement series is empty
         """
         if unit not in ('kelvin', 'celsius', 'fahrenheit'):
             raise ValueError("Invalid value for parameter 'unit'")
@@ -174,6 +174,7 @@ class Historian(object):
         series preceeded by its timestamp
 
         :returns: a tuple
+        :raises: ValueError when the measurement series is empty
         """
         return max(self._purge_none_samples(self.humidity_series()),
                    key=itemgetter(1))
@@ -183,6 +184,7 @@ class Historian(object):
         series preceeded by its timestamp
 
         :returns: a tuple
+        :raises: ValueError when the measurement series is empty
         """
         return min(self._purge_none_samples(self.humidity_series()),
                    key=itemgetter(1))
@@ -191,6 +193,7 @@ class Historian(object):
         """Returns the average value in the humidity series
 
         :returns: a float
+        :raises: ValueError when the measurement series is empty
         """
         return self._average(self._purge_none_samples(
                                                   self.humidity_series()))
@@ -200,6 +203,7 @@ class Historian(object):
         series preceeded by its timestamp
 
         :returns: a tuple
+        :raises: ValueError when the measurement series is empty
         """
         return max(self._purge_none_samples(self.pressure_series()),
                    key=itemgetter(1))
@@ -209,6 +213,7 @@ class Historian(object):
         series preceeded by its timestamp
 
         :returns: a tuple
+        :raises: ValueError when the measurement series is empty
         """
         return min(self._purge_none_samples(self.pressure_series()),
                    key=itemgetter(1))
@@ -217,6 +222,7 @@ class Historian(object):
         """Returns the average value in the pressure series
 
         :returns: a float
+        :raises: ValueError when the measurement series is empty
         """
         return self._average(self._purge_none_samples(
                                                   self.pressure_series()))
@@ -226,6 +232,7 @@ class Historian(object):
         series preceeded by its timestamp
 
         :returns: a tuple
+        :raises: ValueError when the measurement series is empty
         """
         return max(self._purge_none_samples(self.rain_series()),
                    key=lambda item:item[1])
@@ -235,6 +242,7 @@ class Historian(object):
         series preceeded by its timestamp
 
         :returns: a tuple
+        :raises: ValueError when the measurement series is empty
         """
         return min(self._purge_none_samples(self.rain_series()),
                    key=itemgetter(1))
@@ -243,6 +251,7 @@ class Historian(object):
         """Returns the average value in the rain series
 
         :returns: a float
+        :raises: ValueError when the measurement series is empty
         """
         return self._average(self._purge_none_samples(
                                                   self.rain_series()))
@@ -251,6 +260,8 @@ class Historian(object):
         return [item for item in list_of_tuples if item[1] is not None]
 
     def _average(self, list_of_tuples):
+        if len(list_of_tuples) == 0:
+            raise ValueError("Empty data series: impossible to compute average")
         total = 0.0
         for tpl in list_of_tuples:
             total += tpl[1]

@@ -32,9 +32,29 @@ class TestHistorian(unittest.TestCase):
              "wind": 4.7
         }
     }
+    __test_empty_measurements = {
+        1362933983: {
+             "temperature": None,
+             "humidity": None,
+             "pressure": None,
+             "rain": None,
+             "wind": None
+         },
+        1362934043: {
+             "temperature": None,
+             "humidity": None,
+             "pressure": None,
+             "rain": None,
+             "wind": None
+        }
+    }
     __test_station_history = StationHistory(__test_station_ID, 'tick',
                                     __test_reception_time, __test_measurements)
+    __test_empty_station_history = StationHistory(__test_station_ID, 'tick',
+                                    __test_reception_time,
+                                    __test_empty_measurements)
     __instance = Historian(__test_station_history)
+    __empty_instance = Historian(__test_empty_station_history)
 
     def test_temperature_series(self):
         expected = [(1362934043, 266.85), (1362933983, 266.25)]
@@ -90,6 +110,10 @@ class TestHistorian(unittest.TestCase):
         self.assertRaises(ValueError, Historian.max_temperature,
                           self.__instance, 'xyz')
         
+    def test_max_temperature_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.max_temperature,
+                          self.__empty_instance)
+        
     def test_min_temperature(self):
         expected = (1362933983, 266.25)
         self.assertEqual(expected, self.__instance.min_temperature())
@@ -108,6 +132,10 @@ class TestHistorian(unittest.TestCase):
     def test_min_temperature_fails_with_unknown_temperature_unit(self):
         self.assertRaises(ValueError, Historian.min_temperature,
                           self.__instance, 'xyz')
+        
+    def test_min_temperature_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.min_temperature,
+                          self.__empty_instance)
 
     def test_average_temperature(self):
         expected = (266.85 + 266.25)/2.0
@@ -129,41 +157,81 @@ class TestHistorian(unittest.TestCase):
         self.assertRaises(ValueError, Historian.average_temperature,
                           self.__instance, 'xyz')
 
+    def test_average_temperature_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.average_temperature,
+                          self.__empty_instance)
+
     def test_max_humidity(self):
         expected = (1362934043, 27.7)
         self.assertEqual(expected, self.__instance.max_humidity())
         
+    def test_max_humidity_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.max_humidity,
+                          self.__empty_instance)
+        
     def test_min_humidity(self):
         expected = (1362933983, 27.3)
         self.assertEqual(expected, self.__instance.min_humidity())
+        
+    def test_min_humidity_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.min_humidity,
+                          self.__empty_instance)
 
     def test_average_humidity(self):
         expected = (27.3 + 27.7)/2.0
         self.assertEqual(expected, self.__instance.average_humidity())
+
+    def test_average_humidity_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.average_humidity,
+                          self.__empty_instance)
         
     def test_max_pressure(self):
         expected = (1362934043, 1010.09)
         self.assertEqual(expected, self.__instance.max_pressure())
         
+    def test_max_pressure_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.max_pressure,
+                          self.__empty_instance)
+        
     def test_min_pressure(self):
         expected = (1362933983, 1010.02)
         self.assertEqual(expected, self.__instance.min_pressure())
 
+    def test_min_pressure_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.min_pressure,
+                          self.__empty_instance)
+
     def test_average_pressure(self):
         expected = (1010.02 + 1010.09)/2.0
         self.assertEqual(expected, self.__instance.average_pressure())
+
+    def test_average_pressure_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.average_pressure,
+                          self.__empty_instance)
         
     def test_max_rain(self):
         expected = (1362934043, 2.5)
         self.assertEqual(expected, self.__instance.max_rain())
+
+    def test_max_rain_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.max_rain,
+                          self.__empty_instance)
         
     def test_min_rain(self):
         expected = (1362934043, 2.5)
         self.assertEqual(expected, self.__instance.min_rain())
 
+    def test_min_rain_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.min_rain,
+                          self.__empty_instance)
+
     def test_average_rain(self):
         expected = (2.5 + 2.5)/2.0
         self.assertEqual(expected, self.__instance.average_rain())
+
+    def test_average_rain_on_empty_measurements(self):
+        self.assertRaises(ValueError, Historian.average_rain,
+                          self.__empty_instance)
 
     def test_purge_none_samples(self):
         input_list = [("a", 1), ("b", 2), ("c", None), ("d", None), ("e", 5)]
