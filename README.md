@@ -3,7 +3,7 @@ PyOWM
 A Python wrapper around the OpenWeatherMap API
 
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
-[![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png)](https://coveralls.io/r/csparpa/pyowm)
+[![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
 
 What is it?
 ------------
