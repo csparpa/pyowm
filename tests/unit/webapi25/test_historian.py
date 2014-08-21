@@ -85,3 +85,11 @@ class TestHistorian(unittest.TestCase):
     def test_min_humidity(self):
         expected = (1362933983, 27.3)
         self.assertEqual(expected, self.__instance.min_humidity())
+        
+    def test_max_pressure(self):
+        expected = (1362934043, 1010.09)
+        self.assertEqual(expected, self.__instance.max_pressure())
+        
+    def test_min_pressure(self):
+        expected = (1362933983, 1010.02)
+        self.assertEqual(expected, self.__instance.min_pressure())
