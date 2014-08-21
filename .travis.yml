@@ -10,7 +10,7 @@ script:
   - python setup.py test -s tests.unit
   - coverage run --source=pyowm setup.py test -s tests.unit
 after_success:
-  coveralls
+  coveralls --rcfile=.coveragerc
 notifications:
   email:
     on_failure: change
