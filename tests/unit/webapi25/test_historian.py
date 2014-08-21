@@ -27,7 +27,7 @@ class TestHistorian(unittest.TestCase):
              "temperature": 266.85,
              "humidity": 27.7,
              "pressure": 1010.09,
-             "rain": None,
+             "rain": 2.5,
              "wind": 4.7
         }
     }
@@ -63,7 +63,7 @@ class TestHistorian(unittest.TestCase):
         self.assertEqual(expected, self.__instance.pressure_series())
 
     def test_rain_series(self):
-        expected = [(1362934043, None), (1362933983, None)]
+        expected = [(1362934043, 2.5), (1362933983, None)]
         self.assertEqual(expected, self.__instance.rain_series())
 
     def test_wind_series(self):
@@ -93,3 +93,17 @@ class TestHistorian(unittest.TestCase):
     def test_min_pressure(self):
         expected = (1362933983, 1010.02)
         self.assertEqual(expected, self.__instance.min_pressure())
+        
+    def test_max_rain(self):
+        expected = (1362934043, 2.5)
+        self.assertEqual(expected, self.__instance.max_rain())
+        
+    def test_min_rain(self):
+        expected = (1362934043, 2.5)
+        self.assertEqual(expected, self.__instance.min_rain())
+
+    def test_purge_none_samples(self):
+        input_list = [("a", 1), ("b", 2), ("c", None), ("d", None), ("e", 5)]
+        expected = [("a", 1), ("b", 2), ("e", 5)]
+        self.assertEqual(set(expected),
+                         set(self.__instance._purge_none_samples(input_list)))

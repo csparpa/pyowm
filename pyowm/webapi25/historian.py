@@ -107,7 +107,8 @@ class Historian(object):
 
         :returns: a tuple
         """
-        return max(self.temperature_series(),key=itemgetter(1))
+        return max(self._purge_none_samples(self.temperature_series()),
+                   key=itemgetter(1))
         
     def min_temperature(self):
         """Returns the a tuple containing the min value in the temperature
@@ -115,7 +116,8 @@ class Historian(object):
 
         :returns: a tuple
         """
-        return min(self.temperature_series(),key=itemgetter(1))
+        return min(self._purge_none_samples(self.temperature_series()),
+                   key=itemgetter(1))
     
     def max_humidity(self):
         """Returns the a tuple containing the max value in the humidity
@@ -123,7 +125,8 @@ class Historian(object):
 
         :returns: a tuple
         """
-        return max(self.humidity_series(),key=itemgetter(1))
+        return max(self._purge_none_samples(self.humidity_series()),
+                   key=itemgetter(1))
         
     def min_humidity(self):
         """Returns the a tuple containing the min value in the humidity
@@ -131,7 +134,8 @@ class Historian(object):
 
         :returns: a tuple
         """
-        return min(self.humidity_series(),key=itemgetter(1))
+        return min(self._purge_none_samples(self.humidity_series()),
+                   key=itemgetter(1))
 
     def max_pressure(self):
         """Returns the a tuple containing the max value in the pressure
@@ -139,7 +143,8 @@ class Historian(object):
 
         :returns: a tuple
         """
-        return max(self.pressure_series(),key=itemgetter(1))
+        return max(self._purge_none_samples(self.pressure_series()),
+                   key=itemgetter(1))
         
     def min_pressure(self):
         """Returns the a tuple containing the min value in the pressure
@@ -147,7 +152,29 @@ class Historian(object):
 
         :returns: a tuple
         """
-        return min(self.pressure_series(),key=itemgetter(1))
+        return min(self._purge_none_samples(self.pressure_series()),
+                   key=itemgetter(1))
+
+    def max_rain(self):
+        """Returns the a tuple containing the max value in the rain
+        series preceeded by its timestamp
+
+        :returns: a tuple
+        """
+        return max(self._purge_none_samples(self.rain_series()),
+                   key=lambda item:item[1])
+        
+    def min_rain(self):
+        """Returns the a tuple containing the min value in the rain
+        series preceeded by its timestamp
+
+        :returns: a tuple
+        """
+        return min(self._purge_none_samples(self.rain_series()),
+                   key=itemgetter(1))
+
+    def _purge_none_samples(self, list_of_tuples):
+        return [item for item in list_of_tuples if item[1] is not None]
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)
