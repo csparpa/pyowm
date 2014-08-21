@@ -8,7 +8,7 @@ install:
 script:
   - python setup.py install
   - python setup.py test -s tests.unit
-  - coverage run manage.py test
+  - coverage run --source=pyowm setup.py test -s tests.unit
 after_success:
   coveralls
 notifications:
