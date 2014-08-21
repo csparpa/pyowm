@@ -3,10 +3,14 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
+install:
+  - pip install coveralls
 script:
   - python setup.py install
   - python setup.py test -s tests.unit
+  - coverage run manage.py test
+after_success:
+  coveralls
 notifications:
   email:
-    on_success: change
     on_failure: change
