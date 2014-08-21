@@ -77,6 +77,10 @@ class TestHistorian(unittest.TestCase):
     def test_min_temperature(self):
         expected = (1362933983, 266.25)
         self.assertEqual(expected, self.__instance.min_temperature())
+
+    def test_average_temperature(self):
+        expected = (266.85 + 266.25)/2.0
+        self.assertEqual(expected, self.__instance.average_temperature())
         
     def test_max_humidity(self):
         expected = (1362934043, 27.7)
@@ -85,6 +89,10 @@ class TestHistorian(unittest.TestCase):
     def test_min_humidity(self):
         expected = (1362933983, 27.3)
         self.assertEqual(expected, self.__instance.min_humidity())
+
+    def test_average_humidity(self):
+        expected = (27.3 + 27.7)/2.0
+        self.assertEqual(expected, self.__instance.average_humidity())
         
     def test_max_pressure(self):
         expected = (1362934043, 1010.09)
@@ -93,6 +101,10 @@ class TestHistorian(unittest.TestCase):
     def test_min_pressure(self):
         expected = (1362933983, 1010.02)
         self.assertEqual(expected, self.__instance.min_pressure())
+
+    def test_average_pressure(self):
+        expected = (1010.02 + 1010.09)/2.0
+        self.assertEqual(expected, self.__instance.average_pressure())
         
     def test_max_rain(self):
         expected = (1362934043, 2.5)
@@ -102,8 +114,17 @@ class TestHistorian(unittest.TestCase):
         expected = (1362934043, 2.5)
         self.assertEqual(expected, self.__instance.min_rain())
 
+    def test_average_rain(self):
+        expected = (2.5 + 2.5)/2.0
+        self.assertEqual(expected, self.__instance.average_rain())
+
     def test_purge_none_samples(self):
         input_list = [("a", 1), ("b", 2), ("c", None), ("d", None), ("e", 5)]
         expected = [("a", 1), ("b", 2), ("e", 5)]
         self.assertEqual(set(expected),
                          set(self.__instance._purge_none_samples(input_list)))
+    def test_average(self):
+        input_list = [("a", 1.0), ("b", 2.0), ("c", 3.0), ("d", 4.0)]
+        expected = 10.0/len(input_list)
+        self.assertEqual(expected,
+                         self.__instance._average(input_list))

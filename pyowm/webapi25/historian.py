@@ -102,7 +102,7 @@ class Historian(object):
                 for timestamp in self._station_history.get_measurements()]
 
     def max_temperature(self):
-        """Returns the a tuple containing the max value in the temperature
+        """Returns a tuple containing the max value in the temperature
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -111,16 +111,24 @@ class Historian(object):
                    key=itemgetter(1))
         
     def min_temperature(self):
-        """Returns the a tuple containing the min value in the temperature
+        """Returns a tuple containing the min value in the temperature
         series preceeded by its timestamp
 
         :returns: a tuple
         """
         return min(self._purge_none_samples(self.temperature_series()),
                    key=itemgetter(1))
+        
+    def average_temperature(self):
+        """Returns the average value in the temperature series
+
+        :returns: a float
+        """
+        return self._average(self._purge_none_samples(
+                                                  self.temperature_series()))
     
     def max_humidity(self):
-        """Returns the a tuple containing the max value in the humidity
+        """Returns a tuple containing the max value in the humidity
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -129,7 +137,7 @@ class Historian(object):
                    key=itemgetter(1))
         
     def min_humidity(self):
-        """Returns the a tuple containing the min value in the humidity
+        """Returns a tuple containing the min value in the humidity
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -137,8 +145,16 @@ class Historian(object):
         return min(self._purge_none_samples(self.humidity_series()),
                    key=itemgetter(1))
 
+    def average_humidity(self):
+        """Returns the average value in the humidity series
+
+        :returns: a float
+        """
+        return self._average(self._purge_none_samples(
+                                                  self.humidity_series()))
+
     def max_pressure(self):
-        """Returns the a tuple containing the max value in the pressure
+        """Returns a tuple containing the max value in the pressure
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -147,7 +163,7 @@ class Historian(object):
                    key=itemgetter(1))
         
     def min_pressure(self):
-        """Returns the a tuple containing the min value in the pressure
+        """Returns a tuple containing the min value in the pressure
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -155,8 +171,16 @@ class Historian(object):
         return min(self._purge_none_samples(self.pressure_series()),
                    key=itemgetter(1))
 
+    def average_pressure(self):
+        """Returns the average value in the pressure series
+
+        :returns: a float
+        """
+        return self._average(self._purge_none_samples(
+                                                  self.pressure_series()))
+
     def max_rain(self):
-        """Returns the a tuple containing the max value in the rain
+        """Returns a tuple containing the max value in the rain
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -165,7 +189,7 @@ class Historian(object):
                    key=lambda item:item[1])
         
     def min_rain(self):
-        """Returns the a tuple containing the min value in the rain
+        """Returns a tuple containing the min value in the rain
         series preceeded by its timestamp
 
         :returns: a tuple
@@ -173,8 +197,22 @@ class Historian(object):
         return min(self._purge_none_samples(self.rain_series()),
                    key=itemgetter(1))
 
+    def average_rain(self):
+        """Returns the average value in the rain series
+
+        :returns: a float
+        """
+        return self._average(self._purge_none_samples(
+                                                  self.rain_series()))
+
     def _purge_none_samples(self, list_of_tuples):
         return [item for item in list_of_tuples if item[1] is not None]
+
+    def _average(self, list_of_tuples):
+        total = 0.0
+        for tpl in list_of_tuples:
+            total += tpl[1]
+        return total/len(list_of_tuples)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)
