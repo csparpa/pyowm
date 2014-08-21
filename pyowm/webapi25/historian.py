@@ -116,6 +116,22 @@ class Historian(object):
         :returns: a tuple
         """
         return min(self.temperature_series(),key=itemgetter(1))
+    
+    def max_humidity(self):
+        """Returns the a tuple containing the max value in the humidity
+        series preceeded by its timestamp
+
+        :returns: a tuple
+        """
+        return max(self.humidity_series(),key=itemgetter(1))
+        
+    def min_humidity(self):
+        """Returns the a tuple containing the min value in the humidity
+        series preceeded by its timestamp
+
+        :returns: a tuple
+        """
+        return min(self.humidity_series(),key=itemgetter(1))
    
 
     def __repr__(self):

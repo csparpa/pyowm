@@ -77,3 +77,11 @@ class TestHistorian(unittest.TestCase):
     def test_min_temperature(self):
         expected = (1362933983, 266.25)
         self.assertEqual(expected, self.__instance.min_temperature())
+        
+    def test_max_humidity(self):
+        expected = (1362934043, 27.7)
+        self.assertEqual(expected, self.__instance.max_humidity())
+        
+    def test_min_humidity(self):
+        expected = (1362933983, 27.3)
+        self.assertEqual(expected, self.__instance.min_humidity())
