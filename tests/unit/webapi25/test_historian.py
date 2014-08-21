@@ -69,3 +69,11 @@ class TestHistorian(unittest.TestCase):
     def test_wind_series(self):
         expected = [(1362934043, 4.7), (1362933983, 4.7)]
         self.assertEqual(expected, self.__instance.wind_series())
+
+    def test_max_temperature(self):
+        expected = (1362934043, 266.85)
+        self.assertEqual(expected, self.__instance.max_temperature())
+        
+    def test_min_temperature(self):
+        expected = (1362933983, 266.25)
+        self.assertEqual(expected, self.__instance.min_temperature())
