@@ -11,7 +11,7 @@ class CityIDRegistry():
 
     :param filepath_regex: Python format string that gives the path of the files
            that store the city IDs information.
-           Eg: ``folder1/folder2/%02d-suffix.txt``
+           Eg: ``folder1/folder2/%02d-%02d.txt``
     :type filepath_regex: str
     :returns: a *CityIDRegistry* instance
 

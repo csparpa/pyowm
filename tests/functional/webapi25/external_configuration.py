@@ -26,7 +26,7 @@ parsers = {
 }
 
 # City ID registry
-city_id_registry = cityidregistry.CityIDRegistry('test-city-id.txt')
+city_id_registry = cityidregistry.CityIDRegistry('097-102.txt')
 
 # Cache provider to be used
 cache = None
