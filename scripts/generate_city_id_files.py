@@ -78,7 +78,7 @@ def split_keyset(keyset):
 
 def write_subsets_to_files(ssets):
     print 'Ordering subsets and writing subsets into files:'
-    with codecs.open("97-102.txt", "w", "utf-8") as f:
+    with codecs.open("097-102.txt", "w", "utf-8") as f:
         for name in sorted(ssets[0].iterkeys()):
             f.write(name+ssets[0][name]+"\n")
     with codecs.open("103-108.txt", "w", "utf-8") as f:
