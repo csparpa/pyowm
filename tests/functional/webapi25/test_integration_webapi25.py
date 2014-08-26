@@ -144,12 +144,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
-    def test_find_weather_by_coords(self):
+    def test_weather_around_coords(self):
         """
         Test feature: find currently observed weather for locations that are
         nearby the specified coordinates
         """
-        o2 = self.__owm.find_weather_by_coords(57.0, -2.15)  # Scotland
+        o2 = self.__owm.weather_around_coords(57.0, -2.15)  # Scotland
         self.assertTrue(isinstance(o2, list))
         for item in o2:
             self.assertTrue(item is not None)
@@ -160,7 +160,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             weat = item.get_weather()
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
-        o1 = self.__owm.find_weather_by_coords(57.0, -2.15, 2)  # Scotland
+        o1 = self.__owm.weather_around_coords(57.0, -2.15, 2)  # Scotland
         self.assertTrue(isinstance(o1, list))
         for item in o1:
             self.assertTrue(item is not None)

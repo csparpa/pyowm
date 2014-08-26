@@ -205,11 +205,11 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.weather_at_places, \
                           self.__test_instance, "London", "accurate", -5)
 
-    def test_find_weather_by_coords(self):
+    def test_weather_around_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_multiple_obs
-        result = self.__test_instance.find_weather_by_coords(57.0, -2.15)
+        result = self.__test_instance.weather_around_coords(57.0, -2.15)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, list))
         for item in result:
@@ -222,21 +222,21 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
-    def test_find_weather_by_coords_fails_when_coordinates_out_of_bounds(self):
+    def test_weather_around_coords_fails_when_coordinates_out_of_bounds(self):
         """
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90
         """
-        self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
+        self.assertRaises(ValueError, OWM25.weather_around_coords, \
                           self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
+        self.assertRaises(ValueError, OWM25.weather_around_coords, \
                           self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
+        self.assertRaises(ValueError, OWM25.weather_around_coords, \
                           self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
+        self.assertRaises(ValueError, OWM25.weather_around_coords, \
                           self.__test_instance, 200, 2.5)
 
-    def test_find_weather_by_coords_fails_with_wrong_params(self):
-        self.assertRaises(ValueError, OWM25.find_weather_by_coords, \
+    def test_weather_around_coords_fails_with_wrong_params(self):
+        self.assertRaises(ValueError, OWM25.weather_around_coords, \
                           self.__test_instance, 43.7, 20.0, -3)
 
     def test_three_hours_forecast(self):

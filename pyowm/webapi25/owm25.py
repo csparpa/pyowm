@@ -231,7 +231,7 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
-    def find_weather_by_coords(self, lat, lon, limit=None):
+    def weather_around_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations in the proximity of the specified coordinates.
