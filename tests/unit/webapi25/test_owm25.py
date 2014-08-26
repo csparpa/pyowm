@@ -106,11 +106,11 @@ class TestOWM25(unittest.TestCase):
         self.__test_instance.set_language("ru")
         self.assertEqual("ru", self.__test_instance.get_language())
 
-    def test_weather_at(self):
+    def test_weather_at_place(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_single_obs
-        result = self.__test_instance.weather_at("London,uk")
+        result = self.__test_instance.weather_at_place("London,uk")
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)

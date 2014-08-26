@@ -128,7 +128,7 @@ class OWM25(owm.OWM):
         return False
 
     # Main OWM web API querying methods
-    def weather_at(self, name):
+    def weather_at_place(self, name):
         """
         Queries the OWM web API for the currently observed weather at the
         specified toponym (eg: "London,uk")

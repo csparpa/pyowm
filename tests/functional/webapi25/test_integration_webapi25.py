@@ -19,13 +19,13 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
     def API_online(self):
         self.assertTrue(self.__owm.API_online())
 
-    def test_weather_at(self):
+    def test_weather_at_place(self):
         """
         Test feature: get currently observed weather at specific location
         """
-        o1 = self.__owm.weather_at('London,uk')
-        o2 = self.__owm.weather_at('Kiev')
-        o3 = self.__owm.weather_at('QmFoPIlbf')  # Shall be None
+        o1 = self.__owm.weather_at_place('London,uk')
+        o2 = self.__owm.weather_at_place('Kiev')
+        o3 = self.__owm.weather_at_place('QmFoPIlbf')  # Shall be None
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
         loc = o1.get_location()
