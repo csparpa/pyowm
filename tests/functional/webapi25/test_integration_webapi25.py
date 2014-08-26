@@ -68,9 +68,9 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_weather_at_id(self):
-        o1 = self.__owm.weather_at_id(5128581L) # New York
-        o2 = self.__owm.weather_at_id(703448L) # Kiev'
-        o3 = self.__owm.weather_at_id(9999999999999L) # Shall be None
+        o1 = self.__owm.weather_at_id(5128581) # New York
+        o2 = self.__owm.weather_at_id(703448) # Kiev'
+        o3 = self.__owm.weather_at_id(99999999) # Shall be None
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
         loc = o1.get_location()
