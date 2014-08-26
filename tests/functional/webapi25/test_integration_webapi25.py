@@ -271,6 +271,41 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         l5 = self.__owm.weather_history_at_place('QmFoPIlbf')  # Shall be None
         self.assertTrue(l5 is None)
 
+    def test_weather_history_at_id(self):
+        """
+        Test feature: get weather history for a specific city ID
+        """
+        start_iso = "2013-09-06 09:20:00+00"
+        start_unix = 1378459200
+        start_date = datetime(2013, 9, 6, 9, 20, 0)
+        end_iso = "2013-09-06 20:26:40+00"
+        end_unix = 1378499200
+        end_date = datetime(2013, 9, 6, 20, 26, 40)
+        l1 = self.__owm.weather_history_at_id(5128581) # New York
+        if l1 is not None:
+            for weather in l1:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        l2 = self.__owm.weather_history_at_id(703448, start_unix, end_unix)  # Kiev
+        if l2 is not None:
+            for weather in l2:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        l3 = self.__owm.weather_history_at_id(703448, start_iso, end_iso)
+        if l3 is not None:
+            for weather in l3:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        l4 = self.__owm.weather_history_at_id(703448, start_date, end_date)
+        if l4 is not None:
+            for weather in l4:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+
     def test_station_tick_history(self):
         """
         Test feature: get station tick weather history for a specific
