@@ -78,19 +78,8 @@ The installer is available on the [Python Package Index](https://pypi.python.org
 
 What's new
 ----------
-_Release 1.2.0_
+Please read the [changelog](https://github.com/csparpa/pyowm/wiki/Changelog) page of the wiki
 
-* Ported to Python 3 while maintaining Python 2.7+ compatibility
-* Python 2.6 is now unsupported (please update to 2.7)
-* Bug fixes
-
-_Release 1.0.0_
-
-* Users can inject configuration when instantiating the library
-* Code is now compliant to PEP-8 guidelines
-* Added XMLNS support to printed XML
-* Refactoring of low-level utility functions
-* Bug fixes
 
 Documentation
 -------------
