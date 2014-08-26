@@ -10,7 +10,7 @@ Module containing a registry with lookup methods for OWM-provided city IDs
 class CityIDRegistry():
 
     """
-    Initialise a registry that can be used
+    Initialise a registry that can be used to lookup info about cities.
 
     :param filepath_regex: Python format string that gives the path of the files
            that store the city IDs information.

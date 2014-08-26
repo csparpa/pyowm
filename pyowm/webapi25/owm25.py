@@ -10,6 +10,7 @@ from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
     API_AVAILABILITY_TIMEOUT)
+from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
 from pyowm.commons import owmhttpclient
@@ -102,6 +103,15 @@ class OWM25(owm.OWM):
 
         """
         self._language = language
+
+    def city_id_registry(self):
+        """
+        Gives the *CityIDRegistry* singleton instance that can be used to lookup
+        for city IDs.
+
+        :returns: a *CityIDRegistry* instance
+        """
+        return zzz
 
     def API_online(self):
         """

@@ -91,6 +91,10 @@ class TestOWM25(unittest.TestCase):
         owm.set_API_key(test_API_key)
         self.assertEqual(owm.get_API_key(), test_API_key)
 
+    def test_city_id_registry(self):
+        result = self.__test_instance.city_id_registry()
+        self.assertTrue(result is not None)
+
     def test_get_API_version(self):
         self.assertEqual("2.5", self.__test_instance.get_API_version())
 
