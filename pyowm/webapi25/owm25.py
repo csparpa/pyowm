@@ -168,14 +168,14 @@ class OWM25(owm.OWM):
         specified city ID (eg: 5128581)
 
         :param id: the location's city ID
-        :type id: int/long
+        :type id: int
         :returns: an *Observation* instance or ``None`` if no weather data is
             available
         :raises: *ParseResponseException* when OWM web API responses' data
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        assert type(id) is long or type(id) is int, "'id' must be an int"
+        assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
         json_data = self._httpclient.call_API(OBSERVATION_URL,
