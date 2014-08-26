@@ -113,7 +113,7 @@ class OWM25(owm.OWM):
         """
         return zzz
 
-    def API_online(self):
+    def is_API_online(self):
         """
         Returns True if the OWM web API is currently online. A short timeout
         is used to determine API service availability.
