@@ -36,7 +36,7 @@ tomorrow = pyowm.timeutils.tomorrow()
 forecast.will_be_sunny_at(tomorrow)  # Always True in Italy, right? ;-)
 
 # Search for current weather in London (UK)
-observation = owm.weather_at('London,uk')
+observation = owm.weather_at_place('London,uk')
 w = observation.get_weather()
 print(w)                      # <Weather - reference time=2013-12-18 09:20, 
                               # status=Clouds>
@@ -48,7 +48,7 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 
 # Search current weather observations in the surroundings of 
 # lon= 22.57 W, -43.12 S (Rio de Janeiro, BR)
-observation_list = owm.find_weather_by_coords(-22.57, -43.12)
+observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
 Install it

@@ -113,7 +113,7 @@ class OWM25(owm.OWM):
         """
         return zzz
 
-    def API_online(self):
+    def is_API_online(self):
         """
         Returns True if the OWM web API is currently online. A short timeout
         is used to determine API service availability.
@@ -128,7 +128,7 @@ class OWM25(owm.OWM):
         return False
 
     # Main OWM web API querying methods
-    def weather_at(self, name):
+    def weather_at_place(self, name):
         """
         Queries the OWM web API for the currently observed weather at the
         specified toponym (eg: "London,uk")
@@ -193,7 +193,7 @@ class OWM25(owm.OWM):
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
-    def find_weather_by_name(self, pattern, searchtype, limit=None):
+    def weather_at_places(self, pattern, searchtype, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations whose name is matching the specified text search parameters.
@@ -231,7 +231,7 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
-    def find_weather_by_coords(self, lat, lon, limit=None):
+    def weather_around_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations in the proximity of the specified coordinates.
@@ -327,7 +327,7 @@ class OWM25(owm.OWM):
         else:
             return None
 
-    def weather_history(self, name, start=None, end=None):
+    def weather_history_at_place(self, name, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified location
         (eg: "London,uk"). A list of *Weather* objects is returned. It is
