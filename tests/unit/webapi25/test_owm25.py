@@ -51,6 +51,10 @@ class TestOWM25(unittest.TestCase):
                                                      params_dict):
         return OBSERVATION_JSON
 
+    def mock_httputils_call_API_ping(self, API_subset_URL, params_dict,
+                                     API_timeout):
+        return OBSERVATION_JSON
+
     def mock_httputils_call_API_returning_multiple_obs(self, API_subset_URL,
                                                      params_dict):
         return SEARCH_RESULTS_JSON
@@ -90,6 +94,14 @@ class TestOWM25(unittest.TestCase):
         self.assertFalse(owm.get_API_key())
         owm.set_API_key(test_API_key)
         self.assertEqual(owm.get_API_key(), test_API_key)
+
+    def test_is_API_online(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_ping
+        result = self.__test_instance.is_API_online()
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(result)
 
     def test_city_id_registry(self):
         result = self.__test_instance.city_id_registry()
