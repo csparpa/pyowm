@@ -74,3 +74,7 @@ class CityIDRegistry():
                 if line.startswith(city_name.lower()):
                     return line.strip()
         return None
+
+    def __repr__(self):
+        return "<%s.%s - filepath_regex=%s>" % (__name__, \
+          self.__class__.__name__, self._filepath_regex)
