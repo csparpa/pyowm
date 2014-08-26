@@ -25,9 +25,6 @@ parsers = {
   'station_history': None
 }
 
-# City ID registry
-city_id_registry = cityidregistry.CityIDRegistry('097-102.txt')
-
 # Cache provider to be used
 cache = None
 

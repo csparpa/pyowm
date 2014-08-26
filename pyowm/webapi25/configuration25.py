@@ -33,7 +33,7 @@ parsers = {
 }
 
 # City ID registry
-city_id_registry = cityidregistry.CityIDRegistry('cityids/%02d-city-id.txt')
+city_id_registry = cityidregistry.CityIDRegistry('cityids/%03d-%03d.txt')
 
 # Cache provider to be used
 cache = nullcache.NullCache()
