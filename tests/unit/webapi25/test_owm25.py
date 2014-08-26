@@ -180,12 +180,12 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.weather_at_id, \
                           self.__test_instance, -156667)
 
-    def test_find_weather_by_name(self):
+    def test_weather_at_places(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_multiple_obs
         result = \
-            self.__test_instance.find_weather_by_name("London", "accurate")
+            self.__test_instance.weather_at_places("London", "accurate")
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, list))
         self.assertEqual(2, len(result))
@@ -199,10 +199,10 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
-    def test_find_weather_by_name_fails_with_wrong_params(self):
-        self.assertRaises(ValueError, OWM25.find_weather_by_name, \
+    def test_weather_at_places_fails_with_wrong_params(self):
+        self.assertRaises(ValueError, OWM25.weather_at_places, \
                           self.__test_instance, "London", "x")
-        self.assertRaises(ValueError, OWM25.find_weather_by_name, \
+        self.assertRaises(ValueError, OWM25.weather_at_places, \
                           self.__test_instance, "London", "accurate", -5)
 
     def test_find_weather_by_coords(self):

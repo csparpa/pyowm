@@ -89,14 +89,14 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in weat.__dict__.values()))
         self.assertFalse(o3 is not None)
 
-    def test_find_weather_by_name(self):
+    def test_weather_at_places(self):
         """
         Test feature: find currently observed weather for locations matching
         the specified text search pattern
         """
         # Test using searchtype=accurate
-        o1 = self.__owm.find_weather_by_name("London", "accurate")
-        o2 = self.__owm.find_weather_by_name("Paris", "accurate", 2)
+        o1 = self.__owm.weather_at_places("London", "accurate")
+        o2 = self.__owm.weather_at_places("Paris", "accurate", 2)
         self.assertTrue(isinstance(o1, list))
         for item in o1:
             self.assertTrue(item)
@@ -120,8 +120,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
         # Test using searchtype=like
-        o3 = self.__owm.find_weather_by_name("London", "like")
-        o4 = self.__owm.find_weather_by_name("Paris", "like", 2)
+        o3 = self.__owm.weather_at_places("London", "like")
+        o4 = self.__owm.weather_at_places("Paris", "like", 2)
         self.assertTrue(isinstance(o3, list))
         for item in o3:
             self.assertTrue(item)

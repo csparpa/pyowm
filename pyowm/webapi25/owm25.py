@@ -193,7 +193,7 @@ class OWM25(owm.OWM):
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
-    def find_weather_by_name(self, pattern, searchtype, limit=None):
+    def weather_at_places(self, pattern, searchtype, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations whose name is matching the specified text search parameters.
