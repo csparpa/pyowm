@@ -376,6 +376,57 @@ class OWM25(owm.OWM):
                                               params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
+    def weather_history_at_id(self, id, start=None, end=None):
+        """
+        Queries the OWM web API for weather history for the specified city ID.
+        A list of *Weather* objects is returned. It is possible to query for
+        weather history in a closed time period, whose boundaries can be passed
+        as optional parameters.
+
+        :param id: the city ID
+        :type id: int
+        :param start: the object conveying the time value for the start query
+            boundary (defaults to ``None``)
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param end: the object conveying the time value for the end query
+            boundary (defaults to ``None``)
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+        :returns: a list of *Weather* instances or ``None`` if history data is
+            not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* if the time boundaries are not in the correct
+            chronological order, if one of the time boundaries is not ``None``
+            and the other is or if one or both of the time boundaries are after
+            the current time
+
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        params = {'id': id, 'lang': self._language}
+        if start is None and end is None:
+            pass
+        elif start is not None and end is not None:
+            unix_start = timeformatutils.to_UNIXtime(start)
+            unix_end = timeformatutils.to_UNIXtime(end)
+            if unix_start >= unix_end:
+                raise ValueError("Error: the start time boundary must " \
+                                 "precede the end time!")
+            current_time = time()
+            if unix_start > current_time:
+                raise ValueError("Error: the start time boundary must " \
+                                 "precede the current time!")
+            params['start'] = str(unix_start)
+            params['end'] = str(unix_end)
+        else:
+            raise ValueError("Error: one of the time boundaries is None, " \
+                             "while the other is not!")
+        json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
+                                              params)
+        return self._parsers['weather_history'].parse_JSON(json_data)
+
     def station_tick_history(self, station_ID, limit=None):
         """
         Queries the OWM web API for historic weather data measurements for the
