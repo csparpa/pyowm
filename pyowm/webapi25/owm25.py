@@ -10,6 +10,7 @@ from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
     API_AVAILABILITY_TIMEOUT)
+from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
 from pyowm.commons import owmhttpclient
@@ -25,22 +26,27 @@ class OWM25(owm.OWM):
     payload of a specific API endpoint
 
     :param parsers: the dictionary containing *jsonparser* concrete instances
-        to be used as parsers for OWM web API 2.5 reponses
+        to be used as parsers for OWM web API 2.5 responses
     :type parsers: dict
     :param API_key: the OWM web API key (defaults to ``None``)
     :type API_key: str
     :param cache: a concrete implementation of class *OWMCache* serving as the
         cache provider (defaults to a *NullCache* instance)
     :type cache: an *OWMCache* concrete instance
+    :param language: the language in which you want text results to be returned.
+          It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
+    :type language: str
     :returns: an *OWM25* instance
 
     """
-    def __init__(self, parsers, API_key=None, cache=nullcache.NullCache()):
+    def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
+                 language="en"):
         self._parsers = parsers
         if API_key is not None:
             assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self._API_key = API_key
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
+        self._language = language
 
     def get_API_key(self):
         """
@@ -79,7 +85,35 @@ class OWM25(owm.OWM):
         """
         return constants.PYOWM_VERSION
 
-    def API_online(self):
+    def get_language(self):
+        """
+        Returns the language in which the OWM web API shall return text results
+
+        :returns: the language
+
+        """
+        return self._language
+
+    def set_language(self, language):
+        """
+        Sets the language in which the OWM web API shall return text results
+
+        :param language: the new two-characters language (eg: "ru")
+        :type API_key: str
+
+        """
+        self._language = language
+
+    def city_id_registry(self):
+        """
+        Gives the *CityIDRegistry* singleton instance that can be used to lookup
+        for city IDs.
+
+        :returns: a *CityIDRegistry* instance
+        """
+        return zzz
+
+    def is_API_online(self):
         """
         Returns True if the OWM web API is currently online. A short timeout
         is used to determine API service availability.
@@ -88,13 +122,13 @@ class OWM25(owm.OWM):
 
         """
         data = self._httpclient.call_API(OBSERVATION_URL, {},
-                                          API_AVAILABILITY_TIMEOUT)
+                                         API_AVAILABILITY_TIMEOUT)
         if data is not None:
             return True
         return False
 
     # Main OWM web API querying methods
-    def weather_at(self, name):
+    def weather_at_place(self, name):
         """
         Queries the OWM web API for the currently observed weather at the
         specified toponym (eg: "London,uk")
@@ -108,18 +142,19 @@ class OWM25(owm.OWM):
             reached
         """
         assert type(name) is str, "'name' must be a str"
-        json_data = self._httpclient.call_API(OBSERVATION_URL, {'q': name})
+        json_data = self._httpclient.call_API(OBSERVATION_URL,
+                                          {'q': name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
-    def weather_at_coords(self, lon, lat):
+    def weather_at_coords(self, lat, lon):
         """
         Queries the OWM web API for the currently observed weather at the
-        specified geographic (eg: -0.107331,51.503614).
+        specified geographic (eg: 51.503614, -0.107331).
 
-        :param lon: the location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
         :param lat: the location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
         :returns: an *Observation* instance or ``None`` if no weather data is
             available
         :raises: *ParseResponseException* when OWM web API responses' data
@@ -133,10 +168,32 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                               {'lon': lon, 'lat': lat})
+                                              {'lon': lon, 'lat': lat, 
+                                               'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
-    def find_weather_by_name(self, pattern, searchtype, limit=None):
+    def weather_at_id(self, id):
+        """
+        Queries the OWM web API for the currently observed weather at the
+        specified city ID (eg: 5128581)
+
+        :param id: the location's city ID
+        :type id: int
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        json_data = self._httpclient.call_API(OBSERVATION_URL,
+                                              {'id': id,
+                                               'lang': self._language})
+        return self._parsers['observation'].parse_JSON(json_data)
+
+    def weather_at_places(self, pattern, searchtype, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations whose name is matching the specified text search parameters.
@@ -167,22 +224,22 @@ class OWM25(owm.OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        params = {'q': pattern, 'type': searchtype}
+        params = {'q': pattern, 'type': searchtype, 'lang': self._language}
         if limit is not None:
             # fix for OWM 2.5 API bug!
             params['cnt'] = limit - 1
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
-    def find_weather_by_coords(self, lon, lat, limit=None):
+    def weather_around_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
         locations in the proximity of the specified coordinates.
 
-        :param lon: location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
         :param lat: location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
         :param limit: the maximum number of *Observation* items in the returned
             list (default is ``None``, which stands for any number of items)
         :param limit: int or ``None``
@@ -199,7 +256,7 @@ class OWM25(owm.OWM):
         assert type(lat) is float or type(lat) is int, "'lat' must be a float"
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        params = {'lon': lon, 'lat': lat}
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -226,7 +283,7 @@ class OWM25(owm.OWM):
         """
         assert type(name) is str, "'name' must be a str"
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                               {'q': name})
+                                          {'q': name, 'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -259,7 +316,7 @@ class OWM25(owm.OWM):
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        params = {'q': name}
+        params = {'q': name, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
@@ -270,7 +327,7 @@ class OWM25(owm.OWM):
         else:
             return None
 
-    def weather_history(self, name, start=None, end=None):
+    def weather_history_at_place(self, name, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified location
         (eg: "London,uk"). A list of *Weather* objects is returned. It is
@@ -297,7 +354,7 @@ class OWM25(owm.OWM):
 
         """
         assert type(name) is str, "'name' must be a str"
-        params = {'q': name}
+        params = {'q': name, 'lang': self._language}
         if start is None and end is None:
             pass
         elif start is not None and end is not None:
@@ -316,7 +373,58 @@ class OWM25(owm.OWM):
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
         json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
-                                               params)
+                                              params)
+        return self._parsers['weather_history'].parse_JSON(json_data)
+
+    def weather_history_at_id(self, id, start=None, end=None):
+        """
+        Queries the OWM web API for weather history for the specified city ID.
+        A list of *Weather* objects is returned. It is possible to query for
+        weather history in a closed time period, whose boundaries can be passed
+        as optional parameters.
+
+        :param id: the city ID
+        :type id: int
+        :param start: the object conveying the time value for the start query
+            boundary (defaults to ``None``)
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param end: the object conveying the time value for the end query
+            boundary (defaults to ``None``)
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+        :returns: a list of *Weather* instances or ``None`` if history data is
+            not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* if the time boundaries are not in the correct
+            chronological order, if one of the time boundaries is not ``None``
+            and the other is or if one or both of the time boundaries are after
+            the current time
+
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        params = {'id': id, 'lang': self._language}
+        if start is None and end is None:
+            pass
+        elif start is not None and end is not None:
+            unix_start = timeformatutils.to_UNIXtime(start)
+            unix_end = timeformatutils.to_UNIXtime(end)
+            if unix_start >= unix_end:
+                raise ValueError("Error: the start time boundary must " \
+                                 "precede the end time!")
+            current_time = time()
+            if unix_start > current_time:
+                raise ValueError("Error: the start time boundary must " \
+                                 "precede the current time!")
+            params['start'] = str(unix_start)
+            params['end'] = str(unix_end)
+        else:
+            raise ValueError("Error: one of the time boundaries is None, " \
+                             "while the other is not!")
+        json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
+                                              params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
@@ -346,7 +454,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         station_history = self._retrieve_station_history(station_ID, limit,
-                                                          "tick")
+                                                         "tick")
         if station_history is not None:
             return historian.Historian(station_history)
         else:
@@ -380,7 +488,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         station_history = self._retrieve_station_history(station_ID, limit,
-                                                          "hour")
+                                                         "hour")
         if station_history is not None:
             return historian.Historian(station_history)
         else:
@@ -414,7 +522,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         station_history = self._retrieve_station_history(station_ID, limit,
-                                                          "day")
+                                                         "day")
         if station_history is not None:
             return historian.Historian(station_history)
         else:
@@ -424,11 +532,11 @@ class OWM25(owm.OWM):
         """
         Helper method for station_X_history functions.
         """
-        params = {'id': station_ID, 'type': interval}
+        params = {'id': station_ID, 'type': interval, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(STATION_WEATHER_HISTORY_URL,
-                                               params)
+                                              params)
         station_history = \
             self._parsers['station_history'].parse_JSON(json_data)
         if station_history is not None:
@@ -438,6 +546,8 @@ class OWM25(owm.OWM):
 
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \
-               "PyOWM version=%s>" % (__name__, self.__class__.__name__,
+               "PyOWM version=%s, language=%s>" % (__name__,
+                                      self.__class__.__name__,
                                       self._API_key, self.get_API_version(),
-                                      self.get_version())
+                                      self.get_version(),
+                                      self._language)

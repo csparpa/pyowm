@@ -6,61 +6,66 @@ management
 """
 from pyowm.exceptions import not_found_error
 
-
-def status_matches_any(word_list, weather):
+def status_is(weather, status, weather_code_registry):
     """
-    Checks if one or more keywords in a given list is contained into the
-    detailed weather status of a *Weather* object
+    Checks if the weather status code of a *Weather* object corresponds to the
+    detailed status indicated. The lookup is performed against the provided 
+    *WeatherCodeRegistry* object.
 
-    :param word_list: a list of string keywords
-    :type word_list: list
-    :param weather: a *Weather* object
+    :param weather: the *Weather* object whose status code is to be checked
     :type weather: *Weather*
-    :returns: ``True`` if one or more matchings are found, ``False`` otherwise
+    :param status: a string indicating a detailed weather status
+    :type status: str
+    :param weather_code_registry: a *WeatherCodeRegistry* object
+    :type weather_code_registry: *WeatherCodeRegistry*
+    :returns: ``True`` if the check is positive, ``False`` otherwise
 
     """
-    detailed_status = weather.get_detailed_status().lower()
-    for word in word_list:
-        if word in detailed_status:
+    weather_status = weather_code_registry. \
+        status_for(weather.get_weather_code()).lower()
+    return weather_status == status
+
+def any_status_is(weather_list, status, weather_code_registry):
+    """
+    Checks if the weather status code of any of the *Weather* objects in the
+    provided list corresponds to the detailed status indicated. The lookup is
+    performed against the provided *WeatherCodeRegistry* object.
+
+    :param weathers: a list of *Weather* objects
+    :type weathers: list
+    :param status: a string indicating a detailed weather status
+    :type status: str
+    :param weather_code_registry: a *WeatherCodeRegistry* object
+    :type weather_code_registry: *WeatherCodeRegistry*
+    :returns: ``True`` if the check is positive, ``False`` otherwise
+    
+    """
+    for weather in weather_list:
+        if status_is(weather, status, weather_code_registry):
             return True
     return False
 
 
-def statuses_match_any(word_list, weathers_list):
+def filter_by_status(weather_list, status, weather_code_registry):
     """
-    Checks if one or more of the detailed statuses of the *Weather* objects
-    into the given list contain at least one of the keywords in the given list
+    Filters out from the provided list of *Weather* objects a sublist of items
+    having a status corresponding to the provided one. The lookup is performed
+    against the provided *WeatherCodeRegistry* object.
 
-    :param word_list: a list of string keywords
-    :type word_list: list
-    :param weathers_list: a list of *Weather* objects
-    :type weathers_list: list
-    :returns: ``True`` if one or more matchings are found, ``False`` otherwise
-    """
-    for weather in weathers_list:
-        if status_matches_any(word_list, weather):
-            return True
-    return False
-
-
-def filter_by_matching_statuses(word_list, weathers_list):
-    """
-    Returns a sublist of the given list of *Weather* objects, whose items
-    have at least one of the keywords from the given list as part of their
-    detailed statuses.
-
-    :param word_list: a list of string keywords
-    :type word_list: list
-    :param weathers_list: a list of *Weather* objects
-    :type weathers_list: list
-    :returns: a list of *Weather* objects
+    :param weathers: a list of *Weather* objects
+    :type weathers: list
+    :param status: a string indicating a detailed weather status
+    :type status: str
+    :param weather_code_registry: a *WeatherCodeRegistry* object
+    :type weather_code_registry: *WeatherCodeRegistry*
+    :returns: ``True`` if the check is positive, ``False`` otherwise
+    
     """
     result = []
-    for weather in weathers_list:
-        if status_matches_any(word_list, weather):
+    for weather in weather_list:
+        if status_is(weather, status, weather_code_registry):
             result.append(weather)
     return result
-
 
 def is_in_coverage(unixtime, weathers_list):
     """

@@ -47,4 +47,4 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
                           self._config_module_name)
         except:
             self.fail("Error raised during library instantiation")
-        self.assertRaises(Exception, instance.weather_at, 'London,uk')
+        self.assertRaises(Exception, instance.weather_at_place, 'London,uk')

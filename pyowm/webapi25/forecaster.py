@@ -6,8 +6,7 @@ Module containing weather forecast abstraction classes and data structures.
 
 from pyowm.utils import timeformatutils
 from pyowm.webapi25 import weatherutils
-from pyowm.webapi25.configuration25 import (
-    CLOUDS_KEYWORDS, FOG_KEYWORDS, RAIN_KEYWORDS, SNOW_KEYWORDS, SUN_KEYWORDS)
+from pyowm.webapi25.configuration25 import weather_code_registry
 
 
 class Forecaster(object):
@@ -16,7 +15,7 @@ class Forecaster(object):
     A class providing convenience methods for manipulating weather forecast
     data. The class encapsulates a *Forecast* instance and provides
     abstractions on the top of it in order to let programmers exploit weather
-    forecast data in a human-friendly fashion
+    forecast data in a human-friendly fashion.
 
     :param forecast: a *Forecast* instance
     :type forecast: *Forecast*
@@ -76,9 +75,10 @@ class Forecaster(object):
 
         :returns: boolean
 
-        """
-        return weatherutils.statuses_match_any(RAIN_KEYWORDS,
-                                               self._forecast.get_weathers())
+        """        
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "rain",
+                                   weather_code_registry)
+
 
     def will_have_sun(self):
         """
@@ -88,8 +88,8 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.statuses_match_any(SUN_KEYWORDS,
-                                               self._forecast.get_weathers())
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "sun",
+                                          weather_code_registry)
 
     def will_have_fog(self):
         """
@@ -99,8 +99,8 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.statuses_match_any(FOG_KEYWORDS,
-                                   self._forecast.get_weathers())
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "fog",
+                                          weather_code_registry)
 
     def will_have_clouds(self):
         """
@@ -110,8 +110,9 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.statuses_match_any(CLOUDS_KEYWORDS,
-                                   self._forecast.get_weathers())
+        return weatherutils.any_status_is(self._forecast.get_weathers(),
+                                          "clouds",
+                                          weather_code_registry)
 
     def will_have_snow(self):
         """
@@ -121,8 +122,8 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.statuses_match_any(SNOW_KEYWORDS,
-                                   self._forecast.get_weathers())
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "snow",
+                                          weather_code_registry)
 
     def when_rain(self):
         """
@@ -131,8 +132,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(RAIN_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "rain",
+                                             weather_code_registry)
 
     def when_sun(self):
         """
@@ -141,8 +143,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(SUN_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "sun",
+                                             weather_code_registry)
 
     def when_fog(self):
         """
@@ -151,8 +154,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(FOG_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "fog",
+                                             weather_code_registry)
 
     def when_clouds(self):
         """
@@ -161,8 +165,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(CLOUDS_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "clouds",
+                                             weather_code_registry)
 
     def when_snow(self):
         """
@@ -171,8 +176,9 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_matching_statuses(SNOW_KEYWORDS,
-                                           self._forecast.get_weathers())
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "snow",
+                                             weather_code_registry)
 
     def will_be_rainy_at(self, timeobject):
         """
@@ -188,9 +194,10 @@ class Forecaster(object):
 
         """
         time = timeformatutils.to_UNIXtime(timeobject)
-        weather = weatherutils.find_closest_weather(
+        closest_weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
-        return weatherutils.status_matches_any(RAIN_KEYWORDS, weather)
+        return weatherutils.status_is(closest_weather, "rain",
+                                      weather_code_registry)
 
     def will_be_sunny_at(self, timeobject):
         """
@@ -208,7 +215,8 @@ class Forecaster(object):
         time = timeformatutils.to_UNIXtime(timeobject)
         closest_weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
-        return weatherutils.status_matches_any(SUN_KEYWORDS, closest_weather)
+        return weatherutils.status_is(closest_weather, "sun",
+                                      weather_code_registry)
 
     def will_be_snowy_at(self, timeobject):
         """
@@ -224,9 +232,10 @@ class Forecaster(object):
 
         """
         time = timeformatutils.to_UNIXtime(timeobject)
-        weather = weatherutils.find_closest_weather(
+        closest_weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
-        return weatherutils.status_matches_any(SNOW_KEYWORDS, weather)
+        return weatherutils.status_is(closest_weather, "snow",
+                                      weather_code_registry)
 
     def will_be_cloudy_at(self, timeobject):
         """
@@ -242,9 +251,10 @@ class Forecaster(object):
 
         """
         time = timeformatutils.to_UNIXtime(timeobject)
-        weather = weatherutils.find_closest_weather(
+        closest_weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
-        return weatherutils.status_matches_any(CLOUDS_KEYWORDS, weather)
+        return weatherutils.status_is(closest_weather, "clouds",
+                                      weather_code_registry)
 
     def will_be_foggy_at(self, timeobject):
         """
@@ -260,9 +270,10 @@ class Forecaster(object):
 
         """
         time = timeformatutils.to_UNIXtime(timeobject)
-        weather = weatherutils.find_closest_weather(
+        closest_weather = weatherutils.find_closest_weather(
                                         self._forecast.get_weathers(), time)
-        return weatherutils.status_matches_any(FOG_KEYWORDS, weather)
+        return weatherutils.status_is(closest_weather, "fog",
+                                      weather_code_registry)
 
     def get_weather_at(self, timeobject):
         """

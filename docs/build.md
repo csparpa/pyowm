@@ -2,6 +2,7 @@ PyOWM release checklist
 -----------------------
 * update setup.py
 * update constants.py
+* update city ID files
 * update README.md
 * update github wiki pages
 * tag release on github

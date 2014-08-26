@@ -116,6 +116,22 @@ pyowm.webapi25.weatherutils module
     :undoc-members:
     :show-inheritance:
 
+pyowm.webapi25.weathercoderegistry module
+-----------------------------------------
+
+.. automodule:: pyowm.webapi25.weathercoderegistry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.cityidregistry module
+------------------------------------
+
+.. automodule:: pyowm.webapi25.cityidregistry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Module contents
 ---------------
 

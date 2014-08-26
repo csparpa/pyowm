@@ -16,16 +16,16 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
 
     __owm = OWM25(parsers, '�b02f5370d�76021a0')
 
-    def API_online(self):
-        self.assertTrue(self.__owm.API_online())
+    def test_is_API_online(self):
+        self.assertTrue(self.__owm.is_API_online())
 
-    def test_weather_at(self):
+    def test_weather_at_place(self):
         """
         Test feature: get currently observed weather at specific location
         """
-        o1 = self.__owm.weather_at('London,uk')
-        o2 = self.__owm.weather_at('Kiev')
-        o3 = self.__owm.weather_at('QmFoPIlbf')  # Shall be None
+        o1 = self.__owm.weather_at_place('London,uk')
+        o2 = self.__owm.weather_at_place('Kiev')
+        o3 = self.__owm.weather_at_place('QmFoPIlbf')  # Shall be None
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
         loc = o1.get_location()
@@ -48,8 +48,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get currently observed weather at specific coordinates
         """
-        o1 = self.__owm.weather_at_coords(12.484589, 41.896144)  # Rome
-        o2 = self.__owm.weather_at_coords(18.503723, -33.936524)  # Cape Town
+        o1 = self.__owm.weather_at_coords(41.896144, 12.484589)  # Rome
+        o2 = self.__owm.weather_at_coords(-33.936524, 18.503723)  # Cape Town
         self.assertTrue(o1)
         self.assertTrue(o1.get_reception_time())
         loc = o1.get_location()
@@ -67,14 +67,36 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(weat)
         self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
-    def test_find_weather_by_name(self):
+    def test_weather_at_id(self):
+        o1 = self.__owm.weather_at_id(5128581) # New York
+        o2 = self.__owm.weather_at_id(703448) # Kiev'
+        o3 = self.__owm.weather_at_id(99999999) # Shall be None
+        self.assertTrue(o1 is not None)
+        self.assertTrue(o1.get_reception_time() is not None)
+        loc = o1.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o1.get_weather()
+        self.assertTrue(weat is not None)
+        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
+        self.assertTrue(o2 is not None)
+        self.assertTrue(o2.get_reception_time() is not None)
+        loc = o2.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o2.get_weather()
+        self.assertTrue(weat is not None)
+        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
+        self.assertFalse(o3 is not None)
+
+    def test_weather_at_places(self):
         """
         Test feature: find currently observed weather for locations matching
         the specified text search pattern
         """
         # Test using searchtype=accurate
-        o1 = self.__owm.find_weather_by_name("London", "accurate")
-        o2 = self.__owm.find_weather_by_name("Paris", "accurate", 2)
+        o1 = self.__owm.weather_at_places("London", "accurate")
+        o2 = self.__owm.weather_at_places("Paris", "accurate", 2)
         self.assertTrue(isinstance(o1, list))
         for item in o1:
             self.assertTrue(item)
@@ -98,8 +120,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
         # Test using searchtype=like
-        o3 = self.__owm.find_weather_by_name("London", "like")
-        o4 = self.__owm.find_weather_by_name("Paris", "like", 2)
+        o3 = self.__owm.weather_at_places("London", "like")
+        o4 = self.__owm.weather_at_places("Paris", "like", 2)
         self.assertTrue(isinstance(o3, list))
         for item in o3:
             self.assertTrue(item)
@@ -122,12 +144,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
-    def test_find_weather_by_coords(self):
+    def test_weather_around_coords(self):
         """
         Test feature: find currently observed weather for locations that are
         nearby the specified coordinates
         """
-        o2 = self.__owm.find_weather_by_coords(-2.15, 57.0)  # Scotland
+        o2 = self.__owm.weather_around_coords(57.0, -2.15)  # Scotland
         self.assertTrue(isinstance(o2, list))
         for item in o2:
             self.assertTrue(item is not None)
@@ -138,7 +160,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             weat = item.get_weather()
             self.assertTrue(weat is not None)
             self.assertTrue(all(v is not None for v in weat.__dict__.values()))
-        o1 = self.__owm.find_weather_by_coords(-2.15, 57.0, 2)  # Scotland
+        o1 = self.__owm.weather_around_coords(57.0, -2.15, 2)  # Scotland
         self.assertTrue(isinstance(o1, list))
         for item in o1:
             self.assertTrue(item is not None)
@@ -212,7 +234,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                         all(v is not None for v in weather.__dict__.values()))
         self.assertFalse(fc3 is not None)
 
-    def test_weather_history(self):
+    def test_weather_history_at_place(self):
         """
         Test feature: get weather history for a specific location
         """
@@ -222,32 +244,67 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         end_iso = "2013-09-06 20:26:40+00"
         end_unix = 1378499200
         end_date = datetime(2013, 9, 6, 20, 26, 40)
-        l1 = self.__owm.weather_history("London")
+        l1 = self.__owm.weather_history_at_place("London")
         if l1 is not None:
             for weather in l1:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l2 = self.__owm.weather_history('Kiev', start_unix, end_unix)
+        l2 = self.__owm.weather_history_at_place('Kiev', start_unix, end_unix)
         if l2 is not None:
             for weather in l2:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l3 = self.__owm.weather_history('Rome', start_iso, end_iso)
+        l3 = self.__owm.weather_history_at_place('Rome', start_iso, end_iso)
         if l3 is not None:
             for weather in l3:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l4 = self.__owm.weather_history('Berlin', start_date, end_date)
+        l4 = self.__owm.weather_history_at_place('Berlin', start_date, end_date)
         if l4 is not None:
             for weather in l4:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l5 = self.__owm.weather_history('QmFoPIlbf')  # Shall be None
+        l5 = self.__owm.weather_history_at_place('QmFoPIlbf')  # Shall be None
         self.assertTrue(l5 is None)
+
+    def test_weather_history_at_id(self):
+        """
+        Test feature: get weather history for a specific city ID
+        """
+        start_iso = "2013-09-06 09:20:00+00"
+        start_unix = 1378459200
+        start_date = datetime(2013, 9, 6, 9, 20, 0)
+        end_iso = "2013-09-06 20:26:40+00"
+        end_unix = 1378499200
+        end_date = datetime(2013, 9, 6, 20, 26, 40)
+        l1 = self.__owm.weather_history_at_id(5128581) # New York
+        if l1 is not None:
+            for weather in l1:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        l2 = self.__owm.weather_history_at_id(703448, start_unix, end_unix)  # Kiev
+        if l2 is not None:
+            for weather in l2:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        l3 = self.__owm.weather_history_at_id(703448, start_iso, end_iso)
+        if l3 is not None:
+            for weather in l3:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        l4 = self.__owm.weather_history_at_id(703448, start_date, end_date)
+        if l4 is not None:
+            for weather in l4:
+                self.assertTrue(weather is not None)
+                self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
 
     def test_station_tick_history(self):
         """
@@ -283,15 +340,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         data1 = sh1.get_measurements()
         self.assertTrue(data1 is not None)
         self.assertFalse(0, len(data1))
-        h2 = self.__owm.station_hour_history(123, limit=2)
-        self.assertTrue(h2 is not None)
-        sh2 = h2.get_station_history()
-        self.assertTrue(sh2 is not None)
-        data2 = sh2.get_measurements()
-        self.assertTrue(data2 is not None)
-        self.assertFalse(len(data2) > 2)
-        h3 = self.__owm.station_hour_history(987654)  # Shall be None
-        self.assertFalse(h3 is not None)
+        h2 = self.__owm.station_hour_history(987654)  # Shall be None
+        self.assertFalse(h2 is not None)
 
     def test_station_day_history(self):
         """
@@ -305,13 +355,13 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         data1 = sh1.get_measurements()
         self.assertTrue(data1 is not None)
         self.assertFalse(0, len(data1))
-        h2 = self.__owm.station_day_history(123, limit=2)
+        h2 = self.__owm.station_day_history(123, limit=3)
         self.assertTrue(h2 is not None)
         sh2 = h2.get_station_history()
         self.assertTrue(sh2 is not None)
         data2 = sh2.get_measurements()
         self.assertTrue(data2 is not None)
-        self.assertFalse(len(data2) > 2)
+        self.assertFalse(len(data2) > 3)
         h3 = self.__owm.station_day_history(987654)  # Shall be None
         self.assertFalse(h3 is not None)
 
