@@ -234,7 +234,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                         all(v is not None for v in weather.__dict__.values()))
         self.assertFalse(fc3 is not None)
 
-    def test_weather_history(self):
+    def test_weather_history_at_place(self):
         """
         Test feature: get weather history for a specific location
         """
@@ -244,31 +244,31 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         end_iso = "2013-09-06 20:26:40+00"
         end_unix = 1378499200
         end_date = datetime(2013, 9, 6, 20, 26, 40)
-        l1 = self.__owm.weather_history("London")
+        l1 = self.__owm.weather_history_at_place("London")
         if l1 is not None:
             for weather in l1:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l2 = self.__owm.weather_history('Kiev', start_unix, end_unix)
+        l2 = self.__owm.weather_history_at_place('Kiev', start_unix, end_unix)
         if l2 is not None:
             for weather in l2:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l3 = self.__owm.weather_history('Rome', start_iso, end_iso)
+        l3 = self.__owm.weather_history_at_place('Rome', start_iso, end_iso)
         if l3 is not None:
             for weather in l3:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l4 = self.__owm.weather_history('Berlin', start_date, end_date)
+        l4 = self.__owm.weather_history_at_place('Berlin', start_date, end_date)
         if l4 is not None:
             for weather in l4:
                 self.assertTrue(weather is not None)
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
-        l5 = self.__owm.weather_history('QmFoPIlbf')  # Shall be None
+        l5 = self.__owm.weather_history_at_place('QmFoPIlbf')  # Shall be None
         self.assertTrue(l5 is None)
 
     def test_station_tick_history(self):

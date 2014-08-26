@@ -327,7 +327,7 @@ class OWM25(owm.OWM):
         else:
             return None
 
-    def weather_history(self, name, start=None, end=None):
+    def weather_history_at_place(self, name, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified location
         (eg: "London,uk"). A list of *Weather* objects is returned. It is
