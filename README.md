@@ -94,7 +94,6 @@ Unit testing is as simple as `python setup.py test -s tests.unit`
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
 with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
 
-
 Development
 -----------
 Contributors (code enhancement, issue/bug reporting) are __welcome!__
