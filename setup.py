@@ -4,14 +4,15 @@ from setuptools import setup
 
 setup(
     name='pyowm',
-    version='1.2.0',
+    version='2.0.0',
     description='A Python wrapper around the OpenWeatherMap web API',
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
     url='http://github.com/csparpa/pyowm',
     packages=['pyowm', 'pyowm.abstractions', 'pyowm.caches', 'pyowm.commons',
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25',
-              'pyowm.webapi25.xsd', 'tests.unit', 'tests.functional'],
+              'pyowm.webapi25.cityids', 'pyowm.webapi25.xsd',
+              'tests.unit', 'tests.functional'],
       long_description="""\
       PyOWM is a client Python wrapper library for the OpenWeatherMap web API.
       It allows quick and easy consumption of OWM weather data from Python

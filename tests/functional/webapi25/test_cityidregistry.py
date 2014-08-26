@@ -3,22 +3,30 @@ Test case for cityidregistry.py module
 """
 
 import unittest
+from os import path, sep
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
 class TestCityIDRegistry(unittest.TestCase):
 
-    _instance = CityIDRegistry('%03d-%03d.txt')
+    if path.isfile(path.abspath(path.dirname(__name__))+sep+'097-102.txt'):
+        _current_folder = path.abspath(path.dirname(__name__))
+    else:
+        _current_folder = path.abspath(path.dirname(__name__))+sep+ \
+                          sep.join(["functional","webapi25"])
+
+    _prefix = _current_folder+sep
+    _instance = CityIDRegistry(_prefix+'%03d-%03d.txt')
 
     def test_assess_subfile_from(self):
         self.assertEqual(self._instance._assess_subfile_from('b-city'),
-                         '097-102.txt')
+                         self._prefix+'097-102.txt')
         self.assertEqual(self._instance._assess_subfile_from('h-city'),
-                         '103-108.txt')
+                         self._prefix+'103-108.txt')
         self.assertEqual(self._instance._assess_subfile_from('n-city'),
-                         '109-114.txt')
+                         self._prefix+'109-114.txt')
         self.assertEqual(self._instance._assess_subfile_from('t-city'),
-                         '115-122.txt')
+                         self._prefix+'115-122.txt')
         self.assertRaises(ValueError, CityIDRegistry._assess_subfile_from,
                           self._instance, '123abc')
         self.assertRaises(ValueError, CityIDRegistry._assess_subfile_from,
