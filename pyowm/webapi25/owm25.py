@@ -10,6 +10,7 @@ from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
     API_AVAILABILITY_TIMEOUT)
+from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
 from pyowm.commons import owmhttpclient
@@ -103,6 +104,15 @@ class OWM25(owm.OWM):
         """
         self._language = language
 
+    def city_id_registry(self):
+        """
+        Gives the *CityIDRegistry* singleton instance that can be used to lookup
+        for city IDs.
+
+        :returns: a *CityIDRegistry* instance
+        """
+        return zzz
+
     def API_online(self):
         """
         Returns True if the OWM web API is currently online. A short timeout
@@ -159,6 +169,27 @@ class OWM25(owm.OWM):
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = self._httpclient.call_API(OBSERVATION_URL,
                                               {'lon': lon, 'lat': lat, 
+                                               'lang': self._language})
+        return self._parsers['observation'].parse_JSON(json_data)
+
+    def weather_at_id(self, id):
+        """
+        Queries the OWM web API for the currently observed weather at the
+        specified city ID (eg: 5128581)
+
+        :param id: the location's city ID
+        :type id: int
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        json_data = self._httpclient.call_API(OBSERVATION_URL,
+                                              {'id': id,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 

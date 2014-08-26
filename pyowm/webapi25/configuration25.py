@@ -7,6 +7,7 @@ from pyowm.webapi25 import forecastparser
 from pyowm.webapi25 import weatherhistoryparser
 from pyowm.webapi25 import stationhistoryparser
 from pyowm.webapi25 import weathercoderegistry
+from pyowm.webapi25 import cityidregistry
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
@@ -30,6 +31,9 @@ parsers = {
   'weather_history': weatherhistoryparser.WeatherHistoryParser(),
   'station_history': stationhistoryparser.StationHistoryParser()
 }
+
+# City ID registry
+city_id_registry = cityidregistry.CityIDRegistry('cityids/%03d-%03d.txt')
 
 # Cache provider to be used
 cache = nullcache.NullCache()

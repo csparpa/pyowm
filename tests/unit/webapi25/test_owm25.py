@@ -91,6 +91,10 @@ class TestOWM25(unittest.TestCase):
         owm.set_API_key(test_API_key)
         self.assertEqual(owm.get_API_key(), test_API_key)
 
+    def test_city_id_registry(self):
+        result = self.__test_instance.city_id_registry()
+        self.assertTrue(result is not None)
+
     def test_get_API_version(self):
         self.assertEqual("2.5", self.__test_instance.get_API_version())
 
@@ -144,6 +148,25 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, -200, 2.5)
         self.assertRaises(ValueError, OWM25.weather_at_coords, \
                           self.__test_instance, 200, 2.5)
+
+    def test_weather_at_id(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_single_obs
+        result = self.__test_instance.weather_at_id(5128581)  # New York city, US
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, Observation))
+        self.assertTrue(result.get_reception_time() is not None)
+        loc = result.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = result.get_weather()
+        self.assertTrue(weat is not None)
+        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
+
+    def test_weather_at_id_fails_when_id_negative(self):
+        self.assertRaises(ValueError, OWM25.weather_at_id, \
+                          self.__test_instance, -156667)
 
     def test_find_weather_by_name(self):
         ref_to_original_call_API = OWMHTTPClient.call_API

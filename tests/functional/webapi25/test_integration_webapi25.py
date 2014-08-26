@@ -67,6 +67,28 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(weat)
         self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
+    def test_weather_at_id(self):
+        o1 = self.__owm.weather_at_id(5128581) # New York
+        o2 = self.__owm.weather_at_id(703448) # Kiev'
+        o3 = self.__owm.weather_at_id(99999999) # Shall be None
+        self.assertTrue(o1 is not None)
+        self.assertTrue(o1.get_reception_time() is not None)
+        loc = o1.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o1.get_weather()
+        self.assertTrue(weat is not None)
+        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
+        self.assertTrue(o2 is not None)
+        self.assertTrue(o2.get_reception_time() is not None)
+        loc = o2.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o2.get_weather()
+        self.assertTrue(weat is not None)
+        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
+        self.assertFalse(o3 is not None)
+
     def test_find_weather_by_name(self):
         """
         Test feature: find currently observed weather for locations matching
