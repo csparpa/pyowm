@@ -2,6 +2,7 @@
 
 from codecs import open
 from pyowm.webapi25.location import Location
+from pkg_resources import resource_stream
 
 """
 Module containing a registry with lookup methods for OWM-provided city IDs
@@ -69,7 +70,7 @@ class CityIDRegistry():
 
     def _lookup_line_by_city_name(self, city_name):
         filename = self._assess_subfile_from(city_name)
-        with open(filename, "r", "utf-8") as f:
+        with resource_stream(__name__, filename) as f:
             for line in f:
                 if line.startswith(city_name.lower()):
                     return line.strip()
