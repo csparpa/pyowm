@@ -32,7 +32,7 @@ class CityIDRegistry():
 
         """
         line = self._lookup_line_by_city_name(city_name)
-        return long(line.split(",")[1]) if line is not None else None
+        return int(line.split(",")[1]) if line is not None else None
 
     def location_for(self, city_name):
         """
@@ -48,7 +48,7 @@ class CityIDRegistry():
             return None
         tokens = line.split(",")
         return Location(tokens[0], float(tokens[3]), float(tokens[2]),
-                        long(tokens[1]), 'NL')
+                        int(tokens[1]), 'NL')
 
     def _assess_subfile_from(self, city_name):
         c = ord(city_name.lower()[0])

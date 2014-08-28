@@ -5,7 +5,10 @@ Test case for cityidregistry.py module
 """
 
 import unittest
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
