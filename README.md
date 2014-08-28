@@ -47,7 +47,7 @@ w.get_humidity()              # 87
 w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 
 # Search current weather observations in the surroundings of 
-# lon= 22.57 W, -43.12 S (Rio de Janeiro, BR)
+# lat=22.57W, lon=43.12S (Rio de Janeiro, BR)
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
