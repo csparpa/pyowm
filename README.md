@@ -4,6 +4,8 @@ A Python wrapper around the OpenWeatherMap API
 
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
+[![Latest Version](https://pypip.in/version/pyowm/badge.svg)](https://pypi.python.org/pypi/pyowm/)
+[![Downloads](https://pypip.in/download/pyowm/badge.svg?period=week)](https://pypi.python.org/pypi/pyowm/)
 
 What is it?
 ------------
