@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from codecs import open
 from pyowm.webapi25.location import Location
 from pkg_resources import resource_stream
 
@@ -59,10 +58,8 @@ class CityIDRegistry():
             return self._filepath_regex % (97, 102)
         elif c in range(103, 109): # from g to l
             return self._filepath_regex % (103, 108)
-            return filename
         elif c in range(109, 115): # from m to r
             return self._filepath_regex % (109, 114)
-            return filename
         elif c in range (115, 123): # from s to z
             return self._filepath_regex % (115, 122)
         else:
@@ -70,10 +67,17 @@ class CityIDRegistry():
 
     def _lookup_line_by_city_name(self, city_name):
         filename = self._assess_subfile_from(city_name)
+        lines = self._get_lines(filename)
+        return self._match_line(city_name, lines)
+    
+    def _get_lines(self, filename):
         with resource_stream(__name__, filename) as f:
-            for line in f:
-                if line.startswith(city_name.lower()):
-                    return line.strip()
+            return f.readlines()
+    
+    def _match_line(self, city_name, lines):
+        for line in lines:
+            if line.startswith(city_name.lower()):
+                return line.strip()
         return None
 
     def __repr__(self):

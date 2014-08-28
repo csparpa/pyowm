@@ -7,7 +7,7 @@ from os import path, sep
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
-class TestCityIDRegistry(unittest.TestCase):
+class TestCityIDRegistryReadsFS(unittest.TestCase):
 
     if path.isfile(path.abspath(path.dirname(__name__))+sep+'097-102.txt'):
         _current_folder = path.abspath(path.dirname(__name__))
