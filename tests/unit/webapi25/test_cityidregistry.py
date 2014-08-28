@@ -47,7 +47,7 @@ donges,3021093,47.318241,-2.075380,FR"""
         result_1 = self._instance.id_for('dongen')
         result_2 = self._instance.id_for('aaaaaaaaaa')
         CityIDRegistry._get_lines = ref_to_original
-        self.assertEqual(result_1, 2756723L)
+        self.assertEqual(result_1, 2756723)
         self.assertTrue(result_2 is None)
 
     def test_id_for_fails_with_malformed_inputs(self):
@@ -57,7 +57,7 @@ donges,3021093,47.318241,-2.075380,FR"""
     def test_location_for(self):
         ref_to_original = CityIDRegistry._get_lines
         CityIDRegistry._get_lines = self.mock_get_lines
-        expected = Location('dongen', 4.938890, 51.626671, 2756723L, 'NL')
+        expected = Location('dongen', 4.938890, 51.626671, 2756723, 'NL')
         result_1 = self._instance.location_for('dongen')
         result_2 = self._instance.location_for('aaaaaaaaaa')
         CityIDRegistry._get_lines = ref_to_original        
