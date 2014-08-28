@@ -1,10 +1,16 @@
+#!/usr/bin/env python
+
+"""
+Test case for cityidregistry.py module
+"""
+
 import unittest
 from StringIO import StringIO
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
 
-class TestCityIdRegistry(unittest.TestCase):
+class TestCityIDRegistry(unittest.TestCase):
 
     _instance = CityIDRegistry('%03d-%03d.txt')
     _test_file_contents = """dongditou,1812600,39.261391,117.368332,CN
@@ -14,7 +20,7 @@ dongen,2756723,51.626671,4.938890,NL
 dongerying,1812594,39.957500,117.279167,CN
 donges,3021093,47.318241,-2.075380,FR"""
 
-    def mock_get_lines(self, filename):
+    def _mock_get_lines(self, filename):
         return StringIO(self._test_file_contents).readlines()
 
     def test_assess_subfile_from(self):
@@ -33,7 +39,7 @@ donges,3021093,47.318241,-2.075380,FR"""
 
     def test_lookup_line_by_city_name(self):
         ref_to_original = CityIDRegistry._get_lines
-        CityIDRegistry._get_lines = self.mock_get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines
         expected = 'dongen,2756723,51.626671,4.938890,NL'
         result_1 = self._instance._lookup_line_by_city_name('dongen')
         result_2 = self._instance._lookup_line_by_city_name('aaaaaaaa')
@@ -43,7 +49,7 @@ donges,3021093,47.318241,-2.075380,FR"""
 
     def test_id_for(self):
         ref_to_original = CityIDRegistry._get_lines
-        CityIDRegistry._get_lines = self.mock_get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines
         result_1 = self._instance.id_for('dongen')
         result_2 = self._instance.id_for('aaaaaaaaaa')
         CityIDRegistry._get_lines = ref_to_original
@@ -56,7 +62,7 @@ donges,3021093,47.318241,-2.075380,FR"""
 
     def test_location_for(self):
         ref_to_original = CityIDRegistry._get_lines
-        CityIDRegistry._get_lines = self.mock_get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines
         expected = Location('dongen', 4.938890, 51.626671, 2756723, 'NL')
         result_1 = self._instance.location_for('dongen')
         result_2 = self._instance.location_for('aaaaaaaaaa')
