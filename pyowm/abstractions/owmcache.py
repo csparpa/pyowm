@@ -40,7 +40,7 @@ class OWMCache(object):
         :returns: a JSON str in case of cache hit or ``None`` otherwise
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def set(self, request_url, response_json):
@@ -54,4 +54,4 @@ class OWMCache(object):
         :type response_json: str
 
         """
-        pass
+        raise NotImplementedError

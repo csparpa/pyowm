@@ -28,4 +28,4 @@ class JSONParser(object):
             data needed to build the resulting object
 
         """
-        pass
+        raise NotImplementedError
