@@ -34,7 +34,7 @@ donges,3021093,47.318241,-2.075380,FR"""
     def test_lookup_line_by_city_name(self):
         ref_to_original = CityIDRegistry._get_lines
         CityIDRegistry._get_lines = self.mock_get_lines
-        expected = u'dongen,2756723,51.626671,4.938890,NL'
+        expected = 'dongen,2756723,51.626671,4.938890,NL'
         result_1 = self._instance._lookup_line_by_city_name('dongen')
         result_2 = self._instance._lookup_line_by_city_name('aaaaaaaa')
         CityIDRegistry._get_lines = ref_to_original
