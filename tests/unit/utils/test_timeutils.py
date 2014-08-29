@@ -138,4 +138,4 @@ class TestTimeUtils(unittest.TestCase):
     def test_now(self):
         expected = datetime.now()
         result = timeutils.now()
-        self.assertAlmostEqual(expected, result)
+        self.assertTrue((result - expected) < timedelta(microseconds = 100))
