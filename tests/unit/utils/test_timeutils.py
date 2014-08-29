@@ -134,3 +134,8 @@ class TestTimeUtils(unittest.TestCase):
         expected = d + timedelta(hours=-1)
         result = timeutils.last_hour(d)
         self.assertAlmostEqual(expected, result)
+        
+    def test_now(self):
+        expected = datetime.now()
+        result = timeutils.now()
+        self.assertAlmostEqual(expected, result)
