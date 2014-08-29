@@ -42,6 +42,13 @@ class TestForecast(unittest.TestCase):
         index = 1
         self.assertEqual(self.__test_weathers[index],
                          self.__test_instance.get(index))
+        
+    def test_accessors_interval_property(self):
+        former_interval = self.__test_instance.get_interval()
+        self.__test_instance.set_interval("3h")
+        result = self.__test_instance.get_interval()
+        self.__test_instance.set_interval(former_interval)        
+        self.assertEquals("3h", result)
 
     def test_getters_return_expected_3h_data(self):
         """
@@ -82,3 +89,6 @@ class TestForecast(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
             counter += 1
         self.assertEqual(instance.count_weathers(), counter)
+        
+    def test__len__(self):
+        self.assertEquals(len(self.__test_instance), len(self.__test_weathers))
