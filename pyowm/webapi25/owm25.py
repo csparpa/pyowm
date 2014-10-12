@@ -291,6 +291,40 @@ class OWM25(owm.OWM):
         else:
             return None
 
+    def three_hours_forecast_at_coords(self, lat, lon):
+        """
+        Queries the OWM web API for three hours weather forecast for the
+        specified geographic coordinate (eg: latitude: 51.5073509,
+        longitude: -0.1277583). A *Forecaster* object is returned,
+        containing a *Forecast* instance covering a global streak of
+        five days: this instance encapsulates *Weather* objects, with a time
+        interval of three hours one from each other
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
+        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL, params)
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("3h")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
     def daily_forecast(self, name, limit=None):
         """
         Queries the OWM web API for daily weather forecast for the specified
@@ -326,6 +360,51 @@ class OWM25(owm.OWM):
             return forecaster.Forecaster(forecast)
         else:
             return None
+
+    def daily_forecast_at_coords(self, lat, lon, limit=None):
+        """
+        Queries the OWM web API for daily weather forecast for the specified
+        geographic coordinate (eg: latitude: 51.5073509, longitude: -0.1277583).
+        A *Forecaster* object is returned, containing a *Forecast* instance
+        covering a global streak of fourteen days by default: this instance
+        encapsulates *Weather* objects, with a time interval of one day one
+        from each other
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param limit: the maximum number of daily *Weather* items to be
+            retrieved (default is ``None``, which stands for any number of
+            items)
+        :type limit: int or ``None``
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* if negative values are supplied for limit
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("daily")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
 
     def weather_history_at_place(self, name, start=None, end=None):
         """
