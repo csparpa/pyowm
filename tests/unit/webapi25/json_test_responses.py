@@ -31,6 +31,16 @@ THREE_HOURS_FORECAST_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 2643
     '"icon": "04d"}],"clouds": {"all": 92},"wind": {"speed": 4.26,"deg": ' \
     '341.001},"sys": {"pod": "d"},"dt_txt": "2013-09-11 09:00:00"}]}'
 
+THREE_HOURS_FORECAST_AT_COORDS_JSON = '{"cod": "200","message": 0.0982,"city": ' \
+    '{"id": 6690989,"name": "Bethnal Green","coord": {"lon": -0.06109,"lat": ' \
+    '51.52718},"country": "GB","population": 0},"cnt": 25,"list": [{"dt": ' \
+    '1413104400,"main": {"temp": 283.77,"temp_min": 282.26,"temp_max": 283.77,' \
+    '"pressure": 1016.84,"sea_level": 1027.17,"grnd_level": 1016.84,' \
+    '"humidity": 94,"temp_kf": 1.51},"weather": [{"id": 803,"main": "Clouds",' \
+    '"description": "broken clouds","icon": "04d"}],"clouds": {"all": 76},' \
+    '"wind": {"speed": 2.85,"deg": 59.0039},"rain": {"3h": 0},"sys": {"pod": ' \
+    '"d"},"dt_txt": "2014-10-12 09:00:00"}]}' 
+
 DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '2643743,"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},' \
     '"country": "GB","population": 1000000},"cnt": 1,"list": [{"dt": ' \
@@ -38,6 +48,14 @@ DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '284.88,"eve": 287.53,"morn": 289.37},"pressure": 1025.35,"humidity": 71,' \
     '"weather": [{"id": 500,"main": "Rain","description": "light rain","icon"' \
     ': "10d"}],"speed": 3.76,"deg": 338,"clouds": 48,"rain": 3}]}'
+
+DAILY_FORECAST_AT_COORDS_JSON = '{"cod": "200","message": 0.0038,"city": ' \
+    '{"id": 6690574,"name": "Clerkenwell","coord": {"lon": -0.11022,"lat": ' \
+    '51.52438},"country": "GB","population": 0},"cnt": 7,"list": [{"dt": ' \
+    '1413111600,"temp": {"day": 286.25,"min": 282.63,"max": 286.54,"night": ' \
+    '284.54,"eve": 285.51,"morn": 282.63},"pressure": 1016.13,"humidity": 91,' \
+    '"weather": [{"id": 501,"main": "Rain","description": "moderate rain",' \
+    '"icon": "10d"}],"speed": 2.85,"deg": 66,"clouds": 76,"rain": 4}]}'
 
 CITY_WEATHER_HISTORY_JSON = '{"message": "","cod": "200","city_id": 2643743,' \
     '"calctime": 0.5363,"cnt": 1,"list": [{"weather": [{"id": 500,"main": "Rain"' \
