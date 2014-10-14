@@ -17,6 +17,7 @@ import time
 from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      SEARCH_RESULTS_JSON, THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON,
      THREE_HOURS_FORECAST_AT_COORDS_JSON, DAILY_FORECAST_AT_COORDS_JSON,
+     THREE_HOURS_FORECAST_AT_ID_JSON, DAILY_FORECAST_AT_ID_JSON,
      CITY_WEATHER_HISTORY_JSON, STATION_TICK_WEATHER_HISTORY_JSON,
      STATION_WEATHER_HISTORY_JSON)
 from pyowm.webapi25.owm25 import OWM25
@@ -69,6 +70,11 @@ class TestOWM25(unittest.TestCase):
                                                      params_dict):
         return THREE_HOURS_FORECAST_AT_COORDS_JSON
 
+    def mock_httputils_call_API_returning_3h_forecast_at_id(self,
+                                                            API_subset_URL,
+                                                            params_dict):
+        return THREE_HOURS_FORECAST_AT_ID_JSON
+
     def mock_httputils_call_API_returning_daily_forecast(self, API_subset_URL,
                                                      params_dict):
         return DAILY_FORECAST_JSON
@@ -77,6 +83,11 @@ class TestOWM25(unittest.TestCase):
                                                      API_subset_URL,
                                                      params_dict):
         return DAILY_FORECAST_AT_COORDS_JSON
+
+    def mock_httputils_call_API_returning_daily_forecast_at_id(self,
+                                                               API_subset_URL,
+                                                               params_dict):
+        return DAILY_FORECAST_AT_ID_JSON
 
     def mock_httputils_call_API_returning_city_weather_history(self,
                                                        API_subset_URL,
@@ -288,6 +299,24 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
 
+    def test_three_hours_forecast_at_id(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_3h_forecast_at_id
+        result = self.__test_instance.three_hours_forecast_at_id(2643743)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, Forecaster))
+        forecast = result.get_forecast()
+        self.assertTrue(isinstance(forecast, Forecast))
+        self.assertTrue(forecast.get_interval() is not None)
+        self.assertTrue(forecast.get_reception_time() is not None)
+        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertEqual(1, len(forecast))
+        for weather in forecast:
+            self.assertTrue(isinstance(weather, Weather))
+            self.assertTrue(all(v is not None \
+                                for v in weather.__dict__.values()))
+
     def test_daily_forecast(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -312,6 +341,25 @@ class TestOWM25(unittest.TestCase):
             self.mock_httputils_call_API_returning_daily_forecast_at_coords
         result = \
             self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, Forecaster))
+        forecast = result.get_forecast()
+        self.assertTrue(isinstance(forecast, Forecast))
+        self.assertTrue(forecast.get_interval() is not None)
+        self.assertTrue(forecast.get_reception_time() is not None)
+        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertEqual(1, len(forecast))
+        for weather in forecast:
+            self.assertTrue(isinstance(weather, Weather))
+            self.assertTrue(all(v is not None \
+                                for v in weather.__dict__.values()))
+
+    def test_daily_forecast_at_id(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_daily_forecast_at_id
+        result = \
+            self.__test_instance.daily_forecast_at_id(2643743)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
