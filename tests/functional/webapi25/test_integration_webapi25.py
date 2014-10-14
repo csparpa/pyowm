@@ -207,8 +207,10 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get 3 hours forecast at a specific geographic coordinate
         """
-        fc1 = self.__owm.three_hours_forecast_at_coords(51.5073509, -0.1277583) # London,uk
-        fc2 = self.__owm.three_hours_forecast_at_coords(50.4501, 30.5234) # Kiev
+        # London,uk
+        fc1 = self.__owm.three_hours_forecast_at_coords(51.5073509, -0.1277583)
+        # Kiev
+        fc2 = self.__owm.three_hours_forecast_at_coords(50.4501, 30.5234)
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -233,6 +235,40 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                         all(v is not None for v in weather.__dict__.values()))
         with self.assertRaises(ValueError):
             self.__owm.three_hours_forecast_at_coords(199, 199)
+
+    def test_three_hours_forecast_at_id(self):
+        """
+        Test feature: get 3 hours forecast for city ID
+        """
+        # London,uk
+        fc1 = self.__owm.three_hours_forecast_at_id(2643743)
+        # Kiev
+        fc2 = self.__owm.three_hours_forecast_at_id(703448)
+        # Shall be None
+        fc3 = self.__owm.three_hours_forecast_at_id(99999999)
+        self.assertTrue(fc1)
+        f1 = fc1.get_forecast()
+        self.assertTrue(f1 is not None)
+        self.assertTrue(f1.get_reception_time() is not None)
+        loc = f1.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        for weather in f1:
+            self.assertTrue(weather is not None)
+            self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        self.assertTrue(fc2 is not None)
+        f2 = fc2.get_forecast()
+        self.assertTrue(f2 is not None)
+        self.assertTrue(f2.get_reception_time() is not None)
+        loc = f2.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        for weather in f2:
+            self.assertTrue(weather is not None)
+            self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        self.assertEqual(fc3, None)
 
     def test_daily_forecast(self):
         """
@@ -284,6 +320,40 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                         all(v is not None for v in weather.__dict__.values()))
         with self.assertRaises(ValueError):
             self.__owm.daily_forecast_at_coords(199, 199)
+
+    def test_daily_forecast_at_id(self):
+        """
+        Test feature: get daily forecast for a specific city ID
+        """
+        # London,uk
+        fc1 = self.__owm.daily_forecast_at_id(2643743)
+        # Kiev
+        fc2 = self.__owm.daily_forecast_at_id(703448)
+        # Shall be None
+        fc3 = self.__owm.daily_forecast_at_id(99999999)
+        self.assertTrue(fc1)
+        f1 = fc1.get_forecast()
+        self.assertTrue(f1 is not None)
+        self.assertTrue(f1.get_reception_time() is not None)
+        loc = f1.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        for weather in f1:
+            self.assertTrue(weather is not None)
+            self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        self.assertTrue(fc2 is not None)
+        f2 = fc2.get_forecast()
+        self.assertTrue(f2 is not None)
+        self.assertTrue(f2.get_reception_time() is not None)
+        loc = f2.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        for weather in f2:
+            self.assertTrue(weather is not None)
+            self.assertTrue(
+                        all(v is not None for v in weather.__dict__.values()))
+        self.assertFalse(fc3 is not None)
 
     def test_weather_history_at_place(self):
         """

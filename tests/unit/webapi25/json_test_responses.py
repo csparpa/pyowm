@@ -41,6 +41,16 @@ THREE_HOURS_FORECAST_AT_COORDS_JSON = '{"cod": "200","message": 0.0982,"city": '
     '"wind": {"speed": 2.85,"deg": 59.0039},"rain": {"3h": 0},"sys": {"pod": ' \
     '"d"},"dt_txt": "2014-10-12 09:00:00"}]}' 
 
+THREE_HOURS_FORECAST_AT_ID_JSON = '{"cod": "200","message": 0.0022,"city":' \
+    '{"id": 2643743,"name": "London","coord": {"lon": -0.12574,"lat": ' \
+    '51.50853},"country": "GB","population": 1000000},"cnt": 38,"list": ' \
+    '[{"dt": 1413244800,"main": {"temp": 285.92,"temp_min": 284.886,' \
+    '"temp_max": 285.92,"pressure": 1005.16,"sea_level": 1015.38,' \
+    '"grnd_level": 1005.16,"humidity": 98,"temp_kf": 1.03},"weather": ' \
+    '[{"id": 804,"main": "Clouds","description": "overcast clouds","icon": ' \
+    '"04n"}],"clouds": {"all": 92},"wind": {"speed": 3.31,"deg": 303.502},' \
+    '"rain": {"3h": 0},"sys": {"pod": "n"},"dt_txt": "2014-10-14 00:00:00"}]}'
+
 DAILY_FORECAST_JSON = '{"cod": "200","message": 0.1019,"city": {"id": ' \
     '2643743,"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},' \
     '"country": "GB","population": 1000000},"cnt": 1,"list": [{"dt": ' \
@@ -56,6 +66,14 @@ DAILY_FORECAST_AT_COORDS_JSON = '{"cod": "200","message": 0.0038,"city": ' \
     '284.54,"eve": 285.51,"morn": 282.63},"pressure": 1016.13,"humidity": 91,' \
     '"weather": [{"id": 501,"main": "Rain","description": "moderate rain",' \
     '"icon": "10d"}],"speed": 2.85,"deg": 66,"clouds": 76,"rain": 4}]}'
+
+DAILY_FORECAST_AT_ID_JSON = '{"cod": "200","message": 0.1947,"city": {"id": ' \
+    '2643743,"name": "London","coord": {"lon": -0.12574, "lat": 51.50853},' \
+    '"country": "GB","population": 1000000},"cnt": 1,"list": [{"dt": ' \
+    '1413198000,"temp": {"day": 285.9,"min": 285.76,"max": 285.9,"night": ' \
+    '285.76,"eve": 285.9,"morn": 285.9},"pressure": 1006.87,"humidity": 98,' \
+    '"weather": [{"id": 803,"main": "Clouds","description": "broken clouds",' \
+    '"icon": "04n"}],"speed": 2.66,"deg": 321,"clouds": 56}]}'
 
 CITY_WEATHER_HISTORY_JSON = '{"message": "","cod": "200","city_id": 2643743,' \
     '"calctime": 0.5363,"cnt": 1,"list": [{"weather": [{"id": 500,"main": "Rain"' \

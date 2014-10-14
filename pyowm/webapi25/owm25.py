@@ -325,6 +325,36 @@ class OWM25(owm.OWM):
         else:
             return None
 
+    def three_hours_forecast_at_id(self, id):
+        """
+        Queries the OWM web API for three hours weather forecast for the
+        specified city ID (eg: 5128581). A *Forecaster* object is returned,
+        containing a *Forecast* instance covering a global streak of
+        five days: this instance encapsulates *Weather* objects, with a time
+        interval of three hours one from each other
+
+        :param id: the location's city ID
+        :type id: int
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
+                                              {'id': id,
+                                               'lang': self._language})
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("3h")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
+
     def daily_forecast(self, name, limit=None):
         """
         Queries the OWM web API for daily weather forecast for the specified
@@ -395,6 +425,45 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("daily")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
+    def daily_forecast_at_id(self, id, limit=None):
+        """
+        Queries the OWM web API for daily weather forecast for the specified
+        city ID (eg: 5128581). A *Forecaster* object is returned, containing
+        a *Forecast* instance covering a global streak of fourteen days by
+        default: this instance encapsulates *Weather* objects, with a time
+        interval of one day one from each other
+
+        :param id: the location's city ID
+        :type id: int
+        :param limit: the maximum number of daily *Weather* items to be
+            retrieved (default is ``None``, which stands for any number of
+            items)
+        :type limit: int or ``None``
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* if negative values are supplied for limit
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+
+        params = {'id': id, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
