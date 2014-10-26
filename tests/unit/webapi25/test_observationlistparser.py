@@ -16,6 +16,9 @@ class TestObservationListParser(unittest.TestCase):
 
     __instance = ObservationListParser()
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
+    __bad_json_2 = '{"cod": "200", "b": 1.234 }'
+    __no_items_json = '{"cod": "200", "count": "0" }'
+    __404_json = '{"cod": "404" }'
 
     def test_parse_JSON(self):
         result = self.__instance.parse_JSON(SEARCH_RESULTS_JSON)
@@ -34,6 +37,14 @@ class TestObservationListParser(unittest.TestCase):
     def test_parse_JSON_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, self.__instance.parse_JSON,
                           self.__bad_json)
+        self.assertRaises(ParseResponseError, self.__instance.parse_JSON,
+                          self.__bad_json_2)
+
+    def test_parse_JSON_when_no_items_returned(self):
+        self.assertFalse(self.__instance.parse_JSON(self.__no_items_json))
+
+    def test_parse_JSON_when_resource_not_found(self):
+        self.assertIsNone(self.__instance.parse_JSON(self.__404_json))
 
     def test_parse_JSON_when_no_results(self):
         result = self.__instance.parse_JSON(SEARCH_WITH_NO_RESULTS_JSON)

@@ -123,3 +123,9 @@ STATION_WEATHER_HISTORY_JSON = '{"message": "", "cod": "200", "type": "hour", ' 
 
 STATION_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"","cod":"200","type":"tick",' \
     '"station_id":11347,"calctime":" tick = 0.1258 total=1.7684","cnt":0,"list":[]}'
+
+OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' \
+    '"GB","sunrise":1378877413,"sunset":1378923812},"weather":[{"test":"fake"}],"base":' \
+    '"gdps stations","main":{"temp":288.44,"pressure":1022,"temp_min":287.59,' \
+    '"temp_max":289.82,"humidity":75},"wind":{"speed":1.54,"gust":2.57,"deg":' \
+    '31},"clouds":{"all":92},"dt":1378895177,"id":2643743,"name":"London","cod":200}'
