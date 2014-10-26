@@ -9,6 +9,7 @@ from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.forecast import Forecast
 from tests.unit.webapi25.json_test_dumps import FORECAST_JSON_DUMP
+from tests.unit.webapi25.xml_test_dumps import FORECAST_XML_DUMP
 
 
 class TestForecast(unittest.TestCase):
@@ -96,3 +97,6 @@ class TestForecast(unittest.TestCase):
 
     def test_to_JSON(self):
         self.assertEqual(FORECAST_JSON_DUMP, self.__test_instance.to_JSON())
+
+    def test_to_XML(self):
+        self.assertEqual(FORECAST_XML_DUMP, self.__test_instance.to_XML())
