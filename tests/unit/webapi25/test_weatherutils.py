@@ -67,14 +67,14 @@ class TestWeatherUtils(unittest.TestCase):
         result_1 = weatherutils.filter_by_status(self.__test_weathers,
                                                  "rain",
                                                  self.__test_registry)
-        self.assertEquals(1, len(result_1))
+        self.assertEqual(1, len(result_1))
         self.assertTrue(weatherutils.status_is(result_1[0], "rain",
                                                self.__test_registry))
         
         result_2 = weatherutils.filter_by_status(self.__test_weathers,
                                                  "sun",
                                                  self.__test_registry)
-        self.assertEquals(1, len(result_2))
+        self.assertEqual(1, len(result_2))
         self.assertTrue(weatherutils.status_is(result_2[0], "sun",
                                                self.__test_registry))
 

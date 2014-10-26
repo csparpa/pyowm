@@ -47,7 +47,7 @@ donges,3021093,47.318241,-2.075380,FR"""
         result_1 = self._instance._lookup_line_by_city_name('dongen')
         result_2 = self._instance._lookup_line_by_city_name('aaaaaaaa')
         CityIDRegistry._get_lines = ref_to_original
-        self.assertEquals(expected, result_1)
+        self.assertEqual(expected, result_1)
         self.assertTrue(result_2 is None)
 
     def test_id_for(self):

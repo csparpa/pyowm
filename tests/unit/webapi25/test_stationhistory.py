@@ -60,8 +60,11 @@ class TestStationHistory(unittest.TestCase):
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'),
                          self.__test_reception_time)
 
-    def test_to_JSON(self):
-        self.assertEqual(STATIONHISTORY_JSON_DUMP, self.__test_instance.to_JSON())
+    # Only test to_JSON and to_XML functions when running Python 2.7
+    from sys import version_info
+    if version_info[0] < 3:
+        def test_to_JSON(self):
+            self.assertEqual(STATIONHISTORY_JSON_DUMP, self.__test_instance.to_JSON())
 
-    def test_to_XML(self):
-        self.assertEqual(STATIONHISTORY_XML_DUMP, self.__test_instance.to_XML())
+        def test_to_XML(self):
+            self.assertEqual(STATIONHISTORY_XML_DUMP, self.__test_instance.to_XML())

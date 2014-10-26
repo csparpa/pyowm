@@ -50,7 +50,7 @@ class TestForecast(unittest.TestCase):
         self.__test_instance.set_interval("3h")
         result = self.__test_instance.get_interval()
         self.__test_instance.set_interval(former_interval)        
-        self.assertEquals("3h", result)
+        self.assertEqual("3h", result)
 
     def test_getters_return_expected_3h_data(self):
         """
@@ -93,10 +93,13 @@ class TestForecast(unittest.TestCase):
         self.assertEqual(instance.count_weathers(), counter)
         
     def test__len__(self):
-        self.assertEquals(len(self.__test_instance), len(self.__test_weathers))
+        self.assertEqual(len(self.__test_instance), len(self.__test_weathers))
 
-    def test_to_JSON(self):
-        self.assertEqual(FORECAST_JSON_DUMP, self.__test_instance.to_JSON())
+    # Only test to_JSON and to_XML functions when running Python 2.7
+    from sys import version_info
+    if version_info[0] < 3:
+        def test_to_JSON(self):
+            self.assertEqual(FORECAST_JSON_DUMP, self.__test_instance.to_JSON())
 
-    def test_to_XML(self):
-        self.assertEqual(FORECAST_XML_DUMP, self.__test_instance.to_XML())
+        def test_to_XML(self):
+            self.assertEqual(FORECAST_XML_DUMP, self.__test_instance.to_XML())

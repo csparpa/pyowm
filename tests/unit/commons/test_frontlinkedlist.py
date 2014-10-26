@@ -22,7 +22,7 @@ class TestFrontLinkedList(unittest.TestCase):
         instance = FrontLinkedList()
         # No elements
         instance.remove(1)
-        self.assertEquals(0, instance.size())
+        self.assertEqual(0, instance.size())
         # One element
         instance.add(2)
         self.assertEqual(1, instance.size())

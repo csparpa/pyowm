@@ -195,8 +195,11 @@ class TestWeather(unittest.TestCase):
         self.assertRaises(ValueError, Weather.get_temperature,
                           self.__test_instance, 'xyz')
 
-    def test_to_JSON(self):
-        self.assertEquals(WEATHER_JSON_DUMP, self.__test_instance.to_JSON())
+    # Only test to_JSON and to_XML functions when running Python 2.7
+    from sys import version_info
+    if version_info[0] < 3:
+        def test_to_JSON(self):
+            self.assertEqual(WEATHER_JSON_DUMP, self.__test_instance.to_JSON())
 
-    def test_to_XML(self):
-        self.assertEquals(WEATHER_XML_DUMP, self.__test_instance.to_XML())
+        def test_to_XML(self):
+            self.assertEqual(WEATHER_XML_DUMP, self.__test_instance.to_XML())
