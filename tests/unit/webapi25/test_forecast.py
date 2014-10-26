@@ -8,6 +8,7 @@ import unittest
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.forecast import Forecast
+from tests.unit.webapi25.json_test_dumps import FORECAST_JSON_DUMP
 
 
 class TestForecast(unittest.TestCase):
@@ -92,3 +93,6 @@ class TestForecast(unittest.TestCase):
         
     def test__len__(self):
         self.assertEquals(len(self.__test_instance), len(self.__test_weathers))
+
+    def test_to_JSON(self):
+        self.assertEqual(FORECAST_JSON_DUMP, self.__test_instance.to_JSON())

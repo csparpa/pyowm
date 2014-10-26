@@ -6,6 +6,7 @@ Test case for location.py module
 
 import unittest
 from pyowm.webapi25.location import Location, location_from_dictionary
+from tests.unit.webapi25.json_test_dumps import LOCATION_JSON_DUMP
 
 
 class TestLocation(unittest.TestCase):
@@ -57,3 +58,6 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(instance.get_lat(), self.__test_lat)
         self.assertEqual(instance.get_ID(), self.__test_ID)
         self.assertEqual(instance.get_country(), self.__test_country)
+
+    def test_to_JSON(self):
+        self.assertEqual(LOCATION_JSON_DUMP, self.__test_instance.to_JSON())

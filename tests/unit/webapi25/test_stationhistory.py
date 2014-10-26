@@ -6,6 +6,7 @@ Test case for stationhistory.py module
 
 import unittest
 from pyowm.webapi25.stationhistory import StationHistory
+from tests.unit.webapi25.json_test_dumps import STATIONHISTORY_JSON_DUMP
 
 
 class TestStationHistory(unittest.TestCase):
@@ -57,3 +58,6 @@ class TestStationHistory(unittest.TestCase):
                          self.__test_reception_time_iso)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'),
                          self.__test_reception_time)
+
+    def test_to_JSON(self):
+        self.assertEqual(STATIONHISTORY_JSON_DUMP, self.__test_instance.to_JSON())

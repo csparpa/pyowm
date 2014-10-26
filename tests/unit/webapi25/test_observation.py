@@ -8,6 +8,7 @@ import unittest
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.observation import Observation
+from tests.unit.webapi25.json_test_dumps import OBSERVATION_JSON_DUMP
 
 
 class TestObservation(unittest.TestCase):
@@ -42,3 +43,6 @@ class TestObservation(unittest.TestCase):
                          self.__test_iso_reception_time)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
                          self.__test_reception_time)
+
+    def test_to_JSON(self):
+        self.assertEqual(OBSERVATION_JSON_DUMP, self.__test_instance.to_JSON())

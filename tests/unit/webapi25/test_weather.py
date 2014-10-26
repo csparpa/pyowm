@@ -6,6 +6,7 @@ Test case for weather.py module
 
 import unittest
 from pyowm.webapi25.weather import Weather, weather_from_dictionary
+from tests.unit.webapi25.json_test_dumps import WEATHER_JSON_DUMP
 
 
 class TestWeather(unittest.TestCase):
@@ -192,3 +193,6 @@ class TestWeather(unittest.TestCase):
     def test_get_temperature_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.get_temperature,
                           self.__test_instance, 'xyz')
+
+    def test_to_JSON(self):
+        self.assertEquals(WEATHER_JSON_DUMP, self.__test_instance.to_JSON())
