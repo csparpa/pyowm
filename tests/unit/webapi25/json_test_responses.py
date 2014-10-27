@@ -129,3 +129,7 @@ OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"c
     '"gdps stations","main":{"temp":288.44,"pressure":1022,"temp_min":287.59,' \
     '"temp_max":289.82,"humidity":75},"wind":{"speed":1.54,"gust":2.57,"deg":' \
     '31},"clouds":{"all":92},"dt":1378895177,"id":2643743,"name":"London","cod":200}'
+
+FORECAST_MALFORMED_JSON = '{ "city": {"id": 2643743,' \
+    '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
+    '"GB","population": 1000000}, "list": [{"test": "fake"}]}'
