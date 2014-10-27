@@ -19,7 +19,8 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      THREE_HOURS_FORECAST_AT_COORDS_JSON, DAILY_FORECAST_AT_COORDS_JSON,
      THREE_HOURS_FORECAST_AT_ID_JSON, DAILY_FORECAST_AT_ID_JSON,
      CITY_WEATHER_HISTORY_JSON, STATION_TICK_WEATHER_HISTORY_JSON,
-     STATION_WEATHER_HISTORY_JSON)
+     STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
+     DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.owmhttpclient import OWMHTTPClient
@@ -57,6 +58,10 @@ class TestOWM25(unittest.TestCase):
                                      API_timeout):
         return OBSERVATION_JSON
 
+    def mock_httputils_call_API_failing_ping(self, API_subset_URL, params_dict,
+                                            API_timeout):
+        return None
+
     def mock_httputils_call_API_returning_multiple_obs(self, API_subset_URL,
                                                      params_dict):
         return SEARCH_RESULTS_JSON
@@ -64,6 +69,14 @@ class TestOWM25(unittest.TestCase):
     def mock_httputils_call_API_returning_3h_forecast(self, API_subset_URL,
                                                      params_dict):
         return THREE_HOURS_FORECAST_JSON
+
+    def mock_httputils_call_API_returning_3h_forecast_with_no_items(self,
+                                                API_subset_URL, params_dict):
+        return THREE_HOURS_FORECAST_NOT_FOUND_JSON
+
+    def mock_httputils_call_API_returning_daily_forecast_with_no_items(self,
+                                                API_subset_URL, params_dict):
+        return DAILY_FORECAST_NOT_FOUND_JSON
 
     def mock_httputils_call_API_returning_3h_forecast_at_coords(self,
                                                      API_subset_URL,
@@ -109,6 +122,11 @@ class TestOWM25(unittest.TestCase):
                                                        params_dict):
         return STATION_WEATHER_HISTORY_JSON
 
+    def mock_httputils_call_API_returning_station_history_with_no_items(self,
+                                                       API_subset_URL,
+                                                       params_dict):
+        return STATION_HISTORY_NO_ITEMS_JSON
+
     # Tests
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
@@ -124,6 +142,14 @@ class TestOWM25(unittest.TestCase):
         result = self.__test_instance.is_API_online()
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(result)
+
+    def test_is_API_online_failure(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_failing_ping
+        result = self.__test_instance.is_API_online()
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertFalse(result)
 
     def test_city_id_registry(self):
         result = self.__test_instance.city_id_registry()
@@ -279,6 +305,14 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
 
+    def test_three_hours_forecast_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_3h_forecast_with_no_items
+        result = self.__test_instance.three_hours_forecast("London,uk")
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
+
     def test_three_hours_forecast_at_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -299,6 +333,15 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
 
+    def test_three_hours_forecast_at_coords_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_3h_forecast_with_no_items
+        result = self.__test_instance.three_hours_forecast_at_coords(51.50853,
+                                                                     -0.12574)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
+
     def test_three_hours_forecast_at_id(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -317,6 +360,14 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
 
+    def test_three_hours_forecast_at_id_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_3h_forecast_with_no_items
+        result = self.__test_instance.three_hours_forecast_at_id(2643743)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
+
     def test_daily_forecast(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -334,6 +385,18 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
+
+    def test_daily_forecast_fails_with_wrong_params(self):
+        self.assertRaises(ValueError, OWM25.daily_forecast,
+                          self.__test_instance, "London,uk", -3)
+
+    def test_daily_forecast_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_daily_forecast_with_no_items
+        result = self.__test_instance.daily_forecast('London,uk')
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
 
     def test_daily_forecast_at_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -354,6 +417,18 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
 
+    def test_daily_forecast_at_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, -3)
+
+    def test_daily_forecast_at_coords_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_daily_forecast_with_no_items
+        result = self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
+
     def test_daily_forecast_at_id(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -373,9 +448,17 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None \
                                 for v in weather.__dict__.values()))
 
-    def test_daily_forecast_fails_with_wrong_params(self):
-        self.assertRaises(ValueError, OWM25.daily_forecast,
-                          self.__test_instance, "London,uk", -3)
+    def test_daily_forecast_at_id_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_id,
+                          self.__test_instance, 123456, -3)
+
+    def test_daily_forecast_at_id_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_daily_forecast_with_no_items
+        result = self.__test_instance.daily_forecast_at_id(123456)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
 
     def test_weather_history_at_place(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -477,6 +560,14 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.station_tick_history,
                           self.__test_instance, 1234, -3)
 
+    def test_station_tick_history_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_station_history_with_no_items
+        result = self.__test_instance.station_tick_history(1234, limit=4)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
+
     def test_station_hour_history(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -492,6 +583,14 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.station_hour_history,
                           self.__test_instance, 1234, -3)
 
+    def test_station_hour_history_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_station_history_with_no_items
+        result = self.__test_instance.station_hour_history(1234, limit=4)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)
+
     def test_station_day_history(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -506,3 +605,11 @@ class TestOWM25(unittest.TestCase):
     def test_station_day_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.station_day_history,
                           self.__test_instance, 1234, -3)
+
+    def test_station_hour_history_when_forecast_not_found(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_station_history_with_no_items
+        result = self.__test_instance.station_hour_history(1234, limit=4)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertIsNone(result)

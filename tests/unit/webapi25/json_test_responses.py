@@ -31,6 +31,10 @@ THREE_HOURS_FORECAST_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 2643
     '"icon": "04d"}],"clouds": {"all": 92},"wind": {"speed": 4.26,"deg": ' \
     '341.001},"sys": {"pod": "d"},"dt_txt": "2013-09-11 09:00:00"}]}'
 
+THREE_HOURS_FORECAST_NOT_FOUND_JSON = '{"cod": "404","message": "test"}'
+
+DAILY_FORECAST_NOT_FOUND_JSON = '{"cod": "404","message": "test"}'
+
 THREE_HOURS_FORECAST_AT_COORDS_JSON = '{"cod": "200","message": 0.0982,"city": ' \
     '{"id": 6690989,"name": "Bethnal Green","coord": {"lon": -0.06109,"lat": ' \
     '51.52718},"country": "GB","population": 0},"cnt": 25,"list": [{"dt": ' \
@@ -123,6 +127,8 @@ STATION_WEATHER_HISTORY_JSON = '{"message": "", "cod": "200", "type": "hour", ' 
 
 STATION_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"","cod":"200","type":"tick",' \
     '"station_id":11347,"calctime":" tick = 0.1258 total=1.7684","cnt":0,"list":[]}'
+
+STATION_HISTORY_NO_ITEMS_JSON = '{"cod": "200","message": "test", "cnt": 0}'
 
 OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' \
     '"GB","sunrise":1378877413,"sunset":1378923812},"weather":[{"test":"fake"}],"base":' \
