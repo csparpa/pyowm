@@ -482,7 +482,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(sh2 is not None)
         data2 = sh2.get_measurements()
         self.assertTrue(data2 is not None)
-        self.assertFalse(len(data2) > 3)
         h3 = self.__owm.station_day_history(987654)  # Shall be None
         self.assertFalse(h3 is not None)
 
