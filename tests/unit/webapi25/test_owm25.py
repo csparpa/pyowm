@@ -342,6 +342,16 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 
+    def test_three_hours_forecast_at_coords_fails_with_wrong_params(self):
+        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
+                          self.__test_instance, -100.0, 0.0)
+        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
+                          self.__test_instance, 100.0, 0.0)
+        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
+                          self.__test_instance, 0.0, -200.0)
+        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
+                          self.__test_instance, 0.0, 200.0)
+
     def test_three_hours_forecast_at_id(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -368,11 +378,15 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 
+    def test_three_hours_forecast_at_id_fails_with_wrong_params(self):
+        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_id,
+                          self.__test_instance, -1234)
+
     def test_daily_forecast(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast
-        result = self.__test_instance.daily_forecast("London,uk")
+        result = self.__test_instance.daily_forecast("London,uk", 2)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -403,7 +417,7 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_at_coords
         result = \
-            self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574)
+            self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574, 2)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -420,6 +434,14 @@ class TestOWM25(unittest.TestCase):
     def test_daily_forecast_at_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
                           self.__test_instance, 51.50853, -0.12574, -3)
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
+                          self.__test_instance, -100.0, 0.0)
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
+                          self.__test_instance, 100.0, 0.0)
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
+                          self.__test_instance, 0.0, -200.0)
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
+                          self.__test_instance, 0.0, 200.0)
 
     def test_daily_forecast_at_coords_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -434,7 +456,7 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_at_id
         result = \
-            self.__test_instance.daily_forecast_at_id(2643743)
+            self.__test_instance.daily_forecast_at_id(2643743, 2)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -449,6 +471,8 @@ class TestOWM25(unittest.TestCase):
                                 for v in weather.__dict__.values()))
 
     def test_daily_forecast_at_id_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.daily_forecast_at_id,
+                          self.__test_instance, -123456, 3)
         self.assertRaises(ValueError, OWM25.daily_forecast_at_id,
                           self.__test_instance, 123456, -3)
 
