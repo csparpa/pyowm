@@ -23,11 +23,17 @@ class TestFrontLinkedList(unittest.TestCase):
         # No elements
         instance.remove(1)
         self.assertEqual(0, instance.size())
-        # One element
+        # One element, which is removed
         instance.add(2)
         self.assertEqual(1, instance.size())
         instance.remove(2)
         self.assertEqual(0, instance.size())
+        # One element, which is not removed
+        instance.add(5)
+        self.assertEqual(1, instance.size())
+        instance.remove(2)
+        self.assertEqual(1, instance.size())
+        instance.remove(5)  # clear list
         # Two elements
         instance.add(2)
         instance.add("x")
