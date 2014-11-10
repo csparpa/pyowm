@@ -245,6 +245,28 @@ class Forecaster(object):
                                              "hurricane",
                                              weather_code_registry)
 
+    def _will_be(self, timeobject, weather_condition):
+        """
+        Tells if at the specified weather condition will occur at the specified
+        time. The check is performed on the *Weather* item of the forecast
+        which is closest to the time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :param weather_condition: the weather condition to be looked up
+        :type weather_condition: str
+        :returns: boolean
+
+        """
+        time_value = timeformatutils.to_UNIXtime(timeobject)
+        closest_weather = weatherutils.find_closest_weather(
+                                        self._forecast.get_weathers(),
+                                        time_value)
+        return weatherutils.status_is(closest_weather, weather_condition,
+                                      weather_code_registry)
+
     def will_be_rainy_at(self, timeobject):
         """
         Tells if at the specified time the condition is rain. The check is
@@ -258,11 +280,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "rain",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "rain")
 
     def will_be_sunny_at(self, timeobject):
         """
@@ -277,11 +295,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "sun",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "sun")
 
     def will_be_snowy_at(self, timeobject):
         """
@@ -296,11 +310,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "snow",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "snow")
 
     def will_be_cloudy_at(self, timeobject):
         """
@@ -315,11 +325,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "clouds",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "clouds")
 
     def will_be_foggy_at(self, timeobject):
         """
@@ -334,11 +340,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "fog",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "fog")
 
     def will_be_stormy_at(self, timeobject):
         """
@@ -353,11 +355,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "storm",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "storm")
 
     def will_be_tornado_at(self, timeobject):
         """
@@ -372,11 +370,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "tornado",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "tornado")
 
     def will_be_hurricane_at(self, timeobject):
         """
@@ -391,11 +385,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "hurricane",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "hurricane")
 
     def get_weather_at(self, timeobject):
         """
