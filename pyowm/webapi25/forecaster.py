@@ -340,6 +340,63 @@ class Forecaster(object):
         return weatherutils.status_is(closest_weather, "fog",
                                       weather_code_registry)
 
+    def will_be_stormy_at(self, timeobject):
+        """
+        Tells if at the specified time the condition is storm. The check is
+        performed on the *Weather* item of the forecast which is closest to the
+        time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :returns: boolean
+
+        """
+        time = timeformatutils.to_UNIXtime(timeobject)
+        closest_weather = weatherutils.find_closest_weather(
+                                        self._forecast.get_weathers(), time)
+        return weatherutils.status_is(closest_weather, "storm",
+                                      weather_code_registry)
+
+    def will_be_tornado_at(self, timeobject):
+        """
+        Tells if at the specified time the condition is tornado. The check is
+        performed on the *Weather* item of the forecast which is closest to the
+        time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :returns: boolean
+
+        """
+        time = timeformatutils.to_UNIXtime(timeobject)
+        closest_weather = weatherutils.find_closest_weather(
+                                        self._forecast.get_weathers(), time)
+        return weatherutils.status_is(closest_weather, "tornado",
+                                      weather_code_registry)
+
+    def will_be_hurricane_at(self, timeobject):
+        """
+        Tells if at the specified time the condition is hurricane. The check is
+        performed on the *Weather* item of the forecast which is closest to the
+        time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :returns: boolean
+
+        """
+        time = timeformatutils.to_UNIXtime(timeobject)
+        closest_weather = weatherutils.find_closest_weather(
+                                        self._forecast.get_weathers(), time)
+        return weatherutils.status_is(closest_weather, "hurricane",
+                                      weather_code_registry)
+
     def get_weather_at(self, timeobject):
         """
         Gives the *Weather* item in the forecast that is closest in time to
