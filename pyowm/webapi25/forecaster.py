@@ -125,6 +125,39 @@ class Forecaster(object):
         return weatherutils.any_status_is(self._forecast.get_weathers(), "snow",
                                           weather_code_registry)
 
+    def will_have_storm(self):
+        """
+        Tells if into the forecast coverage exist one or more *Weather* items
+        related to storms
+
+        :returns: boolean
+
+        """
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "storm",
+                                          weather_code_registry)
+
+    def will_have_tornado(self):
+        """
+        Tells if into the forecast coverage exist one or more *Weather* items
+        related to tornadoes
+
+        :returns: boolean
+
+        """
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "tornado",
+                                          weather_code_registry)
+
+    def will_have_hurricane(self):
+        """
+        Tells if into the forecast coverage exist one or more *Weather* items
+        related to hurricanes
+
+        :returns: boolean
+
+        """
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "hurricane",
+                                          weather_code_registry)
+
     def when_rain(self):
         """
         Returns a sublist of the *Weather* list in the forecast, containing
@@ -180,6 +213,60 @@ class Forecaster(object):
                                              "snow",
                                              weather_code_registry)
 
+    def when_storm(self):
+        """
+        Returns a sublist of the *Weather* list in the forecast, containing
+        only items having storm as weather condition.
+
+        :returns: a list of *Weather* objects
+        """
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "storm",
+                                             weather_code_registry)
+
+    def when_tornado(self):
+        """
+        Returns a sublist of the *Weather* list in the forecast, containing
+        only items having tornado as weather condition.
+
+        :returns: a list of *Weather* objects
+        """
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "tornado",
+                                             weather_code_registry)
+    def when_hurricane(self):
+        """
+        Returns a sublist of the *Weather* list in the forecast, containing
+        only items having hurricane as weather condition.
+
+        :returns: a list of *Weather* objects
+        """
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "hurricane",
+                                             weather_code_registry)
+
+    def _will_be(self, timeobject, weather_condition):
+        """
+        Tells if at the specified weather condition will occur at the specified
+        time. The check is performed on the *Weather* item of the forecast
+        which is closest to the time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :param weather_condition: the weather condition to be looked up
+        :type weather_condition: str
+        :returns: boolean
+
+        """
+        time_value = timeformatutils.to_UNIXtime(timeobject)
+        closest_weather = weatherutils.find_closest_weather(
+                                        self._forecast.get_weathers(),
+                                        time_value)
+        return weatherutils.status_is(closest_weather, weather_condition,
+                                      weather_code_registry)
+
     def will_be_rainy_at(self, timeobject):
         """
         Tells if at the specified time the condition is rain. The check is
@@ -193,11 +280,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "rain",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "rain")
 
     def will_be_sunny_at(self, timeobject):
         """
@@ -212,11 +295,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "sun",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "sun")
 
     def will_be_snowy_at(self, timeobject):
         """
@@ -231,11 +310,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "snow",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "snow")
 
     def will_be_cloudy_at(self, timeobject):
         """
@@ -250,11 +325,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "clouds",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "clouds")
 
     def will_be_foggy_at(self, timeobject):
         """
@@ -269,11 +340,52 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(), time)
-        return weatherutils.status_is(closest_weather, "fog",
-                                      weather_code_registry)
+        return self._will_be(timeobject, "fog")
+
+    def will_be_stormy_at(self, timeobject):
+        """
+        Tells if at the specified time the condition is storm. The check is
+        performed on the *Weather* item of the forecast which is closest to the
+        time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :returns: boolean
+
+        """
+        return self._will_be(timeobject, "storm")
+
+    def will_be_tornado_at(self, timeobject):
+        """
+        Tells if at the specified time the condition is tornado. The check is
+        performed on the *Weather* item of the forecast which is closest to the
+        time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :returns: boolean
+
+        """
+        return self._will_be(timeobject, "tornado")
+
+    def will_be_hurricane_at(self, timeobject):
+        """
+        Tells if at the specified time the condition is hurricane. The check is
+        performed on the *Weather* item of the forecast which is closest to the
+        time value conveyed by the parameter
+
+        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
+            or an ISO8601-formatted string in the format
+            ``YYYY-MM-DD HH:MM:SS+00``
+        :type timeobject: long/int, ``datetime.datetime`` or str)
+        :returns: boolean
+
+        """
+        return self._will_be(timeobject, "hurricane")
 
     def get_weather_at(self, timeobject):
         """

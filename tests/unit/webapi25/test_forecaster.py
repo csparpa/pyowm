@@ -55,12 +55,32 @@ class TestForecaster(unittest.TestCase):
              "temp_min": 298.0
              },
             "Clear", "Sky is clear", 800, "01d")
+
+    __test_weather_storm = Weather(__test_end_coverage, 1378496480, 1378449510,
+                                   5,
+            {"all": 0}, {}, {"deg": 99.4, "speed": 0.8}, 7,
+            {"press": 1071.119, "sea_level": 1059.589},
+            {"temp": 299.599, "temp_kf": -1.899, "temp_max": 301.9,
+             "temp_min": 298.0
+             },
+            "Storm", "Violent storm", 961, "01d")
+
+    __test_weather_hurricane = Weather(__test_end_coverage, 1378496480, 1378449510,
+                                   5,
+            {"all": 0}, {}, {"deg": 99.4, "speed": 0.8}, 7,
+            {"press": 1071.119, "sea_level": 1059.589},
+            {"temp": 299.599, "temp_kf": -1.899, "temp_max": 301.9,
+             "temp_min": 298.0
+             },
+            "Hurricane", "Hurricane", 962, "01d")
+
     __test_none_values = Weather(__test_end_coverage, 1378496480, 1378449510,
              5, {}, {}, {}, 7, {"press": 1091.119, "sea_level": 1079.589},
             {"temp": 299.599, "temp_kf": -1.899},
             "Clear", "Sky is clear", 800, "01d")
     __test_weathers = [__test_weather_rainsnow, __test_weather_clouds,
-                       __test_weather_sun_1, __test_weather_sun_2]
+                       __test_weather_sun_1, __test_weather_sun_2,
+                       __test_weather_storm, __test_weather_hurricane]
 
     __test_forecast = Forecast("daily", 1379089800, __test_location,
                                __test_weathers)
@@ -98,6 +118,15 @@ class TestForecaster(unittest.TestCase):
     def test_will_have_snow(self):
         self.assertFalse(self.__test_instance.will_have_snow())
 
+    def test_will_have_storm(self):
+        self.assertTrue(self.__test_instance.will_have_storm())
+
+    def test_will_have_tornado(self):
+        self.assertFalse(self.__test_instance.will_have_tornado())
+
+    def test_will_have_hurricane(self):
+        self.assertTrue(self.__test_instance.will_have_hurricane())
+
     def test_when_rain(self):
         self.assertEqual([self.__test_weather_rainsnow],
                          self.__test_instance.when_rain())
@@ -117,6 +146,15 @@ class TestForecaster(unittest.TestCase):
     def test_when_snow(self):
         self.assertFalse(self.__test_instance.when_snow())
 
+    def test_when_storm(self):
+        self.assertTrue(self.__test_instance.when_storm())
+
+    def test_when_tornado(self):
+        self.assertFalse(self.__test_instance.when_tornado())
+
+    def test_when_hurricane(self):
+        self.assertTrue(self.__test_instance.when_hurricane())
+
     def test_will_be_rainy_at(self):
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110
@@ -125,7 +163,7 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_rainy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_rainy_at(time_3))
 
-    def test_will_be_rainy_at_method_fails_with_bad_parameters(self):
+    def test_will_be_rainy_at_fails_with_bad_parameters(self):
         self.assertRaises(TypeError, Forecaster.will_be_rainy_at,
                           self.__test_instance, 45.7)
 
@@ -137,7 +175,7 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_sunny_at(time_2))
         self.assertTrue(self.__test_instance.will_be_sunny_at(time_3))
 
-    def test_will_be_sunny_at_method_fails_with_bad_parameters(self):
+    def test_will_be_sunny_at_fails_with_bad_parameters(self):
         self.assertRaises(TypeError, Forecaster.will_be_sunny_at,
                           self.__test_instance, 45.7)
 
@@ -149,7 +187,7 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_3))
 
-    def test_will_be_snowy_at_method_fails_with_bad_parameters(self):
+    def test_will_be_snowy_at_fails_with_bad_parameters(self):
         self.assertRaises(TypeError, Forecaster.will_be_snowy_at,
                           self.__test_instance, 45.7)
 
@@ -161,7 +199,7 @@ class TestForecaster(unittest.TestCase):
         self.assertTrue(self.__test_instance.will_be_cloudy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_cloudy_at(time_3))
 
-    def test_will_be_cloudy_at_method_fails_with_bad_parameters(self):
+    def test_will_be_cloudy_at_fails_with_bad_parameters(self):
         self.assertRaises(TypeError, Forecaster.will_be_cloudy_at,
                           self.__test_instance, 45.7)
 
@@ -173,9 +211,49 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_3))
 
-    def test_will_be_foggy_at_method_fails_with_bad_parameters(self):
+    def test_will_be_foggy_at_fails_with_bad_parameters(self):
         self.assertRaises(TypeError, Forecaster.will_be_foggy_at,
                           self.__test_instance, 45.7)
+
+    def test_will_be_stormy_at(self):
+        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_2 = 1379226110
+        time_3 = "2013-09-16 19:56:50+00"
+        self.assertFalse(self.__test_instance.will_be_stormy_at(time_1))
+        self.assertFalse(self.__test_instance.will_be_stormy_at(time_2))
+        self.assertFalse(self.__test_instance.will_be_stormy_at(time_3))
+
+    def test_will_be_stormy_at_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_stormy_at,
+                          self.__test_instance, 45.7)
+
+    def test_will_be_tornado_at(self):
+        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_2 = 1379226110
+        time_3 = "2013-09-16 19:56:50+00"
+        self.assertFalse(self.__test_instance.will_be_tornado_at(time_1))
+        self.assertFalse(self.__test_instance.will_be_tornado_at(time_2))
+        self.assertFalse(self.__test_instance.will_be_tornado_at(time_3))
+
+    def test_will_be_tornado_at_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_tornado_at,
+                          self.__test_instance, 45.7)
+
+    def test_will_be_hurricane_at(self):
+        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_2 = 1379226110
+        time_3 = "2013-09-16 19:56:50+00"
+        self.assertFalse(self.__test_instance.will_be_hurricane_at(time_1))
+        self.assertFalse(self.__test_instance.will_be_hurricane_at(time_2))
+        self.assertFalse(self.__test_instance.will_be_hurricane_at(time_3))
+
+    def test_will_be_hurricane_at_fails_with_bad_parameters(self):
+        self.assertRaises(TypeError, Forecaster.will_be_hurricane_at,
+                          self.__test_instance, 45.7)
+
+
+
+
 
     def test_get_weather_at(self):
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
