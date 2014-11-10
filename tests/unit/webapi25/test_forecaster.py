@@ -146,6 +146,15 @@ class TestForecaster(unittest.TestCase):
     def test_when_snow(self):
         self.assertFalse(self.__test_instance.when_snow())
 
+    def test_when_storm(self):
+        self.assertTrue(self.__test_instance.when_storm())
+
+    def test_when_tornado(self):
+        self.assertFalse(self.__test_instance.when_tornado())
+
+    def test_when_hurricane(self):
+        self.assertTrue(self.__test_instance.when_hurricane())
+
     def test_will_be_rainy_at(self):
         time_1 = datetime(2013, 9, 13, 16, 47, 0)
         time_2 = 1379226110

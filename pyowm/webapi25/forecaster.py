@@ -213,6 +213,38 @@ class Forecaster(object):
                                              "snow",
                                              weather_code_registry)
 
+    def when_storm(self):
+        """
+        Returns a sublist of the *Weather* list in the forecast, containing
+        only items having storm as weather condition.
+
+        :returns: a list of *Weather* objects
+        """
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "storm",
+                                             weather_code_registry)
+
+    def when_tornado(self):
+        """
+        Returns a sublist of the *Weather* list in the forecast, containing
+        only items having tornado as weather condition.
+
+        :returns: a list of *Weather* objects
+        """
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "tornado",
+                                             weather_code_registry)
+    def when_hurricane(self):
+        """
+        Returns a sublist of the *Weather* list in the forecast, containing
+        only items having hurricane as weather condition.
+
+        :returns: a list of *Weather* objects
+        """
+        return weatherutils.filter_by_status(self._forecast.get_weathers(),
+                                             "hurricane",
+                                             weather_code_registry)
+
     def will_be_rainy_at(self, timeobject):
         """
         Tells if at the specified time the condition is rain. The check is
