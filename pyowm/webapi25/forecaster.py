@@ -125,6 +125,39 @@ class Forecaster(object):
         return weatherutils.any_status_is(self._forecast.get_weathers(), "snow",
                                           weather_code_registry)
 
+    def will_have_storm(self):
+        """
+        Tells if into the forecast coverage exist one or more *Weather* items
+        related to storms
+
+        :returns: boolean
+
+        """
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "storm",
+                                          weather_code_registry)
+
+    def will_have_tornado(self):
+        """
+        Tells if into the forecast coverage exist one or more *Weather* items
+        related to tornadoes
+
+        :returns: boolean
+
+        """
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "tornado",
+                                          weather_code_registry)
+
+    def will_have_hurricane(self):
+        """
+        Tells if into the forecast coverage exist one or more *Weather* items
+        related to hurricanes
+
+        :returns: boolean
+
+        """
+        return weatherutils.any_status_is(self._forecast.get_weathers(), "hurricane",
+                                          weather_code_registry)
+
     def when_rain(self):
         """
         Returns a sublist of the *Weather* list in the forecast, containing

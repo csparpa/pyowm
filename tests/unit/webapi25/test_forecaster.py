@@ -55,12 +55,32 @@ class TestForecaster(unittest.TestCase):
              "temp_min": 298.0
              },
             "Clear", "Sky is clear", 800, "01d")
+
+    __test_weather_storm = Weather(__test_end_coverage, 1378496480, 1378449510,
+                                   5,
+            {"all": 0}, {}, {"deg": 99.4, "speed": 0.8}, 7,
+            {"press": 1071.119, "sea_level": 1059.589},
+            {"temp": 299.599, "temp_kf": -1.899, "temp_max": 301.9,
+             "temp_min": 298.0
+             },
+            "Storm", "Violent storm", 961, "01d")
+
+    __test_weather_hurricane = Weather(__test_end_coverage, 1378496480, 1378449510,
+                                   5,
+            {"all": 0}, {}, {"deg": 99.4, "speed": 0.8}, 7,
+            {"press": 1071.119, "sea_level": 1059.589},
+            {"temp": 299.599, "temp_kf": -1.899, "temp_max": 301.9,
+             "temp_min": 298.0
+             },
+            "Hurricane", "Hurricane", 962, "01d")
+
     __test_none_values = Weather(__test_end_coverage, 1378496480, 1378449510,
              5, {}, {}, {}, 7, {"press": 1091.119, "sea_level": 1079.589},
             {"temp": 299.599, "temp_kf": -1.899},
             "Clear", "Sky is clear", 800, "01d")
     __test_weathers = [__test_weather_rainsnow, __test_weather_clouds,
-                       __test_weather_sun_1, __test_weather_sun_2]
+                       __test_weather_sun_1, __test_weather_sun_2,
+                       __test_weather_storm, __test_weather_hurricane]
 
     __test_forecast = Forecast("daily", 1379089800, __test_location,
                                __test_weathers)
@@ -97,6 +117,15 @@ class TestForecaster(unittest.TestCase):
 
     def test_will_have_snow(self):
         self.assertFalse(self.__test_instance.will_have_snow())
+
+    def test_will_have_storm(self):
+        self.assertTrue(self.__test_instance.will_have_storm())
+
+    def test_will_have_tornado(self):
+        self.assertFalse(self.__test_instance.will_have_tornado())
+
+    def test_will_have_hurricane(self):
+        self.assertTrue(self.__test_instance.will_have_hurricane())
 
     def test_when_rain(self):
         self.assertEqual([self.__test_weather_rainsnow],
