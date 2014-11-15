@@ -2,7 +2,7 @@
 
 """
 Module containing a concrete implementation for JSONParser abstract class,
-returning a Station instance
+returning a list Station instances
 """
 
 import json

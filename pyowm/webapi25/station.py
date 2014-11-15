@@ -35,7 +35,8 @@ class Station(object):
     :param last_weather: last reported weather conditions from station
     :type last_weather: *Weather* instance
     :returns: an *Station* instance
-    :raises: *ValueError* when negative values are provided as reception time
+    :raises: *ValueError* if lon or lat values are provided out of bounds or
+        last_weather is not an instance of *Weather* or None
 
     """
 
