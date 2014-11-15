@@ -388,8 +388,14 @@ def weather_from_dictionary(d):
             temp_kf = d['main']['temp_kf']
         else:
             temp_kf = None
-        temp_max = d['main']['temp_max']
-        temp_min = d['main']['temp_min']
+        if 'temp_max' in d['main']:
+            temp_max = d['main']['temp_max']
+        else:
+            temp_max = None
+        if 'temp_min' in d['main']:
+            temp_min = d['main']['temp_min']
+        else:
+            temp_min = None
         temperature = {'temp': temp,
                        'temp_kf': temp_kf,
                        'temp_max': temp_max,

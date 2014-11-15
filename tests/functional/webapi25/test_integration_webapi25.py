@@ -427,6 +427,26 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertTrue(
                         all(v is not None for v in weather.__dict__.values()))
 
+    def test_station_at_coords(self):
+        """
+        Test feature: get a list of meteostations nearest to a geographical
+        point
+        """
+        s1 = self.__owm.station_at_coords(51.5073509, -0.1277583, 2)
+        self.assertEqual(2, len(s1))
+        for station in s1:
+            self.assertTrue(station is not None)
+            self.assertTrue(
+                    all(v is not None for v in station.__dict__.values()))
+        with self.assertRaises(ValueError):
+            self.__owm.station_at_coords(51.5073509, 220)
+        with self.assertRaises(ValueError):
+            self.__owm.station_at_coords(220, -0.1277583)
+        with self.assertRaises(ValueError):
+            self.__owm.station_at_coords(51.5073509, -0.1277583, -3)
+        with self.assertRaises(AssertionError):
+            self.__owm.station_at_coords(51.5073509, -0.1277582, 'foo')
+
     def test_station_tick_history(self):
         """
         Test feature: get station tick weather history for a specific

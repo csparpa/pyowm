@@ -9,7 +9,7 @@ from pyowm import constants
 from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    API_AVAILABILITY_TIMEOUT)
+    FIND_STATION_URL, API_AVAILABILITY_TIMEOUT)
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
@@ -573,6 +573,43 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
                                               params)
         return self._parsers['weather_history'].parse_JSON(json_data)
+
+    def station_at_coords(self, lat, lon, limit=None):
+        """
+        Queries the OWM web API for weather stations nearest to the
+        specified geographic coordinate (eg: latitude: 51.5073509,
+        longitude: -0.1277583). A list of *Station* objects is returned,
+        this instance encapsulates a last reported *Weather* object.
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param cnt: the maximum number of *Station* items to be retrieved
+            (default is ``None``, which stands for any number of items)
+        :type cnt: int or ``None``
+
+        :returns: a list of *Station* objects or ``None`` if station data is
+            not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+        params = {'lat': lat, 'lon': lon}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = self._httpclient.call_API(FIND_STATION_URL, params)
+        return self._parsers['station_list'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
         """
