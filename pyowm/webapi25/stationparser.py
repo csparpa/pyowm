@@ -57,7 +57,7 @@ class StationParser(jsonparser.JSONParser):
             else:
                 last_weather = None
         
-        except KeyError, e:
+        except KeyError as e:
             error_msg = ''.join((__name__, ': unable to read JSON data', ))
             raise parse_response_error.ParseResponseError(error_msg)
 
