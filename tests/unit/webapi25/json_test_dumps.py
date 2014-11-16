@@ -59,16 +59,3 @@ STATION_JSON_DUMP = '{"status": 50, "distance": 18.95, "weather": {"status":' \
         + '"sunset_time": 1378496400, "humidity": 57, "wind": {"speed": ' \
         + '1.1, "deg": 252.002}}, "name": "KNGU", "station_type": 1, ' \
         + '"lat": 36.9375, "lon": -76.2893, "station_ID": 2865}'
-"""
-STATION_JSON_DUMP = '{"status": 50, "distance": 18.95, "last": "{"status": ' \
-        + '"Clouds", "weather_code": 804, "rain": {"all": 20}, "snow": ' \
-        + '{"all": 0}, "pressure": {"press": 1030.119, "sea_level": ' \
-        + '1038.589}, "sunrise_time": 1378449600, "weather_icon_name": ' \
-        + '"04d", "clouds": 67, "temperature": {"temp_kf": -1.899, ' \
-        + '"temp_min": 294.199, "temp": 294.199, "temp_max": 296.098}, ' \
-        + '"detailed_status": "Overcast clouds", "reference_time": ' \
-        + '1378459200, "sunset_time": 1378496400, "humidity": 57, "wind":' \
-        + ' {"speed": 1.1, "deg": 252.002}}", "name": "KNGU", ' \
-        + '"station_type": 1, "lat": 36.9375, "lon": -76.2893, ' \
-        + '"station_ID": 2865}'
-"""
