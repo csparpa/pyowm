@@ -5,6 +5,8 @@ from pyowm.webapi25 import observationparser
 from pyowm.webapi25 import observationlistparser
 from pyowm.webapi25 import forecastparser
 from pyowm.webapi25 import weatherhistoryparser
+from pyowm.webapi25 import stationparser
+from pyowm.webapi25 import stationlistparser
 from pyowm.webapi25 import stationhistoryparser
 from pyowm.webapi25 import weathercoderegistry
 from pyowm.webapi25 import cityidregistry
@@ -22,6 +24,7 @@ THREE_HOURS_FORECAST_URL = ROOT_API_URL + '/forecast'
 DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
+FIND_STATION_URL = ROOT_API_URL + '/station/find'
 
 # Parser objects injection for OWM web API responses parsing
 parsers = {
@@ -29,7 +32,9 @@ parsers = {
   'observation_list': observationlistparser.ObservationListParser(),
   'forecast': forecastparser.ForecastParser(),
   'weather_history': weatherhistoryparser.WeatherHistoryParser(),
-  'station_history': stationhistoryparser.StationHistoryParser()
+  'station_history': stationhistoryparser.StationHistoryParser(),
+  'station': stationparser.StationParser(),
+  'station_list': stationlistparser.StationListParser(),
 }
 
 # City ID registry
