@@ -21,9 +21,6 @@ class StationParser(jsonparser.JSONParser):
 
     """
 
-    def __init__(self):
-        pass
-
     def parse_JSON(self, JSON_string):
         """
         Parses a *Station* instance out of raw JSON data. Only certain

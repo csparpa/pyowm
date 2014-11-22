@@ -577,7 +577,7 @@ class OWM25(owm.OWM):
     def station_at_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for weather stations nearest to the
-        specified geographic coordinate (eg: latitude: 51.5073509,
+        specified geographic coordinates (eg: latitude: 51.5073509,
         longitude: -0.1277583). A list of *Station* objects is returned,
         this instance encapsulates a last reported *Weather* object.
 

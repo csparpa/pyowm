@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Module containing classes and datastructures related to meteostation data
+Module containing classes and data structures related to meteostation data
 """
 
 import json
@@ -34,9 +34,9 @@ class Station(object):
     :type distance: float
     :param last_weather: last reported weather conditions from station
     :type last_weather: *Weather* instance
-    :returns: an *Station* instance
-    :raises: *ValueError* if lon or lat values are provided out of bounds or
-        last_weather is not an instance of *Weather* or None
+    :returns: a *Station* instance
+    :raises: *ValueError* if `lon` or `lat` values are provided out of bounds or
+        `last_weather` is not an instance of *Weather* or `None`
 
     """
 
@@ -45,23 +45,18 @@ class Station(object):
 
         if lon < -180.0 or lon > 180.0:
             raise ValueError("'lon' value must be between -180 and 180")
-        if lat < -89.0 or lat > 90.0:
+        if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        if (last_weather is not None 
-                and not isinstance(last_weather, weather.Weather)):
-            raise ValueError('`last_weather` must be a Weather object')
-
+        if last_weather is not None:
+            if not isinstance(last_weather, weather.Weather):
+                raise ValueError('`last_weather` must be a Weather object')
         self._name = name
         self._station_ID = station_ID
         self._station_type = station_type
         self._status = status
         self._lat = float(lat)
         self._lon = float(lon)
-        if distance is not None:
-            self._distance = float(distance)
-        else:
-            self._distance = distance
-        # last weather reporting from station if provided
+        self._distance = float(distance) if distance is not None else None
         self._last_weather = last_weather
 
     def get_name(self):
@@ -121,9 +116,9 @@ class Station(object):
     def get_distance(self):
         """
         Returns the distance of the station from the
-        geo coords used in search
+        geo coordinates used in search
 
-        :return: the float distance from geo coords
+        :return: the float distance from geo coordinates
 
         """
         return self._distance

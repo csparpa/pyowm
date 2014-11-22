@@ -2,7 +2,7 @@
 
 """
 Module containing a concrete implementation for JSONParser abstract class,
-returning a list Station instances
+returning a list of Station instances
 """
 
 import json
@@ -17,10 +17,6 @@ class StationListParser(JSONParser):
     """
     Concrete *JSONParser* implementation building a list of *Station*
     instances out of raw JSON data coming from OWM web API responses.
-
-    :param station_parser: a servant StationParser object
-    :type station_parser: StationParser
-    :returns: a *Station* instance
 
     """
 
