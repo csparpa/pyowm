@@ -1,6 +1,6 @@
-#!/usr/bin/env python
-
-"""JSON test OWM API responses"""
+"""
+JSON test OWM API responses
+"""
 
 OBSERVATION_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' \
     '"GB","sunrise":1378877413,"sunset":1378923812},"weather":[{"id":804,' \

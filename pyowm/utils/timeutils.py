@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing utility functions for time values generation/management
 """

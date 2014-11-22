@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
 """

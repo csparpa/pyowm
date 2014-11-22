@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 """
 Test case for owm.py module.
 Here we don't use mock objects because we don't want to rely on exeternal

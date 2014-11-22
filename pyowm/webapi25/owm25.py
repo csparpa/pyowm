@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing the PyOWM library main entry point
 """

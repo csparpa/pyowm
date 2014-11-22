@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing an abstract base class for JSON OWM web API responses parsing
 """

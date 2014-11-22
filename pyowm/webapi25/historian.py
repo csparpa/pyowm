@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing weather history abstraction classes and data structures.
 """

@@ -1,6 +1,6 @@
-#!/usr/bin/env python
-
-"""JSON dumps for PyOWM test objects"""
+"""
+JSON dumps for PyOWM test objects
+"""
 
 LOCATION_JSON_DUMP = '{"country": "UK", "name": "London", "coordinates": ' \
         + '{"lat": 43.7, "lon": 12.3}, "ID": 1234}'

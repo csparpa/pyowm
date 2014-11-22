@@ -1,6 +1,6 @@
-#!/usr/bin/env python
-
-"""XML dumps for PyOWM test objects"""
+"""
+XML dumps for PyOWM test objects
+"""
 
 LOCATION_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
 <location xmlns:l="http://github.com/csparpa/pyowm/tree/master/pyowm/webapi25/xsd/location.xsd"><l:name>London</l:name><l:coordinates><l:lon>12.3</l:lon><l:lat>43.7</l:lat></l:coordinates><l:ID>1234</l:ID><l:country>UK</l:country></location>"""

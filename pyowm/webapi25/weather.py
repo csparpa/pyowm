@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing weather data classes and data structures.
 """

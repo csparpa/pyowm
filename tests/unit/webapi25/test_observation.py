@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for observation.py module
 """

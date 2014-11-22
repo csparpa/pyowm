@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from pyowm.webapi25.location import Location
 from pkg_resources import resource_stream
 

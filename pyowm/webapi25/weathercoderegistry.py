@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing weather code lookup and resolution classes
 """
