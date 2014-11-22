@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing classes and data structures related to meteostation data
 """

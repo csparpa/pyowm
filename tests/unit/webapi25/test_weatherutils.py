@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for weatherutils.py module
 """

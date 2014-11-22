@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing weather forecast abstraction classes and data structures.
 """

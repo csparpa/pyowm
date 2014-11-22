@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from pyowm.caches import nullcache
 from pyowm.webapi25 import observationparser
 from pyowm.webapi25 import observationlistparser

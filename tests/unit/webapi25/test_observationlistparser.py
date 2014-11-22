@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for observationlistparser.py module
 """

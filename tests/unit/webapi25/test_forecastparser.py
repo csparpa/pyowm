@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-
 """
 Test case for forecastparser.py module
 """
-#from __future__ import absolute_import  # Python 2.x compatibility
+
 import unittest
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.exceptions.parse_response_error import ParseResponseError

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing classes for HTTP client/server interactions
 """

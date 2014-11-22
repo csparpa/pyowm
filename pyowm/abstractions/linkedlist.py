@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing abstractions for defining a linked list data structure
 """

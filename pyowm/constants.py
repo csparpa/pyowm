@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Constants for the PyOWM library
 """

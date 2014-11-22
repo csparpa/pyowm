@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing class related to the implementation of linked-list data
 structure
