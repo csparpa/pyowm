@@ -290,7 +290,11 @@ class Weather(object):
                            'status': self._status,
                            'detailed_status': self._detailed_status,
                            'weather_code': self._weather_code,
-                           'weather_icon_name': self._weather_icon_name})
+                           'weather_icon_name': self._weather_icon_name,
+                           'visibility_distance': self._visibility_distance,
+                           'dewpoint': self._dewpoint,
+                           'humidex': self._humidex,
+                           'heat_index': self._heat_index})
 
     def to_XML(self, xml_declaration=True, xmlns=True):
         """
@@ -349,6 +353,14 @@ class Weather(object):
         humidity_node = ET.SubElement(root_node, "humidity")
         humidity_node.text = str(self._humidity)
         xmlutils.create_DOM_node_from_dict(self._wind, "wind", root_node)
+        visibility_distance_node = ET.SubElement(root_node, "visibility_distance")
+        visibility_distance_node.text = str(self._visibility_distance)
+        dewpoint_node = ET.SubElement(root_node, "dewpoint")
+        dewpoint_node.text = str(self._dewpoint)
+        humidex_node = ET.SubElement(root_node, "humidex")
+        humidex_node.text = str(self._humidex)
+        heat_index_node = ET.SubElement(root_node, "heat_index")
+        heat_index_node.text = str(self._heat_index)
         return root_node
 
     def __repr__(self):
