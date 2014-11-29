@@ -21,7 +21,7 @@ class TestObservation(unittest.TestCase):
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
                 "temp_min": 294.199
             },
-            "Clouds", "Overcast clouds", 804, "04d")
+            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0)
     __test_instance = Observation(__test_reception_time, __test_location,
                                   __test_weather)
 

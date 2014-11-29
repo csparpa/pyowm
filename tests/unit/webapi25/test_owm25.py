@@ -179,7 +179,6 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         weat = result.get_weather()
         self.assertTrue(weat is not None)
-        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_weather_at_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -194,7 +193,6 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         weat = result.get_weather()
         self.assertTrue(weat is not None)
-        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_weather_at_coords_fails_when_coordinates_out_of_bounds(self):
         """
@@ -222,7 +220,6 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         weat = result.get_weather()
         self.assertTrue(weat is not None)
-        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_weather_at_id_fails_when_id_negative(self):
         self.assertRaises(ValueError, OWM25.weather_at_id, \
@@ -245,7 +242,6 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
             weat = item.get_weather()
             self.assertTrue(weat is not None)
-            self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_weather_at_places_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.weather_at_places, \
@@ -268,7 +264,6 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
             weat = item.get_weather()
             self.assertTrue(weat is not None)
-            self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_weather_around_coords_fails_when_coordinates_out_of_bounds(self):
         """
@@ -302,8 +297,6 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_three_hours_forecast_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -330,8 +323,6 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_three_hours_forecast_at_coords_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -367,8 +358,6 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_three_hours_forecast_at_id_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -397,8 +386,6 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_daily_forecast_fails_with_wrong_params(self):
         self.assertRaises(ValueError, OWM25.daily_forecast,
@@ -428,8 +415,6 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_daily_forecast_at_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
@@ -467,8 +452,6 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_daily_forecast_at_id_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, OWM25.daily_forecast_at_id,
@@ -493,7 +476,6 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         for weather in result:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertNotIn(None, weather.__dict__.values())
 
     def test_weather_history_at_place_fails_with_unordered_time_boundaries(self):
         self.assertRaises(ValueError, OWM25.weather_history_at_place,
@@ -533,7 +515,6 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         for weather in result:
             self.assertTrue(isinstance(weather, Weather))
-            self.assertNotIn(None, weather.__dict__.values())
 
     def test_weather_history_at_id_fails_with_negative_id(self):
         self.assertRaises(ValueError, OWM25.weather_history_at_id,

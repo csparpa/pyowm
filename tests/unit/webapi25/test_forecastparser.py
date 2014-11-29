@@ -33,8 +33,6 @@ class TestForecastParser(unittest.TestCase):
         self.assertTrue(isinstance(result.get_weathers(), list))
         for weather in result:
             self.assertTrue(weather is not None)
-            self.assertTrue(all(v is not None \
-                                for v in weather.__dict__.values()))
 
     def test_parse_JSON_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, ForecastParser.parse_JSON,

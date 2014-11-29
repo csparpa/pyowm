@@ -43,6 +43,14 @@ class Weather(object):
     :type weather_code: int
     :param weather_icon_name: weather-related icon name
     :type weather_icon_name: Unicode
+    :param visibility_distance: visibility distance
+    :type visibility_distance: float
+    :param dewpoint: dewpoint
+    :type dewpoint: float
+    :param humidex: Canadian humidex
+    :type humidex: float
+    :param heat_index: heat index
+    :type heat_index: float
     :returns:  a *Weather* instance
     :raises: *ValueError* when negative values are provided
 
@@ -50,7 +58,8 @@ class Weather(object):
 
     def __init__(self, reference_time, sunset_time, sunrise_time, clouds, rain,
                  snow, wind, humidity, pressure, temperature, status,
-                 detailed_status, weather_code, weather_icon_name):
+                 detailed_status, weather_code, weather_icon_name,
+                 visibility_distance, dewpoint, humidex, heat_index):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self._reference_time = reference_time
@@ -75,6 +84,18 @@ class Weather(object):
         self._detailed_status = detailed_status
         self._weather_code = weather_code
         self._weather_icon_name = weather_icon_name
+        if visibility_distance is not None and visibility_distance < 0:
+            raise ValueError("'visibility_distance' must be greater than 0")
+        self._visibility_distance = visibility_distance
+        if dewpoint is not None and dewpoint < 0:
+            raise ValueError("'dewpoint' must be grater than 0")
+        self._dewpoint = dewpoint
+        if humidex is not None and humidex < 0:
+            raise ValueError("'humidex' must be greater than 0")
+        self._humidex = humidex
+        if heat_index is not None and heat_index < 0:
+            raise ValueError("'heat index' must be grater than 0")
+        self._heat_index = heat_index
 
     def get_reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
@@ -218,6 +239,38 @@ class Weather(object):
         """
         return self._weather_icon_name
 
+    def get_visibility_distance(self):
+        """Returns the visibility distance as a float
+
+        :returns: the visibility distance
+
+        """
+        return self._visibility_distance
+
+    def get_dewpoint(self):
+        """Returns the dew point as a float
+
+        :returns: the dew point
+
+        """
+        return self._dewpoint
+
+    def get_humidex(self):
+        """Returns the Canadian humidex as a float
+
+        :returns: the Canadian humidex
+
+        """
+        return self._humidex
+
+    def get_heat_index(self):
+        """Returns the heat index as a float
+
+        :returns: the heat index
+
+        """
+        return self._heat_index
+
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
 
@@ -237,7 +290,11 @@ class Weather(object):
                            'status': self._status,
                            'detailed_status': self._detailed_status,
                            'weather_code': self._weather_code,
-                           'weather_icon_name': self._weather_icon_name})
+                           'weather_icon_name': self._weather_icon_name,
+                           'visibility_distance': self._visibility_distance,
+                           'dewpoint': self._dewpoint,
+                           'humidex': self._humidex,
+                           'heat_index': self._heat_index})
 
     def to_XML(self, xml_declaration=True, xmlns=True):
         """
@@ -296,6 +353,14 @@ class Weather(object):
         humidity_node = ET.SubElement(root_node, "humidity")
         humidity_node.text = str(self._humidity)
         xmlutils.create_DOM_node_from_dict(self._wind, "wind", root_node)
+        visibility_distance_node = ET.SubElement(root_node, "visibility_distance")
+        visibility_distance_node.text = str(self._visibility_distance)
+        dewpoint_node = ET.SubElement(root_node, "dewpoint")
+        dewpoint_node.text = str(self._dewpoint)
+        humidex_node = ET.SubElement(root_node, "humidex")
+        humidex_node.text = str(self._humidex)
+        heat_index_node = ET.SubElement(root_node, "heat_index")
+        heat_index_node.text = str(self._heat_index)
         return root_node
 
     def __repr__(self):
@@ -327,6 +392,30 @@ def weather_from_dictionary(d):
         sunrise_time = d['sys']['sunrise']
     else:
         sunrise_time = 0
+    # -- calc
+    if 'calc' in d:
+        if 'dewpoint' in d['calc']:
+            dewpoint = d['calc']['dewpoint']
+        else:
+            dewpoint = None
+        if 'humidex' in d['calc']:
+            humidex = d['calc']['humidex']
+        else:
+            humidex = None
+        if 'heatindex' in d['calc']:
+            heat_index = d['calc']['heatindex']
+        else:
+            heat_index = None
+    else:
+        dewpoint = None
+        humidex = None
+        heat_index = None
+    # -- visibility
+    if 'visibility' in d:
+        if 'distance' in d['visibility']:
+            visibility_distance = d['visibility']['distance']
+    else:
+        visibility_distance = None
     # -- clouds
     if 'clouds' in d:
         if isinstance(d['clouds'], int) or isinstance(d['clouds'], float):
@@ -416,5 +505,5 @@ def weather_from_dictionary(d):
 
     return Weather(reference_time, sunset_time, sunrise_time, clouds,
                 rain, snow, wind, humidity, pressure, temperature,
-                status, detailed_status, weather_code,
-                weather_icon_name)
+                status, detailed_status, weather_code, weather_icon_name,
+                visibility_distance, dewpoint, humidex, heat_index)

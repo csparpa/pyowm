@@ -21,14 +21,14 @@ class TestForecast(unittest.TestCase):
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
                 "temp_min": 294.199
             },
-            "Clouds", "Overcast clouds", 804, "04d"),
+            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
            Weather(1378459690, 1378496480, 1378449510, 23, {"all": 10},
             {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
             {"press": 1070.119, "sea_level": 1078.589},
             {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
              "temp_min": 295.6
              },
-            "Clear", "Sky is clear", 804, "02d")
+            "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
        ]
     __test_n_weathers = len(__test_weathers)
     __test_instance = Forecast("daily", __test_reception_time, __test_location,

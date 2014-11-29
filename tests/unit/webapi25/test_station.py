@@ -23,7 +23,7 @@ class TestStation(unittest.TestCase):
             67, {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
             {"press": 1030.119, "sea_level": 1038.589}, {"temp": 294.199,
             "temp_kf": -1.899, "temp_max": 296.098, "temp_min": 294.199 },
-            "Clouds", "Overcast clouds", 804, "04d")
+            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0)
 
     __test_instance = Station(__test_name, __test_station_ID,
                               __test_station_type, __test_status, __test_lat,

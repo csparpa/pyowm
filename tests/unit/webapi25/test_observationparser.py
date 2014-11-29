@@ -24,7 +24,6 @@ class TestObservationParser(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         weat = result.get_weather()
         self.assertFalse(weat is None)
-        self.assertTrue(all(v is not None for v in weat.__dict__.values()))
 
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, ObservationParser.parse_JSON,
