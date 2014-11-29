@@ -201,6 +201,14 @@ class TestWeather(unittest.TestCase):
                          self.__test_weather_code)
         self.assertEqual(self.__test_instance.get_weather_icon_name(),
                          self.__test_weather_icon_name)
+        self.assertEqual(self.__test_instance.get_visibility_distance(),
+                         self.__test_visibility_distance)
+        self.assertEqual(self.__test_instance.get_dewpoint(),
+                         self.__test_dewpoint)
+        self.assertEqual(self.__test_instance.get_humidex(),
+                         self.__test_humidex)
+        self.assertEqual(self.__test_instance.get_heat_index(),
+                         self.__test_heat_index)
 
     def test_get_reference_time_returning_different_formats(self):
         self.assertEqual(self.__test_instance.get_reference_time(timeformat='iso'),
