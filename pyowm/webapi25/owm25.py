@@ -242,7 +242,7 @@ class OWM25(owm.OWM):
             reached
         """
         assert type(station_id) is int, "'station_id' must be an int"
-        if id < 0:
+        if station_id < 0:
             raise ValueError("'station_id' value must be greater than 0")
         json_data = self._httpclient.call_API(STATION_URL,
                                               {'id': station_id,

@@ -38,8 +38,10 @@ class TestLocation(unittest.TestCase):
                  "country": "GB", "id": 2643743, "name": "London",
                  "population": 1000000}
                 }
+        dict3 = {"station":{"coord":{"lon":-90.47,"lat":39.38}}}
         result1 = location_from_dictionary(dict1)
         result2 = location_from_dictionary(dict2)
+        result3 = location_from_dictionary(dict3)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
         self.assertFalse(result1.get_country() is not None)
@@ -52,6 +54,11 @@ class TestLocation(unittest.TestCase):
         self.assertTrue(result2.get_lat() is not None)
         self.assertTrue(result2.get_lon() is not None)
         self.assertTrue(result2.get_name() is not None)
+        self.assertTrue(result3.get_lat() is not None)
+        self.assertTrue(result3.get_lon() is not None)
+        self.assertTrue(result3.get_country() is None)
+        self.assertTrue(result3.get_name() is None)
+        self.assertTrue(result3.get_ID() is None)
 
     def test_getters_return_expected_data(self):
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat,

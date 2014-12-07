@@ -156,12 +156,44 @@ class TestWeather(unittest.TestCase):
                     "icon": "u10d"}
                    ], "speed": 3.76, "deg": 338, "clouds": 48, "rain": 3
                 }
+        dict3 = {"station":{
+                    "name":"KPPQ",
+                    "type":1,
+                    "status":50,
+                    "id":1000,
+                    "coord":{"lon":-90.47,"lat":39.38}
+                },
+                "last":{
+                    "main":{
+                        "temp":276.15,
+                        "pressure":1031},
+                        "wind":{
+                            "speed":3.1,
+                            "deg":140
+                        },
+                        "visibility":{
+                            "distance":11265,
+                            "prefix":0
+                        },
+                        "calc":{
+                            "dewpoint":273.15
+                        },
+                        "clouds":[
+                            {"distance":427,
+                             "condition":"SCT"}
+                        ],
+                        "dt":1417977300
+                },
+                "params":["temp","pressure","wind","visibility"]
+        }
         result1 = weather_from_dictionary(dict1)
         self.assertTrue(isinstance(result1, Weather))
         self.assertTrue(all(v is not None for v in result1.__dict__.values()))
         result2 = weather_from_dictionary(dict2)
         self.assertTrue(isinstance(result2, Weather))
         self.assertFalse(all(v is not None for v in result2.__dict__.values()))
+        result3 = weather_from_dictionary(dict3)
+        self.assertTrue(isinstance(result2, Weather))
 
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reference_time(),

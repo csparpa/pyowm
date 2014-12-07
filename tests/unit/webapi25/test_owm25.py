@@ -20,7 +20,8 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      THREE_HOURS_FORECAST_AT_ID_JSON, DAILY_FORECAST_AT_ID_JSON,
      CITY_WEATHER_HISTORY_JSON, STATION_TICK_WEATHER_HISTORY_JSON,
      STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
-     DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON)
+     DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
+     STATION_OBSERVATION_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.owmhttpclient import OWMHTTPClient
@@ -53,6 +54,11 @@ class TestOWM25(unittest.TestCase):
     def mock_httputils_call_API_returning_single_obs(self, API_subset_URL,
                                                      params_dict):
         return OBSERVATION_JSON
+
+    def mock_httputils_call_API_returning_single_station_obs(self,
+                                                             API_subset_URL,
+                                                             params_dict):
+        return STATION_OBSERVATION_JSON
 
     def mock_httputils_call_API_ping(self, API_subset_URL, params_dict,
                                      API_timeout):
@@ -223,6 +229,23 @@ class TestOWM25(unittest.TestCase):
 
     def test_weather_at_id_fails_when_id_negative(self):
         self.assertRaises(ValueError, OWM25.weather_at_id, \
+                          self.__test_instance, -156667)
+
+    def test_weather_at_station(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_single_station_obs
+        result = self.__test_instance.weather_at_station(1000)  # station: PAKP
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, Observation))
+        self.assertTrue(result.get_reception_time() is not None)
+        loc = result.get_location()
+        self.assertTrue(loc is not None)
+        weat = result.get_weather()
+        self.assertTrue(weat is not None)
+
+    def test_weather_at_station_fails_when_id_negative(self):
+        self.assertRaises(ValueError, OWM25.weather_at_station, \
                           self.__test_instance, -156667)
 
     def test_weather_at_places(self):
