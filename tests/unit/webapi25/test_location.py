@@ -18,6 +18,10 @@ class TestLocation(unittest.TestCase):
     __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID,
                                __test_country)
 
+    def test_init_fails_when_lat_or_lon_are_none(self):
+        self.assertRaises(ValueError, Location, 'London', None, 43.7, 1234)
+        self.assertRaises(ValueError, Location, 'London', 200.0, None, 1234)
+
     def test_init_fails_when_coordinates_are_out_of_bounds(self):
         """
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90

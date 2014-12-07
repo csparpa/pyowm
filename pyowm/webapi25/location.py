@@ -36,6 +36,8 @@ class Location(object):
 
     def __init__(self, name, lon, lat, ID, country=None):
         self._name = name
+        if lon is None or lat is None:
+            raise ValueError("Either 'lon' or 'lat' must be specified")
         if lon < -180.0 or lon > 180.0:
             raise ValueError("'lon' value must be between -180 and 180")
         self._lon = float(lon)
@@ -173,10 +175,22 @@ def location_from_dictionary(d):
         data = d['city']
     else:
         data = d
-    name = data['name']
-    lon = data['coord']['lon']
-    lat = data['coord']['lat']
-    ID = int(data['id'])
+    if 'name' in data:
+        name = data['name']
+    else:
+        name = None
+    if 'id' in data:
+        ID = int(data['id'])
+    else:
+        ID = None
+    if 'coord' in data:
+        lon = data['coord']['lon']
+        lat = data['coord']['lat']
+    elif 'coord' in data['station']:
+        lon = data['station']['coord']['lon']
+        lat = data['station']['coord']['lat']
+    else:
+        raise KeyError("Impossible to read geographical coordinates from JSON")
     if 'country' in data:
         country = data['country']
     return Location(name, lon, lat, ID, country)
