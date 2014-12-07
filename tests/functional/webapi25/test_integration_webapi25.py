@@ -277,7 +277,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         Test feature: get daily forecast at a specific geographic coordinate
         """
         fc1 = self.__owm.daily_forecast_at_coords(51.5073509, -0.1277583) # London,uk
-        fc2 = self.__owm.daily_forecast_at_coords(50.4501, 30.5234) # Kiev
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -453,6 +452,17 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(data2 is not None)
         h3 = self.__owm.station_day_history(987654)  # Shall be None
         self.assertFalse(h3 is not None)
+
+    def test_weather_at_station(self):
+        """
+        Test feature: get current weather measurement for a specific
+        meteostation
+        """
+        o = self.__owm.weather_at_station(1000)
+        self.assertTrue(o is not None)
+        self.assertTrue(o.get_reception_time() is not None)
+        weat = o.get_weather()
+        self.assertTrue(weat is not None)
 
 if __name__ == "__main__":
     unittest.main()

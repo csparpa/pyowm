@@ -87,8 +87,6 @@ class Weather(object):
         if visibility_distance is not None and visibility_distance < 0:
             raise ValueError("'visibility_distance' must be greater than 0")
         self._visibility_distance = visibility_distance
-        if dewpoint is not None and dewpoint < 0:
-            raise ValueError("'dewpoint' must be grater than 0")
         self._dewpoint = dewpoint
         if humidex is not None and humidex < 0:
             raise ValueError("'humidex' must be greater than 0")
@@ -383,7 +381,10 @@ def weather_from_dictionary(d):
 
     """
     # -- times
-    reference_time = d['dt']
+    if 'dt' in d:
+        reference_time = d['dt']
+    elif 'dt' in d['last']:
+        reference_time = d['last']['dt']
     if 'sys' in d and 'sunset' in d['sys']:
         sunset_time = d['sys']['sunset']
     else:
@@ -406,6 +407,20 @@ def weather_from_dictionary(d):
             heat_index = d['calc']['heatindex']
         else:
             heat_index = None
+    elif 'last' in d:
+        if 'calc' in d['last']:
+            if 'dewpoint' in d['last']['calc']:
+                dewpoint = d['last']['calc']['dewpoint']
+            else:
+                dewpoint = None
+            if 'humidex' in d['last']['calc']:
+                humidex = d['last']['calc']['humidex']
+            else:
+                humidex = None
+            if 'heatindex' in d['last']['calc']:
+                heat_index = d['last']['calc']['heatindex']
+            else:
+                heat_index = None
     else:
         dewpoint = None
         humidex = None
@@ -414,6 +429,10 @@ def weather_from_dictionary(d):
     if 'visibility' in d:
         if 'distance' in d['visibility']:
             visibility_distance = d['visibility']['distance']
+    elif 'last' in d:
+        if 'visibility' in d['last']:
+            if 'distance' in d['last']['visibility']:
+                visibility_distance = d['last']['visibility']['distance']
     else:
         visibility_distance = None
     # -- clouds
@@ -433,12 +452,15 @@ def weather_from_dictionary(d):
         else:
             rain = d['rain'].copy()
     else:
-        rain = {}
+        rain = dict()
     # -- wind
     if 'wind' in d:
         wind = d['wind'].copy()
+    elif 'last' in d:
+        if 'wind' in d['last']:
+            wind = d['last']['wind'].copy()
     else:
-        wind = {}
+        wind = dict()
     # -- humidity
     if 'humidity' in d:
         humidity = d['humidity']
@@ -453,12 +475,15 @@ def weather_from_dictionary(d):
         else:
             snow = d['snow'].copy()
     else:
-        snow = {}
+        snow = dict()
     # -- pressure
     if 'pressure' in d:
         atm_press = d['pressure']
     elif 'main' in d and 'pressure' in d['main']:
         atm_press = d['main']['pressure']
+    elif 'last' in d:
+        if 'main' in d['last']:
+            atm_press = d['last']['main']['pressure']
     else:
         atm_press = None
     if 'main' in d and 'sea_level' in d['main']:
@@ -488,8 +513,11 @@ def weather_from_dictionary(d):
                        'temp_max': temp_max,
                        'temp_min': temp_min
                        }
+    elif 'last' in d:
+        if 'main' in d['last']:
+            temperature = dict(temp=d['last']['main']['temp'])
     else:
-        temperature = {}
+        temperature = dict()
     # -- weather status info
     if 'weather' in d:
         # Sometimes provided with a leading upper case!

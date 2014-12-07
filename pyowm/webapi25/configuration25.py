@@ -17,12 +17,13 @@ Configuration for the PyOWM library specific to OWM web API version 2.5
 ROOT_API_URL = 'http://api.openweathermap.org/data/2.5'
 ICONS_BASE_URL = 'http://openweathermap.org/img/w'
 OBSERVATION_URL = ROOT_API_URL + '/weather'
+STATION_URL = ROOT_API_URL + '/station'
 FIND_OBSERVATIONS_URL = ROOT_API_URL + '/find'
+FIND_STATION_URL = ROOT_API_URL + '/station/find'
 THREE_HOURS_FORECAST_URL = ROOT_API_URL + '/forecast'
 DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
-FIND_STATION_URL = ROOT_API_URL + '/station/find'
 
 # Parser objects injection for OWM web API responses parsing
 parsers = {

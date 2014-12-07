@@ -9,6 +9,15 @@ OBSERVATION_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' 
     '"temp_max":289.82,"humidity":75},"wind":{"speed":1.54,"gust":2.57,"deg":' \
     '31},"clouds":{"all":92},"dt":1378895177,"id":2643743,"name":"London","cod":200}'
 
+STATION_OBSERVATION_JSON = '{"station":{"name":"KPPQ","type":1,"status":50,' \
+                           '"id":1000,"coord":{"lon":-90.47,"lat":39.38}},' \
+                           '"last":{"main":{"temp":276.15,"pressure":1031},' \
+                           '"wind":{"speed":3.1,"deg":140},"visibility":' \
+                           '{"distance":11265,"prefix":0},"calc":' \
+                           '{"dewpoint":273.15},"clouds":[{"distance":427,' \
+                           '"condition":"SCT"}],"dt":1417977300},' \
+                           '"params":["temp","pressure","wind","visibility"]}'
+
 SEARCH_RESULTS_JSON = '{"cod": "200", "count": 2, "list": [{"clouds": {"all": ' \
     '20}, "coord": {"lat": 51.50853, "lon": -0.12573999999999999}, "dt": 1378237178,' \
     ' "id": 2643743, "main": {"humidity": 56, "pressure": 1025, "temp": ' \
