@@ -53,9 +53,9 @@ class ObservationParser(jsonparser.JSONParser):
         try:
             place = location.location_from_dictionary(d)
         except KeyError:
-            print(''.join([__name__, ': impossible to ' \
+            raise parse_response_error.ParseResponseError(
+                                      ''.join([__name__, ': impossible to ' \
                                        'read location info from JSON data']))
-            place = None
         try:
             w = weather.weather_from_dictionary(d)
         except KeyError:
