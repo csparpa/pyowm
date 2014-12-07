@@ -454,5 +454,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         h3 = self.__owm.station_day_history(987654)  # Shall be None
         self.assertFalse(h3 is not None)
 
+    def test_weather_at_station(self):
+        """
+        Test feature: get current weather measurement for a specific
+        meteostation
+        """
+        raise Exception("Yet to be implemented")
+
 if __name__ == "__main__":
     unittest.main()

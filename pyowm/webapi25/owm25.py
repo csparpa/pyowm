@@ -7,7 +7,7 @@ from pyowm import constants
 from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    FIND_STATION_URL, API_AVAILABILITY_TIMEOUT)
+    FIND_STATION_URL, STATION_URL, API_AVAILABILITY_TIMEOUT)
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
@@ -227,6 +227,27 @@ class OWM25(owm.OWM):
             params['cnt'] = limit - 1
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
+
+    def weather_at_station(self, station_id):
+        """
+        Queries the OWM web API for the weather currently observed by a specific
+        meteostation (eg: 29584)
+
+        :param station_id: the meteostation ID
+        :type station_id: int
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(station_id) is int, "'station_id' must be an int"
+        if id < 0:
+            raise ValueError("'station_id' value must be greater than 0")
+        json_data = self._httpclient.call_API(STATION_URL,
+                                              {'id': station_id,
+                                               'lang': self._language})
+        return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_around_coords(self, lat, lon, limit=None):
         """
