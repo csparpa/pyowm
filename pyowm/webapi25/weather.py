@@ -87,8 +87,6 @@ class Weather(object):
         if visibility_distance is not None and visibility_distance < 0:
             raise ValueError("'visibility_distance' must be greater than 0")
         self._visibility_distance = visibility_distance
-        if dewpoint is not None and dewpoint < 0:
-            raise ValueError("'dewpoint' must be grater than 0")
         self._dewpoint = dewpoint
         if humidex is not None and humidex < 0:
             raise ValueError("'humidex' must be greater than 0")
