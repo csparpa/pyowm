@@ -98,9 +98,10 @@ with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
 
 Development
 -----------
-Contributors (code enhancement, issue/bug reporting) are __welcome!__
+Contributors (code enhancement, issue/bug reporting) are __welcome!__. See the
+[notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started.
 
-See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started
+If you liked PyOWM, (consider giving me a tip)[https://gratipay.com/csparpa]!
 
 References
 ----------
