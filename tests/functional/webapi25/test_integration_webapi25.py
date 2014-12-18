@@ -464,5 +464,20 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         weat = o.get_weather()
         self.assertTrue(weat is not None)
 
+    def test_weather_at_stations_in_bbox(self):
+        """
+        Test feature: get current weather observations from meteostations
+        inside of a bounding box determined by geo-coordinates.
+        """
+        o = self.__owm.weather_at_stations_in_bbox(49.07,8.87,61.26,65.21)
+        self.assertTrue(isinstance(o, list))
+        for item in o:
+            self.assertTrue(item is not None)
+            self.assertTrue(item.get_reception_time() is not None)
+            loc = item.get_location()
+            self.assertTrue(loc is not None)
+            weat = item.get_weather()
+            self.assertTrue(weat is not None)
+
 if __name__ == "__main__":
     unittest.main()
