@@ -46,15 +46,15 @@ class StationParser(jsonparser.JSONParser):
                 distance = d['distance']
             else:
                 distance = None
-
-            if 'last' in d:
-                last_weather = weather.weather_from_dictionary(d['last'])
-            else:
-                last_weather = None
         
         except KeyError as e:
             error_msg = ''.join((__name__, ': unable to read JSON data', ))
             raise parse_response_error.ParseResponseError(error_msg)
+        else:
+            if 'last' in d:
+                last_weather = weather.weather_from_dictionary(d['last'])
+            else:
+                last_weather = None
 
         return station.Station(name, station_ID, station_type, status, lat, lon,
                                distance, last_weather)
