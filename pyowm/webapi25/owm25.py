@@ -41,7 +41,7 @@ class OWM25(owm.OWM):
                  language="en"):
         self._parsers = parsers
         if API_key is not None:
-            assert isinstance(API_key, basestring), "If provided, 'API_key' must be a str"
+            assert type(API_key) is str, "If provided, 'API_key' must be a str"
         self._API_key = API_key
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
         self._language = language
@@ -138,7 +138,7 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        assert isinstance(name, basestring), "'name' must be a str"
+        assert type(name) is str, "'name' must be a str"
         json_data = self._httpclient.call_API(OBSERVATION_URL,
                                           {'q': name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
@@ -213,8 +213,8 @@ class OWM25(owm.OWM):
             reached, *ValueError* when bad value is supplied for the search
             type or the maximum number of items retrieved
         """
-        assert isinstance(pattern, basestring), "'pattern' must be a str"
-        assert isinstance(searchtype, basestring), "'searchtype' must be a str"
+        assert isinstance(pattern, str), "'pattern' must be a str"
+        assert isinstance(searchtype, str), "'searchtype' must be a str"
         if searchtype != "accurate" and searchtype != "like":
             raise ValueError("'searchtype' value must be 'accurate' or 'like'")
         if limit is not None:
@@ -365,7 +365,7 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert isinstance(name, basestring), "'name' must be a str"
+        assert type(name) is str, "'name' must be a str"
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
                                           {'q': name, 'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
@@ -459,7 +459,7 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        assert isinstance(name, basestring), "'name' must be a str"
+        assert type(name) is str, "'name' must be a str"
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -585,7 +585,7 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        assert isinstance(name, basestring), "'name' must be a str"
+        assert type(name) is str, "'name' must be a str"
         params = {'q': name, 'lang': self._language}
         if start is None and end is None:
             pass
