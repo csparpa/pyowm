@@ -685,7 +685,7 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_lon(), float))
             self.assertTrue(isinstance(result.get_lat(), float))
             self.assertTrue(isinstance(result.get_distance(), float))
-            self.assertTrue(isinstance(result.get_name(), basestring)) 
+            self.assertTrue(isinstance(result.get_name(), str)) 
             self.assertTrue(isinstance(result.get_last_weather(), Weather))
             self.assertTrue(isinstance(result.get_station_ID(), int))
             self.assertTrue(isinstance(result.get_station_type(), int))
