@@ -150,6 +150,13 @@ class TestOWM25(unittest.TestCase):
         return STATION_AT_COORDS_JSON
 
     # Tests
+    def test_wrong_API_key(self):
+        try:
+            OWM25(self.__test_parsers, 1234)
+            self.fail("Didn't raise AssertionError")
+        except AssertionError:
+            pass
+
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
         owm = OWM25({})
@@ -201,6 +208,10 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         weat = result.get_weather()
         self.assertTrue(weat is not None)
+
+    def test_weather_at_place_fails_with_wrong_parameters(self):
+        self.assertRaises(AssertionError,  OWM25.weather_at_place, \
+                          self.__test_instance, 3)
 
     def test_weather_at_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -427,6 +438,8 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_daily_forecast_fails_with_wrong_params(self):
+        self.assertRaises(AssertionError, OWM25.daily_forecast,
+                          self.__test_instance, 2, 3)
         self.assertRaises(ValueError, OWM25.daily_forecast,
                           self.__test_instance, "London,uk", -3)
 
@@ -544,6 +557,10 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, "London,uk", "test", 1234567)
         self.assertRaises(ValueError, OWM25.weather_history_at_place,
                           self.__test_instance, "London,uk", 1234567, "test")
+
+    def test_weather_history_at_place_fails_with_wrong_name(self):
+        self.assertRaises(AssertionError, OWM25.weather_history_at_place,
+                          self.__test_instance, 1, "test", 1234567)
 
     def test_weather_history_at_id(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
