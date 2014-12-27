@@ -7,7 +7,7 @@ from pyowm import constants
 from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    FIND_STATION_URL, STATION_URL, API_AVAILABILITY_TIMEOUT)
+    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
@@ -248,6 +248,72 @@ class OWM25(owm.OWM):
                                               {'id': station_id,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
+
+    def weather_at_stations_in_bbox(self, lat_top_left, lon_top_left,
+                                    lat_bottom_right, lon_bottom_right,
+                                    cluster=False, limit=None):
+        """
+        Queries the OWM web API for the weather currently observed by
+        meteostations inside the bounding box of latitude/longitude coords.
+
+        :param lat_top_left: latitude for top-left of bounding box, must be
+            between -90.0 and 90.0
+        :type lat_top_left: int/float
+        :param lon_top_left: longitude for top-left of bounding box
+            must be between -180.0 and 180.0
+        :type lon_top_left: int/float
+        :param lat_bottom_right: latitude for bottom-right of bounding box, must
+            be between -90.0 and 90.0
+        :type lat_bottom_right: int/float
+        :param lon_bottom_right: longitude for bottom-right of bounding box,
+            must be between -180.0 and 180.0
+        :type lon_bottom_right: int/float
+        :param cluster: use server clustering of points
+        :type cluster: bool
+        :param limit: the maximum number of *Observation* items in the returned
+            list (default is ``None``, which stands for any number of items)
+        :param limit: int or ``None``
+        :returns: a list of *Observation* objects or ``None`` if no weather
+            data is available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* when coordinates values are out of bounds or
+            negative values are provided for limit
+        """
+        assert type(lat_top_left) in (float, int), \
+                "'lat_top_left' must be a float"
+        assert type(lon_top_left) in (float, int), \
+                "'lon_top_left' must be a float"
+        assert type(lat_bottom_right) in (float, int), \
+                "'lat_bottom_right' must be a float"
+        assert type(lon_bottom_right) in (float, int), \
+                "'lon_bottom_right' must be a float"
+        assert type(cluster) is bool, "'cluster' must be a bool"
+        assert type(limit) in (int, type(None)), \
+                "'limit' must be an int or None"
+        if lat_top_left < -90.0 or lat_top_left > 90.0:
+            raise ValueError("'lat_top_left' value must be between -90 and 90")
+        if lon_top_left < -180.0 or lon_top_left > 180.0:
+            raise ValueError("'lon_top_left' value must be between -180 and" \
+                             +" 180")
+        if lat_bottom_right < -90.0 or lat_bottom_right > 90.0:
+            raise ValueError("'lat_bottom_right' value must be between -90" \
+                             +" and 90")
+        if lon_bottom_right < -180.0 or lon_bottom_right > 180.0:
+            raise ValueError("'lon_bottom_right' value must be between -180 "\
+                             +"and 180")
+        if limit is not None and limit < 1:
+            raise ValueError("'limit' must be None or greater than zero")
+        params = {'bbox': ','.join([str(lon_top_left),
+                                    str(lat_top_left),
+                                    str(lon_bottom_right),
+                                    str(lat_bottom_right)]),
+                  'cluster': 'yes' if cluster else 'no',}
+        if limit is not None:
+            params['cnt'] = limit
+
+        json_data = self._httpclient.call_API(BBOX_STATION_URL, params)
+        return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_around_coords(self, lat, lon, limit=None):
         """

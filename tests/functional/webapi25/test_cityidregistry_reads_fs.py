@@ -11,6 +11,9 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
 
     if path.isfile(path.abspath(path.dirname(__name__))+sep+'097-102.txt'):
         _current_folder = path.abspath(path.dirname(__name__))
+    elif path.isfile(path.abspath(path.dirname(__name__) + 
+            path.join('tests', 'functional', 'webapi25', '097-102.txt'))):
+        _current_folder = path.join('..','..','tests','functional','webapi25')
     else:
         _current_folder = path.abspath(path.dirname(__name__))+sep+ \
                           sep.join(["functional","webapi25"])

@@ -21,7 +21,8 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      CITY_WEATHER_HISTORY_JSON, STATION_TICK_WEATHER_HISTORY_JSON,
      STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
      DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
-     STATION_OBSERVATION_JSON)
+     STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON, 
+     WEATHER_AT_STATION_IN_BBOX_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.owmhttpclient import OWMHTTPClient
@@ -30,11 +31,14 @@ from pyowm.webapi25.observation import Observation
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.forecaster import Forecaster
+from pyowm.webapi25.station import Station
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.webapi25.historian import Historian
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.webapi25.observationlistparser import ObservationListParser
+from pyowm.webapi25.stationparser import StationParser
+from pyowm.webapi25.stationlistparser import StationListParser
 from pyowm.webapi25.stationhistoryparser import StationHistoryParser
 from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
 
@@ -46,7 +50,9 @@ class TestOWM25(unittest.TestCase):
       'observation_list': ObservationListParser(),
       'forecast': ForecastParser(),
       'weather_history': WeatherHistoryParser(),
-      'station_history': StationHistoryParser()
+      'station_history': StationHistoryParser(),
+      'station': StationParser(),
+      'station_list': StationListParser(),
     }
     __test_instance = OWM25(__test_parsers, 'test_API_key')
 
@@ -132,6 +138,16 @@ class TestOWM25(unittest.TestCase):
                                                        API_subset_URL,
                                                        params_dict):
         return STATION_HISTORY_NO_ITEMS_JSON
+
+    def mock_httputils_call_API_returning_weather_at_stations_in_bbox(self,
+                                                       API_subset_URL,
+                                                       params_dict):
+        return WEATHER_AT_STATION_IN_BBOX_JSON
+
+    def mock_httputils_call_API_returning_station_at_coords(self,
+                                                       API_subset_URL,
+                                                       params_dict):
+        return STATION_AT_COORDS_JSON
 
     # Tests
     def test_API_key_accessors(self):
@@ -573,6 +589,20 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.weather_history_at_id,
                           self.__test_instance, 12345, 1234567, "test")
 
+    def test_weather_at_station_in_bbox(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_weather_at_stations_in_bbox
+        results = self.__test_instance\
+                .weather_at_stations_in_bbox(49.07,8.87,61.26,65.21)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(results, list))
+        for result in results:
+            self.assertTrue(isinstance(result, Observation))
+            self.assertTrue(isinstance(result.get_weather(), Weather))
+            self.assertTrue(isinstance(result.get_location(), Location))
+            self.assertTrue(result.get_reception_time() is not None)
+
     def test_station_tick_history(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -641,3 +671,22 @@ class TestOWM25(unittest.TestCase):
         result = self.__test_instance.station_hour_history(1234, limit=4)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
+
+    def test_station_at_coords(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_station_at_coords
+        results = self.__test_instance.station_at_coords(51.5073509,
+                                                         -0.1277583, 2)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(results, list))
+        for result in results:
+            self.assertTrue(isinstance(result, Station))
+            self.assertTrue(isinstance(result.get_lon(), float))
+            self.assertTrue(isinstance(result.get_lat(), float))
+            self.assertTrue(isinstance(result.get_distance(), float))
+            self.assertTrue(result.get_name())
+            self.assertTrue(isinstance(result.get_last_weather(), Weather))
+            self.assertTrue(isinstance(result.get_station_ID(), int))
+            self.assertTrue(isinstance(result.get_station_type(), int))
+            self.assertTrue(isinstance(result.get_status(), int))

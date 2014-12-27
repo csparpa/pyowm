@@ -18,6 +18,14 @@ STATION_OBSERVATION_JSON = '{"station":{"name":"KPPQ","type":1,"status":50,' \
                            '"condition":"SCT"}],"dt":1417977300},' \
                            '"params":["temp","pressure","wind","visibility"]}'
 
+WEATHER_AT_STATION_IN_BBOX_JSON = '{"cnt":29,"cod":"200","list":[{"clouds":'\
+    '[{"condition":"OVC","distance":305}],"coord":{"lat":56.2301,"lon":'\
+    '43.784},"dt":1419210000,"id":7334,"main":{"pressure":999,"temp":1},'\
+    '"name":"UWGG","rang":50,"type":1,"wind":{"deg":200,"speed":3}},{"clouds"'\
+    ':[{"condition":"VV","distance":91}],"coord":{"lat":51.565,"lon":46.0467}'\
+    ',"dt":1419210000,"id":7343,"main":{"pressure":1007,"temp":0},"name":'\
+    '"UWSS","rang":50,"type":1,"wind":{"deg":180,"speed":3}}]}' 
+
 SEARCH_RESULTS_JSON = '{"cod": "200", "count": 2, "list": [{"clouds": {"all": ' \
     '20}, "coord": {"lat": 51.50853, "lon": -0.12573999999999999}, "dt": 1378237178,' \
     ' "id": 2643743, "main": {"humidity": 56, "pressure": 1025, "temp": ' \
@@ -138,6 +146,16 @@ STATION_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"","cod":"200","type":"tick
     '"station_id":11347,"calctime":" tick = 0.1258 total=1.7684","cnt":0,"list":[]}'
 
 STATION_HISTORY_NO_ITEMS_JSON = '{"cod": "200","message": "test", "cnt": 0}'
+
+STATION_AT_COORDS_JSON = '[{"station":{"name":"EGLC","type":1,"status":50,' \
+    '"id":5091,"coord":{"lon":0.0553,"lat":51.5053}},"distance":12.835,"last"' \
+    ':{"main":{"temp":286.15,"pressure":1019,"humidity":82},"wind":{"speed":' \
+    '8.2,"deg":250},"visibility":{"distance":10000,"prefix":1},"calc":{' \
+    '"dewpoint":283.15,"humidex":287.45},"dt":1419216600}},{"station":{"name":' \
+    '"BarnetEN5","type":5,"status":20,"user_id":150,"id":43279,"coord":{"lon":' \
+    '-0.1997,"lat":51.6444}},"distance":15.702,"last":{"main":{"temp":285.05,' \
+    '"humidity":91,"pressure":1024.7},"wind":{"speed":0,"gust":0,"deg":135},"' \
+    'rain":{"1h":0,"today":0},"calc":{"dewpoint":10.5},"dt":1419220652}}]'
 
 OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' \
     '"GB","sunrise":1378877413,"sunset":1378923812},"weather":[{"test":"fake"}],"base":' \
