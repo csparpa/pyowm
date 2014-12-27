@@ -41,10 +41,19 @@ class OWM25(owm.OWM):
                  language="en"):
         self._parsers = parsers
         if API_key is not None:
-            assert type(API_key) is str, "If provided, 'API_key' must be a str"
+            OWM25._assert_is_string("API_key", API_key)
         self._API_key = API_key
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
         self._language = language
+
+    @staticmethod
+    def _assert_is_string(name, value):
+        try:
+            # Python 2.x
+            assert isinstance(value, basestring), "'%s' must be a str" % (name,)
+        except NameError:
+            # Python 3.x
+            assert isinstance(value, str), "'%s' must be a str" % (name,)
 
     def get_API_key(self):
         """
@@ -138,7 +147,7 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         json_data = self._httpclient.call_API(OBSERVATION_URL,
                                           {'q': name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
@@ -365,7 +374,7 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
                                           {'q': name, 'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
@@ -438,7 +447,6 @@ class OWM25(owm.OWM):
         else:
             return None
 
-
     def daily_forecast(self, name, limit=None):
         """
         Queries the OWM web API for daily weather forecast for the specified
@@ -459,7 +467,7 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -585,7 +593,7 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         params = {'q': name, 'lang': self._language}
         if start is None and end is None:
             pass
