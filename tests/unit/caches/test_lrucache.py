@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for lrucache.py module.
 """
@@ -47,3 +45,23 @@ class TestLRUCache(unittest.TestCase):
         cache_size = instance.size()
         instance.set("4", "ddd")
         self.assertEqual(cache_size, instance.size())
+
+    def test_clean_cache(self):
+        instance = LRUCache(3, 1000 * 60 * 60)  # max 3 items
+        instance.set("1", "aaa")
+        instance.set("2", "bbb")
+        instance.set("3", "ccc")
+        self.assertEqual(3, instance.size())
+        instance.clean()
+        self.assertEqual(0, instance.size())
+
+    def test_insert_already_cached_item(self):
+        instance = LRUCache(3, 1000 * 60 * 60)  # max 3 items
+        instance.set("1", "aaa")
+        instance.set("2", "bbb")
+        self.assertEqual(2, instance.size())
+        most_recent_cache_item = instance._usage_recency._first_node
+        instance.set("1", "aaa")
+        self.assertEqual(2, instance.size())
+        result = instance._usage_recency._first_node
+        self.assertNotEqual(most_recent_cache_item, result)

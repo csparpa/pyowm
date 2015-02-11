@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing the PyOWM library main entry point
 """
@@ -9,7 +7,7 @@ from pyowm import constants
 from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    API_AVAILABILITY_TIMEOUT)
+    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
@@ -43,10 +41,19 @@ class OWM25(owm.OWM):
                  language="en"):
         self._parsers = parsers
         if API_key is not None:
-            assert type(API_key) is str, "If provided, 'API_key' must be a str"
+            OWM25._assert_is_string("API_key", API_key)
         self._API_key = API_key
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
         self._language = language
+
+    @staticmethod
+    def _assert_is_string(name, value):
+        try:
+            # Python 2.x
+            assert isinstance(value, basestring), "'%s' must be a str" % (name,)
+        except NameError:
+            # Python 3.x
+            assert isinstance(value, str), "'%s' must be a str" % (name,)
 
     def get_API_key(self):
         """
@@ -127,7 +134,6 @@ class OWM25(owm.OWM):
             return True
         return False
 
-    # Main OWM web API querying methods
     def weather_at_place(self, name):
         """
         Queries the OWM web API for the currently observed weather at the
@@ -141,7 +147,7 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         json_data = self._httpclient.call_API(OBSERVATION_URL,
                                           {'q': name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
@@ -231,6 +237,93 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
+    def weather_at_station(self, station_id):
+        """
+        Queries the OWM web API for the weather currently observed by a specific
+        meteostation (eg: 29584)
+
+        :param station_id: the meteostation ID
+        :type station_id: int
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(station_id) is int, "'station_id' must be an int"
+        if station_id < 0:
+            raise ValueError("'station_id' value must be greater than 0")
+        json_data = self._httpclient.call_API(STATION_URL,
+                                              {'id': station_id,
+                                               'lang': self._language})
+        return self._parsers['observation'].parse_JSON(json_data)
+
+    def weather_at_stations_in_bbox(self, lat_top_left, lon_top_left,
+                                    lat_bottom_right, lon_bottom_right,
+                                    cluster=False, limit=None):
+        """
+        Queries the OWM web API for the weather currently observed by
+        meteostations inside the bounding box of latitude/longitude coords.
+
+        :param lat_top_left: latitude for top-left of bounding box, must be
+            between -90.0 and 90.0
+        :type lat_top_left: int/float
+        :param lon_top_left: longitude for top-left of bounding box
+            must be between -180.0 and 180.0
+        :type lon_top_left: int/float
+        :param lat_bottom_right: latitude for bottom-right of bounding box, must
+            be between -90.0 and 90.0
+        :type lat_bottom_right: int/float
+        :param lon_bottom_right: longitude for bottom-right of bounding box,
+            must be between -180.0 and 180.0
+        :type lon_bottom_right: int/float
+        :param cluster: use server clustering of points
+        :type cluster: bool
+        :param limit: the maximum number of *Observation* items in the returned
+            list (default is ``None``, which stands for any number of items)
+        :param limit: int or ``None``
+        :returns: a list of *Observation* objects or ``None`` if no weather
+            data is available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* when coordinates values are out of bounds or
+            negative values are provided for limit
+        """
+        assert type(lat_top_left) in (float, int), \
+                "'lat_top_left' must be a float"
+        assert type(lon_top_left) in (float, int), \
+                "'lon_top_left' must be a float"
+        assert type(lat_bottom_right) in (float, int), \
+                "'lat_bottom_right' must be a float"
+        assert type(lon_bottom_right) in (float, int), \
+                "'lon_bottom_right' must be a float"
+        assert type(cluster) is bool, "'cluster' must be a bool"
+        assert type(limit) in (int, type(None)), \
+                "'limit' must be an int or None"
+        if lat_top_left < -90.0 or lat_top_left > 90.0:
+            raise ValueError("'lat_top_left' value must be between -90 and 90")
+        if lon_top_left < -180.0 or lon_top_left > 180.0:
+            raise ValueError("'lon_top_left' value must be between -180 and" \
+                             +" 180")
+        if lat_bottom_right < -90.0 or lat_bottom_right > 90.0:
+            raise ValueError("'lat_bottom_right' value must be between -90" \
+                             +" and 90")
+        if lon_bottom_right < -180.0 or lon_bottom_right > 180.0:
+            raise ValueError("'lon_bottom_right' value must be between -180 "\
+                             +"and 180")
+        if limit is not None and limit < 1:
+            raise ValueError("'limit' must be None or greater than zero")
+        params = {'bbox': ','.join([str(lon_top_left),
+                                    str(lat_top_left),
+                                    str(lon_bottom_right),
+                                    str(lat_bottom_right)]),
+                  'cluster': 'yes' if cluster else 'no',}
+        if limit is not None:
+            params['cnt'] = limit
+
+        json_data = self._httpclient.call_API(BBOX_STATION_URL, params)
+        return self._parsers['observation_list'].parse_JSON(json_data)
+
     def weather_around_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for the currently observed weather in all the
@@ -281,9 +374,72 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
                                           {'q': name, 'lang': self._language})
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("3h")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
+    def three_hours_forecast_at_coords(self, lat, lon):
+        """
+        Queries the OWM web API for three hours weather forecast for the
+        specified geographic coordinate (eg: latitude: 51.5073509,
+        longitude: -0.1277583). A *Forecaster* object is returned,
+        containing a *Forecast* instance covering a global streak of
+        five days: this instance encapsulates *Weather* objects, with a time
+        interval of three hours one from each other
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
+        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL, params)
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("3h")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
+    def three_hours_forecast_at_id(self, id):
+        """
+        Queries the OWM web API for three hours weather forecast for the
+        specified city ID (eg: 5128581). A *Forecaster* object is returned,
+        containing a *Forecast* instance covering a global streak of
+        five days: this instance encapsulates *Weather* objects, with a time
+        interval of three hours one from each other
+
+        :param id: the location's city ID
+        :type id: int
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
+                                              {'id': id,
+                                               'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -311,7 +467,7 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -326,6 +482,90 @@ class OWM25(owm.OWM):
             return forecaster.Forecaster(forecast)
         else:
             return None
+
+    def daily_forecast_at_coords(self, lat, lon, limit=None):
+        """
+        Queries the OWM web API for daily weather forecast for the specified
+        geographic coordinate (eg: latitude: 51.5073509, longitude: -0.1277583).
+        A *Forecaster* object is returned, containing a *Forecast* instance
+        covering a global streak of fourteen days by default: this instance
+        encapsulates *Weather* objects, with a time interval of one day one
+        from each other
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param limit: the maximum number of daily *Weather* items to be
+            retrieved (default is ``None``, which stands for any number of
+            items)
+        :type limit: int or ``None``
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* if negative values are supplied for limit
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("daily")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
+    def daily_forecast_at_id(self, id, limit=None):
+        """
+        Queries the OWM web API for daily weather forecast for the specified
+        city ID (eg: 5128581). A *Forecaster* object is returned, containing
+        a *Forecast* instance covering a global streak of fourteen days by
+        default: this instance encapsulates *Weather* objects, with a time
+        interval of one day one from each other
+
+        :param id: the location's city ID
+        :type id: int
+        :param limit: the maximum number of daily *Weather* items to be
+            retrieved (default is ``None``, which stands for any number of
+            items)
+        :type limit: int or ``None``
+        :returns: a *Forecaster* instance or ``None`` if forecast data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* if negative values are supplied for limit
+        """
+        assert type(id) is int, "'id' must be an int"
+        if id < 0:
+            raise ValueError("'id' value must be greater than 0")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+
+        params = {'id': id, 'lang': self._language}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        if forecast is not None:
+            forecast.set_interval("daily")
+            return forecaster.Forecaster(forecast)
+        else:
+            return None
+
 
     def weather_history_at_place(self, name, start=None, end=None):
         """
@@ -353,7 +593,7 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        assert type(name) is str, "'name' must be a str"
+        OWM25._assert_is_string("name", name)
         params = {'q': name, 'lang': self._language}
         if start is None and end is None:
             pass
@@ -426,6 +666,43 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
                                               params)
         return self._parsers['weather_history'].parse_JSON(json_data)
+
+    def station_at_coords(self, lat, lon, limit=None):
+        """
+        Queries the OWM web API for weather stations nearest to the
+        specified geographic coordinates (eg: latitude: 51.5073509,
+        longitude: -0.1277583). A list of *Station* objects is returned,
+        this instance encapsulates a last reported *Weather* object.
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param cnt: the maximum number of *Station* items to be retrieved
+            (default is ``None``, which stands for any number of items)
+        :type cnt: int or ``None``
+
+        :returns: a list of *Station* objects or ``None`` if station data is
+            not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+        params = {'lat': lat, 'lon': lon}
+        if limit is not None:
+            params['cnt'] = limit
+        json_data = self._httpclient.call_API(FIND_STATION_URL, params)
+        return self._parsers['station_list'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
         """

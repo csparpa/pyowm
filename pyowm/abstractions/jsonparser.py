@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing an abstract base class for JSON OWM web API responses parsing
 """
@@ -28,4 +26,4 @@ class JSONParser(object):
             data needed to build the resulting object
 
         """
-        pass
+        raise NotImplementedError

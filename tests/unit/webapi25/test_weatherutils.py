@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for weatherutils.py module
 """
@@ -40,14 +38,14 @@ class TestWeatherUtils(unittest.TestCase):
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
                 "temp_min": 294.199
             },
-            "Rain", "Light rain", 500, "10d")
+            "Rain", "Light rain", 500, "10d", 1000, 300.0, 298.0, 296.0)
     __test_weather_sun = Weather(__test_time_high, 1378496480, 1378449510, 5,
             {"all": 0}, {"all": 0}, {"deg": 103.4, "speed": 1.2}, 12,
             {"press": 1090.119, "sea_level": 1078.589},
             {"temp": 299.199, "temp_kf": -1.899, "temp_max": 301.0,
              "temp_min": 297.6
              },
-            "Clear", "Sky is clear", 800, "01d")
+            "Clear", "Sky is clear", 800, "01d", 1000, 300.0, 298.0, 296.0)
     __test_weathers = [__test_weather_rain, __test_weather_sun]
 
     def test_status_is(self):
@@ -67,14 +65,14 @@ class TestWeatherUtils(unittest.TestCase):
         result_1 = weatherutils.filter_by_status(self.__test_weathers,
                                                  "rain",
                                                  self.__test_registry)
-        self.assertEquals(1, len(result_1))
+        self.assertEqual(1, len(result_1))
         self.assertTrue(weatherutils.status_is(result_1[0], "rain",
                                                self.__test_registry))
         
         result_2 = weatherutils.filter_by_status(self.__test_weathers,
                                                  "sun",
                                                  self.__test_registry)
-        self.assertEquals(1, len(result_2))
+        self.assertEqual(1, len(result_2))
         self.assertTrue(weatherutils.status_is(result_2[0], "sun",
                                                self.__test_registry))
 

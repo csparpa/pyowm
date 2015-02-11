@@ -4,6 +4,8 @@ A Python wrapper around the OpenWeatherMap API
 
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
+[![Latest Version](https://pypip.in/version/pyowm/badge.svg)](https://pypi.python.org/pypi/pyowm/)
+[![Downloads](https://pypip.in/download/pyowm/badge.svg?period=week)](https://pypi.python.org/pypi/pyowm/)
 
 What is it?
 ------------
@@ -19,12 +21,8 @@ PyOWM currently supports _version 2.5_ of the OWM API (which is the latest one)
 
 PyOWM runs on Python 2.7, 3.2 and 3.3
 
-License
--------
-[MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
-
-Use it
-------
+Usage examples
+--------------
 ```python
 import pyowm
 
@@ -51,8 +49,8 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
-Install it
-----------
+Installation
+------------
 **With [pip](https://pypi.python.org/pypi/pip)**
 
 `pip install pyowm`
@@ -76,6 +74,10 @@ Install it
 
 The installer is available on the [Python Package Index](https://pypi.python.org/pypi/pyowm) 
 
+License
+-------
+[MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
+
 What's new
 ----------
 Please read the [changelog](https://github.com/csparpa/pyowm/wiki/Changelog) page of the wiki
@@ -96,21 +98,10 @@ with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
 
 Development
 -----------
-Contributors (code enhancement, issue/bug reporting) are __welcome!__
+Contributors (code enhancement, issue/bug reporting) are __welcome!__. See the
+[notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started.
 
-*Branching model*
-
-The project adopts [@nvie's branching model](http://nvie.com/posts/a-successful-git-branching-model/)
-
-The "develop" branch contains work-in-progress code: the unit of branching is a feature/enhancement.
-From the "develop" branch, new "feature" branches which will be opened.
-
-The "master" branch will contain only stable code and the "develop" branch will be merged back into it only when a milestone is completed.
-
-Bug fixes will be done as "hotfixes" stemming out of the "master" branch and then will be merged back in both "master" and "develop" branch.
-
-"feature" and "hotfix" branches can be opened by any contributor: once terminated, please send a pull request and I'll merge. Merging of "develop" into "master" will be done by myself when releasing.
-
+If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 
 References
 ----------

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing search and filter utilities for *Weather* objects lists
 management

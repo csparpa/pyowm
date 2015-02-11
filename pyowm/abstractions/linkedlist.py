@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing abstractions for defining a linked list data structure
 """
@@ -24,7 +22,7 @@ class LinkedList(object):
         :returns: an int
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def add(self, data):
@@ -38,7 +36,7 @@ class LinkedList(object):
         :type data: object
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def remove(self, data):
@@ -52,7 +50,7 @@ class LinkedList(object):
         :type data: object
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def contains(self, data):
@@ -64,7 +62,7 @@ class LinkedList(object):
         :returns: a boolean
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def index_of(self, data):
@@ -77,7 +75,7 @@ class LinkedList(object):
         :returns: the int index or -1 if the node is not in the list
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def pop(self):
@@ -86,4 +84,4 @@ class LinkedList(object):
 
         :returns: the object data that was stored in the last node
         """
-        pass
+        raise NotImplementedError

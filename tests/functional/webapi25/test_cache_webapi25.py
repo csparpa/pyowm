@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-
-'''
+"""
 Functional tests for checking PyOWM caching features
-'''
+"""
+
 import unittest
 from time import time
 from pyowm.webapi25.configuration25 import parsers

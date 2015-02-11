@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 """
 Module containing a concrete implementation for JSONParser abstract class,
 returning Forecast objects

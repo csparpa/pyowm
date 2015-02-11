@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing a concrete implementation for JSONParser abstract class,
 returning lists of Observation objects
@@ -17,14 +15,7 @@ class ObservationListParser(JSONParser):
     Concrete *JSONParser* implementation building a list of *Observation*
     instances out of raw JSON data coming from OWM web API responses.
 
-    :param observation_parser: a servant ObservationParser object
-    :type observation_parser: ObservationParser
-    :returns: a *Location* instance
-
     """
-
-    def __init__(self):
-        pass
 
     def parse_JSON(self, JSON_string):
         """

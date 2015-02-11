@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for weathercoderegistry.py module
 """
@@ -26,5 +24,5 @@ class TestWeatherCodeRegistry(unittest.TestCase):
 
     def test_status_for(self):
         self.assertTrue(self._test_instance.status_for(999) is None)
-        self.assertEquals("abc", self._test_instance.status_for(150))
-        self.assertEquals("xyz", self._test_instance.status_for(345))
+        self.assertEqual("abc", self._test_instance.status_for(150))
+        self.assertEqual("xyz", self._test_instance.status_for(345))

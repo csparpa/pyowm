@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing weather code lookup and resolution classes
 """
@@ -35,4 +33,5 @@ class WeatherCodeRegistry(object):
                     return status
         return None
 
-
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)

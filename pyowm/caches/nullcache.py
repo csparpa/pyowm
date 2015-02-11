@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing a null-object cache for OWM web API responses
 """

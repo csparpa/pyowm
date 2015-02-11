@@ -8,9 +8,8 @@ exclude_lines =
     pragma: no cover
 
     # Don't complain about missing debug-only code:
-    def __repr__
-    def __str__
-    if self\.debug
+    def __repr__(self):
+    def __str__(self):
 
     # Don't complain if tests don't hit defensive assertion code:
     raise AssertionError
@@ -19,6 +18,11 @@ exclude_lines =
     # Don't complain if non-runnable code isn't run:
     if 0:
     if False:
-    if __name__ == .__main__.:
+    if __name__ == __main__:
+    
+    # Exclude dump methods
+    def to_JSON(self):
+    def to_XML
+    def _to_DOM(self):
 
 ignore_errors = True

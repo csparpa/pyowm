@@ -1,11 +1,11 @@
-#!/usr/bin/env python
-
 """
 Test case for weather.py module
 """
 
 import unittest
 from pyowm.webapi25.weather import Weather, weather_from_dictionary
+from tests.unit.webapi25.json_test_dumps import WEATHER_JSON_DUMP
+from tests.unit.webapi25.xml_test_dumps import WEATHER_XML_DUMP
 
 
 class TestWeather(unittest.TestCase):
@@ -35,45 +35,88 @@ class TestWeather(unittest.TestCase):
     __test_detailed_status = "Overcast clouds"
     __test_weather_code = 804
     __test_weather_icon_name = "04d"
+    __test_visibility_distance = 1000
+    __test_dewpoint = 300.0
+    __test_humidex = 298.0
+    __test_heat_index = 40.0
 
     __test_instance = Weather(__test_reference_time, __test_sunset_time,
                               __test_sunrise_time, __test_clouds, __test_rain,
                               __test_snow, __test_wind, __test_humidity,
                               __test_pressure, __test_temperature,
                               __test_status, __test_detailed_status,
-                              __test_weather_code, __test_weather_icon_name)
+                              __test_weather_code, __test_weather_icon_name,
+                              __test_visibility_distance, __test_dewpoint,
+                              __test_humidex, __test_heat_index)
 
     def test_init_fails_when_negative_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
               self.__test_sunset_time, self.__test_sunrise_time, self.__test_clouds, 
-                self.__test_rain, self.__test_snow, self.__test_wind,
-                self.__test_humidity, self.__test_pressure, self.__test_temperature,
-                self.__test_status, self.__test_detailed_status,
-                self.__test_weather_code, self.__test_weather_icon_name)
+              self.__test_rain, self.__test_snow, self.__test_wind,
+              self.__test_humidity, self.__test_pressure, self.__test_temperature,
+              self.__test_status, self.__test_detailed_status,
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index)
         self.assertRaises(ValueError, Weather, self.__test_reference_time,
               -9876543210, self.__test_sunrise_time, self.__test_clouds,
               self.__test_rain, self.__test_snow, self.__test_wind,
               self.__test_humidity, self.__test_pressure, self.__test_temperature,
               self.__test_status, self.__test_detailed_status,
-              self.__test_weather_code, self.__test_weather_icon_name)
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index)
         self.assertRaises(ValueError, Weather, self.__test_reference_time,
               self.__test_sunset_time, -9876543210, self.__test_clouds,
               self.__test_rain, self.__test_snow, self.__test_wind,
               self.__test_humidity, self.__test_pressure, self.__test_temperature,
               self.__test_status, self.__test_detailed_status,
-              self.__test_weather_code, self.__test_weather_icon_name)
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index)
         self.assertRaises(ValueError, Weather, self.__test_reference_time,
               self.__test_sunset_time, self.__test_sunrise_time, -45,
               self.__test_rain, self.__test_snow, self.__test_wind,
               self.__test_humidity, self.__test_pressure, self.__test_temperature,
               self.__test_status, self.__test_detailed_status,
-              self.__test_weather_code, self.__test_weather_icon_name)
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index)
         self.assertRaises(ValueError, Weather, self.__test_reference_time,
               self.__test_sunset_time, self.__test_sunrise_time,
               self.__test_clouds, self.__test_rain, self.__test_snow,
               self.__test_wind, -16, self.__test_pressure, self.__test_temperature,
               self.__test_status, self.__test_detailed_status,
-              self.__test_weather_code, self.__test_weather_icon_name)
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+              self.__test_sunset_time, self.__test_sunrise_time,
+              self.__test_clouds, self.__test_rain, self.__test_snow,
+              self.__test_wind, self.__test_humidity,
+              self.__test_pressure, self.__test_temperature,
+              self.__test_status, self.__test_detailed_status,
+              self.__test_weather_code, self.__test_weather_icon_name,
+              -12, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+              self.__test_sunset_time, self.__test_sunrise_time,
+              self.__test_clouds, self.__test_rain, self.__test_snow,
+              self.__test_wind, self.__test_humidity,
+              self.__test_pressure, self.__test_temperature,
+              self.__test_status, self.__test_detailed_status,
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              -10.0, self.__test_heat_index)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+              self.__test_sunset_time, self.__test_sunrise_time,
+              self.__test_clouds, self.__test_rain, self.__test_snow,
+              self.__test_wind, self.__test_humidity,
+              self.__test_pressure, self.__test_temperature,
+              self.__test_status, self.__test_detailed_status,
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, -10.0)
 
     def test_from_dictionary(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
@@ -94,7 +137,13 @@ class TestWeather(unittest.TestCase):
                       'temp_min': 287.59
                   },
                   'id': 2643743,
-                  'wind': {'gust': 2.57, 'speed': 1.54, 'deg': 31}
+                  'wind': {'gust': 2.57, 'speed': 1.54, 'deg': 31},
+                  'visibility': {'distance': 1000},
+                  'calc':{
+                      'dewpoint': 300.0,
+                      'humidex': 298.0,
+                      'heatindex': 296.0
+                  }
         }
         dict2 = {"dt": 1378897200,
                    "temp": {"day": 289.37, "min": 284.88, "max": 289.37,
@@ -107,12 +156,44 @@ class TestWeather(unittest.TestCase):
                     "icon": "u10d"}
                    ], "speed": 3.76, "deg": 338, "clouds": 48, "rain": 3
                 }
+        dict3 = {"station":{
+                    "name":"KPPQ",
+                    "type":1,
+                    "status":50,
+                    "id":1000,
+                    "coord":{"lon":-90.47,"lat":39.38}
+                },
+                "last":{
+                    "main":{
+                        "temp":276.15,
+                        "pressure":1031},
+                        "wind":{
+                            "speed":3.1,
+                            "deg":140
+                        },
+                        "visibility":{
+                            "distance":11265,
+                            "prefix":0
+                        },
+                        "calc":{
+                            "dewpoint":273.15
+                        },
+                        "clouds":[
+                            {"distance":427,
+                             "condition":"SCT"}
+                        ],
+                        "dt":1417977300
+                },
+                "params":["temp","pressure","wind","visibility"]
+        }
         result1 = weather_from_dictionary(dict1)
         self.assertTrue(isinstance(result1, Weather))
         self.assertTrue(all(v is not None for v in result1.__dict__.values()))
         result2 = weather_from_dictionary(dict2)
         self.assertTrue(isinstance(result2, Weather))
-        self.assertTrue(all(v is not None for v in result2.__dict__.values()))
+        self.assertFalse(all(v is not None for v in result2.__dict__.values()))
+        result3 = weather_from_dictionary(dict3)
+        self.assertTrue(isinstance(result2, Weather))
 
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reference_time(),
@@ -143,6 +224,14 @@ class TestWeather(unittest.TestCase):
                          self.__test_weather_code)
         self.assertEqual(self.__test_instance.get_weather_icon_name(),
                          self.__test_weather_icon_name)
+        self.assertEqual(self.__test_instance.get_visibility_distance(),
+                         self.__test_visibility_distance)
+        self.assertEqual(self.__test_instance.get_dewpoint(),
+                         self.__test_dewpoint)
+        self.assertEqual(self.__test_instance.get_humidex(),
+                         self.__test_humidex)
+        self.assertEqual(self.__test_instance.get_heat_index(),
+                         self.__test_heat_index)
 
     def test_get_reference_time_returning_different_formats(self):
         self.assertEqual(self.__test_instance.get_reference_time(timeformat='iso'),
@@ -192,3 +281,12 @@ class TestWeather(unittest.TestCase):
     def test_get_temperature_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.get_temperature,
                           self.__test_instance, 'xyz')
+
+    # Only test to_JSON and to_XML functions when running Python 2.7
+    from sys import version_info
+    if version_info[0] < 3:
+        def test_to_JSON(self):
+            self.assertEqual(WEATHER_JSON_DUMP, self.__test_instance.to_JSON())
+
+        def test_to_XML(self):
+            self.assertEqual(WEATHER_XML_DUMP, self.__test_instance.to_XML())

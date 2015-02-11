@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 '''
@@ -17,6 +16,9 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
     def test(self):
         pyowm.OWM('�b02f5370d�76021a0', '2.5', self._config_module_name)
 
+    def test_library_is_instantiated_with_wrong_API_version(self):
+        self.assertRaises(ValueError, pyowm.OWM, 'abcd', '0.0')
+
     def test_library_is_instantiated_with_external_config(self):
         """
         Test that library is smoothly instantiated also when injecting external
@@ -24,7 +26,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         """
         try:
             pyowm.OWM('�b02f5370d�76021a0', '2.5', self._config_module_name)
-        except:
+        except Exception:
             self.fail("Error raised during library instantiation")
 
     def test_error_raised_when_providing_non_existent_external_config(self):

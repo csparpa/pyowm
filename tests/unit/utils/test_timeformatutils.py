@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for timeformatutils.py module
 """
@@ -42,6 +40,11 @@ class TestTimeFormatUtils(unittest.TestCase):
                           timeformatutils.to_date,
                           -1378459200)
 
+    def test_to_date_fails_with_unproper_argument_type(self):
+        self.assertRaises(TypeError,
+                          timeformatutils.to_date,
+                          list())
+
     def test_to_ISO8601(self):
         unixtime = 1378459200
         iso = "2013-09-06 09:20:00+00"
@@ -54,6 +57,11 @@ class TestTimeFormatUtils(unittest.TestCase):
         self.assertRaises(ValueError,
                           timeformatutils.to_ISO8601,
                           -1378459200)
+
+    def test_to_ISO8601_fails_with_unproper_argument_type(self):
+        self.assertRaises(TypeError,
+                          timeformatutils.to_ISO8601,
+                          list())
 
     def test_ISO8601_to_UNIXtime(self):
         iso = "2013-09-06 09:20:00+00"

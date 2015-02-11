@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for linkedlist.py module.
 """
@@ -20,13 +18,34 @@ class TestFrontLinkedList(unittest.TestCase):
 
     def test_remove(self):
         instance = FrontLinkedList()
+        # No elements
+        instance.remove(1)
+        self.assertEqual(0, instance.size())
+        # One element, which is removed
+        instance.add(2)
+        self.assertEqual(1, instance.size())
+        instance.remove(2)
+        self.assertEqual(0, instance.size())
+        # One element, which is not removed
+        instance.add(5)
+        self.assertEqual(1, instance.size())
+        instance.remove(2)
+        self.assertEqual(1, instance.size())
+        instance.remove(5)  # clear list
+        # Two elements
+        instance.add(2)
+        instance.add("x")
+        self.assertEqual(2, instance.size())
+        instance.remove(2)
+        self.assertEqual(1, instance.size())
+        # Many elements        
         for i in range(1, 6):
             instance.add(i)
+        self.assertEqual(6, instance.size())
+        instance.remove("x")
         self.assertEqual(5, instance.size())
-        instance.remove(3)
-        self.assertEqual(4, instance.size())
         for item in instance:
-            self.assertNotEqual(3, item.data())
+            self.assertNotEqual("x", item.data())
 
     def test_remove_deletes_the_first_occurrence_from_the_front(self):
         instance = FrontLinkedList()
@@ -62,6 +81,7 @@ class TestFrontLinkedList(unittest.TestCase):
         self.assertEqual(2, instance.index_of("first"))
         self.assertEqual(1, instance.index_of("middle"))
         self.assertEqual(0, instance.index_of("last"))
+        self.assertEqual(-1, instance.index_of("ghost"))
 
     def test_pop(self):
         instance = FrontLinkedList()

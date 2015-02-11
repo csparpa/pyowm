@@ -7,10 +7,13 @@ from os import path, sep
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
-class TestCityIDRegistry(unittest.TestCase):
+class TestCityIDRegistryReadsFS(unittest.TestCase):
 
     if path.isfile(path.abspath(path.dirname(__name__))+sep+'097-102.txt'):
         _current_folder = path.abspath(path.dirname(__name__))
+    elif path.isfile(path.abspath(path.dirname(__name__) + 
+            path.join('tests', 'functional', 'webapi25', '097-102.txt'))):
+        _current_folder = path.join('..','..','tests','functional','webapi25')
     else:
         _current_folder = path.abspath(path.dirname(__name__))+sep+ \
                           sep.join(["functional","webapi25"])
@@ -40,7 +43,7 @@ class TestCityIDRegistry(unittest.TestCase):
                             _lookup_line_by_city_name('aaaaaaaa') is None)
 
     def test_id_for(self):
-        self.assertEqual(self._instance.id_for('dongen'), 2756723L)
+        self.assertEqual(self._instance.id_for('dongen'), 2756723)
         self.assertTrue(self._instance.id_for('aaaaaaaaaa') is None)
 
     def test_id_for_fails_with_malformed_inputs(self):
@@ -48,7 +51,7 @@ class TestCityIDRegistry(unittest.TestCase):
                           '123abc')
 
     def test_location_for(self):
-        expected = Location('dongen', 4.938890, 51.626671, 2756723L, 'NL')
+        expected = Location('dongen', 4.938890, 51.626671, 2756723, 'NL')
         result = self._instance.location_for('dongen')
         self.assertEqual(result.get_name(), expected.get_name())
         self.assertEqual(result.get_country(), expected.get_country())

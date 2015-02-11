@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for forecast.py module
 """
@@ -8,6 +6,8 @@ import unittest
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.forecast import Forecast
+from tests.unit.webapi25.json_test_dumps import FORECAST_JSON_DUMP
+from tests.unit.webapi25.xml_test_dumps import FORECAST_XML_DUMP
 
 
 class TestForecast(unittest.TestCase):
@@ -21,14 +21,14 @@ class TestForecast(unittest.TestCase):
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
                 "temp_min": 294.199
             },
-            "Clouds", "Overcast clouds", 804, "04d"),
+            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
            Weather(1378459690, 1378496480, 1378449510, 23, {"all": 10},
             {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
             {"press": 1070.119, "sea_level": 1078.589},
             {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
              "temp_min": 295.6
              },
-            "Clear", "Sky is clear", 804, "02d")
+            "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
        ]
     __test_n_weathers = len(__test_weathers)
     __test_instance = Forecast("daily", __test_reception_time, __test_location,
@@ -42,6 +42,13 @@ class TestForecast(unittest.TestCase):
         index = 1
         self.assertEqual(self.__test_weathers[index],
                          self.__test_instance.get(index))
+        
+    def test_accessors_interval_property(self):
+        former_interval = self.__test_instance.get_interval()
+        self.__test_instance.set_interval("3h")
+        result = self.__test_instance.get_interval()
+        self.__test_instance.set_interval(former_interval)        
+        self.assertEqual("3h", result)
 
     def test_getters_return_expected_3h_data(self):
         """
@@ -82,3 +89,15 @@ class TestForecast(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
             counter += 1
         self.assertEqual(instance.count_weathers(), counter)
+        
+    def test__len__(self):
+        self.assertEqual(len(self.__test_instance), len(self.__test_weathers))
+
+    # Only test to_JSON and to_XML functions when running Python 2.7
+    from sys import version_info
+    if version_info[0] < 3:
+        def test_to_JSON(self):
+            self.assertEqual(FORECAST_JSON_DUMP, self.__test_instance.to_JSON())
+
+        def test_to_XML(self):
+            self.assertEqual(FORECAST_XML_DUMP, self.__test_instance.to_XML())

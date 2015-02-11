@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import requests, re, codecs, json
 
 city_list_url = 'http://openweathermap.org/help/city_list.txt'

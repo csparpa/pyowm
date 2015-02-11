@@ -1,4 +1,10 @@
 Thanks to the contributors
 ==========================
 
-  * [Samuel Yap] (https://github.com/samuelyap) (code testing)
+Code
+----
+  * [Noid] (https://github.com/n0id)
+
+Testing
+-------
+  * [Samuel Yap] (https://github.com/samuelyap)

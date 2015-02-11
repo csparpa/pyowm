@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-
 """
 Module containing a concrete implementation for JSONParser abstract class,
-returning a StatioHistory instance
+returning a StationHistory instance
 """
 
 import json
@@ -14,7 +12,7 @@ from pyowm.exceptions import parse_response_error, api_response_error
 
 class StationHistoryParser(jsonparser.JSONParser):
     """
-    Concrete *JSONParser* implementation building a *StatioHistory* instance
+    Concrete *JSONParser* implementation building a *StationHistory* instance
     out of raw JSON data coming from OWM web API responses.
 
     """
@@ -24,13 +22,13 @@ class StationHistoryParser(jsonparser.JSONParser):
 
     def parse_JSON(self, JSON_string):
         """
-        Parses a *StatioHistory* instance out of raw JSON data. Only certain
+        Parses a *StationHistory* instance out of raw JSON data. Only certain
         properties of the data are used: if these properties are not found or
         cannot be parsed, an error is issued.
 
         :param JSON_string: a raw JSON string
         :type JSON_string: str
-        :returns: a *StatioHistory* instance or ``None`` if no data is
+        :returns: a *StationHistory* instance or ``None`` if no data is
             available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON

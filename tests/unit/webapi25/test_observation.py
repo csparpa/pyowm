@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Test case for observation.py module
 """
@@ -8,6 +6,8 @@ import unittest
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.observation import Observation
+from tests.unit.webapi25.json_test_dumps import OBSERVATION_JSON_DUMP
+from tests.unit.webapi25.xml_test_dumps import OBSERVATION_XML_DUMP
 
 
 class TestObservation(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestObservation(unittest.TestCase):
             {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
                 "temp_min": 294.199
             },
-            "Clouds", "Overcast clouds", 804, "04d")
+            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0)
     __test_instance = Observation(__test_reception_time, __test_location,
                                   __test_weather)
 
@@ -42,3 +42,12 @@ class TestObservation(unittest.TestCase):
                          self.__test_iso_reception_time)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
                          self.__test_reception_time)
+
+    # Only test to_JSON and to_XML functions when running Python 2.7
+    from sys import version_info
+    if version_info[0] < 3:
+        def test_to_JSON(self):
+            self.assertEqual(OBSERVATION_JSON_DUMP, self.__test_instance.to_JSON())
+
+        def test_to_XML(self):
+            self.assertEqual(OBSERVATION_XML_DUMP, self.__test_instance.to_XML())

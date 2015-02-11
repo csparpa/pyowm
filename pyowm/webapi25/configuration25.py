@@ -1,10 +1,10 @@
-#!/usr/bin/env python
-
 from pyowm.caches import nullcache
 from pyowm.webapi25 import observationparser
 from pyowm.webapi25 import observationlistparser
 from pyowm.webapi25 import forecastparser
 from pyowm.webapi25 import weatherhistoryparser
+from pyowm.webapi25 import stationparser
+from pyowm.webapi25 import stationlistparser
 from pyowm.webapi25 import stationhistoryparser
 from pyowm.webapi25 import weathercoderegistry
 from pyowm.webapi25 import cityidregistry
@@ -17,7 +17,10 @@ Configuration for the PyOWM library specific to OWM web API version 2.5
 ROOT_API_URL = 'http://api.openweathermap.org/data/2.5'
 ICONS_BASE_URL = 'http://openweathermap.org/img/w'
 OBSERVATION_URL = ROOT_API_URL + '/weather'
+STATION_URL = ROOT_API_URL + '/station'
 FIND_OBSERVATIONS_URL = ROOT_API_URL + '/find'
+FIND_STATION_URL = ROOT_API_URL + '/station/find'
+BBOX_STATION_URL = ROOT_API_URL + '/box/station'
 THREE_HOURS_FORECAST_URL = ROOT_API_URL + '/forecast'
 DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/city'
@@ -29,7 +32,9 @@ parsers = {
   'observation_list': observationlistparser.ObservationListParser(),
   'forecast': forecastparser.ForecastParser(),
   'weather_history': weatherhistoryparser.WeatherHistoryParser(),
-  'station_history': stationhistoryparser.StationHistoryParser()
+  'station_history': stationhistoryparser.StationHistoryParser(),
+  'station': stationparser.StationParser(),
+  'station_list': stationlistparser.StationListParser(),
 }
 
 # City ID registry
@@ -77,5 +82,29 @@ weather_code_registry = weathercoderegistry.WeatherCodeRegistry({
     "snow": [{
         "start": 600,
         "end": 622
+    }],
+    "tornado": [{
+        "start": 781,
+        "end": 781
+    },
+    {
+        "start": 900,
+        "end": 900
+    }],
+    "storm": [{
+        "start": 901,
+        "end": 901
+    },
+    {
+        "start": 960,
+        "end": 961
+    }],
+    "hurricane": [{
+        "start": 902,
+        "end": 902
+    },
+    {
+        "start": 962,
+        "end": 962
     }]
 })

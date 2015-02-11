@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Module containing the abstract PyOWM library main entry point interface
 """
@@ -24,7 +22,7 @@ class OWM(object):
         :returns: the OWM API key string
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def set_API_key(self, API_key):
@@ -35,7 +33,7 @@ class OWM(object):
         :type API_key: str
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_API_version(self):
@@ -45,7 +43,7 @@ class OWM(object):
         :returns: the OWM web API version string
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_version(self):
@@ -55,7 +53,7 @@ class OWM(object):
         :returns: the current PyOWM library version string
 
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def is_API_online(self):
@@ -66,3 +64,4 @@ class OWM(object):
         :returns: bool
 
         """
+        raise NotImplementedError
