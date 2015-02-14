@@ -1,5 +1,6 @@
 PyOWM release checklist
 -----------------------
+* consider major, minor and patch version numbers according to SemVer
 * update setup.py
 * update constants.py
 * update city ID files
