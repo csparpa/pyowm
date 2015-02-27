@@ -61,9 +61,9 @@ class OWMHTTPClient(object):
                     from urllib2 import urlopen
                 response = urlopen(url, None, timeout)
             except HTTPError as e:
-                raise api_call_error.APICallError(str(e.reason), e)
+                raise api_call_error.APICallError(str(e.message), e)
             except URLError as e:
-                raise api_call_error.APICallError(str(e.reason), e)
+                raise api_call_error.APICallError(str(e.message), e)
             else:
                 data = response.read().decode('utf-8')
                 self._cache.set(url, data)
