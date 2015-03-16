@@ -8,3 +8,8 @@ Code
 Testing
 -------
   * [Samuel Yap] (https://github.com/samuelyap)
+
+Wiki
+----
+  * [richarddunks] (https://github.com/richarddunks)
+  * [solumos] (https://github.com/solumos)
