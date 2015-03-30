@@ -38,12 +38,13 @@ class OWM25(owm.OWM):
 
     """
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
-                 language="en"):
+                 language="en", subscription_type='free'):
         self._parsers = parsers
         if API_key is not None:
             OWM25._assert_is_string("API_key", API_key)
         self._API_key = API_key
-        self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
+        self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache,
+                                                       subscription_type)
         self._language = language
 
     @staticmethod

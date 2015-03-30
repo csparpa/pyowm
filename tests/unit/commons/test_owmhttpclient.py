@@ -68,28 +68,28 @@ class TestOWMHTTPClient(unittest.TestCase):
 
     def test_build_full_URL(self):
         instance = OWMHTTPClient('test_API_key', self.__test_cache)
-        API_subset_URL = 'http://test.com/api'
+        API_subset_URL = '/subset'
         params = {'a': 1}
         result = instance._build_full_URL(API_subset_URL, params)
-        expected_1 = 'http://test.com/api?a=1&APPID=test_API_key'
-        expected_2 = 'http://test.com/api?APPID=test_API_key&a=1'
+        expected_1 = 'http://api.openweathermap.org/data/2.5/subset?a=1&APPID=test_API_key'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/subset?APPID=test_API_key&a=1'
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL_with_no_API_key(self):
-        API_subset_URL = 'http://test.com/api'
+        API_subset_URL = '/subset'
         params = {'a': 1, 'b': 2}
         result = self.__instance._build_full_URL(API_subset_URL, params)
-        expected_1 = 'http://test.com/api?a=1&b=2'
-        expected_2 = 'http://test.com/api?b=2&a=1'
+        expected_1 = 'http://api.openweathermap.org/data/2.5/subset?a=1&b=2'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/subset?b=2&a=1'
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL_with_unicode_chars_in_API_key(self):
         instance = OWMHTTPClient('£°test££', self.__test_cache)
-        API_subset_URL = 'http://test.com/api'
+        API_subset_URL = '/subset'
         params = {'a': 1}
         result = instance._build_full_URL(API_subset_URL, params)
-        expected_1 = 'http://test.com/api?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
-        expected_2 = 'http://test.com/api?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
+        expected_1 = 'http://api.openweathermap.org/data/2.5/subset?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/subset?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_call_API(self):

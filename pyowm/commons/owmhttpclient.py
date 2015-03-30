@@ -12,9 +12,14 @@ except ImportError:
 
 import socket
 from pyowm.exceptions import api_call_error
-
+from pyowm.webapi25.configuration25 import ROOT_API_URL
 
 class OWMHTTPClient(object):
+
+    API_SUBSCRIPTION_SUBDOMAINS = {
+        'free': 'api',
+        'pro': 'pro'
+    }
 
     """
     An HTTP client class, that can leverage a cache mechanism.
@@ -27,9 +32,11 @@ class OWMHTTPClient(object):
 
     """
 
-    def __init__(self, API_key, cache):
+    def __init__(self, API_key, cache, subscription_type='free'):
         self._API_key = API_key
         self._cache = cache
+        self._API_root_URL = ROOT_API_URL % \
+                     (self.API_SUBSCRIPTION_SUBDOMAINS[subscription_type],)
 
     def call_API(self, API_endpoint_URL, params_dict,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
@@ -84,10 +91,11 @@ class OWMHTTPClient(object):
         :returns: a full string HTTP request URL
 
         """
+        url =self._API_root_URL + API_endpoint_URL
         params = params_dict.copy()
         if self._API_key is not None:
             params['APPID'] = self._API_key
-        return self._build_query_parameters(API_endpoint_URL, params)
+        return self._build_query_parameters(url, params)
 
     def _build_query_parameters(self, base_URL, params_dict):
         """
