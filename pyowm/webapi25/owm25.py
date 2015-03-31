@@ -34,6 +34,10 @@ class OWM25(owm.OWM):
     :param language: the language in which you want text results to be returned.
           It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
     :type language: str
+    :param subscription_type: the type of OWM web API subscription to be wrapped.
+           Can be 'free' (free subscription) or 'pro' (paid subscription),
+           Defaults to: 'free'
+    :type subscription_type: str
     :returns: an *OWM25* instance
 
     """

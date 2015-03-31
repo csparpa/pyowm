@@ -29,7 +29,10 @@ class OWMHTTPClient(object):
     :param cache: an *OWMCache* concrete instance that will be used to
          cache OWM web API responses.
     :type cache: an *OWMCache* concrete instance
-
+    :param subscription_type: the type of OWM web API subscription to be wrapped.
+           The value is used to pick the proper API subdomain for HTTP calls.
+           Defaults to: 'free'
+    :type subscription_type: str
     """
 
     def __init__(self, API_key, cache, subscription_type='free'):

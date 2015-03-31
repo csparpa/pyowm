@@ -36,6 +36,10 @@ def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
           It's a two-characters string, eg: "en", "ru", "it". Defaults to:
           ``None``, which means use the default language.
     :type language: str
+    :param subscription_type: the type of OWM web API subscription to be wrapped.
+           Can be 'free' (free subscription) or 'pro' (paid subscription),
+           Defaults to: 'free'
+    :type subscription_type: str
     :returns: an instance of a proper *OWM* subclass
     :raises: *ValueError* when unsupported OWM API versions are provided
     """
