@@ -50,6 +50,7 @@ class OWM25(owm.OWM):
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache,
                                                        subscription_type)
         self._language = language
+        self._subscription_type = subscription_type
 
     @staticmethod
     def _assert_is_string(name, value):
@@ -115,6 +116,16 @@ class OWM25(owm.OWM):
 
         """
         self._language = language
+
+    def get_subscription_type(self):
+        """
+        Returns the OWM API subscription type
+
+        :returns: the subscription type
+
+        """
+        return self._subscription_type
+
 
     def city_id_registry(self):
         """
@@ -828,8 +839,11 @@ class OWM25(owm.OWM):
 
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \
-               "PyOWM version=%s, language=%s>" % (__name__,
+               "subscription type=%s, PyOWM version=%s, language=%s>" % \
+                                    (__name__,
                                       self.__class__.__name__,
-                                      self._API_key, self.get_API_version(),
+                                      self._API_key,
+                                      self.get_API_version(),
+                                      self._subscription_type,
                                       self.get_version(),
                                       self._language)
