@@ -50,6 +50,8 @@ class OWM25(owm.OWM):
         self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache,
                                                        subscription_type)
         self._language = language
+        if API_key is None and subscription_type == 'pro':
+            raise AssertionError('You must provide an API Key for paid subscriptions')
         self._subscription_type = subscription_type
 
     @staticmethod
