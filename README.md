@@ -91,7 +91,13 @@ The library API documentation is available on [Read the Docs](https://pyowm.read
 
 Test
 ----
-Unit testing is as simple as `python setup.py test -s tests.unit`
+Unit testing is as simple as `python setup.py test -s tests.unit`. This shall
+be done for each different Python interpreter supported by PyOWM.
+
+A more straighforward way to run tests is using [Tox](http://tox.readthedocs.org).
+From the project root folder, just launch:
+
+`tox`
 
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
 with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
