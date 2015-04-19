@@ -290,7 +290,9 @@ class TestWeather(unittest.TestCase):
         ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
         self.assertEqual(ordered_base_json, ordered_actual_json)
 
+    '''
     def test_to_XML(self):
         ordered_base_xml = ''.join(sorted(WEATHER_XML_DUMP))
         ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
         self.assertEqual(ordered_base_xml, ordered_actual_xml)
+    '''
