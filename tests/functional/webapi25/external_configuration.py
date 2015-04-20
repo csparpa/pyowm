@@ -27,6 +27,9 @@ cache = None
 # Default language for OWM web API queries text results
 language = 'ru'
 
+# Default API subscription type ('free' or 'pro')
+API_SUBSCRIPTION_TYPE = 'free'
+
 # OWM web API availability test timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 

@@ -34,17 +34,25 @@ class OWM25(owm.OWM):
     :param language: the language in which you want text results to be returned.
           It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
     :type language: str
+    :param subscription_type: the type of OWM web API subscription to be wrapped.
+           Can be 'free' (free subscription) or 'pro' (paid subscription),
+           Defaults to: 'free'
+    :type subscription_type: str
     :returns: an *OWM25* instance
 
     """
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
-                 language="en"):
+                 language="en", subscription_type='free'):
         self._parsers = parsers
         if API_key is not None:
             OWM25._assert_is_string("API_key", API_key)
         self._API_key = API_key
-        self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache)
+        self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache,
+                                                       subscription_type)
         self._language = language
+        if API_key is None and subscription_type == 'pro':
+            raise AssertionError('You must provide an API Key for paid subscriptions')
+        self._subscription_type = subscription_type
 
     @staticmethod
     def _assert_is_string(name, value):
@@ -110,6 +118,16 @@ class OWM25(owm.OWM):
 
         """
         self._language = language
+
+    def get_subscription_type(self):
+        """
+        Returns the OWM API subscription type
+
+        :returns: the subscription type
+
+        """
+        return self._subscription_type
+
 
     def city_id_registry(self):
         """
@@ -823,8 +841,11 @@ class OWM25(owm.OWM):
 
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \
-               "PyOWM version=%s, language=%s>" % (__name__,
+               "subscription type=%s, PyOWM version=%s, language=%s>" % \
+                                    (__name__,
                                       self.__class__.__name__,
-                                      self._API_key, self.get_API_version(),
+                                      self._API_key,
+                                      self.get_API_version(),
+                                      self._subscription_type,
                                       self.get_version(),
                                       self._language)
