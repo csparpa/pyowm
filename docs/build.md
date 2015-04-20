@@ -5,7 +5,7 @@ PyOWM release checklist
 * update constants.py
 * update city ID files
 * update README.md
-* update github wiki pages (including changelog)
+* update github wiki pages (including changelog) in the /wiki folder
 * run tests locally using setup.py
 * merge develop branch into master branch (no feature/hotfix branches left open)
 * close milestone on github
