@@ -427,11 +427,15 @@ def weather_from_dictionary(d):
         heat_index = None
     # -- visibility
     if 'visibility' in d:
-        if 'distance' in d['visibility']:
+        if isinstance(d['visibility'], int):
+            visibility_distance = d['visibility']
+        elif 'distance' in d['visibility']:
             visibility_distance = d['visibility']['distance']
     elif 'last' in d:
         if 'visibility' in d['last']:
-            if 'distance' in d['last']['visibility']:
+            if isinstance(d['last']['visibility'], int):
+                visibility_distance = d['last']['visibility']
+            elif 'distance' in d['last']['visibility']:
                 visibility_distance = d['last']['visibility']['distance']
     else:
         visibility_distance = None
