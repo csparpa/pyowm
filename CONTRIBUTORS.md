@@ -7,6 +7,7 @@ Code
 ----
   * [liato] (https://github.com/liato)
   * [Noid] (https://github.com/n0id)
+  * [dphildebrandt] (https://github.com/dphildebrandt)
 
 Testing
 -------
