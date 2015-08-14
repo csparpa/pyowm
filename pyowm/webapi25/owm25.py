@@ -63,6 +63,23 @@ class OWM25(owm.OWM):
             # Python 3.x
             assert isinstance(value, str), "'%s' must be a str" % (name,)
 
+    @staticmethod
+    def _assert_is_string_or_unicode(name, value):
+        try:
+            # Python 2.x
+            assert isinstance(value, basestring) or isinstance(value, unicode), "'%s' must be a str" % (name,)
+        except NameError:
+            # Python 3.x
+            assert isinstance(value, str) or isinstance(value, unicode), "'%s' must be a str" % (name,)
+
+    @staticmethod
+    def _encode_string(value):
+        if isinstance(value, unicode):
+            # The OWM API expects UTF-8 encoding
+            return value.encode('utf8')
+        else:
+            return value
+
     def get_API_key(self):
         """
         Returns the str OWM API key
@@ -158,16 +175,18 @@ class OWM25(owm.OWM):
         specified toponym (eg: "London,uk")
 
         :param name: the location's toponym
-        :type name: str
+        :type name: str or unicode
         :returns: an *Observation* instance or ``None`` if no weather data is
             available
         :raises: *ParseResponseException* when OWM web API responses' data
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        OWM25._assert_is_string("name", name)
+
+        OWM25._assert_is_string_or_unicode("name", name)
+        encoded_name = OWM25._encode_string(name)
         json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                          {'q': name,'lang': self._language})
+                                          {'q': encoded_name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_coords(self, lat, lon):
@@ -385,16 +404,17 @@ class OWM25(owm.OWM):
         interval of three hours one from each other
 
         :param name: the location's toponym
-        :type name: str
+        :type name: str or unicode
         :returns: a *Forecaster* instance or ``None`` if forecast data is not
             available for the specified location
         :raises: *ParseResponseException* when OWM web API responses' data
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        OWM25._assert_is_string("name", name)
+        OWM25._assert_is_string_or_unicode("name", name)
+        encoded_name = OWM25._encode_string(name)
         json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                          {'q': name, 'lang': self._language})
+                                          {'q': encoded_name, 'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -474,7 +494,7 @@ class OWM25(owm.OWM):
         time interval of one day one from each other
 
         :param name: the location's toponym
-        :type name: str
+        :type name: str or unicode
         :param limit: the maximum number of daily *Weather* items to be
             retrieved (default is ``None``, which stands for any number of
             items)
@@ -485,12 +505,13 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        OWM25._assert_is_string("name", name)
+        OWM25._assert_is_string_or_unicode("name", name)
+        encoded_name = OWM25._encode_string(name)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-        params = {'q': name, 'lang': self._language}
+        params = {'q': encoded_name, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
         json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
@@ -593,7 +614,7 @@ class OWM25(owm.OWM):
         boundaries can be passed as optional parameters.
 
         :param name: the location's toponym
-        :type name: str
+        :type name: str or unicode
         :param start: the object conveying the time value for the start query
             boundary (defaults to ``None``)
         :type start: int, ``datetime.datetime`` or ISO8601-formatted
@@ -611,8 +632,9 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        OWM25._assert_is_string("name", name)
-        params = {'q': name, 'lang': self._language}
+        OWM25._assert_is_string_or_unicode("name", name)
+        encoded_name = OWM25._encode_string(name)
+        params = {'q': encoded_name, 'lang': self._language}
         if start is None and end is None:
             pass
         elif start is not None and end is not None:
