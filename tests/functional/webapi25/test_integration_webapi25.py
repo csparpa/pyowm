@@ -348,6 +348,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         l5 = self.__owm.weather_history_at_place('QmFoPIlbf')  # Shall be None
         self.assertTrue(l5 is None)
 
+    def test_weather_history_at_coords(self):
+        l1 = self.__owm.weather_history_at_coords(51.5073509, -0.1277583)
+        if l1 is not None:
+            for weather in l1:
+                self.assertTrue(weather is not None)
+
     def test_weather_history_at_id(self):
         """
         Test feature: get weather history for a specific city ID
