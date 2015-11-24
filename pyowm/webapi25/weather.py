@@ -526,7 +526,7 @@ def weather_from_dictionary(d):
     if 'weather' in d:
         # Sometimes provided with a leading upper case!
         status = d['weather'][0]['main'].lower()
-        detailed_status = d['weather'][0]['description'].lower()
+        detailed_status = d['weather'][0]['description']
         weather_code = d['weather'][0]['id']
         weather_icon_name = d['weather'][0]['icon']
     else:
