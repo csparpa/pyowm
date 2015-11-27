@@ -431,12 +431,15 @@ def weather_from_dictionary(d):
             visibility_distance = d['visibility']
         elif 'distance' in d['visibility']:
             visibility_distance = d['visibility']['distance']
-    elif 'last' in d:
-        if 'visibility' in d['last']:
-            if isinstance(d['last']['visibility'], int):
-                visibility_distance = d['last']['visibility']
-            elif 'distance' in d['last']['visibility']:
-                visibility_distance = d['last']['visibility']['distance']
+        else:
+            visibility_distance = None
+    elif 'last' in d and 'visibility' in d['last']:
+        if isinstance(d['last']['visibility'], int):
+            visibility_distance = d['last']['visibility']
+        elif 'distance' in d['last']['visibility']:
+            visibility_distance = d['last']['visibility']['distance']
+        else:
+            visibility_distance = None
     else:
         visibility_distance = None
     # -- clouds
@@ -460,9 +463,8 @@ def weather_from_dictionary(d):
     # -- wind
     if 'wind' in d:
         wind = d['wind'].copy()
-    elif 'last' in d:
-        if 'wind' in d['last']:
-            wind = d['last']['wind'].copy()
+    elif 'last' in d and 'wind' in d['last']:
+        wind = d['last']['wind'].copy()
     else:
         wind = dict()
     # -- humidity
@@ -470,6 +472,8 @@ def weather_from_dictionary(d):
         humidity = d['humidity']
     elif 'main' in d and 'humidity' in d['main']:
         humidity = d['main']['humidity']
+    elif 'last' in d and 'main' in d['last'] and 'humidity' in d['last']['main']:
+        humidity = d['last']['main']['humidity']
     else:
         humidity = 0
     # -- snow
@@ -485,9 +489,8 @@ def weather_from_dictionary(d):
         atm_press = d['pressure']
     elif 'main' in d and 'pressure' in d['main']:
         atm_press = d['main']['pressure']
-    elif 'last' in d:
-        if 'main' in d['last']:
-            atm_press = d['last']['main']['pressure']
+    elif 'last' in d and 'main' in d['last'] and 'pressure' in d['last']['main']:
+        atm_press = d['last']['main']['pressure']
     else:
         atm_press = None
     if 'main' in d and 'sea_level' in d['main']:
@@ -517,9 +520,8 @@ def weather_from_dictionary(d):
                        'temp_max': temp_max,
                        'temp_min': temp_min
                        }
-    elif 'last' in d:
-        if 'main' in d['last']:
-            temperature = dict(temp=d['last']['main']['temp'])
+    elif 'last' in d and 'main' in d['last']:
+        temperature = dict(temp=d['last']['main']['temp'])
     else:
         temperature = dict()
     # -- weather status info
