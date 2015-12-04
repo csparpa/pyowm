@@ -13,3 +13,4 @@ after_success:
 notifications:
   email:
     on_failure: change
+sudo: false
