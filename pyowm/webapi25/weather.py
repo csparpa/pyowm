@@ -472,6 +472,8 @@ def weather_from_dictionary(d):
         humidity = d['humidity']
     elif 'main' in d and 'humidity' in d['main']:
         humidity = d['main']['humidity']
+    elif 'last' in d and 'main' in d['last'] and 'humidity' in d['last']['main']:
+        humidity = d['last']['main']['humidity']
     else:
         humidity = 0
     # -- snow
