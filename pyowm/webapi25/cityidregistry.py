@@ -70,7 +70,10 @@ class CityIDRegistry():
     
     def _get_lines(self, filename):
         with resource_stream(__name__, filename) as f:
-            return f.readlines()
+            lines = f.readlines()
+            if type(lines[0]) is bytes:
+                lines = map(lambda l: l.decode("utf-8"), lines)
+            return lines
     
     def _match_line(self, city_name, lines):
         for line in lines:
