@@ -45,6 +45,13 @@ The .egg will be installed into the system-dependent Python libraries folder:
     /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
     /usr/local/lib/pythonX.Y/dist-packages   # MacOS 10.5.4
 
+Clone the wiki as a submodule
+-----------------------------
+Run:
+
+    git submodule update --init
+
+
 Build documentation
 -------------------
 First install Sphinx:
