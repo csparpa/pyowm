@@ -1,3 +1,3 @@
 [submodule "wiki"]
 	path = wiki
-	url = git://github.com/csparpa/pyowm.wiki.git
+	url = https://github.com/csparpa/pyowm.wiki.git
