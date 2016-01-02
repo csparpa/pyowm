@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from setuptools import setup
+from pyowm import constants
 
 setup(
     name='pyowm',
-    version='2.2.0',
+    version=constants.PYOWM_VERSION,
     description='A Python wrapper around the OpenWeatherMap web API',
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
