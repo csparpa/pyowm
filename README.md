@@ -27,6 +27,9 @@ Usage examples
 import pyowm
 
 owm = pyowm.OWM('your-API-key')
+
+# You have a pro subscription? Use:
+# owm = pyowm.OWM(API_key='your-API-key', subscription_type='pro')
     
 # Will it be sunny tomorrow at this time in Milan (Italy) ?
 forecast = owm.daily_forecast("Milan,it")
