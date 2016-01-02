@@ -1,16 +1,17 @@
 PyOWM release checklist
 -----------------------
 * consider major, minor and patch version numbers according to SemVer
-* update setup.py
 * update constants.py
+* update setup.py
 * update city ID files
 * update README.md
 * update github wiki pages (including changelog) in the /wiki folder
-* run tests locally using setup.py
+* run tests locally using tox (or setup.py with all Python supported envs)
+* generate documentation locally
 * merge develop branch into master branch (no feature/hotfix branches left open)
 * close milestone on github
 * tag release on github
-* upload release on pypi
+* generate and upload release on pypi
 
 
 Filling in of main setup.py file
