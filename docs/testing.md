@@ -15,8 +15,15 @@ of the PyOWM library that call the real PyOWM web API via HTTP).
 The default unit testing enviroment is Python's _unittest_: simple and clean
 enough, so no additional dependencies are needed.
 
-Unit tests can be launched by moving into the library installation folder and 
-executing:
+Unit tests can be easily run using _tox_. Running:
+
+    tox
+
+triggers unit tests execution on all Python platfoms that are supported by
+PyOQM.
+
+Unit tests can also be launched by moving into the library installation folder
+and executing:
 
     python -m unittest discover
 

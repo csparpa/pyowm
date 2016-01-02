@@ -157,12 +157,26 @@ class TestOWM25(unittest.TestCase):
         except AssertionError:
             pass
 
+    def test_API_key_is_mandatory_with_paid_subscription(self):
+        try:
+            owm_paid = OWM25(self.__test_parsers, subscription_type='pro')
+            self.fail("Didn't raise AssertionError")
+        except AssertionError:
+            pass
+
     def test_API_key_accessors(self):
         test_API_key = 'G097IueS-9xN712E'
         owm = OWM25({})
         self.assertFalse(owm.get_API_key())
         owm.set_API_key(test_API_key)
         self.assertEqual(owm.get_API_key(), test_API_key)
+
+    def test_get_subscription_type(self):
+        owm_free = OWM25({})
+        self.assertEqual(owm_free.get_subscription_type(), 'free')
+        owm_paid = OWM25(self.__test_parsers, API_key='xyz',
+                         subscription_type='pro')
+        self.assertEqual(owm_paid.get_subscription_type(), 'pro')
 
     def test_is_API_online(self):
         ref_to_original_call_API = OWMHTTPClient.call_API

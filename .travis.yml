@@ -4,13 +4,13 @@ python:
   - "3.2"
   - "3.3"
 install:
-  - pip install coveralls
+  - pip install coverage==3.7.1 tox==1.9.2
 script:
-  - python setup.py install
-  - python setup.py test -s tests.unit
+  - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
 after_success:
   coveralls
 notifications:
   email:
     on_failure: change
+sudo: false

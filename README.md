@@ -2,10 +2,10 @@ PyOWM
 =====
 A Python wrapper around the OpenWeatherMap API
 
+[![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
-[![Latest Version](https://pypip.in/version/pyowm/badge.svg)](https://pypi.python.org/pypi/pyowm/)
-[![Downloads](https://pypip.in/download/pyowm/badge.svg?period=week)](https://pypi.python.org/pypi/pyowm/)
+[![Downloads](https://img.shields.io/pypi/dm/pyowm.svg)](https://img.shields.io/pypi/dm/pyowm.svg)
 
 What is it?
 ------------
@@ -27,6 +27,9 @@ Usage examples
 import pyowm
 
 owm = pyowm.OWM('your-API-key')
+
+# You have a pro subscription? Use:
+# owm = pyowm.OWM(API_key='your-API-key', subscription_type='pro')
     
 # Will it be sunny tomorrow at this time in Milan (Italy) ?
 forecast = owm.daily_forecast("Milan,it")
@@ -91,7 +94,13 @@ The library API documentation is available on [Read the Docs](https://pyowm.read
 
 Test
 ----
-Unit testing is as simple as `python setup.py test -s tests.unit`
+Unit testing is as simple as `python setup.py test -s tests.unit`. This shall
+be done for each different Python interpreter supported by PyOWM.
+
+A more straighforward way to run tests is using [Tox](http://tox.readthedocs.org).
+From the project root folder, just launch:
+
+`tox`
 
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
 with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
@@ -100,6 +109,8 @@ Development
 -----------
 Contributors (code enhancement, issue/bug reporting) are __welcome!__. See the
 [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started.
+
+Since version 2.2 PyOWM adopts [Semantic Versioning](http://semver.org/).
 
 If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 

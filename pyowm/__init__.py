@@ -15,7 +15,7 @@ from pyowm.utils import timeutils  # Convenience import
 
 
 def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
-        config_module=None, language=None):
+        config_module=None, language=None, subscription_type=None):
     """
     A parametrized factory method returning a global OWM instance that
     represents the desired OWM web API version (or the currently supported one
@@ -36,6 +36,10 @@ def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
           It's a two-characters string, eg: "en", "ru", "it". Defaults to:
           ``None``, which means use the default language.
     :type language: str
+    :param subscription_type: the type of OWM web API subscription to be wrapped.
+           Can be 'free' (free subscription) or 'pro' (paid subscription),
+           Defaults to: 'free'
+    :type subscription_type: str
     :returns: an instance of a proper *OWM* subclass
     :raises: *ValueError* when unsupported OWM API versions are provided
     """
@@ -46,6 +50,10 @@ def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
         from pyowm.webapi25.owm25 import OWM25
         if language is None:
             language = cfg_module.language
+        if subscription_type is None:
+            subscription_type = cfg_module.API_SUBSCRIPTION_TYPE
+            if subscription_type not in ['free', 'pro']:
+                subscription_type = 'free'
         return OWM25(cfg_module.parsers, API_key, cfg_module.cache,
-                     language)
+                     language, subscription_type)
     raise ValueError("Unsupported OWM web API version")

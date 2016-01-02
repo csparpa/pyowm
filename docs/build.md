@@ -1,15 +1,17 @@
 PyOWM release checklist
 -----------------------
-* update setup.py
+* consider major, minor and patch version numbers according to SemVer
 * update constants.py
+* update setup.py
 * update city ID files
 * update README.md
-* update github wiki pages (including changelog)
-* run tests locally using setup.py
+* update github wiki pages (including changelog) in the /wiki folder
+* run tests locally using tox (or setup.py with all Python supported envs)
+* generate documentation locally
 * merge develop branch into master branch (no feature/hotfix branches left open)
 * close milestone on github
 * tag release on github
-* upload release on pypi
+* generate and upload release on pypi
 
 
 Filling in of main setup.py file
@@ -42,6 +44,13 @@ The .egg will be installed into the system-dependent Python libraries folder:
     C:\PythonXY\Lib\site-packages            # Windows
     /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
     /usr/local/lib/pythonX.Y/dist-packages   # MacOS 10.5.4
+
+Clone the wiki as a submodule
+-----------------------------
+Run:
+
+    git submodule update --init
+
 
 Build documentation
 -------------------

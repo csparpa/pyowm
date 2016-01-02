@@ -9,3 +9,4 @@ sphinx/_build/*
 .project
 .pydevproject
 .idea/*
+.tox/*

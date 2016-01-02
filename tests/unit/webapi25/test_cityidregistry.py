@@ -78,3 +78,13 @@ donges,3021093,47.318241,-2.075380,FR"""
     def test_location_for_fails_with_malformed_inputs(self):
         self.assertRaises(ValueError, CityIDRegistry.location_for,
                           self._instance, '123abc')
+
+    def test_match_line(self):
+        instance = CityIDRegistry('test')
+        test_lines = ['my-city,1,2\n',
+                      'your-city,3,4\n',
+                      'his-city,5,6\n']
+        result = instance._match_line('my-city', test_lines)
+        self.assertEqual('my-city,1,2\n'.strip(), result)
+        result = instance._match_line('blabla', test_lines)
+        self.assertIsNone(result)

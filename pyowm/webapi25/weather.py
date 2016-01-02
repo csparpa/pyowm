@@ -463,6 +463,8 @@ def weather_from_dictionary(d):
     elif 'last' in d:
         if 'wind' in d['last']:
             wind = d['last']['wind'].copy()
+    elif 'speed' in d:
+        wind = dict(speed=d['speed'])
     else:
         wind = dict()
     # -- humidity
@@ -470,6 +472,8 @@ def weather_from_dictionary(d):
         humidity = d['humidity']
     elif 'main' in d and 'humidity' in d['main']:
         humidity = d['main']['humidity']
+    elif 'last' in d and 'main' in d['last'] and 'humidity' in d['last']['main']:
+        humidity = d['last']['main']['humidity']
     else:
         humidity = 0
     # -- snow
@@ -524,9 +528,8 @@ def weather_from_dictionary(d):
         temperature = dict()
     # -- weather status info
     if 'weather' in d:
-        # Sometimes provided with a leading upper case!
-        status = d['weather'][0]['main'].lower()
-        detailed_status = d['weather'][0]['description'].lower()
+        status = d['weather'][0]['main']
+        detailed_status = d['weather'][0]['description']
         weather_code = d['weather'][0]['id']
         weather_icon_name = d['weather'][0]['icon']
     else:
