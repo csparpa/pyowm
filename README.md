@@ -2,10 +2,10 @@ PyOWM
 =====
 A Python wrapper around the OpenWeatherMap API
 
+[![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
-[![Latest Version](https://pypip.in/version/pyowm/badge.svg)](https://pypi.python.org/pypi/pyowm/)
-[![Downloads](https://pypip.in/download/pyowm/badge.svg?period=week)](https://pypi.python.org/pypi/pyowm/)
+[![Downloads](https://img.shields.io/pypi/dm/pyowm.svg)](https://img.shields.io/pypi/dm/pyowm.svg)
 
 What is it?
 ------------
