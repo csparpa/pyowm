@@ -4,7 +4,7 @@ python:
   - "3.2"
   - "3.3"
 install:
-  - pip install coverage==3.7.1 tox==1.9.2
+  - pip install coverage==3.7.1 tox==1.9.2 virtualenv<14.0
 script:
   - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
