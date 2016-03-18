@@ -9,11 +9,12 @@ import unittest
 from datetime import datetime
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
+from pyowm import constants
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
 
-    __owm = OWM25(parsers, '�b02f5370d�76021a0')
+    __owm = OWM25(parsers, constants.DEFAULT_API_KEY)
 
     def test_is_API_online(self):
         self.assertTrue(self.__owm.is_API_online())
