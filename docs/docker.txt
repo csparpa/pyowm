@@ -1,0 +1,9 @@
+Build the image
+===============
+cd <pyowm-root-dir>
+build -t pyowm:latest .
+
+
+Start container
+===============
+docker run --name pyowm pyowm
