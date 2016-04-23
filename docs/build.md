@@ -12,6 +12,7 @@ PyOWM release checklist
 * close milestone on github
 * tag release on github
 * generate and upload release on pypi
+* update docker image on DockerHub
 
 
 Filling in of main setup.py file
