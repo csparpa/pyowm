@@ -90,7 +90,7 @@ Documentation
 -------------
 Usage examples are available in [the wiki page](https://github.com/csparpa/pyowm/wiki/Usage-examples).
 
-The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
+The library API documentation is available on [Read the Docs](http://pyowm.readthedocs.io/).
 
 Test
 ----
