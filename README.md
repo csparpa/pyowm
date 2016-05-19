@@ -1,5 +1,4 @@
-PyOWM
-=====
+#  PyOWM
 A Python wrapper around the OpenWeatherMap API
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
@@ -7,26 +6,36 @@ A Python wrapper around the OpenWeatherMap API
 [![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
 [![Downloads](https://img.shields.io/pypi/dm/pyowm.svg)](https://img.shields.io/pypi/dm/pyowm.svg)
 
-What is it?
-------------
+##  What is it?
 PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
 
 It allows quick and easy consumption of OWM weather data from Python applications via a simple object model and in a human-friendly fashion.
 
 No additional libraries are requested: only the Python standard library modules.
 
-Support
--------
+##  Support
+
 PyOWM currently supports _version 2.5_ of the OWM API (which is the latest one)
 
 PyOWM runs on Python 2.7, 3.2 and 3.3
 
-Usage examples
---------------
+##  Usage
+
+### API key
+
+As the OpenWeatherMap API needs a valid API key to allow responses, 
+*PyOWM won't work if you don't provide one*. This stands for both the free and paid (pro) subscription plans.
+
+You can signup for a free API key [on the OWM website](https://home.openweathermap.org/users/sign_up)
+
+Please notice that the free API subscription plan is subject to requests throttling.
+
+### Examples
+
 ```python
 import pyowm
 
-owm = pyowm.OWM('your-API-key')
+owm = pyowm.OWM('your-API-key')  # You MUST provide a valid API key
 
 # You have a pro subscription? Use:
 # owm = pyowm.OWM(API_key='your-API-key', subscription_type='pro')
@@ -52,13 +61,13 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
-Installation
-------------
-**With [pip](https://pypi.python.org/pypi/pip)**
+##  Installation
+
+### Using pip
 
 `pip install pyowm`
 
-**From source with [setuptools](https://pypi.python.org/pypi/setuptools)**
+### From source with setuptools
 
 1. Download the source archive either from GitHub ([select a release](https://github.com/csparpa/pyowm/releases)
    or just take the [main branch](https://github.com/csparpa/pyowm/archive/master.zip))
@@ -73,27 +82,24 @@ Installation
        
        `python setup.py install`
 
-**.exe installer (Windows users)**
+### exe installer (Windows users)
 
 The installer is available on the [Python Package Index](https://pypi.python.org/pypi/pyowm) 
 
-License
--------
+## License
+
 [MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
 
-What's new
-----------
+## Changelog
 Please read the [changelog](https://github.com/csparpa/pyowm/wiki/Changelog) page of the wiki
 
 
-Documentation
--------------
+## Documentation
 Usage examples are available in [the wiki page](https://github.com/csparpa/pyowm/wiki/Usage-examples).
 
-The library API documentation is available on [Read the Docs](http://pyowm.readthedocs.io/).
+The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
 
-Test
-----
+## Testing
 Unit testing is as simple as `python setup.py test -s tests.unit`. This shall
 be done for each different Python interpreter supported by PyOWM.
 
@@ -105,8 +111,7 @@ From the project root folder, just launch:
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
 with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
 
-Development
------------
+## Development
 Contributors (code enhancement, issue/bug reporting) are __welcome!__. See the
 [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started.
 
@@ -114,7 +119,6 @@ Since version 2.2 PyOWM adopts [Semantic Versioning](http://semver.org/).
 
 If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 
-References
-----------
+## References
 * [OpenWeatherMap website](http://openweathermap.org/)
 * [OpenWeatherMap web API wiki](http://bugs.openweathermap.org/projects/api/wiki)
