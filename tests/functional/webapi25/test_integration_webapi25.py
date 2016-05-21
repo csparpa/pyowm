@@ -164,9 +164,9 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get 3 hours forecast for a specific location
         """
-        fc1 = self.__owm.three_hours_forecast("London,uk")
-        fc2 = self.__owm.three_hours_forecast('Kiev')
-        fc3 = self.__owm.three_hours_forecast('QmFoPIlbf')  # Shall be None
+        fc1 = self.__owm.forecast_at_place("London,uk", '3h')
+        fc2 = self.__owm.forecast_at_place('Kiev', '3h')
+        fc3 = self.__owm.forecast_at_place('QmFoPIlbf', '3h')  # Shall be None
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -192,9 +192,9 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         Test feature: get 3 hours forecast at a specific geographic coordinate
         """
         # London,uk
-        fc1 = self.__owm.three_hours_forecast_at_coords(51.5073509, -0.1277583)
+        fc1 = self.__owm.forecast_at_coords(51.5073509, -0.1277583, '3h')
         # Kiev
-        fc2 = self.__owm.three_hours_forecast_at_coords(50.4501, 30.5234)
+        fc2 = self.__owm.forecast_at_coords(50.4501, 30.5234, '3h')
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -214,18 +214,18 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f2:
             self.assertTrue(weather is not None)
         with self.assertRaises(ValueError):
-            self.__owm.three_hours_forecast_at_coords(199, 199)
+            self.__owm.forecast_at_coords(199, 199, '3h')
 
     def test_three_hours_forecast_at_id(self):
         """
         Test feature: get 3 hours forecast for city ID
         """
         # London,uk
-        fc1 = self.__owm.three_hours_forecast_at_id(2643743)
+        fc1 = self.__owm.forecast_at_id(2643743, '3h')
         # Kiev
-        fc2 = self.__owm.three_hours_forecast_at_id(703448)
+        fc2 = self.__owm.forecast_at_id(703448, '3h')
         # Shall be None
-        fc3 = self.__owm.three_hours_forecast_at_id(99999999)
+        fc3 = self.__owm.forecast_at_id(99999999, '3h')
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -250,9 +250,9 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get daily forecast for a specific location
         """
-        fc1 = self.__owm.daily_forecast("London,uk")
-        fc2 = self.__owm.daily_forecast('Kiev')
-        fc3 = self.__owm.daily_forecast('QmFoPIlbf')  # Shall be None
+        fc1 = self.__owm.forecast_at_place("London,uk", 'daily')
+        fc2 = self.__owm.forecast_at_place('Kiev', 'daily')
+        fc3 = self.__owm.forecast_at_place('QmFoPIlbf', 'daily')  # Shall be None
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -277,7 +277,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get daily forecast at a specific geographic coordinate
         """
-        fc1 = self.__owm.daily_forecast_at_coords(51.5073509, -0.1277583) # London,uk
+        fc1 = self.__owm.forecast_at_coords(51.5073509, -0.1277583, 'daily') # London,uk
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -288,18 +288,18 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         with self.assertRaises(ValueError):
-            self.__owm.daily_forecast_at_coords(199, 199)
+            self.__owm.forecast_at_coords(199, 199, 'daily')
 
     def test_daily_forecast_at_id(self):
         """
         Test feature: get daily forecast for a specific city ID
         """
         # London,uk
-        fc1 = self.__owm.daily_forecast_at_id(2643743)
+        fc1 = self.__owm.forecast_at_id(2643743, 'daily')
         # Kiev
-        fc2 = self.__owm.daily_forecast_at_id(703448)
+        fc2 = self.__owm.forecast_at_id(703448, 'daily')
         # Shall be None
-        fc3 = self.__owm.daily_forecast_at_id(99999999)
+        fc3 = self.__owm.forecast_at_id(99999999, 'daily')
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)

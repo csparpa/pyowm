@@ -26,15 +26,20 @@ DAILY_FORECAST_URL = '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = '/history/city'
 STATION_WEATHER_HISTORY_URL = '/history/station'
 
+FORECAST_TYPES = {
+    '3h': THREE_HOURS_FORECAST_URL,
+    'daily': DAILY_FORECAST_URL,
+}
+
 # Parser objects injection for OWM web API responses parsing
 parsers = {
-  'observation': observationparser.ObservationParser(),
-  'observation_list': observationlistparser.ObservationListParser(),
-  'forecast': forecastparser.ForecastParser(),
-  'weather_history': weatherhistoryparser.WeatherHistoryParser(),
-  'station_history': stationhistoryparser.StationHistoryParser(),
-  'station': stationparser.StationParser(),
-  'station_list': stationlistparser.StationListParser(),
+    'observation': observationparser.ObservationParser(),
+    'observation_list': observationlistparser.ObservationListParser(),
+    'forecast': forecastparser.ForecastParser(),
+    'weather_history': weatherhistoryparser.WeatherHistoryParser(),
+    'station_history': stationhistoryparser.StationHistoryParser(),
+    'station': stationparser.StationParser(),
+    'station_list': stationlistparser.StationListParser(),
 }
 
 # City ID registry

@@ -21,7 +21,7 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      CITY_WEATHER_HISTORY_JSON, STATION_TICK_WEATHER_HISTORY_JSON,
      STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
      DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
-     STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON, 
+     STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON,
      WEATHER_AT_STATION_IN_BBOX_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
@@ -350,7 +350,7 @@ class TestOWM25(unittest.TestCase):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_3h_forecast
-        result = self.__test_instance.three_hours_forecast("London,uk")
+        result = self.__test_instance.forecast_at_place("London,uk", '3h')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -366,9 +366,13 @@ class TestOWM25(unittest.TestCase):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_3h_forecast_with_no_items
-        result = self.__test_instance.three_hours_forecast("London,uk")
+        result = self.__test_instance.forecast_at_place("London,uk", '3h')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
+
+    def test_three_hours_forecast_with_wrong_params(self):
+        self.assertRaises(ValueError, OWM25.forecast_at_place,
+                          self.__test_instance, "London,uk", 'foobar')
 
     def test_three_hours_forecast_at_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -376,7 +380,7 @@ class TestOWM25(unittest.TestCase):
             self.mock_httputils_call_API_returning_3h_forecast_at_coords
         result = \
             self.__test_instance\
-                .three_hours_forecast_at_coords(51.50853, -0.12574)
+                .forecast_at_coords(51.50853, -0.12574, '3h')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -392,26 +396,28 @@ class TestOWM25(unittest.TestCase):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_3h_forecast_with_no_items
-        result = self.__test_instance.three_hours_forecast_at_coords(51.50853,
-                                                                     -0.12574)
+        result = self.__test_instance.forecast_at_coords(
+            51.50853, -0.12574, '3h')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 
     def test_three_hours_forecast_at_coords_fails_with_wrong_params(self):
-        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
-                          self.__test_instance, -100.0, 0.0)
-        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
-                          self.__test_instance, 100.0, 0.0)
-        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
-                          self.__test_instance, 0.0, -200.0)
-        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_coords,
-                          self.__test_instance, 0.0, 200.0)
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, -100.0, 0.0, '3h')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 100.0, 0.0, '3h')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 0.0, -200.0, '3h')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 0.0, 200.0, '3h')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, 'foobar')
 
     def test_three_hours_forecast_at_id(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_3h_forecast_at_id
-        result = self.__test_instance.three_hours_forecast_at_id(2643743)
+        result = self.__test_instance.forecast_at_id(2643743, '3h')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -427,19 +433,22 @@ class TestOWM25(unittest.TestCase):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_3h_forecast_with_no_items
-        result = self.__test_instance.three_hours_forecast_at_id(2643743)
+        result = self.__test_instance.forecast_at_id(2643743, '3h')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 
     def test_three_hours_forecast_at_id_fails_with_wrong_params(self):
-        self.assertRaises(ValueError, OWM25.three_hours_forecast_at_id,
-                          self.__test_instance, -1234)
+        self.assertRaises(ValueError, OWM25.forecast_at_id,
+                          self.__test_instance, -1234, '3h')
+        self.assertRaises(ValueError, OWM25.forecast_at_id,
+                          self.__test_instance, -1234, 'foobar')
 
     def test_daily_forecast(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast
-        result = self.__test_instance.daily_forecast("London,uk", 2)
+        result = self.__test_instance.forecast_at_place(
+            "London,uk", 'daily', limit=2)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -452,16 +461,18 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_daily_forecast_fails_with_wrong_params(self):
-        self.assertRaises(AssertionError, OWM25.daily_forecast,
-                          self.__test_instance, 2, 3)
-        self.assertRaises(ValueError, OWM25.daily_forecast,
-                          self.__test_instance, "London,uk", -3)
+        self.assertRaises(AssertionError, OWM25.forecast_at_place,
+                          self.__test_instance, 2, 'daily', limit=3)
+        self.assertRaises(ValueError, OWM25.forecast_at_place,
+                          self.__test_instance, "London,uk", 'daily', limit=-3)
+        self.assertRaises(ValueError, OWM25.forecast_at_place,
+                          self.__test_instance, "London,uk", 'foobar', limit=-3)
 
     def test_daily_forecast_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_with_no_items
-        result = self.__test_instance.daily_forecast('London,uk')
+        result = self.__test_instance.forecast_at_place('London,uk', 'daily')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 
@@ -470,7 +481,8 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_at_coords
         result = \
-            self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574, 2)
+            self.__test_instance.forecast_at_coords(
+                51.50853, -0.12574, 'daily', limit=2)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -483,22 +495,26 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_daily_forecast_at_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, -3)
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
-                          self.__test_instance, -100.0, 0.0)
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
-                          self.__test_instance, 100.0, 0.0)
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
-                          self.__test_instance, 0.0, -200.0)
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_coords,
-                          self.__test_instance, 0.0, 200.0)
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, 'daily',
+                          limit=-3)
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, -100.0, 0.0, 'daily')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 100.0, 0.0, 'daily')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 0.0, -200.0, 'daily')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 0.0, 200.0, 'daily')
+        self.assertRaises(ValueError, OWM25.forecast_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, 'foobar')
 
     def test_daily_forecast_at_coords_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_with_no_items
-        result = self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574)
+        result = self.__test_instance.forecast_at_coords(
+            51.50853, -0.12574, 'daily')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 
@@ -507,7 +523,7 @@ class TestOWM25(unittest.TestCase):
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_at_id
         result = \
-            self.__test_instance.daily_forecast_at_id(2643743, 2)
+            self.__test_instance.forecast_at_id(2643743, 'daily', limit=2)
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
@@ -520,16 +536,18 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_daily_forecast_at_id_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_id,
-                          self.__test_instance, -123456, 3)
-        self.assertRaises(ValueError, OWM25.daily_forecast_at_id,
-                          self.__test_instance, 123456, -3)
+        self.assertRaises(ValueError, OWM25.forecast_at_id,
+                          self.__test_instance, -123456, 'daily', limit=3)
+        self.assertRaises(ValueError, OWM25.forecast_at_id,
+                          self.__test_instance, 123456, 'daily', limit=-3)
+        self.assertRaises(ValueError, OWM25.forecast_at_id,
+                          self.__test_instance, 123456, 'foobar', limit=3)
 
     def test_daily_forecast_at_id_when_forecast_not_found(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
             self.mock_httputils_call_API_returning_daily_forecast_with_no_items
-        result = self.__test_instance.daily_forecast_at_id(123456)
+        result = self.__test_instance.forecast_at_id(123456, 'daily')
         OWMHTTPClient.call_API = ref_to_original_call_API
         self.assertIsNone(result)
 

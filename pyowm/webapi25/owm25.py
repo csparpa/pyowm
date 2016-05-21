@@ -5,9 +5,9 @@ Module containing the PyOWM library main entry point
 from time import time
 from pyowm import constants
 from pyowm.webapi25.configuration25 import (
-    OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
-    DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
+    OBSERVATION_URL, FIND_OBSERVATIONS_URL, CITY_WEATHER_HISTORY_URL,
+    STATION_WEATHER_HISTORY_URL, FIND_STATION_URL, STATION_URL,
+    BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT, FORECAST_TYPES)
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
@@ -192,7 +192,7 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                              {'lon': lon, 'lat': lat, 
+                                              {'lon': lon, 'lat': lat,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -376,153 +376,62 @@ class OWM25(owm.OWM):
         json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
-    def three_hours_forecast(self, name):
+    def forecast_at_place(self, name, granularity, limit=None):
         """
-        Queries the OWM web API for three hours weather forecast for the
-        specified location (eg: "London,uk"). A *Forecaster* object is
-        returned, containing a *Forecast* instance covering a global streak of
-        five days: this instance encapsulates *Weather* objects, with a time
-        interval of three hours one from each other
-
-        :param name: the location's toponym
-        :type name: str
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM web API responses' data
-            cannot be parsed, *APICallException* when OWM web API can not be
-            reached
-        """
-        OWM25._assert_is_string("name", name)
-        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                          {'q': name, 'lang': self._language})
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
-        if forecast is not None:
-            forecast.set_interval("3h")
-            return forecaster.Forecaster(forecast)
-        else:
-            return None
-
-    def three_hours_forecast_at_coords(self, lat, lon):
-        """
-        Queries the OWM web API for three hours weather forecast for the
-        specified geographic coordinate (eg: latitude: 51.5073509,
-        longitude: -0.1277583). A *Forecaster* object is returned,
-        containing a *Forecast* instance covering a global streak of
-        five days: this instance encapsulates *Weather* objects, with a time
-        interval of three hours one from each other
-
-        :param lat: location's latitude, must be between -90.0 and 90.0
-        :type lat: int/float
-        :param lon: location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM web API responses' data
-            cannot be parsed, *APICallException* when OWM web API can not be
-            reached
-        """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-        params = {'lon': lon, 'lat': lat, 'lang': self._language}
-        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL, params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
-        if forecast is not None:
-            forecast.set_interval("3h")
-            return forecaster.Forecaster(forecast)
-        else:
-            return None
-
-    def three_hours_forecast_at_id(self, id):
-        """
-        Queries the OWM web API for three hours weather forecast for the
-        specified city ID (eg: 5128581). A *Forecaster* object is returned,
-        containing a *Forecast* instance covering a global streak of
-        five days: this instance encapsulates *Weather* objects, with a time
-        interval of three hours one from each other
-
-        :param id: the location's city ID
-        :type id: int
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM web API responses' data
-            cannot be parsed, *APICallException* when OWM web API can not be
-            reached
-        """
-        assert type(id) is int, "'id' must be an int"
-        if id < 0:
-            raise ValueError("'id' value must be greater than 0")
-        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                              {'id': id,
-                                               'lang': self._language})
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
-        if forecast is not None:
-            forecast.set_interval("3h")
-            return forecaster.Forecaster(forecast)
-        else:
-            return None
-
-    def daily_forecast(self, name, limit=None):
-        """
-        Queries the OWM web API for daily weather forecast for the specified
+        Queries the OWM web API for forecasts of the given
+        granularity (eg: currently 'daily' or '3h') for the specified
         location (eg: "London,uk"). A *Forecaster* object is returned,
-        containing a *Forecast* instance covering a global streak of fourteen
-        days by default: this instance encapsulates *Weather* objects, with a
-        time interval of one day one from each other
+        containing a *Forecast* instance covering a global streak of
+        five days (for '3h') or 14 days (for 'daily') by default: this
+        instance encapsulates *Weather* objects, with a time interval
+        equal to the granularity
 
         :param name: the location's toponym
         :type name: str
+        :param granularity: the forecast interval
+        :type granularity: str
         :param limit: the maximum number of daily *Weather* items to be
-            retrieved (default is ``None``, which stands for any number of
-            items)
-        :type limit: int or ``None``
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM web API responses' data
-            cannot be parsed, *APICallException* when OWM web API can not be
-            reached, *ValueError* if negative values are supplied for limit
+            retrieved (default is ``None``, which stands for any number
+            items); only applicable for granularity 'daily'
+        :type limit: int of ``None``
+        :returns: a *Forecaster* instance or ``None`` if forecast data
+            is not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses'
+            data cannot be parsed, *APICallException* when OWM web API
+            can not be reached, *ValueError* if negative values are
+            supplied for limit or an invalid granularity provided
         """
         OWM25._assert_is_string("name", name)
-        if limit is not None:
-            assert isinstance(limit, int), "'limit' must be an int or None"
-            if limit < 1:
-                raise ValueError("'limit' must be None or greater than zero")
         params = {'q': name, 'lang': self._language}
-        if limit is not None:
-            params['cnt'] = limit
-        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
-        if forecast is not None:
-            forecast.set_interval("daily")
-            return forecaster.Forecaster(forecast)
-        else:
-            return None
 
-    def daily_forecast_at_coords(self, lat, lon, limit=None):
+        return self._retrieve_forecasts(params, granularity, limit)
+
+    def forecast_at_coords(self, lat, lon, granularity, limit=None):
         """
-        Queries the OWM web API for daily weather forecast for the specified
-        geographic coordinate (eg: latitude: 51.5073509, longitude: -0.1277583).
-        A *Forecaster* object is returned, containing a *Forecast* instance
-        covering a global streak of fourteen days by default: this instance
-        encapsulates *Weather* objects, with a time interval of one day one
-        from each other
+        Queries the OWM web API for forecasts of the given granularity
+        for the specified geographic coordinate (eg: latitude:
+        51.5073509, longitude: -0.1277583). A *Forecaster* object is
+        returned, containing a *Forecast* instance covering a global
+        streak five of fourteen days (depending on '3h' or 'daily'
+        granularity) by default: this instance encapsulates *Weather*
+        objects, with a time interval equal to the granularity.
 
         :param lat: location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
         :param lon: location's longitude, must be between -180.0 and 180.0
         :type lon: int/float
+        :param granularity: the forecast interval
+        :type granularity: str
         :param limit: the maximum number of daily *Weather* items to be
-            retrieved (default is ``None``, which stands for any number of
-            items)
+            retrieved (default is ``None``, which stands for any number
+            of items); only applicable for granularity 'daily'
         :type limit: int or ``None``
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM web API responses' data
-            cannot be parsed, *APICallException* when OWM web API can not be
-            reached, *ValueError* if negative values are supplied for limit
+        :returns: a *Forecaster* instance or ``None`` if forecast data
+            is not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses'
+            data cannot be parsed, *APICallException* when OWM web API
+            can not be reached, *ValueError* if negative values are
+            supplied for limit or an invalid granularity provided
         """
         assert type(lon) is float or type(lon) is int, "'lon' must be a float"
         if lon < -180.0 or lon > 180.0:
@@ -530,60 +439,73 @@ class OWM25(owm.OWM):
         assert type(lat) is float or type(lat) is int, "'lat' must be a float"
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        if limit is not None:
-            assert isinstance(limit, int), "'limit' must be an int or None"
-            if limit < 1:
-                raise ValueError("'limit' must be None or greater than zero")
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-        if limit is not None:
-            params['cnt'] = limit
-        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
-        if forecast is not None:
-            forecast.set_interval("daily")
-            return forecaster.Forecaster(forecast)
-        else:
-            return None
 
-    def daily_forecast_at_id(self, id, limit=None):
+        return self._retrieve_forecasts(params, granularity, limit)
+
+    def forecast_at_id(self, id, granularity, limit=None):
         """
-        Queries the OWM web API for daily weather forecast for the specified
-        city ID (eg: 5128581). A *Forecaster* object is returned, containing
-        a *Forecast* instance covering a global streak of fourteen days by
-        default: this instance encapsulates *Weather* objects, with a time
-        interval of one day one from each other
+        Queries the OWM web API for forecasts of the given granularity
+        for the specified city id (eg: 5128581). A *Forecaster* object
+        is returned, containing a *Forecast* instance covering a global
+        streak five of fourteen days (depending on '3h' or 'daily'
+        granularity) by default: this instance encapsulates *Weather*
+        objects, with a time interval equal to the granularity.
 
         :param id: the location's city ID
         :type id: int
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param granularity: the forecast interval
+        :type granularity: str
         :param limit: the maximum number of daily *Weather* items to be
-            retrieved (default is ``None``, which stands for any number of
-            items)
+            retrieved (default is ``None``, which stands for any number
+            of items); only applicable for granularity 'daily'
         :type limit: int or ``None``
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM web API responses' data
-            cannot be parsed, *APICallException* when OWM web API can not be
-            reached, *ValueError* if negative values are supplied for limit
+        :returns: a *Forecaster* instance or ``None`` if forecast data
+            is not available for the specified location
+        :raises: *ParseResponseException* when OWM web API responses'
+            data cannot be parsed, *APICallException* when OWM web API
+            can not be reached, *ValueError* if negative values are
+            supplied for limit or an invalid granularity provided
         """
         assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
-        if limit is not None:
-            assert isinstance(limit, int), "'limit' must be an int or None"
-            if limit < 1:
-                raise ValueError("'limit' must be None or greater than zero")
-
         params = {'id': id, 'lang': self._language}
-        if limit is not None:
-            params['cnt'] = limit
-        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+
+        return self._retrieve_forecasts(params, granularity, limit)
+
+    def _retrieve_forecasts(self, params, granularity, limit):
+        """
+        Helper method for forecast_at_X functions.
+        """
+        if granularity not in FORECAST_TYPES:
+            raise ValueError(
+                "'granularity' must be a valid option: {}".format(
+                    ', '.join(FORECAST_TYPES)
+                )
+            )
+
+        if granularity == 'daily':
+            if limit is not None:
+                assert isinstance(limit, int), "'limit' must be an int or None"
+                if limit < 1:
+                    raise ValueError(
+                        "'limit' must be None or greater than zero"
+                    )
+            if limit is not None:
+                params['cnt'] = limit
+
+        json_data = self._httpclient.call_API(
+            FORECAST_TYPES[granularity], params
+        )
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
-            forecast.set_interval("daily")
+            forecast.set_interval(granularity)
             return forecaster.Forecaster(forecast)
         else:
             return None
-
 
     def weather_history_at_place(self, name, start=None, end=None):
         """
