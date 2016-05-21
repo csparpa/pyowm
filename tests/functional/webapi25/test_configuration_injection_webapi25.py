@@ -6,6 +6,7 @@ injected by the user and their values are correctly used
 '''
 import unittest
 import pyowm
+from api_key import API_KEY
 
 
 class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
@@ -14,7 +15,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
     _non_existent_config_module_name = 'this_will_never_be_a_config_module'
 
     def test(self):
-        pyowm.OWM('�b02f5370d�76021a0', '2.5', self._config_module_name)
+        pyowm.OWM(API_KEY, '2.5', self._config_module_name)
 
     def test_library_is_instantiated_with_wrong_API_version(self):
         self.assertRaises(ValueError, pyowm.OWM, 'abcd', '0.0')
@@ -25,7 +26,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         configuration
         """
         try:
-            pyowm.OWM('�b02f5370d�76021a0', '2.5', self._config_module_name)
+            pyowm.OWM(API_KEY, '2.5', self._config_module_name)
         except Exception:
             self.fail("Error raised during library instantiation")
 
@@ -34,7 +35,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         Test that library instantiation raises an error when trying to inject
         a non-existent external configuration module
         """
-        self.assertRaises(Exception, pyowm.OWM, '�b02f5370d�76021a0', '2.5',
+        self.assertRaises(Exception, pyowm.OWM, API_KEY, '2.5',
                           self._non_existent_config_module_name)
 
     def test_library_performs_API_calls_with_external_config(self):
@@ -45,8 +46,12 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         """
         try:
             instance = \
-                pyowm.OWM('�b02f5370d�76021a0', '2.5',
+                pyowm.OWM(API_KEY, '2.5',
                           self._config_module_name)
         except:
             self.fail("Error raised during library instantiation")
         self.assertRaises(Exception, instance.weather_at_place, 'London,uk')
+
+
+if __name__ == "__main__":
+    unittest.main()

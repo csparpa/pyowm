@@ -10,11 +10,12 @@ from datetime import datetime
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
 from pyowm import constants
+from api_key import API_KEY
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
 
-    __owm = OWM25(parsers, constants.DEFAULT_API_KEY)
+    __owm = OWM25(parsers, API_KEY)
 
     def test_is_API_online(self):
         self.assertTrue(self.__owm.is_API_online())
@@ -25,7 +26,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         o1 = self.__owm.weather_at_place('London,uk')
         o2 = self.__owm.weather_at_place('Kiev')
-        o3 = self.__owm.weather_at_place('QmFoPIlbf')  # Shall be None
+        o3 = self.__owm.weather_at_place('234g08n34gQmFoPIlbf')  # Shall be None
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
         loc = o1.get_location()
@@ -166,7 +167,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         fc1 = self.__owm.three_hours_forecast("London,uk")
         fc2 = self.__owm.three_hours_forecast('Kiev')
-        fc3 = self.__owm.three_hours_forecast('QmFoPIlbf')  # Shall be None
+        fc3 = self.__owm.three_hours_forecast('wg8934gnk3QmFoPIlbf')  # Shall be None
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -252,7 +253,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         fc1 = self.__owm.daily_forecast("London,uk")
         fc2 = self.__owm.daily_forecast('Kiev')
-        fc3 = self.__owm.daily_forecast('QmFoPIlbf')  # Shall be None
+        fc3 = self.__owm.daily_forecast('34hg08n34knQmFoPIlbf')  # Shall be None
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)

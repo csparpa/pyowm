@@ -63,3 +63,6 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
     def test_location_for_fails_with_malformed_inputs(self):
         self.assertRaises(ValueError, CityIDRegistry.location_for,
                           self._instance, '123abc')
+
+if __name__ == "__main__":
+    unittest.main()
