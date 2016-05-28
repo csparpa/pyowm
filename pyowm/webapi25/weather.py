@@ -64,10 +64,10 @@ class Weather(object):
             raise ValueError("'reference_time' must be greater than 0")
         self._reference_time = reference_time
         if sunset_time < 0:
-            raise ValueError("'sunset_time' must be greatear than 0")
+            sunset_time = 0
         self._sunset_time = sunset_time
         if sunrise_time < 0:
-            raise ValueError("'sunrise_time' must be greatear than 0")
+            sunrise_time = 0
         self._sunrise_time = sunrise_time
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
