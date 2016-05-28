@@ -59,22 +59,6 @@ class TestWeather(unittest.TestCase):
               self.__test_visibility_distance, self.__test_dewpoint,
               self.__test_humidex, self.__test_heat_index)
         self.assertRaises(ValueError, Weather, self.__test_reference_time,
-              -9876543210, self.__test_sunrise_time, self.__test_clouds,
-              self.__test_rain, self.__test_snow, self.__test_wind,
-              self.__test_humidity, self.__test_pressure, self.__test_temperature,
-              self.__test_status, self.__test_detailed_status,
-              self.__test_weather_code, self.__test_weather_icon_name,
-              self.__test_visibility_distance, self.__test_dewpoint,
-              self.__test_humidex, self.__test_heat_index)
-        self.assertRaises(ValueError, Weather, self.__test_reference_time,
-              self.__test_sunset_time, -9876543210, self.__test_clouds,
-              self.__test_rain, self.__test_snow, self.__test_wind,
-              self.__test_humidity, self.__test_pressure, self.__test_temperature,
-              self.__test_status, self.__test_detailed_status,
-              self.__test_weather_code, self.__test_weather_icon_name,
-              self.__test_visibility_distance, self.__test_dewpoint,
-              self.__test_humidex, self.__test_heat_index)
-        self.assertRaises(ValueError, Weather, self.__test_reference_time,
               self.__test_sunset_time, self.__test_sunrise_time, -45,
               self.__test_rain, self.__test_snow, self.__test_wind,
               self.__test_humidity, self.__test_pressure, self.__test_temperature,
