@@ -458,7 +458,7 @@ def weather_from_dictionary(d):
     else:
         rain = dict()
     # -- wind
-    if 'wind' in d:
+    if 'wind' in d and d['wind'] is not None:
         wind = d['wind'].copy()
     elif 'last' in d:
         if 'wind' in d['last']:
