@@ -458,15 +458,20 @@ def weather_from_dictionary(d):
         if isinstance(d['rain'], int) or isinstance(d['rain'], float):
             rain = {'all': d['rain']}
         else:
-            rain = d['rain'].copy()
+            if d['rain'] is not None:
+                rain = d['rain'].copy()
+            else:
+                rain = dict()
     else:
         rain = dict()
     # -- wind
     if 'wind' in d and d['wind'] is not None:
         wind = d['wind'].copy()
     elif 'last' in d:
-        if 'wind' in d['last']:
+        if 'wind' in d['last'] and d['last']['wind'] is not None:
             wind = d['last']['wind'].copy()
+        else:
+            wind = dict()
     elif 'speed' in d:
         wind = dict(speed=d['speed'])
     else:
@@ -485,7 +490,10 @@ def weather_from_dictionary(d):
         if isinstance(d['snow'], int) or isinstance(d['snow'], float):
             snow = {'all': d['snow']}
         else:
-            snow = d['snow'].copy()
+            if d['snow'] is not None:
+                snow = d['snow'].copy()
+            else:
+                snow = dict()
     else:
         snow = dict()
     # -- pressure
@@ -505,7 +513,10 @@ def weather_from_dictionary(d):
     pressure = {'press': atm_press, 'sea_level': sea_level_press}
     # -- temperature
     if 'temp' in d:
-        temperature = d['temp'].copy()
+        if d['temp'] is not None:
+            temperature = d['temp'].copy()
+        else:
+            temperature = dict()
     elif 'main' in d and 'temp' in d['main']:
         temp = d['main']['temp']
         if 'temp_kf' in d['main']:
@@ -542,6 +553,7 @@ def weather_from_dictionary(d):
         weather_code = 0
         weather_icon_name = ''
 
+    print rain
     return Weather(reference_time, sunset_time, sunrise_time, clouds,
                 rain, snow, wind, humidity, pressure, temperature,
                 status, detailed_status, weather_code, weather_icon_name,

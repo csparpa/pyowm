@@ -220,7 +220,73 @@ class TestWeather(unittest.TestCase):
         self.assertTrue(isinstance(result2, Weather))
         self.assertFalse(all(v is not None for v in result2.__dict__.values()))
         result3 = weather_from_dictionary(dict3)
+        self.assertTrue(isinstance(result3, Weather))
+
+    def test_from_dictionary_when_data_fields_are_none(self):
+        dict1 = {'clouds': {'all': 92}, 'name': 'London',
+                 'coord': {'lat': 51.50853, 'lon': -0.12574},
+                 'sys': {'country': 'GB', 'sunset': 1378923812,
+                         'sunrise': 1378877413
+                         },
+                 'weather': [
+                 {'main': 'Clouds', 'id': 804, 'icon': '04d',
+                  'description': 'overcastclouds'}
+                 ],
+                 'cod': 200, 'base': 'gdpsstations', 'dt': 1378895177,
+                 'main': {
+                      'pressure': 1022,
+                      'humidity': 75,
+                      'temp_max': 289.82,
+                      'temp': 288.44,
+                      'temp_min': 287.59
+                  },
+                  'id': 2643743,
+                  'wind': None,
+                  'visibility': {'distance': 1000},
+                  'calc':{
+                      'dewpoint': 300.0,
+                      'humidex': 298.0,
+                      'heatindex': 296.0
+                  },
+                 'rain': None,
+                 'snow': None
+        }
+        result1 = weather_from_dictionary(dict1)
+        self.assertTrue(isinstance(result1, Weather))
+        self.assertEquals(0, len(result1.get_wind()))
+        self.assertEquals(0, len(result1.get_rain()))
+        self.assertEquals(0, len(result1.get_snow()))
+
+        dict2 = {"station":{
+                    "name":"KPPQ",
+                    "type":1,
+                    "status":50,
+                    "id":1000,
+                    "coord":{"lon":-90.47,"lat":39.38}
+                },
+                "last":{
+                    "main":{
+                        "temp":276.15,
+                        "pressure":1031},
+                        "wind":None,
+                        "visibility":{
+                            "distance":11265,
+                            "prefix":0
+                        },
+                        "calc":{
+                            "dewpoint":273.15
+                        },
+                        "clouds":[
+                            {"distance":427,
+                             "condition":"SCT"}
+                        ],
+                        "dt":1417977300
+                },
+                "params":["temp","pressure","wind","visibility"]
+        }
+        result2 = weather_from_dictionary(dict2)
         self.assertTrue(isinstance(result2, Weather))
+        self.assertEquals(0, len(result2.get_wind()))
 
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reference_time(),
