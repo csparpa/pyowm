@@ -553,7 +553,6 @@ def weather_from_dictionary(d):
         weather_code = 0
         weather_icon_name = ''
 
-    print rain
     return Weather(reference_time, sunset_time, sunrise_time, clouds,
                 rain, snow, wind, humidity, pressure, temperature,
                 status, detailed_status, weather_code, weather_icon_name,
