@@ -107,6 +107,14 @@ Test against Python X.Y
    (venv) $> deactivate
 
 
+Installing multiple Python versions
+-----------------------------------
+```
+sudo apt-add-repository ppa:fkrull/deadsnakes
+sudo apt-get update
+sudo apt-get install python3.2 python 3.3
+```
+
 Upload to PyPi (Cheeseshop)
 ---------------------------
 The following commands are to be issued using a specific Python interpreter (eg: if you launch them using Python 3.3 it will result in 3.3-compatible artifacts (.zip with sources, .egg and win installer) being uploaded to the Cheesehop.
