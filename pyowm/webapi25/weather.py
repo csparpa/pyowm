@@ -17,10 +17,10 @@ class Weather(object):
 
     :param reference_time: GMT UNIX time of weather measurement
     :type reference_time: int
-    :param sunset_time: GMT UNIX time of sunset
-    :type sunset_time: int
-    :param sunrise_time: GMT UNIX time of sunrise
-    :type sunrise_time: int
+    :param sunset_time: GMT UNIX time of sunset or None on polar days
+    :type sunset_time: int or None
+    :param sunrise_time: GMT UNIX time of sunrise or None on polar nights
+    :type sunrise_time: int or None
     :param clouds: cloud coverage percentage
     :type clouds: int
     :param rain: precipitation info
@@ -64,10 +64,10 @@ class Weather(object):
             raise ValueError("'reference_time' must be greater than 0")
         self._reference_time = reference_time
         if sunset_time < 0:
-            raise ValueError("'sunset_time' must be greatear than 0")
+            sunset_time = None
         self._sunset_time = sunset_time
         if sunrise_time < 0:
-            raise ValueError("'sunrise_time' must be greatear than 0")
+            sunrise_time = None
         self._sunrise_time = sunrise_time
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
@@ -115,10 +115,12 @@ class Weather(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: an int or a str
+        :returns: an int or a str or None
         :raises: ValueError
 
         """
+        if self._sunset_time is None:
+            return None
         return timeformatutils.timeformat(self._sunset_time, timeformat)
 
     def get_sunrise_time(self, timeformat='unix'):
@@ -128,10 +130,12 @@ class Weather(object):
             '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
             string in the format ``YYYY-MM-DD HH:MM:SS+00``
         :type timeformat: str
-        :returns: an int or a str
+        :returns: an int or a str or None
         :raises: ValueError
 
         """
+        if self._sunrise_time is None:
+            return None
         return timeformatutils.timeformat(self._sunrise_time, timeformat)
 
     def get_clouds(self):
@@ -335,7 +339,7 @@ class Weather(object):
         xmlutils.create_DOM_node_from_dict(self._pressure, "pressure",
                                              root_node)
         node_sunrise_time = ET.SubElement(root_node, "sunrise_time")
-        node_sunrise_time.text = str(self._sunrise_time)
+        node_sunrise_time.text = str(self._sunrise_time) if self._sunrise_time is not None else 'null'
         weather_icon_name_node = ET.SubElement(root_node, "weather_icon_name")
         weather_icon_name_node.text = self._weather_icon_name
         clouds_node = ET.SubElement(root_node, "clouds")
@@ -347,7 +351,7 @@ class Weather(object):
         reference_time_node = ET.SubElement(root_node, "reference_time")
         reference_time_node.text = str(self._reference_time)
         sunset_time_node = ET.SubElement(root_node, "sunset_time")
-        sunset_time_node.text = str(self._sunset_time)
+        sunset_time_node.text = str(self._sunset_time) if self._sunset_time is not None else 'null'
         humidity_node = ET.SubElement(root_node, "humidity")
         humidity_node.text = str(self._humidity)
         xmlutils.create_DOM_node_from_dict(self._wind, "wind", root_node)
@@ -454,15 +458,20 @@ def weather_from_dictionary(d):
         if isinstance(d['rain'], int) or isinstance(d['rain'], float):
             rain = {'all': d['rain']}
         else:
-            rain = d['rain'].copy()
+            if d['rain'] is not None:
+                rain = d['rain'].copy()
+            else:
+                rain = dict()
     else:
         rain = dict()
     # -- wind
-    if 'wind' in d:
+    if 'wind' in d and d['wind'] is not None:
         wind = d['wind'].copy()
     elif 'last' in d:
-        if 'wind' in d['last']:
+        if 'wind' in d['last'] and d['last']['wind'] is not None:
             wind = d['last']['wind'].copy()
+        else:
+            wind = dict()
     elif 'speed' in d:
         wind = dict(speed=d['speed'])
     else:
@@ -481,7 +490,10 @@ def weather_from_dictionary(d):
         if isinstance(d['snow'], int) or isinstance(d['snow'], float):
             snow = {'all': d['snow']}
         else:
-            snow = d['snow'].copy()
+            if d['snow'] is not None:
+                snow = d['snow'].copy()
+            else:
+                snow = dict()
     else:
         snow = dict()
     # -- pressure
@@ -501,7 +513,10 @@ def weather_from_dictionary(d):
     pressure = {'press': atm_press, 'sea_level': sea_level_press}
     # -- temperature
     if 'temp' in d:
-        temperature = d['temp'].copy()
+        if d['temp'] is not None:
+            temperature = d['temp'].copy()
+        else:
+            temperature = dict()
     elif 'main' in d and 'temp' in d['main']:
         temp = d['main']['temp']
         if 'temp_kf' in d['main']:

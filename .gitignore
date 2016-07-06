@@ -10,3 +10,4 @@ sphinx/_build/*
 .pydevproject
 .idea/*
 .tox/*
+.coverage

@@ -14,14 +14,14 @@ from pyowm import constants
 from pyowm.utils import timeutils  # Convenience import
 
 
-def OWM(API_key=None, version=constants.LATEST_OWM_API_VERSION,
+def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERSION,
         config_module=None, language=None, subscription_type=None):
     """
     A parametrized factory method returning a global OWM instance that
     represents the desired OWM web API version (or the currently supported one
     if no version number is specified)
 
-    :param API_key: the OWM web API key (``None`` by default)
+    :param API_key: the OWM web API key (defaults to a test value)
     :type API_key: str
     :param version: the OWM web API version. Defaults to ``None``, which means
         use the latest web API version
