@@ -3,9 +3,10 @@ Module containing APIResponseError class
 """
 
 import os
+from pyowm.exceptions import OWMError
 
 
-class APIResponseError(Exception):
+class APIResponseError(OWMError):
     """
     Error class that represents HTTP error status codes in OWM web API
     responses.
