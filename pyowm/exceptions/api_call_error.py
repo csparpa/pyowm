@@ -3,9 +3,10 @@ Module containing APICallError class
 """
 
 import os
+from pyowm.exceptions import OWMError
 
 
-class APICallError(Exception):
+class APICallError(OWMError):
     """
     Error class that represents failures when invoking OWM web API, in example
     due to network errors.

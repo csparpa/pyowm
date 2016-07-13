@@ -2,9 +2,10 @@
 Module containing ParseResponseError class
 """
 import os
+from pyowm.exceptions import OWMError
 
 
-class ParseResponseError(Exception):
+class ParseResponseError(OWMError):
     """
     Error class that represents failures when parsing payload data in HTTP
     responses sent by the OWM web API.

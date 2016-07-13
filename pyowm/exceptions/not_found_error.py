@@ -3,9 +3,10 @@ Module containing NotFoundError class
 """
 
 import os
+from pyowm.exceptions import OWMError
 
 
-class NotFoundError(Exception):
+class NotFoundError(OWMError):
     """
     Error class that represents the situation when an entity is not found into
     a collection of entities.
