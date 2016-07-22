@@ -99,10 +99,11 @@ class Weather(object):
         """Returns the GMT time telling when the weather was measured
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date*' for python datetime.datetime object
         :type timeformat: str
-        :returns: an int or a str
+        :returns: an int, a str or a datetime.datetime object
         :raises: ValueError when negative values are provided
 
         """
