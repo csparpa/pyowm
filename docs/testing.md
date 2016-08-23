@@ -27,11 +27,24 @@ and executing:
 
     python -m unittest discover
 
-or by executing the 
 
-    ./run-all-tests.[bat|bash]
-    
-scripts in the library root folder.
+Functional tests
+----------------
+Insert your API key into this module:
+
+    tests.functional.api_key
+
+and then you can run the integration tests from the library installation 
+folder with:
+
+    cd tests/functional
+    pythonXY test_integration_webapi25.py
+
+for Python interpreter version XY.
+Please note that depending on your subscription type some of the tests
+may fail, eg: if you have a free subscription tier, the test cases that
+invoke the OWM API to get historical weather data will fail as these
+data can only be retrieved using a paid account.
 
 
 Continuous integration
@@ -48,5 +61,7 @@ against the real OWM web API.
 Integration tests can be launched by moving into the library installation folder
 and executing:
 
-    cd functional-tests
-    python integration-tests.py  
+    cd tests/functional
+    pythonXY integration-tests.py
+
+of course replace XY with your target Python version.

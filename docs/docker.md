@@ -5,7 +5,7 @@ Build the image
 ---------------
 ```
 cd <pyowm-root-dir>
-build -t pyowm:latest .
+docker build -t pyowm:latest .
 ```
 
 
