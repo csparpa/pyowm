@@ -8,6 +8,7 @@ Code
   * [dphildebrandt] (https://github.com/dphildebrandt)
   * [ggstuart] (https://github.com/ggstuart)
   * [liato] (https://github.com/liato)
+  * [LukasBoersma] (https://github.com/LukasBoersma)
   * [Noid] (https://github.com/n0id)
   * [titilambert] (https://github.com/titilambert)
   * [txemi] (https://github.com/txemi)
