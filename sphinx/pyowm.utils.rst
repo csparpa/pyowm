@@ -27,7 +27,7 @@ pyowm.utils.timeutils module
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
 pyowm.utils.xmlutils module
 ---------------------------
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # pyowm documentation build configuration file, created by
-# sphinx-quickstart on Mon Sep 23 21:47:00 2013.
+# sphinx-quickstart on Thu Aug 25 12:34:05 2016.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyowm'
-copyright = u'2014, Claudio Sparpaglione (@csparpa)'
+copyright = u'2016, Claudio Sparpaglione'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -197,10 +197,10 @@ latex_elements = {
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
-#  author, documentclass [howto/manual]).
+#  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'pyowm.tex', u'pyowm Documentation',
-   u'Claudio Sparpaglione (@csparpa)', 'manual'),
+   u'Claudio Sparpaglione', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -230,7 +230,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'pyowm', u'pyowm Documentation',
-     [u'Claudio Sparpaglione (@csparpa)'], 1)
+     [u'Claudio Sparpaglione'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -244,7 +244,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'pyowm', u'pyowm Documentation',
-   u'Claudio Sparpaglione (@csparpa)', 'pyowm', 'One line description of project.',
+   u'Claudio Sparpaglione', 'pyowm', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -265,9 +265,18 @@ texinfo_documents = [
 
 # Bibliographic Dublin Core info.
 epub_title = u'pyowm'
-epub_author = u'Claudio Sparpaglione (@csparpa)'
-epub_publisher = u'Claudio Sparpaglione (@csparpa)'
-epub_copyright = u'2014, Claudio Sparpaglione (@csparpa)'
+epub_author = u'Claudio Sparpaglione'
+epub_publisher = u'Claudio Sparpaglione'
+epub_copyright = u'2016, Claudio Sparpaglione'
+
+# The basename for the epub file. It defaults to the project name.
+#epub_basename = u'pyowm'
+
+# The HTML theme for the epub output. Since the default themes are not optimized
+# for small screen space, using the same theme for HTML and epub output is
+# usually not wise. This defaults to 'epub', a theme designed to save visual
+# space.
+#epub_theme = 'epub'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
@@ -298,7 +307,7 @@ epub_copyright = u'2014, Claudio Sparpaglione (@csparpa)'
 #epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-#epub_exclude_files = []
+epub_exclude_files = ['search.html']
 
 # The depth of the table of contents in toc.ncx.
 #epub_tocdepth = 3

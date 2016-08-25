@@ -584,7 +584,6 @@ class OWM25(owm.OWM):
         else:
             return None
 
-
     def weather_history_at_place(self, name, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified location
@@ -671,7 +670,7 @@ class OWM25(owm.OWM):
         if start is not None:
             unix_start = timeformatutils.to_UNIXtime(start)
 
-            current_time = time.time()
+            current_time = time()
             if unix_start > current_time:
                 raise ValueError("Error: the start time boundary must "
                                  "precede the current time!")
