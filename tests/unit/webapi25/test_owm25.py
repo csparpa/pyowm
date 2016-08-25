@@ -228,6 +228,16 @@ class TestOWM25(unittest.TestCase):
         weat = result.get_weather()
         self.assertTrue(weat is not None)
 
+    def test_weather_at_place_with_unicode_name(self):
+        result = self.__test_instance.weather_at_place(u"Köln,de")
+        self.assertTrue(isinstance(result, Observation))
+        self.assertTrue(result.get_reception_time() is not None)
+        loc = result.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = result.get_weather()
+        self.assertTrue(weat is not None)
+
     def test_weather_at_place_fails_with_wrong_parameters(self):
         self.assertRaises(AssertionError,  OWM25.weather_at_place, \
                           self.__test_instance, 3)
