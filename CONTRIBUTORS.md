@@ -5,10 +5,11 @@ Contributors will be shown in alphabetical order
 
 Code
 ----
+  * [dphildebrandt] (https://github.com/dphildebrandt)
   * [liato] (https://github.com/liato)
   * [Noid] (https://github.com/n0id)
-  * [dphildebrandt] (https://github.com/dphildebrandt)
   * [titilambert] (https://github.com/titilambert)
+  * [txemi] (https://github.com/txemi)
 
 Testing
 -------
