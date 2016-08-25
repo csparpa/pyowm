@@ -38,8 +38,9 @@ class Forecaster(object):
         the time of the most ancient *Weather* item in the forecast
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: a long or a str
         :raises: *ValueError* when invalid time format values are provided
@@ -55,8 +56,9 @@ class Forecaster(object):
         time of the most recent *Weather* item in the forecast
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: a long or a str
         :raises: *ValueError* when invalid time format values are provided

@@ -17,7 +17,7 @@ No additional libraries are requested: only the Python standard library modules.
 
 PyOWM currently supports _version 2.5_ of the OWM API (which is the latest one)
 
-PyOWM runs on Python 2.7, 3.2 and 3.3
+PyOWM runs on Python 2.7, 3.2, 3.3, 3.4 and 3.5
 
 ##  Usage
 

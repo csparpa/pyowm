@@ -3,6 +3,7 @@ Test case for stationhistory.py module
 """
 
 import unittest
+from datetime import datetime
 from pyowm.webapi25.stationhistory import StationHistory
 from tests.unit.webapi25.json_test_dumps import STATIONHISTORY_JSON_DUMP
 from tests.unit.webapi25.xml_test_dumps import STATIONHISTORY_XML_DUMP
@@ -14,6 +15,8 @@ class TestStationHistory(unittest.TestCase):
     __test_interval = "tick"
     __test_reception_time = 1378684800
     __test_reception_time_iso = '2013-09-09 00:00:00+00'
+    __test_date_reception_time = datetime.strptime(__test_reception_time_iso,
+                                                   '%Y-%m-%d %H:%M:%S+00')
     __test_measurements = {
         1362933983: {
              "temperature": 266.25,
@@ -57,6 +60,8 @@ class TestStationHistory(unittest.TestCase):
                          self.__test_reception_time_iso)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'),
                          self.__test_reception_time)
+        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+                         self.__test_date_reception_time)
 
     # Test JSON and XML comparisons by ordering strings (this overcomes
     # interpeter-dependant serialization of XML/JSON objects)
