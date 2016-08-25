@@ -634,6 +634,70 @@ class OWM25(owm.OWM):
                                               params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
+    def weather_history_at_coords(self, lat, lon, start=None, end=None, type_=None, cnt=None):
+        """
+        Queries the OWM web API for weather history for the specified at the
+        specified geographic (eg: 51.503614, -0.107331). A list of *Weather* objects is returned. It is
+        possible to query for weather history in a closed time period, whose
+        boundaries can be passed as optional parameters.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the time value for the start query
+            boundary (defaults to ``None``)
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param end: the object conveying the time value for the end query
+            boundary (defaults to ``None``)
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+        :param type_:'daily', 'hour', and 'tick'
+        :param cnt:
+        :returns: a list of *Weather* instances or ``None`` if history data is
+            not available for the specified location
+        :rtype: list[pyowm.webapi25.weather.Weather]
+        """
+        pass
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
+
+        if start is not None:
+            unix_start = timeformatutils.to_UNIXtime(start)
+
+            current_time = time.time()
+            if unix_start > current_time:
+                raise ValueError("Error: the start time boundary must "
+                                 "precede the current time!")
+            params['start'] = str(unix_start)
+        else:
+            unix_start = None
+
+        if end is not None:
+            unix_end = timeformatutils.to_UNIXtime(end)
+            params['end'] = str(unix_end)
+        else:
+            unix_end = None
+
+        if unix_start is not None and unix_end is not None:
+            if unix_start >= unix_end:
+                raise ValueError("Error: the start time boundary must "
+                                 "precede the end time!")
+
+        if type_ is not None:
+            params['type'] = type_
+        if cnt is not None:
+            params['cnt'] = cnt
+
+        json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL, params)
+        return self._parsers['weather_history'].parse_JSON(json_data)
+
     def weather_history_at_id(self, id, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified city ID.
