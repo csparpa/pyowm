@@ -633,7 +633,7 @@ class OWM25(owm.OWM):
                                               params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
-    def weather_history_at_coords(self, lat, lon, start=None, end=None, type_=None, cnt=None):
+    def weather_history_at_coords(self, lat, lon, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified at the
         specified geographic (eg: 51.503614, -0.107331). A list of *Weather* objects is returned. It is
@@ -651,11 +651,9 @@ class OWM25(owm.OWM):
         :param end: the object conveying the time value for the end query
             boundary (defaults to ``None``)
         :type end: int, ``datetime.datetime`` or ISO8601-formatted string
-        :param type_:'daily', 'hour', and 'tick'
-        :param cnt:
         :returns: a list of *Weather* instances or ``None`` if history data is
             not available for the specified location
-        :rtype: list[pyowm.webapi25.weather.Weather]
+
         """
         pass
         assert type(lon) is float or type(lon) is int, "'lon' must be a float"
@@ -688,11 +686,6 @@ class OWM25(owm.OWM):
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must "
                                  "precede the end time!")
-
-        if type_ is not None:
-            params['type'] = type_
-        if cnt is not None:
-            params['cnt'] = cnt
 
         json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL, params)
         return self._parsers['weather_history'].parse_JSON(json_data)

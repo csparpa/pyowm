@@ -121,8 +121,9 @@ class Forecast(object):
             from the OWM web API
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str
         :raises: ValueError
