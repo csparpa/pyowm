@@ -3,6 +3,7 @@ Test case for observation.py module
 """
 
 import unittest
+from datetime import datetime
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.observation import Observation
@@ -14,6 +15,8 @@ class TestObservation(unittest.TestCase):
 
     __test_reception_time = 1234567
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
+    __test_date_reception_time = datetime.strptime(__test_iso_reception_time,
+                                                   '%Y-%m-%d %H:%M:%S+00')
     __test_location = Location('test', 12.3, 43.7, 987, 'UK')
     __test_weather = Weather(1378459200, 1378496400, 1378449600, 67, {"all": 20},
             {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
@@ -42,6 +45,8 @@ class TestObservation(unittest.TestCase):
                          self.__test_iso_reception_time)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
                          self.__test_reception_time)
+        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+                         self.__test_date_reception_time)
 
     # Test JSON and XML comparisons by ordering strings (this overcomes
     # interpeter-dependant serialization of XML/JSON objects)
