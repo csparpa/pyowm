@@ -436,12 +436,15 @@ def weather_from_dictionary(d):
             visibility_distance = d['visibility']
         elif 'distance' in d['visibility']:
             visibility_distance = d['visibility']['distance']
-    elif 'last' in d:
-        if 'visibility' in d['last']:
-            if isinstance(d['last']['visibility'], int):
-                visibility_distance = d['last']['visibility']
-            elif 'distance' in d['last']['visibility']:
-                visibility_distance = d['last']['visibility']['distance']
+        else:
+            visibility_distance = None
+    elif 'last' in d and 'visibility' in d['last']:
+        if isinstance(d['last']['visibility'], int):
+            visibility_distance = d['last']['visibility']
+        elif 'distance' in d['last']['visibility']:
+            visibility_distance = d['last']['visibility']['distance']
+        else:
+            visibility_distance = None
     else:
         visibility_distance = None
     # -- clouds
