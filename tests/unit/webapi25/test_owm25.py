@@ -277,6 +277,25 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.weather_at_id, \
                           self.__test_instance, -156667)
 
+    def test_weather_at_ids(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_multiple_obs
+        result = self.__test_instance.weather_at_ids([5128581, 15647, 78654])
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, list))
+        for obs in result:
+            self.assertTrue(obs is not None)
+            self.assertTrue(isinstance(obs, Observation))
+            weat = obs.get_weather()
+            self.assertTrue(weat is not None)
+
+    def test_weather_at_ids_fails_when_wrong_parameters(self):
+        self.assertRaises(AssertionError, OWM25.weather_at_ids, \
+                          self.__test_instance, "test")
+        self.assertRaises(ValueError, OWM25.weather_at_ids, \
+                          self.__test_instance, [-1, 2, 3])
+
     def test_weather_at_station(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \

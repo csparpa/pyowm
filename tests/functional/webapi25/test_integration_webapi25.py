@@ -84,6 +84,26 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(weat is not None)
         self.assertFalse(o3 is not None)
 
+    def test_weather_at_ids(self):
+        # New York, Kiev
+        observations = self.__owm.weather_at_ids([5128581,703448])
+        o1 = observations[0]
+        o2 = observations[1]
+        self.assertTrue(o1 is not None)
+        self.assertTrue(o1.get_reception_time() is not None)
+        loc = o1.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o1.get_weather()
+        self.assertTrue(weat is not None)
+        self.assertTrue(o2 is not None)
+        self.assertTrue(o2.get_reception_time() is not None)
+        loc = o2.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o2.get_weather()
+        self.assertTrue(weat is not None)
+
     def test_weather_at_places(self):
         """
         Test feature: find currently observed weather for locations matching
