@@ -136,4 +136,10 @@ class TestTimeUtils(unittest.TestCase):
     def test_now(self):
         expected = datetime.now()
         result = timeutils.now()
-        self.assertTrue((result - expected) < timedelta(microseconds=300))
+        self.assertEquals(result.year, expected.year)
+        self.assertEquals(result.month, expected.month)
+        self.assertEquals(result.day, expected.day)
+        self.assertEquals(result.hour, expected.hour)
+        self.assertEquals(result.minute, expected.minute)
+        self.assertEquals(result.second, expected.second)
+

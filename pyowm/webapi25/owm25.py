@@ -5,7 +5,8 @@ Module containing the PyOWM library main entry point
 from time import time
 from pyowm import constants
 from pyowm.webapi25.configuration25 import (
-    OBSERVATION_URL, FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
+    OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
+    FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
     FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
@@ -232,6 +233,29 @@ class OWM25(owm.OWM):
                                               {'id': id,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
+
+    def weather_at_ids(self, ids_list):
+        """
+        Queries the OWM web API for the currently observed weathers at the
+        specified city IDs (eg: [5128581,87182])
+
+        :param ids_list: the list of city IDs
+        :type ids_list: list of int
+        :returns: a list of *Observation* instances or an empty list if no
+            weather data is available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        assert type(ids_list) is list, "'ids_list' must be a list of integers"
+        for id in ids_list:
+            assert type(id) is int, "'ids_list' must be a list of integers"
+            if id < 0:
+                raise ValueError("id values in 'ids_list' must be greater than 0")
+        json_data = self._httpclient.call_API(GROUP_OBSERVATIONS_URL,
+                                              {'id': ','.join(list(map(str, ids_list))),
+                                               'lang': self._language})
+        return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_at_places(self, pattern, searchtype, limit=None):
         """
