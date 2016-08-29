@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
-import requests, re, codecs, json
+import requests, re, codecs, json, gzip, collections
 
-city_list_url = 'http://openweathermap.org/help/city_list.txt'
-city_list = "city_list.txt"
+city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
+us_city_list_url = 'http://bulk.openweathermap.org/sample/city.list.us.json.gz'
+city_list_gz = "city.list.json.gz"
+us_city_list_gz = "city.list.us.json.gz"
 csv_city_list = "city_list.csv"
+us_csv_city_list = "us_city_list.csv"
 ordered_csv_city_list = "city_list.ordered.csv"
 
 
@@ -12,95 +15,132 @@ ordered_csv_city_list = "city_list.ordered.csv"
 This script is used to retrieve the city IDs list from the OWM web 2.5 API
 and then to divide the list into smaller chunks: each chunk is ordered by
 city ID and written to a separate file
+
+URLs of source files:
+  http://bulk.openweathermap.org/sample/city.list.json.gz
+  http://bulk.openweathermap.org/sample/city.list.us.json.gz
 """
 
-def download_the_file():
+def download_the_files():
     print 'Downloading file '+city_list_url+' ...'
-    resp = requests.get(city_list_url)
-    with codecs.open(city_list, "w", "utf-8") as f:
-        f.write(resp.text)
+    with open(city_list_gz, 'wb') as h:
+        response = requests.get(city_list_url, stream=True)
+        for block in response.iter_content(1024):
+            h.write(block)
+
+    print 'Downloading file '+us_city_list_url+' ...'
+    with open(us_city_list_gz, 'wb') as g:
+        response = requests.get(us_city_list_url, stream=True)
+        for block in response.iter_content(1024):
+            g.write(block)
+
     print '  ... done'
 
 
-def make_it_a_hsv():
-    print 'Parsing file to hsv ...'
-    header_out = False
-    with codecs.open(city_list, "r", "utf-8") as i:
-        with codecs.open(csv_city_list, "w", "utf-8") as o:
-            for line in i:
-                newline = re.sub(r"\t", "#", line)
-                if header_out:
-                    o.write(newline)
-                header_out = True
-    print '  ... done'
+def read_all_cities_into_dict():
+    print 'Reading city data from files ...'
+    all_cities = dict()
+
+    # All cities
+    with gzip.open(city_list_gz, "rb", "utf-8") as i:
+        cities = i.readlines()
+        for city in cities:
+            # eg. {"_id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
+            city_dict = json.loads(city)
+            if city_dict['_id'] in all_cities:
+                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['_id'], city_dict)
+                continue
+            else:
+                all_cities[city_dict['_id']] = dict(name=city_dict['name'],
+                                                    country=city_dict['country'],
+                                                    lon=city_dict['coord']['lon'],
+                                                    lat=city_dict['coord']['lat'])
+
+    # US cities
+    with gzip.open(us_city_list_gz, "rb", "utf-8") as f:
+        cities = f.readlines()
+        for city in cities:
+            # eg. {"_id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
+            city_dict = json.loads(city)
+            if city_dict['_id'] in all_cities:
+                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['_id'], city_dict)
+                continue
+            else:
+                all_cities[city_dict['_id']] = dict(name=city_dict['name'],
+                                                    country=city_dict['country'],
+                                                    lon=city_dict['coord']['lon'],
+                                                    lat=city_dict['coord']['lat'])
+
+    print '... done'
+    return all_cities
 
 
-def extract_keyset():
-    print 'Ordering csv lines by city ID ...'
-    lines = []
-    with codecs.open(csv_city_list, "r", "utf-8") as f:
-        for line in f.readlines():
-            fields = line.split("\n")[0].split("#")
-            id = fields[0]
-            name = re.sub(r",", " ", fields[1]).lower()
-            if name != "":
-                lines.append([name, ","+id+","+",".join(fields[2:])])
-    print '  ... done'
-    return {l[0]: l[1] for l in lines}
+def order_dict_by_city_id(all_cities):
+    print 'Ordering city dict by city ID ...'
+    all_cities_ordered = collections.OrderedDict(sorted(all_cities.items()))
+    print '... done'
+    return all_cities_ordered
 
 
-def split_keyset(keyset):
-    print 'Splitting keyset of %d city names into 4 subsets based on the initial letter:' % (len(keyset),)
+def city_to_string(city_id, city_dict):
+    return ','.join([city_dict['name'], str(city_id), str(city_dict['lat']), str(city_dict['lon']),
+                     city_dict['country']])
+
+def split_keyset(cities_dict):
+    print 'Splitting keyset of %d city names into 4 subsets based on the initial letter:' % (len(cities_dict),)
     print '-> from "a" = ASCII 97  to "f" = ASCII 102'
     print '-> from "g" = ASCII 103 to "l" = ASCII 108'
     print '-> from "m" = ASCII 109 to "r" = ASCII 114'
     print '-> from "s" = ASCII 115 to "z" = ASCII 122'
-    ss = [dict(), dict(), dict(), dict()]
-    for name in keyset:
+    ss = [list(), list(), list(), list()]
+    for city_id in cities_dict:
+        name = cities_dict[city_id]['name'].lower()
+        if not name:
+            continue
         c = ord(name[0])
         if c < 97: # not a letter
             continue
         elif c in range(97, 103):  # from a to f
-            ss[0][name] = keyset[name]
+            ss[0].append(city_to_string(city_id, cities_dict[city_id]))
             continue
         elif c in range(103, 109): # from g to l
-            ss[1][name] = keyset[name]
+            ss[1].append(city_to_string(city_id, cities_dict[city_id]))
             continue
         elif c in range(109, 115): # from m to r
-            ss[2][name] = keyset[name]
+            ss[2].append(city_to_string(city_id, cities_dict[city_id]))
             continue
         elif c in range (115, 123): # from s to z
-            ss[3][name] = keyset[name]
+            ss[3].append(city_to_string(city_id, cities_dict[city_id]))
             continue
         else:
             continue # not a letter
-    print '  ... done'
+    print '... done'
     return ss
 
 
 def write_subsets_to_files(ssets):
-    print 'Ordering subsets and writing subsets into files:'
+    print 'Writing subsets to files ...'
     with codecs.open("097-102.txt", "w", "utf-8") as f:
-        for name in sorted(ssets[0].iterkeys()):
-            f.write(name+ssets[0][name]+"\n")
+        for city_string in sorted(ssets[0]):
+            f.write(city_string+"\n")
     with codecs.open("103-108.txt", "w", "utf-8") as f:
-        for name in sorted(ssets[1].iterkeys()):
-            f.write(name+ssets[1][name]+"\n")
+        for city_string in sorted(ssets[1]):
+            f.write(city_string+"\n")
     with codecs.open("109-114.txt", "w", "utf-8") as f:
-        for name in sorted(ssets[2].iterkeys()):
-            f.write(name+ssets[2][name]+"\n")
+        for city_string in sorted(ssets[2]):
+            f.write(city_string+"\n")
     with codecs.open("115-122.txt", "w", "utf-8") as f:
-        for name in sorted(ssets[3].iterkeys()):
-            f.write(name+ssets[3][name]+"\n")
-    print '  ... done'
+        for city_string in sorted(ssets[3]):
+            f.write(city_string+"\n")
+    print '... done'
 
 
 if __name__ == '__main__':
     print 'Job started'
-    download_the_file()
-    make_it_a_hsv()
-    keyset = extract_keyset()
-    ssets = split_keyset(keyset)
+    download_the_files()
+    cities = read_all_cities_into_dict()
+    ordered_cities = order_dict_by_city_id(cities)
+    ssets = split_keyset(ordered_cities)
     write_subsets_to_files(ssets)
     print 'Job finished'
 

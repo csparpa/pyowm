@@ -99,8 +99,9 @@ class Weather(object):
         """Returns the GMT time telling when the weather was measured
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str
         :raises: ValueError when negative values are provided
@@ -435,12 +436,15 @@ def weather_from_dictionary(d):
             visibility_distance = d['visibility']
         elif 'distance' in d['visibility']:
             visibility_distance = d['visibility']['distance']
-    elif 'last' in d:
-        if 'visibility' in d['last']:
-            if isinstance(d['last']['visibility'], int):
-                visibility_distance = d['last']['visibility']
-            elif 'distance' in d['last']['visibility']:
-                visibility_distance = d['last']['visibility']['distance']
+        else:
+            visibility_distance = None
+    elif 'last' in d and 'visibility' in d['last']:
+        if isinstance(d['last']['visibility'], int):
+            visibility_distance = d['last']['visibility']
+        elif 'distance' in d['last']['visibility']:
+            visibility_distance = d['last']['visibility']['distance']
+        else:
+            visibility_distance = None
     else:
         visibility_distance = None
     # -- clouds

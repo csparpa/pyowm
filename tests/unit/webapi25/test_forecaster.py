@@ -4,6 +4,7 @@ Test case for forecaster.py module
 
 import unittest
 from datetime import datetime
+from datetime import datetime
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.forecast import Forecast
@@ -14,12 +15,20 @@ class TestForecaster(unittest.TestCase):
 
     __test_time_1 = 1379090800
     __test_start_coverage_iso = "2013-09-13 16:46:40+00"
+    __test_date_start_coverage = datetime.strptime(__test_start_coverage_iso,
+                                                   '%Y-%m-%d %H:%M:%S+00')
     __test_middle_1_coverage = 1379226100
     __test_middle_1_coverage_iso = "2013-09-15 06:21:40+00"
+    __test_date_middle_1_coverage = datetime.strptime(__test_middle_1_coverage_iso,
+                                                      '%Y-%m-%d %H:%M:%S+00')
     __test_time_2 = 1379361400
     __test_middle_2_coverage_iso = "2013-09-16 19:56:40+00"
+    __test_date_middle_2_coverage = datetime.strptime(__test_middle_2_coverage_iso,
+                                                      '%Y-%m-%d %H:%M:%S+00')
     __test_end_coverage = 1379902600
     __test_end_coverage_iso = "2013-09-23 02:16:40+00"
+    __test_date_end_coverage = datetime.strptime(__test_end_coverage_iso,
+                                                 '%Y-%m-%d %H:%M:%S+00')
 
     __test_location = Location('test', 12.3, 43.7, 987, 'IT')
 
@@ -94,12 +103,16 @@ class TestForecaster(unittest.TestCase):
                             self.__test_start_coverage_iso)
         self.assertEqual(self.__test_instance.when_starts(timeformat='unix'),
                             self.__test_time_1)
+        self.assertEqual(self.__test_instance.when_starts(timeformat='date'),
+                         self.__test_date_start_coverage)
 
     def test_when_ends_returning_different_timeformats(self):
         self.assertEqual(self.__test_instance.when_ends(timeformat='iso'),
                             self.__test_end_coverage_iso)
         self.assertEqual(self.__test_instance.when_ends(timeformat='unix'),
                             self.__test_end_coverage)
+        self.assertEqual(self.__test_instance.when_ends(timeformat='date'),
+                         self.__test_date_end_coverage)
 
     def test_will_have_rain(self):
         self.assertTrue(self.__test_instance.will_have_rain())

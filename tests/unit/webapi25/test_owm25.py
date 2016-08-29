@@ -149,6 +149,11 @@ class TestOWM25(unittest.TestCase):
                                                        params_dict):
         return STATION_AT_COORDS_JSON
 
+    def mock_httputils_call_API_returning_weather_history_at_coords(self,
+                                                       API_subset_URL,
+                                                       params_dict):
+        return CITY_WEATHER_HISTORY_JSON
+
     # Tests
     def test_wrong_API_key(self):
         try:
@@ -271,6 +276,25 @@ class TestOWM25(unittest.TestCase):
     def test_weather_at_id_fails_when_id_negative(self):
         self.assertRaises(ValueError, OWM25.weather_at_id, \
                           self.__test_instance, -156667)
+
+    def test_weather_at_ids(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_multiple_obs
+        result = self.__test_instance.weather_at_ids([5128581, 15647, 78654])
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, list))
+        for obs in result:
+            self.assertTrue(obs is not None)
+            self.assertTrue(isinstance(obs, Observation))
+            weat = obs.get_weather()
+            self.assertTrue(weat is not None)
+
+    def test_weather_at_ids_fails_when_wrong_parameters(self):
+        self.assertRaises(AssertionError, OWM25.weather_at_ids, \
+                          self.__test_instance, "test")
+        self.assertRaises(ValueError, OWM25.weather_at_ids, \
+                          self.__test_instance, [-1, 2, 3])
 
     def test_weather_at_station(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
@@ -542,6 +566,57 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         for weather in result:
             self.assertTrue(isinstance(weather, Weather))
+
+    def test_weather_history_at_coords(self):
+        ref_to_original_call_API = OWMHTTPClient.call_API
+        OWMHTTPClient.call_API = \
+            self.mock_httputils_call_API_returning_weather_history_at_coords
+        result = self.__test_instance.weather_history_at_coords(51.503614, -0.107331)
+        OWMHTTPClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, list))
+        for weather in result:
+            self.assertTrue(isinstance(weather, Weather))
+
+    def test_weather_history_at_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, -3)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, -100.0, 0.0)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 100.0, 0.0)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 0.0, -200.0)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 0.0, 200.0)
+
+    def test_weather_history_at_coords_fails_with_unordered_time_boundaries(self):
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574,
+                          "2013-09-06 20:26:40+00", "2013-09-06 09:20:00+00")
+
+    def test_weather_history_at_coords_fails_with_time_boundaries_in_the_future(self):
+        current_time = int(time.time())
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574,
+                          current_time + 1000, current_time + 2000)
+
+    def test_weather_history_at_place_fails_with_wrong_time_boundaries(self):
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, None, 1234567)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, 1234567, None)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, 1234567, None)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, -1234567, None)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, None, -1234567)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, -999, -888)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, "test", 1234567)
+        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
+                          self.__test_instance, 51.50853, -0.12574, 1234567, "test")
 
     def test_weather_history_at_place_fails_with_unordered_time_boundaries(self):
         self.assertRaises(ValueError, OWM25.weather_history_at_place,

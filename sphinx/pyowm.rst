@@ -1,8 +1,6 @@
 pyowm package
 =============
 
-:special-members: __init__
-
 Subpackages
 -----------
 
@@ -25,6 +23,7 @@ pyowm.constants module
     :members:
     :undoc-members:
     :show-inheritance:
+
 
 Module contents
 ---------------

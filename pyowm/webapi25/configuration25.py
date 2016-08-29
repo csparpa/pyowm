@@ -17,6 +17,7 @@ Configuration for the PyOWM library specific to OWM web API version 2.5
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
 ICONS_BASE_URL = 'http://openweathermap.org/img/w'
 OBSERVATION_URL = '/weather'
+GROUP_OBSERVATIONS_URL = '/group'
 STATION_URL = '/station'
 FIND_OBSERVATIONS_URL = '/find'
 FIND_STATION_URL = '/station/find'
