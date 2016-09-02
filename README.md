@@ -86,6 +86,18 @@ observation_list = owm.weather_around_coords(-22.57, -43.12)
 
 The installer is available on the [Python Package Index](https://pypi.python.org/pypi/pyowm) 
 
+### Docker
+You can run a Docker container mounting the latest PyOWM release code with:
+```
+docker run -d --name pyowm csparpa/pyowm
+```
+
+The source code is under `/pyowm` inside the container.
+You can globally install PyOWM on the container with:
+```
+docker exec -ti pyowm bash -c 'pip install pyowm'
+```
+
 ## License
 
 [MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
