@@ -123,6 +123,9 @@ From the project root folder, just launch:
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
 with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
 
+## Discussion
+Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here](http://pyowm-slackin.herokuapp.com/)
+
 ## Development
 Contributors (code enhancement, issue/bug reporting) are __welcome!__. See the
 [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started.
