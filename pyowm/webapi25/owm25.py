@@ -73,7 +73,7 @@ class OWM25(owm.OWM):
     @staticmethod
     def _encode_string(value):
         try:  # The OWM API expects UTF-8 encoding
-            if isinstance(value, unicode):
+            if not isinstance(value, unicode):
                 return value.encode('utf8')
         except NameError:
             return value
