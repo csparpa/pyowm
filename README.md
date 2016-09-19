@@ -136,4 +136,4 @@ If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 
 ## References
 * [OpenWeatherMap website](http://openweathermap.org/)
-* [OpenWeatherMap web API wiki](http://bugs.openweathermap.org/projects/api/wiki)
+* [OpenWeatherMap web API docs](http://openweathermap.org/api)
