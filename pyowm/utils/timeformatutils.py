@@ -2,8 +2,23 @@
 Module containing utility functions for time formats conversion
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta, tzinfo
 from calendar import timegm
+
+ZERO = timedelta(0)
+
+
+class UTC(tzinfo):
+    """UTC"""
+
+    def utcoffset(self, dt):
+        return ZERO
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return ZERO
 
 
 def timeformat(timeobject, timeformat):
@@ -49,11 +64,12 @@ def to_date(timeobject):
     if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
-        return datetime.utcfromtimestamp(timeobject)
+        return datetime.utcfromtimestamp(timeobject).replace(tzinfo=UTC())
     elif isinstance(timeobject, datetime):
-        return timeobject
+        return timeobject.replace(tzinfo=UTC())
     elif isinstance(timeobject, str):
-        return datetime.strptime(timeobject, '%Y-%m-%d %H:%M:%S+00')
+        return datetime.strptime(timeobject,
+                                 '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     else:
         raise TypeError('The time value must be espressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
