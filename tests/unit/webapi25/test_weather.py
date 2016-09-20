@@ -4,6 +4,7 @@ Test case for weather.py module
 
 import unittest
 from pyowm.webapi25.weather import Weather, weather_from_dictionary
+from pyowm.utils.timeformatutils import UTC
 from tests.unit.webapi25.json_test_dumps import WEATHER_JSON_DUMP
 from datetime import datetime
 
@@ -13,7 +14,7 @@ class TestWeather(unittest.TestCase):
     __test_reference_time = 1378459200
     __test_iso_reference_time = "2013-09-06 09:20:00+00"
     __test_date_reference_time = datetime.strptime(__test_iso_reference_time,
-                                                   '%Y-%m-%d %H:%M:%S+00')
+                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_sunset_time = 1378496400
     __test_iso_sunset_time = "2013-09-06 19:40:00+00"
     __test_sunrise_time = 1378449600

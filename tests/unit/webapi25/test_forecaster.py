@@ -4,11 +4,11 @@ Test case for forecaster.py module
 
 import unittest
 from datetime import datetime
-from datetime import datetime
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.forecast import Forecast
 from pyowm.webapi25.forecaster import Forecaster
+from pyowm.utils.timeformatutils import UTC
 
 
 class TestForecaster(unittest.TestCase):
@@ -16,19 +16,19 @@ class TestForecaster(unittest.TestCase):
     __test_time_1 = 1379090800
     __test_start_coverage_iso = "2013-09-13 16:46:40+00"
     __test_date_start_coverage = datetime.strptime(__test_start_coverage_iso,
-                                                   '%Y-%m-%d %H:%M:%S+00')
+                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_middle_1_coverage = 1379226100
     __test_middle_1_coverage_iso = "2013-09-15 06:21:40+00"
     __test_date_middle_1_coverage = datetime.strptime(__test_middle_1_coverage_iso,
-                                                      '%Y-%m-%d %H:%M:%S+00')
+                              '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_time_2 = 1379361400
     __test_middle_2_coverage_iso = "2013-09-16 19:56:40+00"
     __test_date_middle_2_coverage = datetime.strptime(__test_middle_2_coverage_iso,
-                                                      '%Y-%m-%d %H:%M:%S+00')
+                              '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_end_coverage = 1379902600
     __test_end_coverage_iso = "2013-09-23 02:16:40+00"
     __test_date_end_coverage = datetime.strptime(__test_end_coverage_iso,
-                                                 '%Y-%m-%d %H:%M:%S+00')
+                                '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
 
     __test_location = Location('test', 12.3, 43.7, 987, 'IT')
 

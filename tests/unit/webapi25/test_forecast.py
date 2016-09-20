@@ -7,6 +7,7 @@ from datetime import datetime
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.forecast import Forecast
+from pyowm.utils.timeformatutils import UTC
 from tests.unit.webapi25.json_test_dumps import FORECAST_JSON_DUMP
 from tests.unit.webapi25.xml_test_dumps import FORECAST_XML_DUMP
 
@@ -16,7 +17,7 @@ class TestForecast(unittest.TestCase):
     __test_reception_time = 1234567
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
     __test_date_reception_time = datetime.strptime(__test_iso_reception_time,
-                                                   '%Y-%m-%d %H:%M:%S+00')
+                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_location = Location('test', 12.3, 43.7, 987, 'IT')
     __test_weathers = [Weather(1378459200, 1378496400, 1378449600, 67,
             {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
