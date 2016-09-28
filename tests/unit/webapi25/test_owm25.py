@@ -14,6 +14,7 @@ Monkey patching pattern:
 
 import unittest
 import time
+import sys
 from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      SEARCH_RESULTS_JSON, THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON,
      THREE_HOURS_FORECAST_AT_COORDS_JSON, DAILY_FORECAST_AT_COORDS_JSON,
@@ -796,3 +797,35 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_station_ID(), int))
             self.assertTrue(isinstance(result.get_station_type(), int))
             self.assertTrue(isinstance(result.get_status(), int))
+
+    def test_encode_string(self):
+        name = 'testname'
+        if sys.version_info > (3, 0):
+            result = OWM25._encode_string(name)
+            self.assertEquals(result, name)
+        else:  # Python 2
+            result = OWM25._encode_string(name)
+            try:
+                result.decode('ascii')
+            except:
+                self.fail()
+
+    def test_assert_is_string(self):
+        a_string = 'test'
+        a_non_string = 123
+        OWM25._assert_is_string(a_string)
+        self.assertRaises(AssertionError, OWM25._assert_is_string, a_non_string)
+
+    def test_assert_is_string_or_unicode(self):
+        a_string = 'test'
+        a_non_string = 123
+        OWM25._assert_is_string_or_unicode(a_string)
+        self.assertRaises(AssertionError,
+                          OWM25._assert_is_string_or_unicode,
+                          a_non_string)
+
+        try:  # only for Python 2
+            unicode_value = unicode('test')
+            OWM25._assert_is_string_or_unicode(unicode_value)
+        except:
+            pass
