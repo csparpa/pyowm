@@ -79,3 +79,7 @@ STATION_JSON_DUMP = '{"status": 50, "distance": 18.95, "weather": {"status": ' \
                     '"weather_icon_name": "04d", "wind": {"speed": 1.1, ' \
                     '"deg": 252.002}}, "name": "KNGU", "station_type": 1, ' \
                     '"lat": 36.9375, "lon": -76.2893, "station_ID": 2865}'
+
+UVINDEX_JSON_DUMP = '{"reception_time": 1234567, "Location": {"country": "UK", ' \
+                   '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
+                   '"ID": 987}, "value": 6.8}'
