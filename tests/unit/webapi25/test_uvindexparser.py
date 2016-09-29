@@ -22,6 +22,7 @@ class TestObservationParser(unittest.TestCase):
         self.assertIsNone(loc.get_ID())
         self.assertIsNotNone(loc.get_lon())
         self.assertIsNotNone(loc.get_lat())
+        self.assertIsNone(result.get_interval())
         self.assertIsNotNone(result.get_value())
 
     def test_parse_JSON_fails_with_malformed_JSON_data(self):

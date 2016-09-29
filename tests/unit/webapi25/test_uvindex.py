@@ -19,17 +19,20 @@ class TestUVIndex(unittest.TestCase):
                                '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_location = Location('test', 12.3, 43.7, 987, 'UK')
     __test_uv_intensity = 6.8
+    __test_interval = 'day'
     __test_exposure_risk = 'high'
     __test_instance = UVIndex(
-        __test_reception_time, __test_location, __test_uv_intensity)
+        __test_reception_time, __test_location, __test_interval, __test_uv_intensity)
 
     def test_init_fails_when_reception_time_is_negative(self):
         self.assertRaises(ValueError, UVIndex, -1234567,
-                          self.__test_location, self.__test_uv_intensity)
+                          self.__test_location,
+                          self.__test_interval,
+                          self.__test_uv_intensity)
 
     def test_init_fails_when_uv_intensity_is_negative(self):
         self.assertRaises(ValueError, UVIndex, self.__test_reception_time,
-                          self.__test_location, -8.9)
+                          self.__test_location, self.__test_interval, -8.9)
 
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reception_time(),
@@ -38,6 +41,8 @@ class TestUVIndex(unittest.TestCase):
                          self.__test_location)
         self.assertEqual(self.__test_instance.get_value(),
                          self.__test_uv_intensity)
+        self.assertEqual(self.__test_instance.get_interval(),
+                         self.__test_interval)
         self.assertEqual(self.__test_instance.get_exposure_risk(),
                          self.__test_exposure_risk)
 
@@ -54,6 +59,7 @@ class TestUVIndex(unittest.TestCase):
         in_a_year = _datetime_to_UNIXtime(datetime.utcnow()) + 31536000
         uvindex = UVIndex(in_a_year,
                           self.__test_location,
+                          self.__test_interval,
                           self.__test_uv_intensity)
         self.assertTrue(uvindex.is_forecast())
 

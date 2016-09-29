@@ -36,17 +36,20 @@ class UVIndex(object):
     :type location: *Location*
     :param value: the observed UV intensity value
     :type value: float
+    :param interval: the time granularity of the UV Index data
+    :type interval: str
     :returns: an *UVIndex* instance
     :raises: *ValueError* when negative values are provided as reception time or
     UV intensity value
 
     """
 
-    def __init__(self, reception_time, location, value):
+    def __init__(self, reception_time, location, interval, value):
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self._reception_time = reception_time
         self._location = location
+        self._interval = interval
         if value < 0.0:
             raise ValueError("'UV intensity must be greater than 0")
         self._value = value
@@ -75,6 +78,14 @@ class UVIndex(object):
 
         """
         return self._location
+
+    def get_interval(self):
+        """
+        Returns the time granularity interval for this UVIndex measurement
+
+        :return: str
+        """
+        return self._interval
 
     def get_value(self):
         """
@@ -109,7 +120,8 @@ class UVIndex(object):
 
         """
         return json.dumps({"reception_time": self._reception_time,
-                           "Location": json.loads(self._location.to_JSON()),
+                           "location": json.loads(self._location.to_JSON()),
+                           "interval": self._interval,
                            "value": self._value
                            })
 
@@ -146,11 +158,17 @@ class UVIndex(object):
         root_node = ET.Element("uvindex")
         reception_time_node = ET.SubElement(root_node, "reception_time")
         reception_time_node.text = str(self._reception_time)
+        interval_node = ET.SubElement(root_node, "interval")
+        interval_node.text = str(self._interval)
         value_node = ET.SubElement(root_node, "value")
         value_node.text = str(self._value)
         root_node.append(self._location._to_DOM())
         return root_node
 
     def __repr__(self):
-        return "<%s.%s - reception time=%s>" % (__name__, \
-              self.__class__.__name__, self.get_reception_time('iso'))
+        return "<%s.%s - reception time=%s, interval=%s, value=%s>" % (
+            __name__,
+            self.__class__.__name__,
+            self.get_reception_time('iso'),
+            self._interval,
+            str(self._value))
