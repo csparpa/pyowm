@@ -12,7 +12,7 @@ from pyowm.webapi25.configuration25 import (
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
-from pyowm.commons import owmhttpclient
+from pyowm.commons import owmhttpclient, owmhttpuvclient
 from pyowm.utils import timeformatutils
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
@@ -48,8 +48,9 @@ class OWM25(owm.OWM):
         if API_key is not None:
             OWM25._assert_is_string(API_key)
         self._API_key = API_key
-        self._httpclient = owmhttpclient.OWMHTTPClient(API_key, cache,
-                                                       subscription_type)
+        self._owmclient = owmhttpclient.OWMHTTPClient(API_key, cache,
+                                                      subscription_type)
+        self._owmuvclient = owmhttpuvclient.OWMHttpUVClient(API_key, cache)
         self._language = language
         if API_key is None and subscription_type == 'pro':
             raise AssertionError('You must provide an API Key for paid subscriptions')
@@ -180,8 +181,8 @@ class OWM25(owm.OWM):
         :returns: bool
 
         """
-        data = self._httpclient.call_API(OBSERVATION_URL, {},
-                                         API_AVAILABILITY_TIMEOUT)
+        data = self._owmclient.call_API(OBSERVATION_URL, {},
+                                        API_AVAILABILITY_TIMEOUT)
         if data is not None:
             return True
         return False
@@ -202,8 +203,8 @@ class OWM25(owm.OWM):
 
         OWM25._assert_is_string_or_unicode(name)
         encoded_name = OWM25._encode_string(name)
-        json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                          {'q': encoded_name,'lang': self._language})
+        json_data = self._owmclient.call_API(OBSERVATION_URL,
+                                             {'q': encoded_name,'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_coords(self, lat, lon):
@@ -227,8 +228,8 @@ class OWM25(owm.OWM):
         assert type(lat) is float or type(lat) is int, "'lat' must be a float"
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                              {'lon': lon, 'lat': lat, 
+        json_data = self._owmclient.call_API(OBSERVATION_URL,
+                                             {'lon': lon, 'lat': lat,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -248,8 +249,8 @@ class OWM25(owm.OWM):
         assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
-        json_data = self._httpclient.call_API(OBSERVATION_URL,
-                                              {'id': id,
+        json_data = self._owmclient.call_API(OBSERVATION_URL,
+                                             {'id': id,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -271,8 +272,8 @@ class OWM25(owm.OWM):
             assert type(id) is int, "'ids_list' must be a list of integers"
             if id < 0:
                 raise ValueError("id values in 'ids_list' must be greater than 0")
-        json_data = self._httpclient.call_API(GROUP_OBSERVATIONS_URL,
-                                              {'id': ','.join(list(map(str, ids_list))),
+        json_data = self._owmclient.call_API(GROUP_OBSERVATIONS_URL,
+                                             {'id': ','.join(list(map(str, ids_list))),
                                                'lang': self._language})
         return self._parsers['observation_list'].parse_JSON(json_data)
 
@@ -311,7 +312,7 @@ class OWM25(owm.OWM):
         if limit is not None:
             # fix for OWM 2.5 API bug!
             params['cnt'] = limit - 1
-        json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
+        json_data = self._owmclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_at_station(self, station_id):
@@ -330,8 +331,8 @@ class OWM25(owm.OWM):
         assert type(station_id) is int, "'station_id' must be an int"
         if station_id < 0:
             raise ValueError("'station_id' value must be greater than 0")
-        json_data = self._httpclient.call_API(STATION_URL,
-                                              {'id': station_id,
+        json_data = self._owmclient.call_API(STATION_URL,
+                                             {'id': station_id,
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -398,7 +399,7 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
 
-        json_data = self._httpclient.call_API(BBOX_STATION_URL, params)
+        json_data = self._owmclient.call_API(BBOX_STATION_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_around_coords(self, lat, lon, limit=None):
@@ -432,7 +433,7 @@ class OWM25(owm.OWM):
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
             params['cnt'] = limit
-        json_data = self._httpclient.call_API(FIND_OBSERVATIONS_URL, params)
+        json_data = self._owmclient.call_API(FIND_OBSERVATIONS_URL, params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def three_hours_forecast(self, name):
@@ -453,8 +454,8 @@ class OWM25(owm.OWM):
         """
         OWM25._assert_is_string_or_unicode(name)
         encoded_name = OWM25._encode_string(name)
-        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                          {'q': encoded_name, 'lang': self._language})
+        json_data = self._owmclient.call_API(THREE_HOURS_FORECAST_URL,
+                                             {'q': encoded_name, 'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -488,7 +489,7 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL, params)
+        json_data = self._owmclient.call_API(THREE_HOURS_FORECAST_URL, params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -515,8 +516,8 @@ class OWM25(owm.OWM):
         assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
-        json_data = self._httpclient.call_API(THREE_HOURS_FORECAST_URL,
-                                              {'id': id,
+        json_data = self._owmclient.call_API(THREE_HOURS_FORECAST_URL,
+                                             {'id': id,
                                                'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -554,7 +555,7 @@ class OWM25(owm.OWM):
         params = {'q': encoded_name, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        json_data = self._owmclient.call_API(DAILY_FORECAST_URL, params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("daily")
@@ -598,7 +599,7 @@ class OWM25(owm.OWM):
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        json_data = self._owmclient.call_API(DAILY_FORECAST_URL, params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("daily")
@@ -637,7 +638,7 @@ class OWM25(owm.OWM):
         params = {'id': id, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._httpclient.call_API(DAILY_FORECAST_URL, params)
+        json_data = self._owmclient.call_API(DAILY_FORECAST_URL, params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("daily")
@@ -691,8 +692,8 @@ class OWM25(owm.OWM):
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
-                                              params)
+        json_data = self._owmclient.call_API(CITY_WEATHER_HISTORY_URL,
+                                             params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def weather_history_at_coords(self, lat, lon, start=None, end=None):
@@ -749,7 +750,7 @@ class OWM25(owm.OWM):
                 raise ValueError("Error: the start time boundary must "
                                  "precede the end time!")
 
-        json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL, params)
+        json_data = self._owmclient.call_API(CITY_WEATHER_HISTORY_URL, params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def weather_history_at_id(self, id, start=None, end=None):
@@ -799,8 +800,8 @@ class OWM25(owm.OWM):
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        json_data = self._httpclient.call_API(CITY_WEATHER_HISTORY_URL,
-                                              params)
+        json_data = self._owmclient.call_API(CITY_WEATHER_HISTORY_URL,
+                                             params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def station_at_coords(self, lat, lon, limit=None):
@@ -837,7 +838,7 @@ class OWM25(owm.OWM):
         params = {'lat': lat, 'lon': lon}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._httpclient.call_API(FIND_STATION_URL, params)
+        json_data = self._owmclient.call_API(FIND_STATION_URL, params)
         return self._parsers['station_list'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
@@ -948,14 +949,54 @@ class OWM25(owm.OWM):
         params = {'id': station_ID, 'type': interval, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._httpclient.call_API(STATION_WEATHER_HISTORY_URL,
-                                              params)
+        json_data = self._owmclient.call_API(STATION_WEATHER_HISTORY_URL,
+                                             params)
         station_history = \
             self._parsers['station_history'].parse_JSON(json_data)
         if station_history is not None:
             station_history.set_station_ID(station_ID)
             station_history.set_interval(interval)
         return station_history
+
+    def uvindex_around_coords(self, lat, lon, start=None, interval=None):
+        """
+        Queries the OWM web API for an UVIndex value on the surroundings of the
+        provided geocoordinates and in the specified time interval.
+        A *UVIndex* object instance is returned, encapsulating a
+        *Location* object and the UV intensity value.
+        If `start` is not provided, the latest available UVIndex value is retrieved.
+        If `start` is provided but `interval` is not, then `interval` defaults
+        to the maximum extent, which is: `year`
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time
+            window start (defaults to ``None``). If not provided, the latest
+            available UVIndex value is retrieved
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param interval: the length of the search time window starting at
+           `start` (defaults to ``None``). If not provided, 'year' is used
+        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
+        :return: a *UVIndex* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        json_data = self._owmuvclient.get_uvi(params)
+        uvindex = self._parsers['uvindex'].parse_JSON(json_data)
+        uvindex._interval = interval
+        return uvindex
 
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \

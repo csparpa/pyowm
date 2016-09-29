@@ -6,6 +6,7 @@ from pyowm.webapi25 import weatherhistoryparser
 from pyowm.webapi25 import stationparser
 from pyowm.webapi25 import stationlistparser
 from pyowm.webapi25 import stationhistoryparser
+from pyowm.webapi25 import uvindexparser
 from pyowm.webapi25 import weathercoderegistry
 from pyowm.webapi25 import cityidregistry
 
@@ -27,6 +28,11 @@ DAILY_FORECAST_URL = '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = '/history/city'
 STATION_WEATHER_HISTORY_URL = '/history/station'
 
+# OWM UV web API URLs
+ROOT_UV_API_URL = 'http://api.openweathermap.org/v3'
+UV_INDEX_URL = '/uvi'
+
+
 # Parser objects injection for OWM web API responses parsing
 parsers = {
   'observation': observationparser.ObservationParser(),
@@ -36,6 +42,7 @@ parsers = {
   'station_history': stationhistoryparser.StationHistoryParser(),
   'station': stationparser.StationParser(),
   'station_list': stationlistparser.StationListParser(),
+  'uvindex': uvindexparser.UVIndexParser()
 }
 
 # City ID registry

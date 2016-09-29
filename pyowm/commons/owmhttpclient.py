@@ -12,7 +12,10 @@ except ImportError:
 
 import socket
 from pyowm.exceptions import api_call_error
-from pyowm.webapi25.configuration25 import ROOT_API_URL
+from pyowm.utils import timeformatutils
+from pyowm.webapi25.configuration25 import ROOT_API_URL, ROOT_UV_API_URL, \
+    UV_INDEX_URL
+
 
 class OWMHTTPClient(object):
 
@@ -22,7 +25,8 @@ class OWMHTTPClient(object):
     }
 
     """
-    An HTTP client class, that can leverage a cache mechanism.
+    An HTTP client class for the OWM web API. The class can leverage a
+    caching mechanism
 
     :param API_key: a Unicode object representing the OWM web API key
     :type API_key: Unicode
@@ -40,6 +44,26 @@ class OWMHTTPClient(object):
         self._cache = cache
         self._API_root_URL = ROOT_API_URL % \
                      (self.API_SUBSCRIPTION_SUBDOMAINS[subscription_type],)
+
+    def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
+        cached = cache.get(API_full_url)
+        if cached:
+            return cached
+        else:
+            try:
+                try:
+                    from urllib.request import urlopen
+                except ImportError:
+                    from urllib2 import urlopen
+                response = urlopen(API_full_url, None, timeout)
+            except HTTPError as e:
+                raise api_call_error.APICallError(str(e), e)
+            except URLError as e:
+                raise api_call_error.APICallError(str(e), e)
+            else:
+                data = response.read().decode('utf-8')
+                cache.set(API_full_url, data)
+                return data
 
     def call_API(self, API_endpoint_URL, params_dict,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
@@ -60,24 +84,7 @@ class OWMHTTPClient(object):
 
         """
         url = self._build_full_URL(API_endpoint_URL, params_dict)
-        cached = self._cache.get(url)
-        if cached:
-            return cached
-        else:
-            try:
-                try:
-                    from urllib.request import urlopen
-                except ImportError:
-                    from urllib2 import urlopen
-                response = urlopen(url, None, timeout)
-            except HTTPError as e:
-                raise api_call_error.APICallError(str(e), e)
-            except URLError as e:
-                raise api_call_error.APICallError(str(e), e)
-            else:
-                data = response.read().decode('utf-8')
-                self._cache.set(url, data)
-                return data
+        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def _build_full_URL(self, API_endpoint_URL, params_dict):
         """
@@ -119,3 +126,72 @@ class OWMHTTPClient(object):
     def __repr__(self):
         return "<%s.%s - cache=%s>" % \
             (__name__, self.__class__.__name__, repr(self._cache))
+
+
+class OWMHttpUVClient(object):
+
+    """
+    An HTTP client class for the OWM UV web API. The class can leverage a
+    caching mechanism
+
+    :param API_key: a Unicode object representing the OWM UV web API key
+    :type API_key: Unicode
+    :param cache: an *OWMCache* concrete instance that will be used to
+         cache OWM UV web API responses.
+    :type cache: an *OWMCache* concrete instance
+    """
+
+    def __init__(self, API_key, cache):
+        self._API_key = API_key
+        self._cache = cache
+        self._API_root_URL = ROOT_UV_API_URL
+
+    def _trim_to_ISO8601(self, date_object, interval):
+        if interval == 'minute':
+            return date_object.strftime('%Y-%m-%dT%H:%MZ')
+        elif interval == 'hour':
+            return date_object.strftime('%Y-%m-%dT%HZ')
+        elif interval == 'day':
+            return date_object.strftime('%Y-%m-%dZ')
+        elif interval == 'month':
+            return date_object.strftime('%Y-%mZ')
+        elif interval == 'year':
+            return date_object.strftime('%YZ')
+        else:
+            raise ValueError("The interval provided for UVIndex search "
+                             "window is invalid")
+
+    def get_uvi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        """
+        Invokes the UV Index endpoint
+        :param params_dict: dict of parameters
+        :param timeout: how many seconds to wait for connection establishment
+            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
+        :type timeout: int
+        :returns: a string containing raw JSON data
+        :raises: *ValueError*, *APICallError*
+        """
+        lon = str(params_dict['lon'])
+        lat = str(params_dict['lat'])
+        start = params_dict['start']
+        interval = params_dict['interval']
+
+        # build request URL
+        url_template = '%s%s/%s,%s/%s.json?appid=%s'
+        if start is None:
+            timeref = 'current'
+        else:
+            if interval is None:
+                timeref = self._trim_to_ISO8601(
+                    timeformatutils.to_UNIXtime(start), 'year')
+            else:
+                timeref = self._trim_to_ISO8601(
+                    timeformatutils.to_date(start), interval)
+
+        url = url_template % (ROOT_UV_API_URL, UV_INDEX_URL, lat, lon,
+                              timeref, self._API_key)
+        return lookup_cache_or_invoke_API(self._cache, url, timeout)
+
+    def __repr__(self):
+        return "<%s.%s - cache=%s>" % \
+               (__name__, self.__class__.__name__, repr(self._cache))
