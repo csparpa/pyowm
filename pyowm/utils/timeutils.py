@@ -20,6 +20,7 @@ def now(timeformat='date'):
     """
     return timeformatutils.timeformat(datetime.now(), timeformat)
 
+
 def next_hour(date=None):
     """
     Gives the ``datetime.datetime`` object corresponding to the next hour
@@ -31,6 +32,7 @@ def next_hour(date=None):
     :returns: a ``datetime.datetime`` object
     """
     return _timedelta_hours(1, date)
+
 
 def last_hour(date=None):
     """
@@ -44,6 +46,7 @@ def last_hour(date=None):
     """
     return _timedelta_hours(-1, date)
 
+
 def next_three_hours(date=None):
     """
     Gives the ``datetime.datetime`` object corresponding to the next three
@@ -56,6 +59,7 @@ def next_three_hours(date=None):
     """
     return _timedelta_hours(3, date)
 
+
 def last_three_hours(date=None):
     """
     Gives the ``datetime.datetime`` object corresponding to last three
@@ -67,6 +71,7 @@ def last_three_hours(date=None):
     :returns: a ``datetime.datetime`` object
     """
     return _timedelta_hours(-3, date)
+
 
 def tomorrow(hour=None, minute=None):
     """
@@ -95,6 +100,7 @@ def tomorrow(hour=None, minute=None):
     return datetime(tomorrow_date.year, tomorrow_date.month, tomorrow_date.day,
                     hour, minute, 0)
 
+
 def yesterday(hour=None, minute=None):
     """
     Gives the ``datetime.datetime`` object corresponding to yesterday. The
@@ -121,6 +127,7 @@ def yesterday(hour=None, minute=None):
     return datetime(yesterday_date.year, yesterday_date.month,
                     yesterday_date.day, hour, minute, 0)
 
+
 def next_week(date=None):
     """
     Gives the ``datetime.datetime`` object corresponding to the next week
@@ -133,6 +140,7 @@ def next_week(date=None):
     :returns: a ``datetime.datetime`` object
     """
     return _timedelta_days(7, date)
+
 
 def last_week(date=None):
     """
@@ -148,6 +156,62 @@ def last_week(date=None):
     return _timedelta_days(-7, date)
 
 
+def last_month(date=None):
+    """
+    Gives the ``datetime.datetime`` object corresponding to the last month
+    before now or before the specified ``datetime.datetime`` object. A month
+    corresponds to 30 days.
+
+    :param date: the date you want a month to be subtracted from (if left
+       ``None``, the current date and time will be used)
+    :type date: ``datetime.datetime`` object
+    :returns: a ``datetime.datetime`` object
+    """
+    return _timedelta_months(-1, date)
+
+
+def next_month(date=None):
+    """
+    Gives the ``datetime.datetime`` object corresponding to the next month
+    after now or after the specified ``datetime.datetime`` object. A month
+    corresponds to 30 days.
+
+    :param date: the date you want a month to be added to (if left
+       ``None``, the current date and time will be used)
+    :type date: ``datetime.datetime`` object
+    :returns: a ``datetime.datetime`` object
+    """
+    return _timedelta_months(1, date)
+
+
+def last_year(date=None):
+    """
+    Gives the ``datetime.datetime`` object corresponding to the last year
+    before now or before the specified ``datetime.datetime`` object. A year
+    corresponds to 365 days.
+
+    :param date: the date you want a year to be subtracted from (if left
+       ``None``, the current date and time will be used)
+    :type date: ``datetime.datetime`` object
+    :returns: a ``datetime.datetime`` object
+    """
+    return _timedelta_years(-1, date)
+
+
+def next_year(date=None):
+    """
+    Gives the ``datetime.datetime`` object corresponding to the next year
+    after now or after the specified ``datetime.datetime`` object. A month
+    corresponds to 30 days.
+
+    :param date: the date you want a year to be added to (if left
+       ``None``, the current date and time will be used)
+    :type date: ``datetime.datetime`` object
+    :returns: a ``datetime.datetime`` object
+    """
+    return _timedelta_years(1, date)
+
+
 def _timedelta_hours(offset, date=None):
     if date is None:
         return datetime.now() + timedelta(hours=offset)
@@ -156,6 +220,7 @@ def _timedelta_hours(offset, date=None):
             ": 'date' must be a datetime.datetime object"
         return date + timedelta(hours=offset)
 
+
 def _timedelta_days(offset, date=None):
     if date is None:
         return datetime.now() + timedelta(days=offset)
@@ -163,3 +228,21 @@ def _timedelta_days(offset, date=None):
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
         return date + timedelta(days=offset)
+
+
+def _timedelta_months(offset, date=None):
+    if date is None:
+        return datetime.now() + timedelta(days=offset * 30)
+    else:
+        assert isinstance(date, datetime), __name__ + \
+            ": 'date' must be a datetime.datetime object"
+        return date + timedelta(days=offset * 30)
+
+
+def _timedelta_years(offset, date=None):
+    if date is None:
+        return datetime.now() + timedelta(days=offset * 365)
+    else:
+        assert isinstance(date, datetime), __name__ + \
+            ": 'date' must be a datetime.datetime object"
+        return date + timedelta(days=offset * 365)

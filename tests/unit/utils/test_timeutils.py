@@ -143,3 +143,54 @@ class TestTimeUtils(unittest.TestCase):
         self.assertEquals(result.minute, expected.minute)
         self.assertEquals(result.second, expected.second)
 
+    def test_last_month(self):
+        result = timeutils.last_month()
+        expected = datetime.now() + timedelta(days=-30)
+        self.assertAlmostEqual(
+            float(timeformatutils.to_UNIXtime(expected)),
+            float(timeformatutils.to_UNIXtime(result)))
+
+    def test_last_month_after_specified_time(self):
+        d = datetime(2015, 10, 1, 15, 46, 12)
+        expected = d + timedelta(days=-30)
+        result = timeutils.last_month(d)
+        self.assertAlmostEqual(expected, result)
+
+    def test_next_month(self):
+        result = timeutils.next_month()
+        expected = datetime.now() + timedelta(days=30)
+        self.assertAlmostEqual(
+            float(timeformatutils.to_UNIXtime(expected)),
+            float(timeformatutils.to_UNIXtime(result)))
+
+    def test_next_month_after_specified_time(self):
+        d = datetime(2015, 10, 1, 15, 46, 12)
+        expected = d + timedelta(days=30)
+        result = timeutils.next_month(d)
+        self.assertAlmostEqual(expected, result)
+
+    def test_last_year(self):
+        result = timeutils.last_year()
+        expected = datetime.now() + timedelta(days=-365)
+        self.assertAlmostEqual(
+            float(timeformatutils.to_UNIXtime(expected)),
+            float(timeformatutils.to_UNIXtime(result)))
+
+    def test_last_year_after_specified_time(self):
+        d = datetime(2015, 10, 1, 15, 46, 12)
+        expected = d + timedelta(days=-365)
+        result = timeutils.last_year(d)
+        self.assertAlmostEqual(expected, result)
+
+    def test_next_year(self):
+        result = timeutils.next_year()
+        expected = datetime.now() + timedelta(days=365)
+        self.assertAlmostEqual(
+            float(timeformatutils.to_UNIXtime(expected)),
+            float(timeformatutils.to_UNIXtime(result)))
+
+    def test_next_year_after_specified_time(self):
+        d = datetime(2015, 10, 1, 15, 46, 12)
+        expected = d + timedelta(days=365)
+        result = timeutils.next_year(d)
+        self.assertAlmostEqual(expected, result)
