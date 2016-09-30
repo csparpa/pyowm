@@ -166,9 +166,11 @@ class UVIndex(object):
         return root_node
 
     def __repr__(self):
-        return "<%s.%s - reception time=%s, interval=%s, value=%s>" % (
-            __name__,
-            self.__class__.__name__,
-            self.get_reception_time('iso'),
-            self._interval,
-            str(self._value))
+        return "<%s.%s - reception time=%s, location=%s, interval=%s, " \
+               "value=%s>" % (
+                    __name__,
+                    self.__class__.__name__,
+                    self.get_reception_time('iso'),
+                    str(self._location),
+                    self._interval,
+                    str(self._value))
