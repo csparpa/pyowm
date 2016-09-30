@@ -100,7 +100,6 @@ class OWMHttpUVClient(object):
 
         url = url_template % (ROOT_UV_API_URL, UV_INDEX_URL, lat, lon,
                               timeref, self._API_key)
-        print url
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def __repr__(self):
