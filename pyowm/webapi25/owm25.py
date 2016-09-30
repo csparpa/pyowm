@@ -995,6 +995,8 @@ class OWM25(owm.OWM):
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._owmuvclient.get_uvi(params)
         uvindex = self._parsers['uvindex'].parse_JSON(json_data)
+        if interval is None:
+            interval = 'year'
         uvindex._interval = interval
         return uvindex
 
