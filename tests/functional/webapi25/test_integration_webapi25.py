@@ -507,5 +507,18 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             weat = item.get_weather()
             self.assertTrue(weat is not None)
 
+    def test_uvindex_around_coords(self):
+        """
+        Test feature: get UV index around geo-coordinates.
+        """
+        u = self.__owm.uvindex_around_coords(45,9)
+        self.assertIsNotNone(u)
+        self.assertIsNotNone(u.get_value())
+        self.assertIsNotNone(u.get_reception_time())
+        self.assertIsNotNone(u.get_interval())
+        loc = u.get_location()
+        self.assertIsNotNone(loc)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -166,3 +166,9 @@ OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"c
 FORECAST_MALFORMED_JSON = '{ "city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
     '"GB","population": 1000000}, "list": [{"test": "fake"}]}'
+
+UVINDEX_JSON = '{"time":"2016-09-27T12:00:00Z","location":{"latitude":43.75,' \
+               '"longitude":8.25},"data":4.58}'
+
+UVINDEX_MALFORMED_JSON = '{"zzz":"2016-09-27T12:00:00Z","test":{"latitude":43.75,' \
+               '"longitude":8.25},"values":4.58}'

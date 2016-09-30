@@ -23,10 +23,11 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
      DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
      STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON, 
-     WEATHER_AT_STATION_IN_BBOX_JSON)
+     WEATHER_AT_STATION_IN_BBOX_JSON, UVINDEX_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.owmhttpclient import OWMHTTPClient
+from pyowm.commons.owmhttpuvclient import OWMHttpUVClient
 from pyowm.webapi25.forecast import Forecast
 from pyowm.webapi25.observation import Observation
 from pyowm.webapi25.weather import Weather
@@ -35,6 +36,7 @@ from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.station import Station
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.webapi25.historian import Historian
+from pyowm.webapi25.uvindex import UVIndex
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.webapi25.observationlistparser import ObservationListParser
@@ -42,6 +44,7 @@ from pyowm.webapi25.stationparser import StationParser
 from pyowm.webapi25.stationlistparser import StationListParser
 from pyowm.webapi25.stationhistoryparser import StationHistoryParser
 from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
+from pyowm.webapi25.uvindexparser import UVIndexParser
 
 
 class TestOWM25(unittest.TestCase):
@@ -54,6 +57,7 @@ class TestOWM25(unittest.TestCase):
       'station_history': StationHistoryParser(),
       'station': StationParser(),
       'station_list': StationListParser(),
+      'uvindex': UVIndexParser()
     }
     __test_instance = OWM25(__test_parsers, 'test_API_key')
 
@@ -155,7 +159,43 @@ class TestOWM25(unittest.TestCase):
                                                        params_dict):
         return CITY_WEATHER_HISTORY_JSON
 
+    def mock_get_uvi_returning_uvindex_around_coords(self, params_dict):
+        return UVINDEX_JSON
+
     # Tests
+
+    def test_encode_string(self):
+        name = 'testname'
+        if sys.version_info > (3, 0):
+            result = OWM25._encode_string(name)
+            self.assertEquals(result, name)
+        else:  # Python 2
+            result = OWM25._encode_string(name)
+            try:
+                result.decode('ascii')
+            except:
+                self.fail()
+
+    def test_assert_is_string(self):
+        a_string = 'test'
+        a_non_string = 123
+        OWM25._assert_is_string(a_string)
+        self.assertRaises(AssertionError, OWM25._assert_is_string, a_non_string)
+
+    def test_assert_is_string_or_unicode(self):
+        a_string = 'test'
+        a_non_string = 123
+        OWM25._assert_is_string_or_unicode(a_string)
+        self.assertRaises(AssertionError,
+                          OWM25._assert_is_string_or_unicode,
+                          a_non_string)
+
+        try:  # only for Python 2
+            unicode_value = unicode('test')
+            OWM25._assert_is_string_or_unicode(unicode_value)
+        except:
+            pass
+
     def test_wrong_API_key(self):
         try:
             OWM25(self.__test_parsers, 1234)
@@ -771,14 +811,6 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.station_day_history,
                           self.__test_instance, 1234, -3)
 
-    def test_station_hour_history_when_forecast_not_found(self):
-        ref_to_original_call_API = OWMHTTPClient.call_API
-        OWMHTTPClient.call_API = \
-            self.mock_httputils_call_API_returning_station_history_with_no_items
-        result = self.__test_instance.station_hour_history(1234, limit=4)
-        OWMHTTPClient.call_API = ref_to_original_call_API
-        self.assertIsNone(result)
-
     def test_station_at_coords(self):
         ref_to_original_call_API = OWMHTTPClient.call_API
         OWMHTTPClient.call_API = \
@@ -798,34 +830,27 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_station_type(), int))
             self.assertTrue(isinstance(result.get_status(), int))
 
-    def test_encode_string(self):
-        name = 'testname'
-        if sys.version_info > (3, 0):
-            result = OWM25._encode_string(name)
-            self.assertEquals(result, name)
-        else:  # Python 2
-            result = OWM25._encode_string(name)
-            try:
-                result.decode('ascii')
-            except:
-                self.fail()
+    def test_uvindex_around_coords(self):
+        ref_to_original = OWMHttpUVClient.get_uvi
+        OWMHttpUVClient.get_uvi = \
+            self.mock_get_uvi_returning_uvindex_around_coords
+        result = self.__test_instance.uvindex_around_coords(45, 9)
+        OWMHttpUVClient.get_uvi = ref_to_original
+        self.assertTrue(isinstance(result, UVIndex))
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_value())
+        self.assertIsNotNone(result.get_interval())
 
-    def test_assert_is_string(self):
-        a_string = 'test'
-        a_non_string = 123
-        OWM25._assert_is_string(a_string)
-        self.assertRaises(AssertionError, OWM25._assert_is_string, a_non_string)
-
-    def test_assert_is_string_or_unicode(self):
-        a_string = 'test'
-        a_non_string = 123
-        OWM25._assert_is_string_or_unicode(a_string)
-        self.assertRaises(AssertionError,
-                          OWM25._assert_is_string_or_unicode,
-                          a_non_string)
-
-        try:  # only for Python 2
-            unicode_value = unicode('test')
-            OWM25._assert_is_string_or_unicode(unicode_value)
-        except:
-            pass
+    def test_uvindex_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
+                          self.__test_instance, 200, 2.5)
