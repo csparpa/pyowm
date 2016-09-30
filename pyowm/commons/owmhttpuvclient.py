@@ -7,7 +7,7 @@ except ImportError:
     from urllib import urlencode
 
 import socket
-from pyowm.exceptions import api_call_error
+from pyowm.exceptions import api_call_error, not_found_error, unauthorized_error
 from pyowm.utils import timeformatutils
 from pyowm.webapi25.configuration25 import ROOT_UV_API_URL, \
     UV_INDEX_URL
@@ -46,6 +46,7 @@ class OWMHttpUVClient(object):
             raise ValueError("The interval provided for UVIndex search "
                              "window is invalid")
 
+
     def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
         cached = cache.get(API_full_url)
         if cached:
@@ -58,6 +59,10 @@ class OWMHttpUVClient(object):
                     from urllib2 import urlopen
                 response = urlopen(API_full_url, None, timeout)
             except HTTPError as e:
+                if '401' in str(e):
+                    raise unauthorized_error.UnauthorizedError('Invalid API key')
+                if '404' in str(e):
+                    raise not_found_error.NotFoundError('The request was not found')
                 raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
@@ -95,6 +100,7 @@ class OWMHttpUVClient(object):
 
         url = url_template % (ROOT_UV_API_URL, UV_INDEX_URL, lat, lon,
                               timeref, self._API_key)
+        print url
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def __repr__(self):
