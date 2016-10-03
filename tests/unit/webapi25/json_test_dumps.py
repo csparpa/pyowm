@@ -83,3 +83,12 @@ STATION_JSON_DUMP = '{"status": 50, "distance": 18.95, "weather": {"status": ' \
 UVINDEX_JSON_DUMP = '{"reception_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
                    '"ID": 987}, "interval": "day", "value": 6.8}'
+COINDEX_JSON_DUMP = '{"reception_time": 1234567, "co_samples": [{"pressure": ' \
+                    '1000, "vmr": 8.168363052618588e-08, "precision": ' \
+                    '-4.999999987376214e-07}, {"pressure": 681.2920532226562, ' \
+                    '"vmr": 8.686949115599418e-08, "precision": ' \
+                    '-4.999999987376214e-07}, {"pressure": 464.15887451171875, ' \
+                    '"vmr": 8.871462853221601e-08, "precision": ' \
+                    '-4.999999987376214e-07}], "location": {"country": "UK", ' \
+                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
+                    '"ID": 987}, "interval": "day"}'

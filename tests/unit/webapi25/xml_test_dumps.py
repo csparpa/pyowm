@@ -23,3 +23,6 @@ STATION_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
 
 UVINDEX_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
 <uvindex xmlns:u="http://github.com/csparpa/pyowm/tree/master/pyowm/webapi25/xsd/uvindex.xsd"><u:reception_time>1234567</u:reception_time><u:value>6.8</u:value><u:interval>day</u:interval><u:location><u:name>test</u:name><u:coordinates><u:lon>12.3</u:lon><u:lat>43.7</u:lat></u:coordinates><u:ID>987</u:ID><u:country>UK</u:country></u:location></uvindex>"""
+
+COINDEX_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
+<uvindex xmlns:co="http://github.com/csparpa/pyowm/tree/master/pyowm/webapi25/xsd/coindex.xsd"><co:reception_time>1234567</co:reception_time><co:interval>day</co:interval><co:co_samples><co:co_sample><co:pressure>1000</co:pressure><co:vmr>8.16836305262e-08</co:vmr><co:precision>-4.99999998738e-07</co:precision></co:co_sample><co:co_sample><co:pressure>681.292053223</co:pressure><co:vmr>8.6869491156e-08</co:vmr><co:precision>-4.99999998738e-07</co:precision></co:co_sample><co:co_sample><co:pressure>464.158874512</co:pressure><co:vmr>8.87146285322e-08</co:vmr><co:precision>-4.99999998738e-07</co:precision></co:co_sample></co:co_samples><co:location><co:name>test</co:name><co:coordinates><co:lon>12.3</co:lon><co:lat>43.7</co:lat></co:coordinates><co:ID>987</co:ID><co:country>UK</co:country></co:location></uvindex>"""
