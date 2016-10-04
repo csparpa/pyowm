@@ -141,7 +141,7 @@ class COIndex(object):
         :returns: a ``xml.etree.Element`` object
 
         """
-        root_node = ET.Element("uvindex")
+        root_node = ET.Element("coindex")
         reception_time_node = ET.SubElement(root_node, "reception_time")
         reception_time_node.text = str(self._reception_time)
         interval_node = ET.SubElement(root_node, "interval")
@@ -149,6 +149,10 @@ class COIndex(object):
         co_samples_node = ET.SubElement(root_node, "co_samples")
         for smpl in self._co_samples:
             s = smpl.copy()
+            # turn values to 12 decimal digits-formatted strings
+            s['pressure'] = '{:.12e}'.format(s['pressure'])
+            s['vmr'] = '{:.12e}'.format(s['vmr'])
+            s['precision'] = '{:.12e}'.format(s['precision'])
             xmlutils.create_DOM_node_from_dict(s, "co_sample",
                                                co_samples_node)
         root_node.append(self._location._to_DOM())
