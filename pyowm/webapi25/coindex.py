@@ -27,7 +27,7 @@ class COIndex(object):
     :type interval: str
     :returns: an *COIndex* instance
     :raises: *ValueError* when negative values are provided as reception time,
-    CO samples are not provided in a list or CO sample haven't got the 'vmr' key
+    CO samples are not provided in a list
 
     """
 
@@ -39,9 +39,7 @@ class COIndex(object):
         self._interval = interval
         if not isinstance(co_samples, list):
             raise ValueError("'co_samples' must be a list")
-        if not all(map(lambda item: 'vmr' in item, co_samples)):
-            raise ValueError("'co_samples' items must contain the 'vmr' key")
-        self._co_samples = sorted(co_samples, key=lambda k: k['vmr'], reverse=True)
+        self._co_samples = sorted(co_samples, key=lambda k: k['value'], reverse=True)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -90,14 +88,14 @@ class COIndex(object):
         Returns the CO sample with the highest Volume Mixing Ratio value
         :return: dict
         """
-        return max(self._co_samples, key=lambda x: x['vmr'])
+        return max(self._co_samples, key=lambda x: x['value'])
 
     def get_co_sample_with_lowest_vmr(self):
         """
         Returns the CO sample with the lowest Volume Mixing Ratio value
         :return: dict
         """
-        return min(self._co_samples, key=lambda x: x['vmr'])
+        return min(self._co_samples, key=lambda x: x['value'])
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
@@ -151,7 +149,7 @@ class COIndex(object):
             s = smpl.copy()
             # turn values to 12 decimal digits-formatted strings
             s['pressure'] = '{:.12e}'.format(s['pressure'])
-            s['vmr'] = '{:.12e}'.format(s['vmr'])
+            s['value'] = '{:.12e}'.format(s['value'])
             s['precision'] = '{:.12e}'.format(s['precision'])
             xmlutils.create_DOM_node_from_dict(s, "co_sample",
                                                co_samples_node)

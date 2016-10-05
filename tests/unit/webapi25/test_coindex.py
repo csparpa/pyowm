@@ -1,12 +1,12 @@
 """
-Test case for uvindex.py module
+Test case for coindex.py module
 """
 
 import unittest
 from datetime import datetime
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.coindex import COIndex
-from pyowm.utils.timeformatutils import UTC, _datetime_to_UNIXtime
+from pyowm.utils.timeformatutils import UTC
 from tests.unit.webapi25.json_test_dumps import COINDEX_JSON_DUMP
 from tests.unit.webapi25.xml_test_dumps import COINDEX_XML_DUMP
 
@@ -22,17 +22,17 @@ class TestCOIndex(unittest.TestCase):
         {
             "precision": -4.999999987376214e-7,
             "pressure": 1000,
-            "vmr": 8.168363052618588e-8
+            "value": 8.168363052618588e-8
         },
         {
             "precision": -4.999999987376214e-7,
             "pressure": 681.2920532226562,
-            "vmr": 8.686949115599418e-8
+            "value": 8.686949115599418e-8
         },
         {
             "precision": -4.999999987376214e-7,
             "pressure": 464.15887451171875,
-            "vmr": 8.871462853221601e-8
+            "value": 8.871462853221601e-8
         }
     ]
     __test_interval = 'day'
@@ -56,7 +56,7 @@ class TestCOIndex(unittest.TestCase):
                          self.__test_location)
         ordered = self.__test_instance.get_co_samples()
         self.assertEqual(ordered,
-                         sorted(self.__test_co_samples, key=lambda k: k['vmr'], reverse=True))
+                         sorted(self.__test_co_samples, key=lambda k: k['value'], reverse=True))
         self.assertEqual(self.__test_instance.get_interval(),
                          self.__test_interval)
 
@@ -72,7 +72,7 @@ class TestCOIndex(unittest.TestCase):
         expected = {
             "precision": -4.999999987376214e-7,
             "pressure": 464.15887451171875,
-            "vmr": 8.871462853221601e-8
+            "value": 8.871462853221601e-8
         }
         result = self.__test_instance.get_co_sample_with_highest_vmr()
         self.assertEquals(expected, result)
@@ -81,7 +81,7 @@ class TestCOIndex(unittest.TestCase):
         expected = {
             "precision": -4.999999987376214e-7,
             "pressure": 1000,
-            "vmr": 8.168363052618588e-8
+            "value": 8.168363052618588e-8
         }
         result = self.__test_instance.get_co_sample_with_lowest_vmr()
         self.assertEquals(expected, result)

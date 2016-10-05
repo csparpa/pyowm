@@ -1,5 +1,5 @@
 """
-Test case for observationparser.py module
+Test case for uvindexparser.py module
 """
 import unittest
 from pyowm.webapi25.uvindexparser import UVIndexParser
