@@ -17,7 +17,7 @@ from pyowm.webapi25.configuration25 import ROOT_API_URL, ROOT_UV_API_URL, \
     UV_INDEX_URL
 
 
-class OWMHTTPClient(object):
+class WeatherHttpClient(object):
 
     API_SUBSCRIPTION_SUBDOMAINS = {
         'free': 'api',
