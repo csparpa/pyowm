@@ -19,10 +19,10 @@ class AirPollutionHttpClient(object):
     An HTTP client class for the OWM Air Pollution web API. The class can leverage a
     caching mechanism
 
-    :param API_key: a Unicode object representing the OWM UV web API key
+    :param API_key: a Unicode object representing the OWM Air Pollution web API key
     :type API_key: Unicode
     :param cache: an *OWMCache* concrete instance that will be used to
-         cache OWM UV web API responses.
+         cache OWM Air Pollution web API responses.
     :type cache: an *OWMCache* concrete instance
     """
 
@@ -43,7 +43,7 @@ class AirPollutionHttpClient(object):
         elif interval == 'year':
             return date_object.strftime('%YZ')
         else:
-            raise ValueError("The interval provided for UVIndex search "
+            raise ValueError("The interval provided for the search "
                              "window is invalid")
 
     def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
