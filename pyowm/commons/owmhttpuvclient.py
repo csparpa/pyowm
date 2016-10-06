@@ -62,7 +62,7 @@ class OWMHttpUVClient(object):
                 if '401' in str(e):
                     raise unauthorized_error.UnauthorizedError('Invalid API key')
                 if '404' in str(e):
-                    raise not_found_error.NotFoundError('The request was not found')
+                    raise not_found_error.NotFoundError('The resource was not found')
                 raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
