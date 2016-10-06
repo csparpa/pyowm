@@ -27,7 +27,7 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.owmhttpclient import OWMHTTPClient
-from pyowm.commons.owmhttpuvclient import OWMHttpUVClient
+from pyowm.commons.uv_client import UltraVioletHttpClient
 from pyowm.webapi25.forecast import Forecast
 from pyowm.webapi25.observation import Observation
 from pyowm.webapi25.weather import Weather
@@ -831,11 +831,11 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_status(), int))
 
     def test_uvindex_around_coords(self):
-        ref_to_original = OWMHttpUVClient.get_uvi
-        OWMHttpUVClient.get_uvi = \
+        ref_to_original = UltraVioletHttpClient.get_uvi
+        UltraVioletHttpClient.get_uvi = \
             self.mock_get_uvi_returning_uvindex_around_coords
         result = self.__test_instance.uvindex_around_coords(45, 9)
-        OWMHttpUVClient.get_uvi = ref_to_original
+        UltraVioletHttpClient.get_uvi = ref_to_original
         self.assertTrue(isinstance(result, UVIndex))
         self.assertIsNotNone(result.get_reception_time())
         loc = result.get_location()

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-Test cases for owmhttpuvclient.py
+Test cases for uv_client.py
 """
 
 import unittest
-from pyowm.commons.owmhttpuvclient import OWMHttpUVClient
+from pyowm.commons.uv_client import UltraVioletHttpClient
 from pyowm.caches.nullcache import NullCache
 from pyowm.utils import timeformatutils
 
@@ -13,7 +13,7 @@ from pyowm.utils import timeformatutils
 class TestOWMHttpUVClient(unittest.TestCase):
 
     __test_cache = NullCache()
-    __instance = OWMHttpUVClient('xyz', __test_cache)
+    __instance = UltraVioletHttpClient('xyz', __test_cache)
 
     def test_trim_to(self):
         ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z

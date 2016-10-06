@@ -13,7 +13,7 @@ from pyowm.webapi25.configuration25 import ROOT_UV_API_URL, \
     UV_INDEX_URL
 
 
-class OWMHttpUVClient(object):
+class UltraVioletHttpClient(object):
 
     """
     An HTTP client class for the OWM UV web API. The class can leverage a
@@ -45,7 +45,6 @@ class OWMHttpUVClient(object):
         else:
             raise ValueError("The interval provided for UVIndex search "
                              "window is invalid")
-
 
     def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
         cached = cache.get(API_full_url)

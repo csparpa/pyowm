@@ -12,7 +12,7 @@ from pyowm.webapi25.configuration25 import (
 from pyowm.webapi25.configuration25 import city_id_registry as zzz
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
-from pyowm.commons import owmhttpclient, owmhttpuvclient, airpollution_client
+from pyowm.commons import owmhttpclient, uv_client, airpollution_client
 from pyowm.utils import timeformatutils
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
@@ -49,7 +49,7 @@ class OWM25(owm.OWM):
             OWM25._assert_is_string(API_key)
         self._API_key = API_key
         self._api = owmhttpclient.OWMHTTPClient(API_key, cache, subscription_type)
-        self._uvapi = owmhttpuvclient.OWMHttpUVClient(API_key, cache)
+        self._uvapi = uv_client.UltraVioletHttpClient(API_key, cache)
         self._pollapi = \
             airpollution_client.AirPollutionHttpClient(API_key, cache)
         self._language = language
