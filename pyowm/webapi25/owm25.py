@@ -164,7 +164,6 @@ class OWM25(owm.OWM):
         """
         return self._subscription_type
 
-
     def city_id_registry(self):
         """
         Gives the *CityIDRegistry* singleton instance that can be used to lookup
@@ -961,9 +960,9 @@ class OWM25(owm.OWM):
 
     def uvindex_around_coords(self, lat, lon, start=None, interval=None):
         """
-        Queries the OWM web API for an UVIndex value on the surroundings of the
-        provided geocoordinates and in the specified time interval.
-        A *UVIndex* object instance is returned, encapsulating a
+        Queries the OWM web API for Ultra Violet value sampled in the
+        surroundings of the provided geocoordinates and in the specified time
+        interval. A *UVIndex* object instance is returned, encapsulating a
         *Location* object and the UV intensity value.
         If `start` is not provided, the latest available UVIndex value is retrieved.
         If `start` is provided but `interval` is not, then `interval` defaults
@@ -1000,6 +999,49 @@ class OWM25(owm.OWM):
             interval = 'year'
         uvindex._interval = interval
         return uvindex
+
+    def coindex_around_coords(self, lat, lon, start=None, interval=None):
+        """
+        Queries the OWM web API for Carbon Monoxide values sampled in the
+        surroundings of the provided geocoordinates and in the specified time
+        interval.
+        A *COIndex* object instance is returned, encapsulating a
+        *Location* object and the list of CO samples
+        If `start` is not provided, the latest available CO samples are retrieved
+        If `start` is provided but `interval` is not, then `interval` defaults
+        to the maximum extent, which is: `year`
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time
+            window start (defaults to ``None``). If not provided, the latest
+            available CO samples value are retrieved
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param interval: the length of the search time window starting at
+           `start` (defaults to ``None``). If not provided, 'year' is used
+        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
+        :return: a *COIndex* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        json_data = self._pollapi.get_coi(params)
+        coindex = self._parsers['coindex'].parse_JSON(json_data)
+        if interval is None:
+            interval = 'year'
+        coindex._interval = interval
+        return coindex
 
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \

@@ -23,11 +23,12 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
      DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
      STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON, 
-     WEATHER_AT_STATION_IN_BBOX_JSON, UVINDEX_JSON)
+     WEATHER_AT_STATION_IN_BBOX_JSON, UVINDEX_JSON, COINDEX_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.weather_client import WeatherHttpClient
 from pyowm.commons.uv_client import UltraVioletHttpClient
+from pyowm.commons.airpollution_client import AirPollutionHttpClient
 from pyowm.webapi25.forecast import Forecast
 from pyowm.webapi25.observation import Observation
 from pyowm.webapi25.weather import Weather
@@ -37,6 +38,7 @@ from pyowm.webapi25.station import Station
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.webapi25.historian import Historian
 from pyowm.webapi25.uvindex import UVIndex
+from pyowm.webapi25.coindex import COIndex
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.webapi25.observationlistparser import ObservationListParser
@@ -45,6 +47,7 @@ from pyowm.webapi25.stationlistparser import StationListParser
 from pyowm.webapi25.stationhistoryparser import StationHistoryParser
 from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
 from pyowm.webapi25.uvindexparser import UVIndexParser
+from pyowm.webapi25.coindexparser import COIndexParser
 
 
 class TestOWM25(unittest.TestCase):
@@ -57,7 +60,8 @@ class TestOWM25(unittest.TestCase):
       'station_history': StationHistoryParser(),
       'station': StationParser(),
       'station_list': StationListParser(),
-      'uvindex': UVIndexParser()
+      'uvindex': UVIndexParser(),
+      'coindex': COIndexParser()
     }
     __test_instance = OWM25(__test_parsers, 'test_API_key')
 
@@ -161,6 +165,9 @@ class TestOWM25(unittest.TestCase):
 
     def mock_get_uvi_returning_uvindex_around_coords(self, params_dict):
         return UVINDEX_JSON
+
+    def mock_get_coi_returning_coindex_around_coords(self, params_dict):
+        return COINDEX_JSON
 
     # Tests
 
@@ -853,4 +860,29 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
                           self.__test_instance, -200, 2.5)
         self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_coindex_around_coords(self):
+        ref_to_original = AirPollutionHttpClient.get_coi
+        AirPollutionHttpClient.get_coi = \
+            self.mock_get_coi_returning_coindex_around_coords
+        result = self.__test_instance.coindex_around_coords(45, 9)
+        AirPollutionHttpClient.get_coi = ref_to_original
+        self.assertTrue(isinstance(result, COIndex))
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_co_samples())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_coindex_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.coindex_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, OWM25.coindex_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, OWM25.coindex_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, OWM25.coindex_around_coords, \
                           self.__test_instance, 200, 2.5)
