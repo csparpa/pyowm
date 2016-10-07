@@ -57,7 +57,7 @@ class UVIndexParser(jsonparser.JSONParser):
                       ''.join([__name__, ': impossible to parse UV Index']))
 
         return uvindex.UVIndex(reference_time, place, None, uv_intensity,
-                               reception_time=reception_time)
+                               reception_time)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)
