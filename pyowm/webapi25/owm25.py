@@ -181,8 +181,9 @@ class OWM25(owm.OWM):
         :returns: bool
 
         """
-        data = self._api.call_API(OBSERVATION_URL, {},
-                                        API_AVAILABILITY_TIMEOUT)
+        data = self._api.call_API(OBSERVATION_URL,
+                                  {'q': 'London,UK'},
+                                  API_AVAILABILITY_TIMEOUT)
         if data is not None:
             return True
         return False
