@@ -25,7 +25,7 @@ class TestUVIndex(unittest.TestCase):
     __test_exposure_risk = 'high'
     __test_instance = UVIndex(
         __test_reference_time, __test_location, __test_interval,
-        __test_uv_intensity, reception_time=__test_reception_time)
+        __test_uv_intensity, __test_reception_time)
 
     def test_init_fails_when_reference_time_is_negative(self):
         self.assertRaises(ValueError, UVIndex, -1234567,
