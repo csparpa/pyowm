@@ -118,6 +118,15 @@ class COIndex(object):
         """
         return min(self._co_samples, key=lambda x: x['value'])
 
+    def is_forecast(self):
+        """
+        Tells if the current CO observation refers to the future with respect
+        to the current date
+        :return: bool
+        """
+        return timeutils.now(timeformat='unix') < \
+               self.get_reference_time(timeformat='unix')
+
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
 

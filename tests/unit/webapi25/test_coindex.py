@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from pyowm.webapi25.location import Location
 from pyowm.webapi25.coindex import COIndex
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.timeformatutils import UTC, _datetime_to_UNIXtime
 from tests.unit.webapi25.json_test_dumps import COINDEX_JSON_DUMP
 from tests.unit.webapi25.xml_test_dumps import COINDEX_XML_DUMP
 
@@ -89,6 +89,14 @@ class TestCOIndex(unittest.TestCase):
                          self.__test_reception_time)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
+
+    def test_is_forecast(self):
+        self.assertFalse(self.__test_instance.is_forecast())
+        in_a_year = _datetime_to_UNIXtime(datetime.utcnow()) + 31536000
+        uvindex = COIndex(in_a_year,
+                          self.__test_location, self.__test_interval,
+                          [], self.__test_reception_time)
+        self.assertTrue(uvindex.is_forecast())
 
     def test_get_co_sample_with_highest_vmr(self):
         expected = {
