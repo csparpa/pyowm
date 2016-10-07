@@ -1,7 +1,3 @@
-"""
-UV Index classes and data structures.
-"""
-
 import json
 import xml.etree.ElementTree as ET
 from pyowm.webapi25.xsd.xmlnsconfig import (
@@ -26,17 +22,16 @@ def uv_intensity_to_exposure_risk(uv_intensity):
 class UVIndex(object):
     """
     A class representing the UltraViolet Index observed in a certain location
-    in the world. The location is represented by the
-    encapsulated *Location* object.
+    in the world. The location is represented by the encapsulated *Location* object.
 
-    :param reception_time: GMT UNIXtime telling when the weather obervation has
+    :param reception_time: GMT UNIXtime telling when the observation has
         been received from the OWM web API
     :type reception_time: int
     :param location: the *Location* relative to this UV observation
     :type location: *Location*
     :param value: the observed UV intensity value
     :type value: float
-    :param interval: the time granularity of the UV Index data
+    :param interval: the time granularity of the UV observation
     :type interval: str
     :returns: an *UVIndex* instance
     :raises: *ValueError* when negative values are provided as reception time or
@@ -72,7 +67,7 @@ class UVIndex(object):
 
     def get_location(self):
         """
-        Returns the *Location* object for this UV index observation
+        Returns the *Location* object for this UV observation
 
         :returns: the *Location* object
 
@@ -81,7 +76,7 @@ class UVIndex(object):
 
     def get_interval(self):
         """
-        Returns the time granularity interval for this UVIndex measurement
+        Returns the time granularity interval for this UV observation
 
         :return: str
         """
