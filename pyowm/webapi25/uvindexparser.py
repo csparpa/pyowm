@@ -8,7 +8,7 @@ from pyowm.webapi25 import uvindex
 from pyowm.webapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
-from pyowm.utils import timeformatutils
+from pyowm.utils import timeformatutils, timeutils
 
 
 class UVIndexParser(jsonparser.JSONParser):
@@ -37,9 +37,12 @@ class UVIndexParser(jsonparser.JSONParser):
         """
         d = json.loads(JSON_string)
         try:
-            # -- time (strip away Z and T on ISO8601 format)
-            t = d['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = timeformatutils._ISO8601_to_UNIXtime(t)
+            # -- reference time (strip away Z and T on ISO8601 format)
+            ref_t = d['time'].replace('Z', '+00').replace('T', ' ')
+            reference_time = timeformatutils._ISO8601_to_UNIXtime(ref_t)
+
+            # -- reception time (now)
+            reception_time = timeutils.now('unix')
 
             # -- location
             lon = float(d['location']['longitude'])
@@ -53,7 +56,8 @@ class UVIndexParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError(
                       ''.join([__name__, ': impossible to parse UV Index']))
 
-        return uvindex.UVIndex(reference_time, place, None, uv_intensity)
+        return uvindex.UVIndex(reference_time, place, None, uv_intensity,
+                               reception_time=reception_time)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)

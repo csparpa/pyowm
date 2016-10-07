@@ -844,6 +844,7 @@ class TestOWM25(unittest.TestCase):
         result = self.__test_instance.uvindex_around_coords(45, 9)
         UltraVioletHttpClient.get_uvi = ref_to_original
         self.assertTrue(isinstance(result, UVIndex))
+        self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)

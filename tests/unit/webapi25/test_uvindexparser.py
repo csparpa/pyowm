@@ -15,6 +15,7 @@ class TestObservationParser(unittest.TestCase):
     def test_parse_JSON(self):
         result = self.__instance.parse_JSON(UVINDEX_JSON)
         self.assertIsNotNone(result)
+        self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)

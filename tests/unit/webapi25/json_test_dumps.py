@@ -80,9 +80,11 @@ STATION_JSON_DUMP = '{"status": 50, "distance": 18.95, "weather": {"status": ' \
                     '"deg": 252.002}}, "name": "KNGU", "station_type": 1, ' \
                     '"lat": 36.9375, "lon": -76.2893, "station_ID": 2865}'
 
-UVINDEX_JSON_DUMP = '{"reception_time": 1234567, "location": {"country": "UK", ' \
+UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
-                   '"ID": 987}, "interval": "day", "value": 6.8}'
+                   '"ID": 987}, "interval": "day", "value": 6.8, ' \
+                    '"reception_time": 1475283600}'
+
 COINDEX_JSON_DUMP = '{"reception_time": 1234567, "co_samples": [{"pressure": ' \
                     '1000, "value": 8.168363052618588e-08, "precision": ' \
                     '-4.999999987376214e-07}, {"pressure": 681.2920532226562, ' \
