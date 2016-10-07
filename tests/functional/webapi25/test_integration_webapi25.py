@@ -516,9 +516,33 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertIsNotNone(u.get_value())
         self.assertIsNotNone(u.get_reception_time())
         self.assertIsNotNone(u.get_interval())
-        loc = u.get_location()
-        self.assertIsNotNone(loc)
+        self.assertIsNotNone(u.get_location())
 
+
+def test_coindex_around_coords(self):
+    """
+    Test feature: get CO index around geo-coordinates.
+    """
+    u = self.__owm.coindex_around_coords(45, 9)
+    self.assertIsNotNone(u)
+    self.assertIsNotNone(u.get_co_samples())
+    self.assertIsNotNone(u.get_reception_time())
+    self.assertIsNotNone(u.get_reference_time())
+    self.assertIsNotNone(u.get_interval())
+    self.assertIsNotNone(u.get_location())
+
+
+def test_ozone_around_coords(self):
+    """
+    Test feature: get ozone around geo-coordinates.
+    """
+    u = self.__owm.ozone_around_coords(45, 9)
+    self.assertIsNotNone(u)
+    self.assertIsNotNone(u.get_du_value())
+    self.assertIsNotNone(u.get_reception_time())
+    self.assertIsNotNone(u.get_reference_time())
+    self.assertIsNotNone(u.get_interval())
+    self.assertIsNotNone(u.get_location())
 
 if __name__ == "__main__":
     unittest.main()
