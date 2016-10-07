@@ -184,7 +184,7 @@ class UVIndex(object):
         return root_node
 
     def __repr__(self):
-        return "<%s.%s - reference time=%s,reception time=%s, location=%s, " \
+        return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
                "interval=%s, value=%s>" % (
                     __name__,
                     self.__class__.__name__,

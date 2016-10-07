@@ -870,6 +870,7 @@ class TestOWM25(unittest.TestCase):
         result = self.__test_instance.coindex_around_coords(45, 9)
         AirPollutionHttpClient.get_coi = ref_to_original
         self.assertTrue(isinstance(result, COIndex))
+        self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)

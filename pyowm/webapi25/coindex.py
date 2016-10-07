@@ -16,35 +16,56 @@ class COIndex(object):
     different atmospheric pressure. The location is represented by the
     encapsulated *Location* object.
 
-    :param reception_time: GMT UNIXtime telling when the weather obervation has
-        been received from the OWM web API
-    :type reception_time: int
-    :param location: the *Location* relative to this UV observation
+    :param reference_time: GMT UNIXtime telling when the CO data has been measured
+    :type reference_time: int
+    :param location: the *Location* relative to this CO observation
     :type location: *Location*
+    :param interval: the time granularity of the CO observation
+    :type interval: str
     :param co_samples: the CO samples
     :type co_samples: list of dicts
-    :param interval: the time granularity of the UV Index data
-    :type interval: str
+    :param reception_time: GMT UNIXtime telling when the CO observation has
+        been received from the OWM web API
+    :type reception_time: int
     :returns: an *COIndex* instance
     :raises: *ValueError* when negative values are provided as reception time,
     CO samples are not provided in a list
 
     """
 
-    def __init__(self, reception_time, location, interval, co_samples):
-        if reception_time < 0:
-            raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
+    def __init__(self, reference_time, location, interval, co_samples,
+                 reception_time):
+        if reference_time < 0:
+            raise ValueError("'reference_time' must be greater than 0")
+        self._reference_time = reference_time
         self._location = location
         self._interval = interval
         if not isinstance(co_samples, list):
             raise ValueError("'co_samples' must be a list")
         self._co_samples = sorted(co_samples, key=lambda k: k['value'], reverse=True)
+        if reception_time < 0:
+            raise ValueError("'reception_time' must be greater than 0")
+        self._reception_time = reception_time
+
+    def get_reference_time(self, timeformat='unix'):
+        """
+        Returns the GMT time telling when the CO samples have been measured
+
+        :param timeformat: the format for the time value. May be:
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
+        :type timeformat: str
+        :returns: an int or a str
+        :raises: ValueError when negative values are provided
+
+        """
+        return timeformatutils.timeformat(self._reference_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
-        Returns the GMT time telling when the CO samples have been collected
-          from the OWM web API
+        Returns the GMT time telling when the CO observation has been received
+        from the OWM web API
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
@@ -103,10 +124,11 @@ class COIndex(object):
         :returns:  the JSON string
 
         """
-        return json.dumps({"reception_time": self._reception_time,
+        return json.dumps({"reference_time": self._reference_time,
                            "location": json.loads(self._location.to_JSON()),
                            "interval": self._interval,
-                           "co_samples": self._co_samples
+                           "co_samples": self._co_samples,
+                           "reception_time": self._reception_time,
                            })
 
     def to_XML(self, xml_declaration=True, xmlns=True):
@@ -140,6 +162,8 @@ class COIndex(object):
 
         """
         root_node = ET.Element("coindex")
+        reference_time_node = ET.SubElement(root_node, "reference_time")
+        reference_time_node.text = str(self._reference_time)
         reception_time_node = ET.SubElement(root_node, "reception_time")
         reception_time_node.text = str(self._reception_time)
         interval_node = ET.SubElement(root_node, "interval")
@@ -157,9 +181,11 @@ class COIndex(object):
         return root_node
 
     def __repr__(self):
-        return "<%s.%s - reception time=%s, location=%s, interval=%s>" % (
+        return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
+               "interval=%s>" % (
                     __name__,
                     self.__class__.__name__,
+                    self.get_reference_time('iso'),
                     self.get_reception_time('iso'),
                     str(self._location),
                     self._interval)

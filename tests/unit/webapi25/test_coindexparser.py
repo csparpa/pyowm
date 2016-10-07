@@ -15,7 +15,8 @@ class TestCOIndexParser(unittest.TestCase):
     def test_parse_JSON(self):
         result = self.__instance.parse_JSON(COINDEX_JSON)
         self.assertIsNotNone(result)
-        self.assertIsNotNone(result.get_reception_time())
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reference_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)
         self.assertIsNone(loc.get_name())

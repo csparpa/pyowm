@@ -1,14 +1,9 @@
-"""
-Module containing a concrete implementation for JSONParser abstract class,
-returning COIndex objects
-"""
-
 import json
 from pyowm.webapi25 import coindex
 from pyowm.webapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
-from pyowm.utils import timeformatutils
+from pyowm.utils import timeformatutils, timeutils
 
 
 class COIndexParser(jsonparser.JSONParser):
@@ -37,9 +32,12 @@ class COIndexParser(jsonparser.JSONParser):
         """
         d = json.loads(JSON_string)
         try:
-            # -- time (strip away Z and T on ISO8601 format)
+            # -- reference time (strip away Z and T on ISO8601 format)
             t = d['time'].replace('Z', '+00').replace('T', ' ')
             reference_time = timeformatutils._ISO8601_to_UNIXtime(t)
+
+            # -- reception time (now)
+            reception_time = timeutils.now('unix')
 
             # -- location
             lon = float(d['location']['longitude'])
@@ -53,7 +51,8 @@ class COIndexParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError(
                       ''.join([__name__, ': impossible to parse COIndex']))
 
-        return coindex.COIndex(reference_time, place, None, co_samples)
+        return coindex.COIndex(reference_time, place, None, co_samples,
+                               reception_time)
 
     def __repr__(self):
         return "<%s.%s>" % (__name__, self.__class__.__name__)
