@@ -29,7 +29,7 @@ class COIndex(object):
     :type reception_time: int
     :returns: an *COIndex* instance
     :raises: *ValueError* when negative values are provided as reception time,
-    CO samples are not provided in a list
+      CO samples are not provided in a list
 
     """
 

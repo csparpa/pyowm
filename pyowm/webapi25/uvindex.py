@@ -37,7 +37,7 @@ class UVIndex(object):
     :type reception_time: int
     :returns: an *UVIndex* instance
     :raises: *ValueError* when negative values are provided as reception time or
-    UV intensity value
+      UV intensity value
 
     """
 

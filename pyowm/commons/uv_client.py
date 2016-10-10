@@ -21,8 +21,8 @@ class UltraVioletHttpClient(object):
 
     :param API_key: a Unicode object representing the OWM UV web API key
     :type API_key: Unicode
-    :param cache: an *OWMCache* concrete instance that will be used to \
-         cache OWM UV web API responses.
+    :param cache: an *OWMCache* concrete instance that will be used to
+      cache OWM UV web API responses.
     :type cache: an *OWMCache* concrete instance
 
     """

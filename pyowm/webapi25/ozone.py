@@ -24,7 +24,7 @@ class Ozone(object):
     :type reception_time: int
     :returns: an *Ozone* instance
     :raises: *ValueError* when negative values are provided as reception time or
-    du_value
+      du_value
 
     """
 
