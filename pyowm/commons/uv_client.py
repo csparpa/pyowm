@@ -21,9 +21,10 @@ class UltraVioletHttpClient(object):
 
     :param API_key: a Unicode object representing the OWM UV web API key
     :type API_key: Unicode
-    :param cache: an *OWMCache* concrete instance that will be used to
+    :param cache: an *OWMCache* concrete instance that will be used to \
          cache OWM UV web API responses.
     :type cache: an *OWMCache* concrete instance
+
     """
 
     def __init__(self, API_key, cache):
@@ -73,12 +74,14 @@ class UltraVioletHttpClient(object):
     def get_uvi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         """
         Invokes the UV Index endpoint
+
         :param params_dict: dict of parameters
         :param timeout: how many seconds to wait for connection establishment
             (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
         :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
+
         """
         lat = str(params_dict['lat'])
         lon = str(params_dict['lon'])

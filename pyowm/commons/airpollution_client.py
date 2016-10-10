@@ -16,14 +16,15 @@ from pyowm.webapi25.configuration25 import ROOT_POLLUTION_API_URL, \
 class AirPollutionHttpClient(object):
 
     """
-    An HTTP client class for the OWM Air Pollution web API. The class can leverage a
-    caching mechanism
+    An HTTP client class for the OWM Air Pollution web API. The class can
+    leverage a caching mechanism
 
     :param API_key: a Unicode object representing the OWM Air Pollution web API key
     :type API_key: Unicode
-    :param cache: an *OWMCache* concrete instance that will be used to
+    :param cache: an *OWMCache* concrete instance that will be used to \
          cache OWM Air Pollution web API responses.
     :type cache: an *OWMCache* concrete instance
+
     """
 
     def __init__(self, API_key, cache):
@@ -73,12 +74,14 @@ class AirPollutionHttpClient(object):
     def get_coi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         """
         Invokes the CO Index endpoint
+
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment
+        :param timeout: how many seconds to wait for connection establishment \
             (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
         :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
+
         """
         lat = str(params_dict['lat'])
         lon = str(params_dict['lon'])
@@ -104,12 +107,14 @@ class AirPollutionHttpClient(object):
     def get_o3(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         """
         Invokes the O3 Index endpoint
+
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment
+        :param timeout: how many seconds to wait for connection establishment \
             (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
         :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
+
         """
         lat = str(params_dict['lat'])
         lon = str(params_dict['lon'])

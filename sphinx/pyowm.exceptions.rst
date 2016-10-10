@@ -37,6 +37,14 @@ pyowm.exceptions.parse_response_error module
     :show-inheritance:
 
 
+pyowm.exceptions.unauthorized_error module
+------------------------------------------
+
+.. automodule:: pyowm.exceptions.unauthorized_error
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Module contents
 ---------------
 

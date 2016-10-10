@@ -181,6 +181,49 @@ pyowm.webapi25.uvindex module
     :show-inheritance:
 
 
+pyowm.webapi25.uvindexparser module
+-----------------------------------
+
+.. automodule:: pyowm.webapi25.uvindexparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.coindex module
+-----------------------------
+
+.. automodule:: pyowm.webapi25.coindex
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+pyowm.webapi25.coindexparser module
+-----------------------------------
+
+.. automodule:: pyowm.webapi25.coindexparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.webapi25.ozone module
+---------------------------
+
+.. automodule:: pyowm.webapi25.ozone
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+pyowm.webapi25.coindexparser module
+-----------------------------------
+
+.. automodule:: pyowm.webapi25.ozoneparser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 
