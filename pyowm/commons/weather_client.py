@@ -11,13 +11,13 @@ except ImportError:
     from urllib import urlencode
 
 import socket
-from pyowm.exceptions import api_call_error
+from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error
 from pyowm.utils import timeformatutils
 from pyowm.webapi25.configuration25 import ROOT_API_URL, ROOT_UV_API_URL, \
     UV_INDEX_URL
 
 
-class OWMHTTPClient(object):
+class WeatherHttpClient(object):
 
     API_SUBSCRIPTION_SUBDOMAINS = {
         'free': 'api',
@@ -57,6 +57,10 @@ class OWMHTTPClient(object):
                     from urllib2 import urlopen
                 response = urlopen(API_full_url, None, timeout)
             except HTTPError as e:
+                if '401' in str(e):
+                    raise unauthorized_error.UnauthorizedError('Invalid API key')
+                if '404' in str(e):
+                    raise not_found_error.NotFoundError('The resource was not found')
                 raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)

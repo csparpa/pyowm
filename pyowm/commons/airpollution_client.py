@@ -9,27 +9,27 @@ except ImportError:
 import socket
 from pyowm.exceptions import api_call_error, not_found_error, unauthorized_error
 from pyowm.utils import timeformatutils
-from pyowm.webapi25.configuration25 import ROOT_UV_API_URL, \
-    UV_INDEX_URL
+from pyowm.webapi25.configuration25 import ROOT_POLLUTION_API_URL, \
+    CO_INDEX_URL, OZONE_URL
 
 
-class OWMHttpUVClient(object):
+class AirPollutionHttpClient(object):
 
     """
-    An HTTP client class for the OWM UV web API. The class can leverage a
+    An HTTP client class for the OWM Air Pollution web API. The class can leverage a
     caching mechanism
 
-    :param API_key: a Unicode object representing the OWM UV web API key
+    :param API_key: a Unicode object representing the OWM Air Pollution web API key
     :type API_key: Unicode
     :param cache: an *OWMCache* concrete instance that will be used to
-         cache OWM UV web API responses.
+         cache OWM Air Pollution web API responses.
     :type cache: an *OWMCache* concrete instance
     """
 
     def __init__(self, API_key, cache):
         self._API_key = API_key
         self._cache = cache
-        self._API_root_URL = ROOT_UV_API_URL
+        self._API_root_URL = ROOT_POLLUTION_API_URL
 
     def _trim_to(self, date_object, interval):
         if interval == 'minute':
@@ -43,9 +43,8 @@ class OWMHttpUVClient(object):
         elif interval == 'year':
             return date_object.strftime('%YZ')
         else:
-            raise ValueError("The interval provided for UVIndex search "
+            raise ValueError("The interval provided for the search "
                              "window is invalid")
-
 
     def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
         cached = cache.get(API_full_url)
@@ -62,7 +61,7 @@ class OWMHttpUVClient(object):
                 if '401' in str(e):
                     raise unauthorized_error.UnauthorizedError('Invalid API key')
                 if '404' in str(e):
-                    raise not_found_error.NotFoundError('The request was not found')
+                    raise not_found_error.NotFoundError('The resource was not found')
                 raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
@@ -71,9 +70,9 @@ class OWMHttpUVClient(object):
                 cache.set(API_full_url, data)
                 return data
 
-    def get_uvi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def get_coi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         """
-        Invokes the UV Index endpoint
+        Invokes the CO Index endpoint
         :param params_dict: dict of parameters
         :param timeout: how many seconds to wait for connection establishment
             (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
@@ -98,7 +97,38 @@ class OWMHttpUVClient(object):
                 timeref = self._trim_to(
                     timeformatutils.to_date(start), interval)
 
-        url = url_template % (ROOT_UV_API_URL, UV_INDEX_URL, lat, lon,
+        url = url_template % (ROOT_POLLUTION_API_URL, CO_INDEX_URL, lat, lon,
+                              timeref, self._API_key)
+        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+
+    def get_o3(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        """
+        Invokes the O3 Index endpoint
+        :param params_dict: dict of parameters
+        :param timeout: how many seconds to wait for connection establishment
+            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
+        :type timeout: int
+        :returns: a string containing raw JSON data
+        :raises: *ValueError*, *APICallError*
+        """
+        lat = str(params_dict['lat'])
+        lon = str(params_dict['lon'])
+        start = params_dict['start']
+        interval = params_dict['interval']
+
+        # build request URL
+        url_template = '%s%s/%s,%s/%s.json?appid=%s'
+        if start is None:
+            timeref = 'current'
+        else:
+            if interval is None:
+                timeref = self._trim_to(
+                    timeformatutils.to_date(start), 'year')
+            else:
+                timeref = self._trim_to(
+                    timeformatutils.to_date(start), interval)
+
+        url = url_template % (ROOT_POLLUTION_API_URL, OZONE_URL, lat, lon,
                               timeref, self._API_key)
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
