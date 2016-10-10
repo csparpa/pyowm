@@ -215,10 +215,10 @@ pyowm.webapi25.ozone module
     :show-inheritance:
 
 
-pyowm.webapi25.coindexparser module
------------------------------------
+pyowm.webapi25.ozone_parser module
+----------------------------------
 
-.. automodule:: pyowm.webapi25.ozoneparser
+.. automodule:: pyowm.webapi25.ozone_parser
     :members:
     :undoc-members:
     :show-inheritance:
