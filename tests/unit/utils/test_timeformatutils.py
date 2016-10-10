@@ -12,7 +12,7 @@ class TestTimeFormatUtils(unittest.TestCase):
     def test_timeformat(self):
         unixtime = 1378459200
         iso = "2013-09-06 09:20:00+00"
-        date = datetime(2013, 9, 6, 9, 20, 0)
+        date = datetime(2013, 9, 6, 9, 20, 0, tzinfo=timeformatutils.UTC())
         self.assertEqual(unixtime, timeformatutils.timeformat(unixtime, "unix"))
         self.assertEqual(iso, timeformatutils.timeformat(unixtime, "iso"))
         self.assertEqual(date, timeformatutils.timeformat(unixtime, "date"))
@@ -30,7 +30,7 @@ class TestTimeFormatUtils(unittest.TestCase):
     def test_to_date(self):
         unixtime = 1378459200
         iso = "2013-09-06 09:20:00+00"
-        date = datetime(2013, 9, 6, 9, 20, 0)
+        date = datetime(2013, 9, 6, 9, 20, 0, tzinfo=timeformatutils.UTC())
         self.assertEqual(date, timeformatutils.to_date(unixtime))
         self.assertEqual(date, timeformatutils.to_date(iso))
         self.assertEqual(date, timeformatutils.to_date(date))
@@ -48,7 +48,7 @@ class TestTimeFormatUtils(unittest.TestCase):
     def test_to_ISO8601(self):
         unixtime = 1378459200
         iso = "2013-09-06 09:20:00+00"
-        date = datetime(2013, 9, 6, 9, 20, 0)
+        date = datetime(2013, 9, 6, 9, 20, 0, tzinfo=timeformatutils.UTC())
         self.assertEqual(iso, timeformatutils.to_ISO8601(unixtime))
         self.assertEqual(iso, timeformatutils.to_ISO8601(iso))
         self.assertEqual(iso, timeformatutils.to_ISO8601(date))
@@ -70,7 +70,7 @@ class TestTimeFormatUtils(unittest.TestCase):
                          timeformatutils._ISO8601_to_UNIXtime(iso))
 
     def test_datetime_to_UNIXtime(self):
-        date = datetime(2013, 9, 19, 12, 0)
+        date = datetime(2013, 9, 19, 12, 0, tzinfo=timeformatutils.UTC())
         expected = 1379592000
         self.assertEqual(timeformatutils._datetime_to_UNIXtime(date), expected)
 
@@ -82,7 +82,7 @@ class TestTimeFormatUtils(unittest.TestCase):
     def test_to_UNIXtime(self):
         unix = 1378459200
         iso = "2013-09-06 09:20:00+00"
-        date = datetime(2013, 9, 6, 9, 20, 0)
+        date = datetime(2013, 9, 6, 9, 20, 0, tzinfo=timeformatutils.UTC())
         self.assertEqual(unix, timeformatutils.to_UNIXtime(unix))
         self.assertEqual(unix, timeformatutils.to_UNIXtime(iso))
         self.assertEqual(unix, timeformatutils.to_UNIXtime(date))

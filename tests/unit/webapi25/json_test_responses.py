@@ -166,3 +166,17 @@ OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"c
 FORECAST_MALFORMED_JSON = '{ "city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
     '"GB","population": 1000000}, "list": [{"test": "fake"}]}'
+
+UVINDEX_JSON = '{"time":"2016-09-27T12:00:00Z","location":{"latitude":43.75,' \
+               '"longitude":8.25},"data":4.58}'
+
+UVINDEX_MALFORMED_JSON = '{"zzz":"2016-09-27T12:00:00Z","test":{"latitude":43.75,' \
+               '"longitude":8.25},"values":4.58}'
+
+COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
+
+COINDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
+
+OZONE_JSON = '{"time":"2016-10-06T13:32:53Z","location":{"latitude":1.3841,"longitude":9.8633},"data":276.8447570800781}'
+
+OZONE_MALFORMED_JSON = '{"time":"2016-10-06T13:32:53Z", "x": 1234}'

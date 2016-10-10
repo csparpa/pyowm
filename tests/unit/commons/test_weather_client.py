@@ -22,8 +22,9 @@ except ImportError:
     from urllib2 import HTTPError, URLError
     import urllib2
 
-from pyowm.commons.owmhttpclient import OWMHTTPClient
+from pyowm.commons.weather_client import WeatherHttpClient
 from pyowm.exceptions.api_call_error import APICallError
+from pyowm.exceptions import not_found_error
 from pyowm.caches.nullcache import NullCache
 
 context = locals()  # Local context
@@ -32,7 +33,7 @@ context = locals()  # Local context
 class TestOWMHTTPClient(unittest.TestCase):
 
     __test_cache = NullCache()
-    __instance = OWMHTTPClient(None, __test_cache)
+    __instance = WeatherHttpClient(None, __test_cache)
     __test_output = b"this is a test HTTP response payload"
 
     def mock_urlopen(self, url, data, timeout):
@@ -67,7 +68,7 @@ class TestOWMHTTPClient(unittest.TestCase):
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL(self):
-        instance = OWMHTTPClient('test_API_key', self.__test_cache)
+        instance = WeatherHttpClient('test_API_key', self.__test_cache)
         API_subset_URL = '/subset'
         params = {'a': 1}
         result = instance._build_full_URL(API_subset_URL, params)
@@ -84,7 +85,7 @@ class TestOWMHTTPClient(unittest.TestCase):
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL_with_unicode_chars_in_API_key(self):
-        instance = OWMHTTPClient('£°test££', self.__test_cache)
+        instance = WeatherHttpClient('£°test££', self.__test_cache)
         API_subset_URL = '/subset'
         params = {'a': 1}
         result = instance._build_full_URL(API_subset_URL, params)
@@ -109,7 +110,7 @@ class TestOWMHTTPClient(unittest.TestCase):
             urllib.request.urlopen = ref_to_original_urlopen
         self.assertEqual(self.__test_output.decode('utf-8'), result_output)
 
-    def test_call_API_raises_OWM_API_call_exception(self):
+    def test_call_API_raises_exception(self):
         # Setup monkey patching
         if 'urllib2' in context:  # Python 2.x
             ref_to_original_urlopen = urllib2.urlopen
@@ -122,7 +123,8 @@ class TestOWMHTTPClient(unittest.TestCase):
         else:  # Python 3.x
             urllib.request.urlopen = \
                 self.mock_urlopen_raising_HTTPError
-        self.assertRaises(APICallError, self.__instance.call_API,
+        self.assertRaises(not_found_error.NotFoundError,
+                          self.__instance.call_API,
                           'http://tests.com/api', {'a': 1, 'b': 2})
 
         # Test raising URLError

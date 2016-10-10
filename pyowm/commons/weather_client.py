@@ -11,10 +11,13 @@ except ImportError:
     from urllib import urlencode
 
 import socket
-from pyowm.exceptions import api_call_error
-from pyowm.webapi25.configuration25 import ROOT_API_URL
+from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error
+from pyowm.utils import timeformatutils
+from pyowm.webapi25.configuration25 import ROOT_API_URL, ROOT_UV_API_URL, \
+    UV_INDEX_URL
 
-class OWMHTTPClient(object):
+
+class WeatherHttpClient(object):
 
     API_SUBSCRIPTION_SUBDOMAINS = {
         'free': 'api',
@@ -22,7 +25,8 @@ class OWMHTTPClient(object):
     }
 
     """
-    An HTTP client class, that can leverage a cache mechanism.
+    An HTTP client class for the OWM web API. The class can leverage a
+    caching mechanism
 
     :param API_key: a Unicode object representing the OWM web API key
     :type API_key: Unicode
@@ -40,6 +44,30 @@ class OWMHTTPClient(object):
         self._cache = cache
         self._API_root_URL = ROOT_API_URL % \
                      (self.API_SUBSCRIPTION_SUBDOMAINS[subscription_type],)
+
+    def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
+        cached = cache.get(API_full_url)
+        if cached:
+            return cached
+        else:
+            try:
+                try:
+                    from urllib.request import urlopen
+                except ImportError:
+                    from urllib2 import urlopen
+                response = urlopen(API_full_url, None, timeout)
+            except HTTPError as e:
+                if '401' in str(e):
+                    raise unauthorized_error.UnauthorizedError('Invalid API key')
+                if '404' in str(e):
+                    raise not_found_error.NotFoundError('The resource was not found')
+                raise api_call_error.APICallError(str(e), e)
+            except URLError as e:
+                raise api_call_error.APICallError(str(e), e)
+            else:
+                data = response.read().decode('utf-8')
+                cache.set(API_full_url, data)
+                return data
 
     def call_API(self, API_endpoint_URL, params_dict,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
@@ -60,24 +88,7 @@ class OWMHTTPClient(object):
 
         """
         url = self._build_full_URL(API_endpoint_URL, params_dict)
-        cached = self._cache.get(url)
-        if cached:
-            return cached
-        else:
-            try:
-                try:
-                    from urllib.request import urlopen
-                except ImportError:
-                    from urllib2 import urlopen
-                response = urlopen(url, None, timeout)
-            except HTTPError as e:
-                raise api_call_error.APICallError(str(e), e)
-            except URLError as e:
-                raise api_call_error.APICallError(str(e), e)
-            else:
-                data = response.read().decode('utf-8')
-                self._cache.set(url, data)
-                return data
+        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def _build_full_URL(self, API_endpoint_URL, params_dict):
         """

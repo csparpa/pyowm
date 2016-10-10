@@ -15,7 +15,7 @@ No additional libraries are requested: only the Python standard library modules.
 
 ##  Support
 
-PyOWM currently supports _version 2.5_ of the OWM API (which is the latest one)
+PyOWM currently supports _version 2.5_ of the OWM API
 
 PyOWM runs on Python 2.7, 3.2, 3.3, 3.4 and 3.5
 
@@ -112,13 +112,13 @@ Usage examples are available in [the wiki page](https://github.com/csparpa/pyowm
 The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
 
 ## Testing
-Unit testing is as simple as `python setup.py test -s tests.unit`. This shall
-be done for each different Python interpreter supported by PyOWM.
-
-A more straighforward way to run tests is using [Tox](http://tox.readthedocs.org).
+Run tests using [Tox](http://tox.readthedocs.org).
 From the project root folder, just launch:
 
 `tox`
+
+Also, unit tests can be run with: `pythonX.Y setup.py test -s tests.unit`.
+
 
 PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
 with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
@@ -136,4 +136,4 @@ If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 
 ## References
 * [OpenWeatherMap website](http://openweathermap.org/)
-* [OpenWeatherMap web API wiki](http://bugs.openweathermap.org/projects/api/wiki)
+* [OpenWeatherMap web API docs](http://openweathermap.org/api)
