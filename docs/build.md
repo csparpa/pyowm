@@ -115,6 +115,19 @@ sudo apt-get update
 sudo apt-get install python3.2 python 3.3
 ```
 
+
+Uploading to PyPi using Twine
+-----------------------------
+```
+python2.7 setup.py sdist --format=zip  # source dist
+python2.7 setup.py bdist_egg  # py27 egg
+python3.2 setup.py bdist_egg  # py32 egg
+python3.3 setup.py bdist_egg  # py33 egg
+python3.4 setup.py bdist_egg  # py34 egg
+python3.5 setup.py bdist_egg  # py35 egg
+twine upload dist/*           # upload to pypi
+```
+
 Upload to PyPi (Cheeseshop)
 ---------------------------
 The following commands are to be issued using a specific Python interpreter (eg: if you launch them using Python 3.3 it will result in 3.3-compatible artifacts (.zip with sources, .egg and win installer) being uploaded to the Cheesehop.
