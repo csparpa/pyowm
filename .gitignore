@@ -12,3 +12,4 @@ sphinx/_build/*
 .tox/*
 .coverage
 tests/functional/.tox/*
+.cache
