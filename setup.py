@@ -5,7 +5,7 @@ from pyowm import constants
 
 setup(
     name='pyowm',
-    version=constants.PYOWM_VERSION,
+    version='.'.join(map(str, constants.PYOWM_VERSION)),
     description='A Python wrapper around the OpenWeatherMap web API',
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
