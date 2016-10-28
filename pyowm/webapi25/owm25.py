@@ -19,6 +19,9 @@ from pyowm.webapi25 import historian
 
 
 class OWM25(owm.OWM):
+
+    OWM_API_VERSION = (2, 5, 0)
+
     """
     OWM subclass providing methods for each OWM web API 2.5 endpoint. The class
     is instantiated with *jsonparser* subclasses, each one parsing the response
@@ -125,13 +128,14 @@ class OWM25(owm.OWM):
         :returns: the OWM web API version string
 
         """
-        return "2.5"
+        return self.OWM_API_VERSION
 
     def get_version(self):
         """
         Returns the current version of the PyOWM library
 
-        :returns: the current PyOWM library version string
+        :returns: the current PyOWM library version tuple in the form:
+          (major, minor, patch)
 
         """
         return constants.PYOWM_VERSION

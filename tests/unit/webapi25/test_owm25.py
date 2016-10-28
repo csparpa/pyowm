@@ -258,7 +258,8 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(result is not None)
 
     def test_get_API_version(self):
-        self.assertEqual("2.5", self.__test_instance.get_API_version())
+        self.assertEqual(self.__test_instance.OWM_API_VERSION,
+                         self.__test_instance.get_API_version())
 
     def test_get_version(self):
         self.assertEqual(PYOWM_VERSION, self.__test_instance.get_version())
