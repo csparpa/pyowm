@@ -7,6 +7,7 @@ from pyowm.webapi25.observation import Observation as ObservationEntity
 from pyowm.webapi25.forecast import Forecast as ForecastEntity
 from pyowm.webapi25.station import Station as StationEntity
 from pyowm.webapi25.stationhistory import StationHistory as StationHistoryEntity
+from pyowm.webapi25.uvindex import UVIndex as UVIndexEntity
 
 
 class Location(models.Model):
@@ -359,3 +360,18 @@ class StationHistory(models.Model):
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
+
+
+class UVIndex(models.Model):
+    """
+    Model allowing a UVIndex entity object to be saved to a persistent datastore
+    """
+    reference_time = models.DateTimeField(null=True, blank=True)
+    location = models.ForeignKey(Location, null=True, blank=True)
+    value = models.FloatField()
+    interval = models.CharField(max_length=255,
+                                verbose_name='Time granularity of UV observation',
+                                help_text='Interval')
+    reception_time = models.DateTimeField(null=True, blank=True)
+
+

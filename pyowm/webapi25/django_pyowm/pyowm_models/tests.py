@@ -5,7 +5,7 @@ from pyowm.utils.timeformatutils import UTC
 from .models import Location, \
     LocationEntity, Weather, WeatherEntity, Observation, ObservationEntity, \
     Forecast, ForecastEntity, Station, StationEntity, StationHistory, \
-    StationHistoryEntity
+    StationHistoryEntity, UVIndex, UVIndexEntity
 
 
 class Databox():
@@ -79,7 +79,6 @@ class Databox():
     station = StationEntity(station_name, station_id, station_type,
                             station_status, lat, lon, station_distance, weather)
 
-
     # station history
     station_history_interval = "tick"
     station_history_measurements = {
@@ -103,6 +102,12 @@ class Databox():
         station_history_interval,
         reception_time,
         station_history_measurements)
+
+    # UV Index
+    uvindex_intensity = 6.8
+    uvindex_interval = 'day'
+    uvindex = UVIndexEntity(reference_time, location, uvindex_interval,
+                            uvindex_intensity, reception_time)
 
 
 class TestLocationModel(TestCase):
@@ -252,3 +257,26 @@ class TestStationHistoryModel(TestCase):
             measurements=json.dumps(Databox.station_history_measurements))
         result = model.to_entity()
         self.assertEquals(Databox.station_history, result)
+
+
+class TestUVIndexModel(TestCase):
+
+    def test_from_entity(self):
+        expected_model = UVIndex(
+            reference_time=Databox.reference_time,
+            location=Databox.location,
+            value=Databox.uvindex_intensity,
+            interval=Databox.uvindex_interval,
+            reception_time=Databox.reception_time)
+        result_model = UVIndex.from_entity(Databox.uvindex)
+        self.assertEquals(expected_model, result_model)
+
+    def test_to_entity(self):
+        model = UVIndex(
+            reference_time=Databox.reference_time,
+            location=Databox.location,
+            value=Databox.uvindex_intensity,
+            interval=Databox.uvindex_interval,
+            reception_time=Databox.reception_time)
+        result = model.to_entity()
+        self.assertEquals(Databox.uvindex, result)
