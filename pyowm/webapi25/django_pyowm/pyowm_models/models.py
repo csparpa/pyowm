@@ -196,8 +196,14 @@ class Forecast(models.Model):
                                 verbose_name='Time granularity of the forecast',
                                 help_text='Interval',
                                 choices=INTERVAL_CHOICES)
-    reception_time = models.DateTimeField(null=True, blank=True)
-    location = models.ForeignKey(Location, null=True, blank=True)
+    reception_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation was received',
+        help_text='Reception time')
+    location = models.ForeignKey(
+        Location, null=True, blank=True,
+        verbose_name='Location of the forecast',
+        help_text='Location')
     weathers = models.ManyToManyField(Weather,
                                       blank=True,
                                       related_name='forecasts',
@@ -265,7 +271,10 @@ class Station(models.Model):
         verbose_name='Distance of station from lat/lon of search criteria',
         help_text='Distance',
         null=True, blank=True)
-    last_weather = models.ForeignKey(Weather, null=True, blank=True)
+    last_weather = models.ForeignKey(
+        Weather, null=True, blank=True,
+        verbose_name='Last weather measured by the station',
+        help_text='Last weather')
 
     def to_entity(self):
         """
@@ -325,8 +334,12 @@ class StationHistory(models.Model):
                                 verbose_name='Time granularity of the station history',
                                 help_text='Interval',
                                 choices=INTERVAL_CHOICES)
-    reception_time = models.DateTimeField(null=True, blank=True)
-    measurements = models.TextField()
+    reception_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation was received',
+        help_text='Reception time')
+    measurements = models.TextField(verbose_name='Measured data',
+                                    help_text='Measurements')
 
     def to_entity(self):
         """
@@ -366,12 +379,48 @@ class UVIndex(models.Model):
     """
     Model allowing a UVIndex entity object to be saved to a persistent datastore
     """
-    reference_time = models.DateTimeField(null=True, blank=True)
-    location = models.ForeignKey(Location, null=True, blank=True)
-    value = models.FloatField()
+    reference_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation refers to',
+        help_text='Reference time')
+    location = models.ForeignKey(Location, null=True, blank=True,
+                                 verbose_name='Location of the observation',
+                                 help_text='Location')
+    value = models.FloatField(verbose_name='Observed UV intensity',
+                              help_text='Value')
     interval = models.CharField(max_length=255,
-                                verbose_name='Time granularity of UV observation',
+                                verbose_name='Time granularity of the observation',
                                 help_text='Interval')
-    reception_time = models.DateTimeField(null=True, blank=True)
+    reception_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation was received',
+        help_text='Reception time')
 
+    def to_entity(self):
+        """
+        Generates a UVIndex object out of the current model
+        :return: a pyowm.webapi25.uvindex.UVIndex instance
+        """
+        return UVIndexEntity(
+            timeformatutils.timeformat(self.reference_time, 'unix'),
+            Location.to_entity(self.location),
+            self.value,
+            self.interval,
+            timeformatutils.timeformat(self.reception_time, 'unix'))
 
+    @classmethod
+    def from_entity(cls, uvindex_obj):
+        """
+        Creates a model instance out of a UVIndex entity object
+        :param uvindex_obj: the UVIndex object
+        :type uvindex_obj: pyowm.webapi25.uvindex.UVIndex
+        :return: a UVIndex model instance
+        """
+        assert isinstance(uvindex_obj, UVIndexEntity)
+        loc = uvindex_obj.get_location()
+        return UVIndex(
+            reference_time=uvindex_obj.get_reference_time(timeformat='date'),
+            location=Location.from_entity(loc),
+            value=uvindex_obj.get_value(),
+            interval=uvindex_obj.get_interval(),
+            reception_time=uvindex_obj.get_reception_time(timeformat='date'))
