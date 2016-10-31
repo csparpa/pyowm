@@ -4,7 +4,8 @@ from django.test import TestCase
 from pyowm.utils.timeformatutils import UTC
 from .models import Location, \
     LocationEntity, Weather, WeatherEntity, Observation, ObservationEntity, \
-    Forecast, ForecastEntity, Station, StationEntity
+    Forecast, ForecastEntity, Station, StationEntity, StationHistory, \
+    StationHistoryEntity
 
 
 class Databox():
@@ -77,6 +78,31 @@ class Databox():
     station_distance = 18.56
     station = StationEntity(station_name, station_id, station_type,
                             station_status, lat, lon, station_distance, weather)
+
+
+    # station history
+    station_history_interval = "tick"
+    station_history_measurements = {
+        1362933983: {
+            "temperature": 266.25,
+            "humidity": 27.3,
+            "pressure": 1010.02,
+            "rain": None,
+            "wind": 4.7
+        },
+        1362934043: {
+            "temperature": 266.85,
+            "humidity": 27.7,
+            "pressure": 1010.09,
+            "rain": None,
+            "wind": 4.7
+        }
+    }
+    station_history = StationHistoryEntity(
+        station_id,
+        station_history_interval,
+        reception_time,
+        station_history_measurements)
 
 
 class TestLocationModel(TestCase):
@@ -205,3 +231,24 @@ class TestStationModel(TestCase):
                         last_weather=Databox.weather)
         result = model.to_entity()
         self.assertEquals(Databox.station, result)
+
+
+class TestStationHistoryModel(TestCase):
+
+    def test_from_entity(self):
+        expected_model = StationHistory(
+            station_id=Databox.station_id,
+            interval=Databox.station_history_interval,
+            reception_time=Databox.reception_time,
+            measurements=json.dumps(Databox.station_history_measurements))
+        result_model = Station.from_entity(Databox.station_history)
+        self.assertEquals(expected_model, result_model)
+
+    def test_to_entity(self):
+        model = StationHistory(
+            station_id=Databox.station_id,
+            interval=Databox.station_history_interval,
+            reception_time=Databox.reception_time,
+            measurements=json.dumps(Databox.station_history_measurements))
+        result = model.to_entity()
+        self.assertEquals(Databox.station_history, result)
