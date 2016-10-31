@@ -4,6 +4,7 @@ PyOWM release checklist
 * update constants.py
 * update setup.py
 * update city ID files
+* test/check Django app
 * update README.md
 * update github wiki pages (including changelog) in the /wiki folder
 * run tests locally using tox (or setup.py with all Python supported envs)
@@ -145,3 +146,16 @@ If you don't want artifacts to be uploaded but just be created locally, omit the
 Awesome guide on setting up open source Python projects
 -------------------------------------------------------
 [Jeff Knupp's blog](http://www.jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/)
+
+
+Django app for PyOWM
+--------------------
+
+https://docs.djangoproject.com/en/1.10/intro/reusable-apps/
+
+Checklist:
+
+  - write all models
+  - test all models
+  - generate first migration file
+  - embed into src code package

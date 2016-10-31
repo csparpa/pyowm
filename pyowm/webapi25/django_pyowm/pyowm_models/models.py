@@ -4,6 +4,7 @@ from pyowm.utils import timeformatutils
 from pyowm.webapi25.location import Location as LocationEntity
 from pyowm.webapi25.weather import Weather as WeatherEntity
 from pyowm.webapi25.observation import Observation as ObservationEntity
+from pyowm.webapi25.forecast import Forecast as ForecastEntity
 
 
 class Location(models.Model):
@@ -46,6 +47,12 @@ class Location(models.Model):
             lat=location_obj.get_lat(),
             city_id=location_obj.get_ID(),
             country=location_obj.get_country())
+
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
 
 
 class Weather(models.Model):
@@ -125,16 +132,20 @@ class Weather(models.Model):
             humidex=weather_obj.get_humidex(),
             heat_index=weather_obj.get_heat_index())
 
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
+
 
 class Observation(models.Model):
     """
     Model allowing an Observation entity object to be saved to a persistent datastore
     """
     reception_time = models.DateTimeField(null=True, blank=True)
-    location = models.ForeignKey(Location, null=True, blank=True,
-                                 on_delete=models.DO_NOTHING)
-    weather = models.ForeignKey(Weather, null=True, blank=True,
-                                on_delete=models.DO_NOTHING)
+    location = models.ForeignKey(Location, null=True, blank=True)
+    weather = models.ForeignKey(Weather, null=True, blank=True)
 
     def to_entity(self):
         """
@@ -161,10 +172,67 @@ class Observation(models.Model):
         weat = Weather.from_entity(weather_entity)
         return Observation(
             reception_time=observation_obj.get_reception_time(timeformat='date'),
+            location=loc, weather=weat)
+
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
+
+
+class Forecast(models.Model):
+    """
+    Model allowing a Forecast entity object to be saved to a persistent datastore
+    """
+    INTERVAL_CHOICES = (
+        (u'3h', u'Three hours'),
+        (u'daily', u'Daily'))
+
+    interval = models.CharField(max_length=255,
+                                verbose_name='Time granularity of the forecast',
+                                help_text='Interval',
+                                choices=INTERVAL_CHOICES)
+    reception_time = models.DateTimeField(null=True, blank=True)
+    location = models.ForeignKey(Location, null=True, blank=True)
+    weathers = models.ManyToManyField(Weather,
+                                      blank=True,
+                                      related_name='forecasts',
+                                      help_text="Weathers",
+                                      verbose_name="Weathers of the forecast")
+
+    def to_entity(self):
+        """
+        Generates a Forecast object out of the current model
+        :return: a pyowm.webapi25.forecast.Forecast instance
+        """
+        return ForecastEntity(
+            self.interval,
+            timeformatutils.timeformat(self.reception_time, 'unix'),
+            self.location.to_entity(),
+            list(self.weathers.all()))
+
+    @classmethod
+    def from_entity(cls, forecast_obj):
+        """
+        Creates a model instance out of a Forecast model object
+        :param forecast_obj: the Forecast object
+        :type forecast_obj: pyowm.webapi25.forecast.Forecast
+        :return: a Forecast model instance
+        """
+        assert isinstance(forecast_obj, ForecastEntity)
+        location_entity = forecast_obj.get_location()
+        weather_entities = forecast_obj.get_weathers()
+        loc = Location.from_entity(location_entity)
+        weats = [Weather.from_entity(w) for w in weather_entities]
+        return Forecast(
+            interval=forecast_obj.get_interval(),
+            reception_time=forecast_obj.get_reception_time(timeformat='date'),
             location=loc,
-            weather=weat)
+            weathers=weats)
 
-
-    def save(self, *args, **kwargs):
-        # TBD: need to save related objects before the current one!
-        pass
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
