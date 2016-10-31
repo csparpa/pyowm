@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from django.test import TestCase
 from pyowm.utils.timeformatutils import UTC
-from .models import Location, \
+from pyowm.webapi25.django_pyowm.pyowm_models.models import Location, \
     LocationEntity, Weather, WeatherEntity, Observation, ObservationEntity, \
     Forecast, ForecastEntity, Station, StationEntity, StationHistory, \
     StationHistoryEntity, UVIndex, UVIndexEntity
@@ -20,9 +20,11 @@ class Databox():
     country = 'UK'
     location = LocationEntity(location_name, lon, lat, city_id, country)
 
+    reception_time_unix = 1378459200
     reception_time = datetime.strptime(
-        "2013-09-07 09:20:00+00",
+        "2013-09-06 09:20:00+00",
         '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    reference_time_unix = 1378459200
     reference_time = datetime.strptime(
         "2013-09-06 09:20:00+00",
         '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
@@ -53,7 +55,7 @@ class Databox():
 
     # weather
     weather = WeatherEntity(
-        reference_time, sunset_time,
+        reference_time_unix, sunset_time,
         sunrise_time, clouds, rain,
         snow, wind, humidity,
         pressure, temperature,
@@ -63,12 +65,12 @@ class Databox():
         humidex, heat_index)
 
     # observation
-    observation = ObservationEntity(reception_time, location, weather)
+    observation = ObservationEntity(reception_time_unix, location, weather)
 
     # forecast
     interval = '3h'
     weathers = [weather, weather]
-    forecast = ForecastEntity(interval, reception_time, location, weathers)
+    forecast = ForecastEntity(interval, reception_time_unix, location, weathers)
 
     # station
     station_name = 'KNGU'
@@ -100,14 +102,14 @@ class Databox():
     station_history = StationHistoryEntity(
         station_id,
         station_history_interval,
-        reception_time,
+        reception_time_unix,
         station_history_measurements)
 
     # UV Index
     uvindex_intensity = 6.8
     uvindex_interval = 'day'
-    uvindex = UVIndexEntity(reference_time, location, uvindex_interval,
-                            uvindex_intensity, reception_time)
+    uvindex = UVIndexEntity(reference_time_unix, location, uvindex_interval,
+                            uvindex_intensity, reception_time_unix)
 
 
 class TestLocationModel(TestCase):
