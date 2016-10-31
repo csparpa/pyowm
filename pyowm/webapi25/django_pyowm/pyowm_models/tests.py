@@ -246,7 +246,7 @@ class TestStationHistoryModel(TestCase):
             interval=Databox.station_history_interval,
             reception_time=Databox.reception_time,
             measurements=json.dumps(Databox.station_history_measurements))
-        result_model = Station.from_entity(Databox.station_history)
+        result_model = StationHistory.from_entity(Databox.station_history)
         self.assertEquals(expected_model, result_model)
 
     def test_to_entity(self):
