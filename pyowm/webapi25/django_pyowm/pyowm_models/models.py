@@ -5,6 +5,7 @@ from pyowm.webapi25.location import Location as LocationEntity
 from pyowm.webapi25.weather import Weather as WeatherEntity
 from pyowm.webapi25.observation import Observation as ObservationEntity
 from pyowm.webapi25.forecast import Forecast as ForecastEntity
+from pyowm.webapi25.station import Station as StationEntity
 
 
 class Location(models.Model):
@@ -230,6 +231,74 @@ class Forecast(models.Model):
             reception_time=forecast_obj.get_reception_time(timeformat='date'),
             location=loc,
             weathers=weats)
+
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
+
+
+class Station(models.Model):
+    """
+    Model allowing a Station entity object to be saved to a persistent datastore
+    """
+    name = models.CharField(max_length=255,
+                            verbose_name='Name of the meteostation',
+                            help_text='Name',
+                            null=True, blank=True)
+    station_id = models.IntegerField(verbose_name='OWM station ID',
+                                     help_text='Station ID')
+    station_type = models.IntegerField(verbose_name='Meteostation type',
+                                       help_text='Type',
+                                       null=True, blank=True)
+    station_status = models.IntegerField(verbose_name='Meteostation status',
+                                         help_text='Status',
+                                         null=True, blank=True)
+    lat = models.FloatField(verbose_name='Latitude of the meteostation',
+                            help_text='Latitude')
+    lon = models.FloatField(verbose_name='Longitude of the meteostation',
+                            help_text='Longitude')
+    distance = models.FloatField(
+        verbose_name='Distance of station from lat/lon of search criteria',
+        help_text='Distance',
+        null=True, blank=True)
+    last_weather = models.ForeignKey(Weather, null=True, blank=True)
+
+    def to_entity(self):
+        """
+        Generates a Station object out of the current model
+        :return: a pyowm.webapi25.station.Station instance
+        """
+        return StationEntity(
+            self.name,
+            self.station_id,
+            self.station_type,
+            self.station_status,
+            self.lat,
+            self.lon,
+            self.distance,
+            self.last_weather.to_entity())
+
+    @classmethod
+    def from_entity(cls, station_obj):
+        """
+        Creates a model instance out of a Station model object
+        :param station_obj: the Station object
+        :type station_obj: pyowm.webapi25.station.Station
+        :return: a Station model instance
+        """
+        assert isinstance(station_obj, StationEntity)
+        weather_entity = Weather.from_entity(station_obj.get_last_weather())
+        return Station(
+            name=station_obj.get_name(),
+            station_id=station_obj.get_station_ID(),
+            station_type=station_obj.get_station_type(),
+            station_status=station_obj.get_status(),
+            lat=station_obj.get_lat(),
+            lon=station_obj.get_lon(),
+            distance=station_obj.get_distance(),
+            last_weather=weather_entity)
 
     def __repr__(self):
         return "<%s.%s - pk=%d>" % (

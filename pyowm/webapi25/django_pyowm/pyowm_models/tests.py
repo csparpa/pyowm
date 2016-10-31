@@ -4,7 +4,7 @@ from django.test import TestCase
 from pyowm.utils.timeformatutils import UTC
 from .models import Location, \
     LocationEntity, Weather, WeatherEntity, Observation, ObservationEntity, \
-    Forecast, ForecastEntity
+    Forecast, ForecastEntity, Station, StationEntity
 
 
 class Databox():
@@ -12,7 +12,12 @@ class Databox():
     Test data container
     """
     # location
-    location = LocationEntity('London', 12.3, 43.7, 1234, 'UK')
+    location_name = 'London'
+    lat = 43.7
+    lon = 12.3
+    city_id = 1234
+    country = 'UK'
+    location = LocationEntity(location_name, lon, lat, city_id, country)
 
     reception_time = datetime.strptime(
         "2013-09-07 09:20:00+00",
@@ -64,18 +69,30 @@ class Databox():
     weathers = [weather, weather]
     forecast = ForecastEntity(interval, reception_time, location, weathers)
 
+    # station
+    station_name = 'KNGU'
+    station_id = 2685
+    station_type = 1
+    station_status = 50
+    station_distance = 18.56
+    station = StationEntity(station_name, station_id, station_type,
+                            station_status, lat, lon, station_distance, weather)
+
 
 class TestLocationModel(TestCase):
 
     def test_from_entity(self):
-        expected_model = Location(name='London', lon=12.3, lat=43.7,
-                                  city_id=1234, country='UK')
+        expected_model = Location(name=Databox.location_name,
+                                  lon=Databox.lon, lat=Databox.lat,
+                                  city_id=Databox.city_id,
+                                  country=Databox.country)
         result_model = Location.from_entity(Databox.location)
         self.assertEquals(expected_model, result_model)
 
     def test_to_entity(self):
-        model = Location(name='London', lon=12.3, lat=43.7,
-                         city_id=1234, country='UK')
+        model = Location(name=Databox.location_name, lon=Databox.lon,
+                         lat=Databox.lat, city_id=Databox.city_id,
+                         country=Databox.country)
         result = model.to_entity()
         self.assertEquals(Databox.location, result)
 
@@ -163,3 +180,28 @@ class TestForecastModel(TestCase):
                          weathers=Databox.weathers)
         result = model.to_entity()
         self.assertEquals(Databox.forecast, result)
+
+
+class TestStationModel(TestCase):
+
+    def test_from_entity(self):
+        expected_model = Station(name=Databox.station_name,
+                                 station_id=Databox.station_id,
+                                 station_type=Databox.station_type,
+                                 station_status=Databox.station_status,
+                                 lat=Databox.lat, lon=Databox.lon,
+                                 distance=Databox.station_distance,
+                                 last_weather=Databox.weather)
+        result_model = Station.from_entity(Databox.station)
+        self.assertEquals(expected_model, result_model)
+
+    def test_to_entity(self):
+        model = Station(name=Databox.station_name,
+                        station_id=Databox.station_id,
+                        station_type=Databox.station_type,
+                        station_status=Databox.station_status,
+                        lat=Databox.lat, lon=Databox.lon,
+                        distance=Databox.station_distance,
+                        last_weather=Databox.weather)
+        result = model.to_entity()
+        self.assertEquals(Databox.station, result)
