@@ -62,6 +62,27 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         weat = o2.get_weather()
         self.assertTrue(weat)
 
+    def test_weather_at_zipcode(self):
+        """
+        Test feature: get currently observed weather at specific postcode
+        """
+        o1 = self.__owm.weather_at_zip_code("2000", "AU")   # Sydney, Australia
+        o2 = self.__owm.weather_at_zip_code("SW85BH", "UK") # London, UK
+        self.assertTrue(o1)
+        self.assertTrue(o1.get_reception_time())
+        loc = o1.get_location()
+        self.assertTrue(loc)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o1.get_weather()
+        self.assertTrue(weat)
+        self.assertTrue(o2)
+        self.assertTrue(o2.get_reception_time())
+        loc = o2.get_location()
+        self.assertTrue(loc)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = o2.get_weather()
+        self.assertTrue(weat)
+
     def test_weather_at_id(self):
         o1 = self.__owm.weather_at_id(5128581) # New York
         o2 = self.__owm.weather_at_id(703448) # Kiev'
