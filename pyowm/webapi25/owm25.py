@@ -263,8 +263,6 @@ class OWM25(owm.OWM):
                                           'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
-        pass
-
     def weather_at_id(self, id):
         """
         Queries the OWM web API for the currently observed weather at the
