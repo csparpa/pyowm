@@ -51,6 +51,8 @@ data can only be retrieved using a paid account.
 Django integration testing
 --------------------------
 ```
+cd <root-folder>
+python setup.py install
 cd pyowm/webapi25/django_pyowm
 python manage.py test pyowm_models.tests
 ```

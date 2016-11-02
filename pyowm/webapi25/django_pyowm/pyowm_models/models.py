@@ -54,7 +54,7 @@ class Location(models.Model):
             country=location_obj.get_country())
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -89,9 +89,9 @@ class Weather(models.Model):
         :return: a pyowm.webapi25.weather.Weather instance
         """
         return WeatherEntity(
-            self.reference_time,
-            self.sunrise_time,
-            self.sunset_time,
+            timeformatutils.timeformat(self.reference_time, 'unix'),
+            timeformatutils.timeformat(self.sunset_time, 'unix'),
+            timeformatutils.timeformat(self.sunrise_time, 'unix'),
             self.clouds,
             json.loads(self.rain),
             json.loads(self.snow),
@@ -138,7 +138,7 @@ class Weather(models.Model):
             heat_index=weather_obj.get_heat_index())
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -180,7 +180,7 @@ class Observation(models.Model):
             location=loc, weather=weat)
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -221,29 +221,28 @@ class Forecast(models.Model):
             self.interval,
             timeformatutils.timeformat(self.reception_time, 'unix'),
             self.location.to_entity(),
-            list(self.weathers.all()))
+            [Weather.to_entity(w) for w in self.weathers.all()])
 
     @classmethod
     def from_entity(cls, forecast_obj):
         """
-        Creates a model instance out of a Forecast model object
+        Creates a model instance out of a Forecast model object. Please notice
+        that no Weather objects can be attached to the result model instance as
+        it shall be saved before of instantiating the many-to-many relationship.
         :param forecast_obj: the Forecast object
         :type forecast_obj: pyowm.webapi25.forecast.Forecast
         :return: a Forecast model instance
         """
         assert isinstance(forecast_obj, ForecastEntity)
         location_entity = forecast_obj.get_location()
-        weather_entities = forecast_obj.get_weathers()
         loc = Location.from_entity(location_entity)
-        weats = [Weather.from_entity(w) for w in weather_entities]
         return Forecast(
             interval=forecast_obj.get_interval(),
             reception_time=forecast_obj.get_reception_time(timeformat='date'),
-            location=loc,
-            weathers=weats)
+            location=loc)
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -314,7 +313,7 @@ class Station(models.Model):
             last_weather=weather_entity)
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -348,11 +347,12 @@ class StationHistory(models.Model):
         Generates a StationHistory object out of the current model
         :return: a pyowm.webapi25.stationhistory.StationHistory instance
         """
+        data = {int(k): v for k, v in json.loads(self.measurements).items()}
         return StationHistoryEntity(
             self.station_id,
             self.interval,
             timeformatutils.timeformat(self.reception_time, 'unix'),
-            json.loads(self.measurements))
+            data)
 
 
     @classmethod
@@ -371,7 +371,7 @@ class StationHistory(models.Model):
             measurements=json.dumps(stationhistory_obj.get_measurements()))
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -415,8 +415,8 @@ class UVIndex(models.Model):
         return UVIndexEntity(
             timeformatutils.timeformat(self.reference_time, 'unix'),
             Location.to_entity(self.location),
-            self.value,
             self.interval,
+            self.value,
             timeformatutils.timeformat(self.reception_time, 'unix'))
 
     @classmethod
@@ -437,7 +437,7 @@ class UVIndex(models.Model):
             reception_time=uvindex_obj.get_reception_time(timeformat='date'))
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -502,7 +502,7 @@ class COIndex(models.Model):
             co_samples=json.dumps(coindex_obj.get_co_samples()))
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
@@ -545,8 +545,8 @@ class Ozone(models.Model):
         return OzoneEntity(
             timeformatutils.timeformat(self.reference_time, 'unix'),
             Location.to_entity(self.location),
-            self.du_value,
             self.interval,
+            self.du_value,
             timeformatutils.timeformat(self.reception_time, 'unix'))
 
     @classmethod
@@ -567,7 +567,7 @@ class Ozone(models.Model):
             reception_time=ozone_obj.get_reception_time(timeformat='date'))
 
     def __repr__(self):
-        return "<%s.%s - pk=%d>" % (
+        return "<%s.%s - pk=%s>" % (
             __name__,
             self.__class__.__name__,
             self.pk if self.pk is not None else 'None')
