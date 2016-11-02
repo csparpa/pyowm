@@ -8,6 +8,8 @@ from pyowm.webapi25.forecast import Forecast as ForecastEntity
 from pyowm.webapi25.station import Station as StationEntity
 from pyowm.webapi25.stationhistory import StationHistory as StationHistoryEntity
 from pyowm.webapi25.uvindex import UVIndex as UVIndexEntity
+from pyowm.webapi25.coindex import COIndex as COIndexEntity
+from pyowm.webapi25.ozone import Ozone as OzoneEntity
 
 
 class Location(models.Model):
@@ -379,6 +381,14 @@ class UVIndex(models.Model):
     """
     Model allowing a UVIndex entity object to be saved to a persistent datastore
     """
+
+    INTERVAL_CHOICES = (
+        (u'minute', u'One minute'),
+        (u'hour', u'One hour'),
+        (u'day', u'One day'),
+        (u'month', u'One month'),
+        (u'year', u'One year'))
+
     reference_time = models.DateTimeField(
         null=True, blank=True,
         verbose_name='Time the observation refers to',
@@ -390,7 +400,8 @@ class UVIndex(models.Model):
                               help_text='Value')
     interval = models.CharField(max_length=255,
                                 verbose_name='Time granularity of the observation',
-                                help_text='Interval')
+                                help_text='Interval',
+                                choices=INTERVAL_CHOICES)
     reception_time = models.DateTimeField(
         null=True, blank=True,
         verbose_name='Time the observation was received',
@@ -424,3 +435,119 @@ class UVIndex(models.Model):
             value=uvindex_obj.get_value(),
             interval=uvindex_obj.get_interval(),
             reception_time=uvindex_obj.get_reception_time(timeformat='date'))
+
+
+class COIndex(models.Model):
+    """
+    Model allowing a COIndex entity object to be saved to a persistent datastore
+    """
+    INTERVAL_CHOICES = (
+        (u'minute', u'One minute'),
+        (u'hour', u'One hour'),
+        (u'day', u'One day'),
+        (u'month', u'One month'),
+        (u'year', u'One year'))
+
+    reference_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation refers to',
+        help_text='Reference time')
+    location = models.ForeignKey(Location, null=True, blank=True,
+                                 verbose_name='Location of the observation',
+                                 help_text='Location')
+    interval = models.CharField(max_length=255,
+                                verbose_name='Time granularity of the observation',
+                                choices=INTERVAL_CHOICES)
+    reception_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation was received',
+        help_text='Reception time')
+    co_samples = models.TextField(verbose_name='CO samples data',
+                                  help_text='CO samples')
+
+    def to_entity(self):
+        """
+        Generates a COIndex object out of the current model
+        :return: a pyowm.webapi25.coindex.COIndex instance
+        """
+        return COIndexEntity(
+            timeformatutils.timeformat(self.reference_time, 'unix'),
+            Location.to_entity(self.location),
+            self.interval,
+            json.loads(self.co_samples),
+            timeformatutils.timeformat(self.reception_time, 'unix'))
+
+    @classmethod
+    def from_entity(cls, coindex_obj):
+        """
+        Creates a model instance out of a COIndex entity object
+        :param coindex_obj: the COIndex object
+        :type coindex_obj: pyowm.webapi25.coindex.COIndex
+        :return: a COIndex model instance
+        """
+        assert isinstance(coindex_obj, COIndexEntity)
+        loc = coindex_obj.get_location()
+        return COIndex(
+            reference_time=coindex_obj.get_reference_time(timeformat='date'),
+            location=Location.from_entity(loc),
+            interval=coindex_obj.get_interval(),
+            reception_time=coindex_obj.get_reception_time(timeformat='date'),
+            co_samples=json.dumps(coindex_obj.get_co_samples()))
+
+
+class Ozone(models.Model):
+    """
+    Model allowing an Ozone entity object to be saved to a persistent datastore
+    """
+    INTERVAL_CHOICES = (
+        (u'minute', u'One minute'),
+        (u'hour', u'One hour'),
+        (u'day', u'One day'),
+        (u'month', u'One month'),
+        (u'year', u'One year'))
+
+    reference_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation refers to',
+        help_text='Reference time')
+    location = models.ForeignKey(Location, null=True, blank=True,
+                                 verbose_name='Location of the observation',
+                                 help_text='Location')
+    du_value = models.FloatField(verbose_name='Observed ozone Dobson Units',
+                                 help_text='DU value')
+    interval = models.CharField(max_length=255,
+                                verbose_name='Time granularity of the observation',
+                                choices=INTERVAL_CHOICES)
+    reception_time = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Time the observation was received',
+        help_text='Reception time')
+
+    def to_entity(self):
+        """
+        Generates an Ozone object out of the current model
+        :return: a pyowm.webapi25.ozone.Ozone instance
+        """
+        return OzoneEntity(
+            timeformatutils.timeformat(self.reference_time, 'unix'),
+            Location.to_entity(self.location),
+            self.du_value,
+            self.interval,
+            timeformatutils.timeformat(self.reception_time, 'unix'))
+
+    @classmethod
+    def from_entity(cls, ozone_obj):
+        """
+        Creates a model instance out of an Ozone entity object
+        :param ozone_obj: the Ozone object
+        :type ozone_obj: pyowm.webapi25.ozone.Ozone
+        :return: an Ozone model instance
+        """
+        assert isinstance(ozone_obj, OzoneEntity)
+        loc = ozone_obj.get_location()
+        return Ozone(
+            reference_time=ozone_obj.get_reference_time(timeformat='date'),
+            location=Location.from_entity(loc),
+            du_value=ozone_obj.get_du_value(),
+            interval=ozone_obj.get_interval(),
+            reception_time=ozone_obj.get_reception_time(timeformat='date'))

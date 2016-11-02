@@ -5,7 +5,8 @@ from pyowm.utils.timeformatutils import UTC
 from pyowm.webapi25.django_pyowm.pyowm_models.models import Location, \
     LocationEntity, Weather, WeatherEntity, Observation, ObservationEntity, \
     Forecast, ForecastEntity, Station, StationEntity, StationHistory, \
-    StationHistoryEntity, UVIndex, UVIndexEntity
+    StationHistoryEntity, UVIndex, UVIndexEntity, COIndex, COIndexEntity, \
+    Ozone, OzoneEntity
 
 
 class Databox():
@@ -110,6 +111,27 @@ class Databox():
     uvindex_interval = 'day'
     uvindex = UVIndexEntity(reference_time_unix, location, uvindex_interval,
                             uvindex_intensity, reception_time_unix)
+
+    # CO Index
+    co_samples = [
+        {
+            "precision": -4.999999987376214e-7,
+            "pressure": 1000,
+            "value": 8.168363052618588e-8
+        },
+        {
+            "precision": -4.999999987376214e-7,
+            "pressure": 681.2920532226562,
+            "value": 8.686949115599418e-8
+        }
+    ]
+    coindex_interval = 'month'
+    coindex = COIndex(
+        reference_time, location, coindex_interval, reception_time, co_samples)
+
+    # Ozone
+    du_value = 6.8
+    ozone = Ozone(reference_time, location, interval, du_value, reception_time)
 
 
 class TestLocationModel(TestCase):
@@ -282,3 +304,49 @@ class TestUVIndexModel(TestCase):
             reception_time=Databox.reception_time)
         result = model.to_entity()
         self.assertEquals(Databox.uvindex, result)
+
+
+class TestCOIndexModel(TestCase):
+
+    def test_from_entity(self):
+        expected_model = COIndex(
+            reference_time=Databox.reference_time,
+            location=Databox.location,
+            interval=Databox.uvindex_interval,
+            reception_time=Databox.reception_time,
+            co_samples=json.dumps(Databox.co_samples))
+        result_model = COIndex.from_entity(Databox.coindex)
+        self.assertEquals(expected_model, result_model)
+
+    def test_to_entity(self):
+        model = COIndex(
+            reference_time=Databox.reference_time,
+            location=Databox.location,
+            interval=Databox.uvindex_interval,
+            reception_time=Databox.reception_time,
+            co_samples=json.dumps(Databox.co_samples))
+        result = model.to_entity()
+        self.assertEquals(Databox.coindex, result)
+
+
+class TestOzoneModel(TestCase):
+
+    def test_from_entity(self):
+        expected_model = Ozone(
+            reference_time=Databox.reference_time,
+            location=Databox.location,
+            du_value=Databox.du_value,
+            interval=Databox.uvindex_interval,
+            reception_time=Databox.reception_time)
+        result_model = Ozone.from_entity(Databox.ozone)
+        self.assertEquals(expected_model, result_model)
+
+    def test_to_entity(self):
+        model = Ozone(
+            reference_time=Databox.reference_time,
+            location=Databox.location,
+            du_value=Databox.du_value,
+            interval=Databox.uvindex_interval,
+            reception_time=Databox.reception_time)
+        result = model.to_entity()
+        self.assertEquals(Databox.ozone, result)
