@@ -99,6 +99,7 @@ class OWM25(owm.OWM):
         try:  # The OWM API expects UTF-8 encoding
             if not isinstance(value, unicode):
                 return value.encode('utf8')
+            return value
         except NameError:
             return value
 
