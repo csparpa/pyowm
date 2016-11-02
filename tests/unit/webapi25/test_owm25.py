@@ -301,6 +301,20 @@ class TestOWM25(unittest.TestCase):
         weat = result.get_weather()
         self.assertTrue(weat is not None)
 
+    def test_weather_at_zip_code(self):
+        ref_to_original_call_API = WeatherHttpClient.call_API
+        WeatherHttpClient.call_API = \
+            self.mock_httputils_call_API_returning_single_obs
+        result = self.__test_instance.weather_at_zip_code("2000", "AU")
+        WeatherHttpClient.call_API = ref_to_original_call_API
+        self.assertTrue(isinstance(result, Observation))
+        self.assertTrue(result.get_reception_time() is not None)
+        loc = result.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        weat = result.get_weather()
+        self.assertTrue(weat is not None)
+
     def test_weather_at_coords_fails_when_coordinates_out_of_bounds(self):
         """
         Test failure when providing: lon < -180, lon > 180, lat < -90, lat > 90
