@@ -238,6 +238,31 @@ class OWM25(owm.OWM):
                                                'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
+    def weather_at_zip_code(self, zipcode, country):
+        """
+        Queries the OWM web API for the currently observed weather at the
+        specified zip code and country code (eg: 2037, au).
+        
+        :param zip: the location's zip or postcode
+        :type zip: string
+        :param country: the location's country code
+        :type country: string
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        OWM25._assert_is_string_or_unicode(zipcode)
+        OWM25._assert_is_string_or_unicode(country)
+        encoded_zip = OWM25._encode_string(zipcode)
+        encoded_country = OWM25._encode_string(country)
+        zip_param = encoded_zip + ',' + encoded_country
+        json_data = self._api.call_API(OBSERVATION_URL,
+                                         {'zip': zip_param,
+                                          'lang': self._language})
+        return self._parsers['observation'].parse_JSON(json_data)
+
     def weather_at_id(self, id):
         """
         Queries the OWM web API for the currently observed weather at the
