@@ -436,11 +436,18 @@ class UVIndex(models.Model):
             interval=uvindex_obj.get_interval(),
             reception_time=uvindex_obj.get_reception_time(timeformat='date'))
 
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
+
 
 class COIndex(models.Model):
     """
     Model allowing a COIndex entity object to be saved to a persistent datastore
     """
+
     INTERVAL_CHOICES = (
         (u'minute', u'One minute'),
         (u'hour', u'One hour'),
@@ -494,11 +501,18 @@ class COIndex(models.Model):
             reception_time=coindex_obj.get_reception_time(timeformat='date'),
             co_samples=json.dumps(coindex_obj.get_co_samples()))
 
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
+
 
 class Ozone(models.Model):
     """
     Model allowing an Ozone entity object to be saved to a persistent datastore
     """
+
     INTERVAL_CHOICES = (
         (u'minute', u'One minute'),
         (u'hour', u'One hour'),
@@ -551,3 +565,10 @@ class Ozone(models.Model):
             du_value=ozone_obj.get_du_value(),
             interval=ozone_obj.get_interval(),
             reception_time=ozone_obj.get_reception_time(timeformat='date'))
+
+    def __repr__(self):
+        return "<%s.%s - pk=%d>" % (
+            __name__,
+            self.__class__.__name__,
+            self.pk if self.pk is not None else 'None')
+
