@@ -126,12 +126,13 @@ class Databox():
         }
     ]
     coindex_interval = 'month'
-    coindex = COIndex(
+    coindex = COIndexEntity(
         reference_time, location, coindex_interval, reception_time, co_samples)
 
     # Ozone
     du_value = 6.8
-    ozone = Ozone(reference_time, location, interval, du_value, reception_time)
+    ozone = OzoneEntity(reference_time, location, interval, du_value,
+                        reception_time)
 
 
 class TestLocationModel(TestCase):
