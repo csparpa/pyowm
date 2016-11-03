@@ -182,6 +182,15 @@ class Observation(models.Model):
             reception_time=observation_obj.get_reception_time(timeformat='date'),
             location=loc, weather=weat)
 
+    def save_all(self):
+        """
+        Saves this model along with all related ones.
+        :return: None
+        """
+        self.location.save()
+        self.weather.save()
+        self.save()
+
     def __repr__(self):
         return "<%s.%s - pk=%s>" % (
             __name__,
@@ -241,6 +250,20 @@ class Forecast(models.Model):
             interval=forecast_obj.get_interval(),
             reception_time=forecast_obj.get_reception_time(timeformat='date'),
             location=loc)
+
+    def save_all(self):
+        """
+        Saves this model along with all related ones.
+        :return: None
+        """
+        self.location.save()
+        weats = self.weathers
+        self.weathers = []
+        self.save()
+        for w in weats:
+            w.save()
+        self.weathers = weats
+        self.save()
 
     def __repr__(self):
         return "<%s.%s - pk=%s>" % (
@@ -312,6 +335,14 @@ class Station(models.Model):
             lon=station_obj.get_lon(),
             distance=station_obj.get_distance(),
             last_weather=weather_entity)
+
+    def save_all(self):
+        """
+        Saves this model along with all related ones.
+        :return: None
+        """
+        self.last_weather.save()
+        self.save()
 
     def __repr__(self):
         return "<%s.%s - pk=%s>" % (
@@ -436,6 +467,14 @@ class UVIndex(models.Model):
             interval=uvindex_obj.get_interval(),
             reception_time=uvindex_obj.get_reception_time(timeformat='date'))
 
+    def save_all(self):
+        """
+        Saves this model along with all related ones.
+        :return: None
+        """
+        self.location.save()
+        self.save()
+
     def __repr__(self):
         return "<%s.%s - pk=%s>" % (
             __name__,
@@ -500,6 +539,14 @@ class COIndex(models.Model):
             reception_time=coindex_obj.get_reception_time(timeformat='date'),
             co_samples=json.dumps(coindex_obj.get_co_samples()))
 
+    def save_all(self):
+        """
+        Saves this model along with all related ones.
+        :return: None
+        """
+        self.location.save()
+        self.save()
+
     def __repr__(self):
         return "<%s.%s - pk=%s>" % (
             __name__,
@@ -563,6 +610,14 @@ class Ozone(models.Model):
             du_value=ozone_obj.get_du_value(),
             interval=ozone_obj.get_interval(),
             reception_time=ozone_obj.get_reception_time(timeformat='date'))
+
+    def save_all(self):
+        """
+        Saves this model along with all related ones.
+        :return: None
+        """
+        self.location.save()
+        self.save()
 
     def __repr__(self):
         return "<%s.%s - pk=%s>" % (

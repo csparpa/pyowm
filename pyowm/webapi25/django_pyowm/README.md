@@ -12,6 +12,7 @@ The app works with Django 1.10+ and Python 2.7 or 3.2+
 ## Install
 You can either reuse this Django project as a template to develop your
 own one, or reuse the `pyowm_models` app.
+
 To do so, you need to install PyOWM first (eg: using `pip`) and then
 add `pyowm_models` to the `INSTALLED_APPS` list into your Django
  project's `settings.py` file:
@@ -31,7 +32,7 @@ INSTALLED_APPS = [
 
 You can now import PyOWM models into your code and use them.
 
-## Usage
+## Features
 Models behave as all other Django models but they have a few useful 
 functions:
 
@@ -39,8 +40,10 @@ functions:
      from the corresponding PyOWM domain object instance
   -  `<Model_instance>.to_entity(entity)` - turns the model instance to
      the corresponding PyOWM domain object instance
-     
-Eg:
+
+## Usage
+
+In your own Django project's code you can do something like this:
 
 ```python
 from pyowm import OWM
@@ -50,10 +53,17 @@ from pyowm.webapi25.django_pyowm.pyowm_models import models
 owm = OWM(API_key='my_key')
 obs = owm.weather_at_place('London,UK')
 
-# Create a model instance and save it
+# Create a model instance from API response
 m = models.Observation.from_entity(obs)
+
+# Save related objects and then the model itself
+m.location.save()
+m.weather.save()
 m.save()
 
+# .. or save everything in one shot
+m.save_all()
+
 # From model instance to entity
-m.to_entity() == obs  # True
+original_obs = m.to_entity()
 ```
