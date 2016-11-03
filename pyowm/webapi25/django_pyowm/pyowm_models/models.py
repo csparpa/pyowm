@@ -17,15 +17,18 @@ class Location(models.Model):
     Model allowing a Location entity object to be saved to a persistent datastore
     """
     name = models.CharField(max_length=255,
+                            null=True, blank=True,
                             verbose_name='Toponym of the place',
                             help_text='Name')
     lon = models.FloatField(verbose_name='Longitude of the place',
                             help_text='Longitude')
     lat = models.FloatField(verbose_name='Latitude of the place',
                             help_text='Latitude')
-    city_id = models.IntegerField(verbose_name='City ID related to the place',
+    city_id = models.IntegerField(null=True, blank=True,
+                                  verbose_name='City ID related to the place',
                                   help_text='City ID')
     country = models.CharField(max_length=255,
+                               null=True, blank=True,
                                verbose_name='Country of the place',
                                help_text="Country")
 
@@ -64,7 +67,7 @@ class Weather(models.Model):
     """
     Model allowing a Weather entity object to be saved to a persistent datastore
     """
-    reference_time = models.DateTimeField(null=True, blank=True)
+    reference_time = models.DateTimeField()
     sunrise_time = models.DateTimeField(null=True, blank=True)
     sunset_time = models.DateTimeField(null=True, blank=True)
     clouds = models.PositiveIntegerField(null=True, blank=True)
@@ -149,8 +152,8 @@ class Observation(models.Model):
     Model allowing an Observation entity object to be saved to a persistent datastore
     """
     reception_time = models.DateTimeField(null=True, blank=True)
-    location = models.ForeignKey(Location, null=True, blank=True)
-    weather = models.ForeignKey(Weather, null=True, blank=True)
+    location = models.ForeignKey(Location)
+    weather = models.ForeignKey(Weather)
 
     def to_entity(self):
         """
@@ -202,12 +205,10 @@ class Forecast(models.Model):
         null=True, blank=True,
         verbose_name='Time the observation was received',
         help_text='Reception time')
-    location = models.ForeignKey(
-        Location, null=True, blank=True,
-        verbose_name='Location of the forecast',
-        help_text='Location')
+    location = models.ForeignKey(Location,
+                                 verbose_name='Location of the forecast',
+                                 help_text='Location')
     weathers = models.ManyToManyField(Weather,
-                                      blank=True,
                                       related_name='forecasts',
                                       help_text="Weathers",
                                       verbose_name="Weathers of the forecast")
@@ -390,10 +391,9 @@ class UVIndex(models.Model):
         (u'year', u'One year'))
 
     reference_time = models.DateTimeField(
-        null=True, blank=True,
         verbose_name='Time the observation refers to',
         help_text='Reference time')
-    location = models.ForeignKey(Location, null=True, blank=True,
+    location = models.ForeignKey(Location,
                                  verbose_name='Location of the observation',
                                  help_text='Location')
     value = models.FloatField(verbose_name='Observed UV intensity',
@@ -456,10 +456,9 @@ class COIndex(models.Model):
         (u'year', u'One year'))
 
     reference_time = models.DateTimeField(
-        null=True, blank=True,
         verbose_name='Time the observation refers to',
         help_text='Reference time')
-    location = models.ForeignKey(Location, null=True, blank=True,
+    location = models.ForeignKey(Location,
                                  verbose_name='Location of the observation',
                                  help_text='Location')
     interval = models.CharField(max_length=255,
@@ -521,10 +520,9 @@ class Ozone(models.Model):
         (u'year', u'One year'))
 
     reference_time = models.DateTimeField(
-        null=True, blank=True,
         verbose_name='Time the observation refers to',
         help_text='Reference time')
-    location = models.ForeignKey(Location, null=True, blank=True,
+    location = models.ForeignKey(Location,
                                  verbose_name='Location of the observation',
                                  help_text='Location')
     du_value = models.FloatField(verbose_name='Observed ozone Dobson Units',
