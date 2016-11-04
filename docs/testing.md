@@ -15,7 +15,9 @@ of the PyOWM library that call the real PyOWM web API via HTTP).
 The default unit testing enviroment is Python's _unittest_: simple and clean
 enough, so no additional dependencies are needed.
 
-Unit tests can be easily run using _tox_. Running:
+Unit tests can be easily run using _tox_ along with _py.test_. 
+
+Running:
 
     tox
 
@@ -38,7 +40,7 @@ and then you can run the integration tests from the library installation
 folder with:
 
     cd tests/functional
-    pythonXY test_integration_webapi25.py
+    tox
 
 for Python interpreter version XY.
 Please note that depending on your subscription type some of the tests
@@ -46,22 +48,16 @@ may fail, eg: if you have a free subscription tier, the test cases that
 invoke the OWM API to get historical weather data will fail as these
 data can only be retrieved using a paid account.
 
+Django integration testing
+--------------------------
+```
+cd <root-folder>
+python setup.py install
+cd pyowm/webapi25/django_pyowm
+python manage.py test pyowm_models.tests
+```
 
 Continuous integration
 ----------------------
 A Travis CI account has been established in order to continously run tests and
 build the SW.
-
-
-Integration tests
------------------
-Also integration tests will be provided: their aim is to test PyOWM behaviour
-against the real OWM web API.
-    
-Integration tests can be launched by moving into the library installation folder
-and executing:
-
-    cd tests/functional
-    pythonXY integration-tests.py
-
-of course replace XY with your target Python version.
