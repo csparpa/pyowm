@@ -17,7 +17,7 @@ No additional libraries are requested: only the Python standard library modules.
 
 PyOWM currently supports _version 2.5_ of the OWM API
 
-PyOWM runs on Python 2.7, 3.2, 3.3, 3.4 and 3.5
+PyOWM runs on Python 2.7 and Python 3.2+
 
 ##  Usage
 
@@ -63,77 +63,52 @@ observation_list = owm.weather_around_coords(-22.57, -43.12)
 
 ##  Installation
 
-### Using pip
+Use `pip` for your ease:
 
-`pip install pyowm`
-
-### From source with setuptools
-
-1. Download the source archive either from GitHub ([select a release](https://github.com/csparpa/pyowm/releases)
-   or just take the [main branch](https://github.com/csparpa/pyowm/archive/master.zip))
-   or from the [Python Package Index](https://pypi.python.org/pypi/pyowm) 
-2. Uncompress:
-
-       `unzip pywom-x.y.z`
-
-3. Launch setuptools:
-
-       `cd pywom-x.y.z`
-       
-       `python setup.py install`
-
-### exe installer (Windows users)
-
-The installer is available on the [Python Package Index](https://pypi.python.org/pypi/pyowm) 
-
-### Docker
-You can run a Docker container mounting the latest PyOWM release code with:
-```
-docker run -d --name pyowm csparpa/pyowm
+```shell
+$ pip install pyowm
 ```
 
-The source code is under `/pyowm` inside the container.
-You can globally install PyOWM on the container with:
+You can also install from source using `setuptools`: either download [a release from GitHub](https://github.com/csparpa/pyowm/releases)
+or just take the [latest main branch](https://github.com/csparpa/pyowm/archive/master.zip)), then:
+
+```shell
+$ unzip <zip archive>   # or tar -xzf <tar.gz archive>
+$ cd pyowm-x.y.z
+$ python setup.py install
 ```
-docker exec -ti pyowm bash -c 'pip install pyowm'
-```
 
-## License
-
-[MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
-
-## Changelog
-Please read the [changelog](https://github.com/csparpa/pyowm/wiki/Changelog) page of the wiki
+Windows users can get an exe installer for early PyOWM versions on the [Python Package Index](https://pypi.python.org/pypi/pyowm)
 
 
 ## Documentation
-Usage examples are available in [the wiki page](https://github.com/csparpa/pyowm/wiki/Usage-examples).
+Each release has its own changelog on the [changelogs wiki page](https://github.com/csparpa/pyowm/wiki/Changelog).
+
+PyOWM usage examples are available in [the wiki](https://github.com/csparpa/pyowm/wiki/Usage-examples).
 
 The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
 
-## Testing
-Run tests using [Tox](http://tox.readthedocs.org).
-From the project root folder, just launch:
 
-`tox`
-
-Also, unit tests can be run with: `pythonX.Y setup.py test -s tests.unit`.
+## License
+[MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
 
 
-PyOWM is continuously built with [Travis-CI](https://travis-ci.org/csparpa/pyowm) and code coverage is checked
-with [Coveralls.io](https://coveralls.io/r/csparpa/pyowm)
-
-## Discussion
-Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here](http://pyowm-slackin.herokuapp.com/)
+## Contributing
 
 ## Development
-Contributors (code enhancement, issue/bug reporting) are __welcome!__. See the
-[notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) to get started.
+_Contributors (code, testing, issues reporting) are welcome!_.
 
-Since version 2.2 PyOWM adopts [Semantic Versioning](http://semver.org/).
+See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) wiki page to get started.
 
-If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
+### Testing
+See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
+
+
+## Slack Community
+Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here](http://pyowm-slackin.herokuapp.com/)
+
 
 ## References
+* If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 * [OpenWeatherMap website](http://openweathermap.org/)
 * [OpenWeatherMap web API docs](http://openweathermap.org/api)

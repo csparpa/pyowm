@@ -48,14 +48,6 @@ may fail, eg: if you have a free subscription tier, the test cases that
 invoke the OWM API to get historical weather data will fail as these
 data can only be retrieved using a paid account.
 
-Django integration testing
---------------------------
-```
-cd <root-folder>
-python setup.py install
-cd pyowm/webapi25/django_pyowm
-python manage.py test pyowm_models.tests
-```
 
 Continuous integration
 ----------------------
