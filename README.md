@@ -69,17 +69,9 @@ Use `pip` for your ease:
 $ pip install pyowm
 ```
 
-You can also install from source using `setuptools`: either download [a release from GitHub](https://github.com/csparpa/pyowm/releases)
-or just take the [latest main branch](https://github.com/csparpa/pyowm/archive/master.zip)), then:
-
-```shell
-$ unzip <zip archive>   # or tar -xzf <tar.gz archive>
-$ cd pyowm-x.y.z
-$ python setup.py install
-```
-
-Windows users can get an exe installer for early PyOWM versions on the [Python Package Index](https://pypi.python.org/pypi/pyowm)
-
+There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools),
+[Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and
+common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
 
 ## Documentation
 Each release has its own changelog on the [changelogs wiki page](https://github.com/csparpa/pyowm/wiki/Changelog).
