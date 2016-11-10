@@ -19,6 +19,8 @@ PyOWM currently supports _version 2.5_ of the OWM API
 
 PyOWM runs on Python 2.7 and Python 3.2+
 
+PyOWM integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
+
 ##  Usage
 
 ### API key
