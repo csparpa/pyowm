@@ -77,7 +77,7 @@ class CityIDRegistry():
     
     def _match_line(self, city_name, lines):
         for line in lines:
-            if line.startswith(city_name.lower()):
+            if line.startswith(city_name.title()) or line.startswith(city_name.lower()):
                 return line.strip()
         return None
 
