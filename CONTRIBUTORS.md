@@ -9,6 +9,7 @@ Code
   * [dphildebrandt] (https://github.com/dphildebrandt)
   * [dstmar] (https://github.com/dstmar)
   * [ggstuart] (https://github.com/ggstuart)
+  * [lardconcepts] (https://github.com/lardconcepts)
   * [liato] (https://github.com/liato)
   * [LukasBoersma] (https://github.com/LukasBoersma)
   * [Noid] (https://github.com/n0id)
@@ -18,6 +19,10 @@ Code
 Testing
 -------
   * [Samuel Yap] (https://github.com/samuelyap)
+
+Packaging and Distribution
+--------------------------
+  * [Diapente] (]https://github.com/Diapente)
 
 Wiki
 ----
