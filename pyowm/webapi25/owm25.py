@@ -9,7 +9,7 @@ from pyowm.webapi25.configuration25 import (
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
     FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
-from pyowm.webapi25.configuration25 import city_id_registry as zzz
+from pyowm.webapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
 from pyowm.commons import weather_client, uv_client, airpollution_client
@@ -176,7 +176,7 @@ class OWM25(owm.OWM):
 
         :returns: a *CityIDRegistry* instance
         """
-        return zzz
+        return reg
 
     def is_API_online(self):
         """
