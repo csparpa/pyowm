@@ -5,6 +5,7 @@ Contributors will be shown in alphabetical order
 
 Code
 ----
+  * [alechewitt] (https://github.com/alechewitt)
   * [dphildebrandt] (https://github.com/dphildebrandt)
   * [dstmar] (https://github.com/dstmar)
   * [ggstuart] (https://github.com/ggstuart)
