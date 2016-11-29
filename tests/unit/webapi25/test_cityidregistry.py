@@ -20,9 +20,22 @@ dongel,747912,40.693600,29.941540,TR
 dongen,2756723,51.626671,4.938890,NL
 dongerying,1812594,39.957500,117.279167,CN
 donges,3021093,47.318241,-2.075380,FR"""
+    _test_file_contents_with_homonymies = """Abasolo,3533505,24.066669,-98.366669,MX
+Abasolo,4019867,25.950001,-100.400002,MX
+Abasolo,4019869,20.450001,-101.51667,MX
+Abbans-Dessus,3038800,47.120548,5.88188,FR
+Abbans-Dessus,6452202,47.116669,5.88333,FR
+Abbeville,3038789,50.099998,1.83333,FR
+Abbeville,4178992,31.992121,-83.306824,US
+Abbeville,4314295,29.974649,-92.134293,US
+Abbeville,4568985,34.178169,-82.379013,US
+Abbeville,4829449,31.57184,-85.250488,US"""
 
     def _mock_get_lines(self, filename):
         return StringIO(self._test_file_contents).readlines()
+
+    def _mock_get_lines_with_homonymies(self, filename):
+        return StringIO(self._test_file_contents_with_homonymies).readlines()
 
     def test_assess_subfile_from(self):
         self.assertEqual(self._instance._assess_subfile_from('b-city'),
@@ -57,6 +70,14 @@ donges,3021093,47.318241,-2.075380,FR"""
         self.assertEqual(result_1, 2756723)
         self.assertTrue(result_2 is None)
 
+    def test_id_for_when_multiple_matches(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
+        result = self._instance.id_for('Abbeville')
+        CityIDRegistry._get_lines = ref_to_original
+        # only the ID of the first matching location name is returned
+        self.assertEqual(result, 3038789)
+
     def test_id_for_fails_with_malformed_inputs(self):
         self.assertRaises(ValueError, CityIDRegistry.id_for, self._instance,
                           '123abc')
@@ -64,8 +85,8 @@ donges,3021093,47.318241,-2.075380,FR"""
     def test_location_for(self):
         ref_to_original = CityIDRegistry._get_lines
         CityIDRegistry._get_lines = self._mock_get_lines
-        expected = Location('dongen', 4.938890, 51.626671, 2756723, 'NL')
-        result_1 = self._instance.location_for('dongen')
+        expected = Location('dongdu', 117.699997, 35.849998, 1812597, 'CN')
+        result_1 = self._instance.location_for('dongdu')
         result_2 = self._instance.location_for('aaaaaaaaaa')
         CityIDRegistry._get_lines = ref_to_original        
         self.assertEqual(result_1.get_name(), expected.get_name())
@@ -81,10 +102,37 @@ donges,3021093,47.318241,-2.075380,FR"""
 
     def test_match_line(self):
         instance = CityIDRegistry('test')
-        test_lines = ['my-city,1,2\n',
-                      'your-city,3,4\n',
-                      'his-city,5,6\n']
-        result = instance._match_line('my-city', test_lines)
-        self.assertEqual('my-city,1,2\n'.strip(), result)
+        test_lines = [
+            'Londinieres,2997784,49.831871,1.40232,FR\n',
+            'Londoko,2020707,49.033329,131.983337,RU\n',
+            'London Borough of Harrow,7535661,51.566669,-0.33333,GB\n',
+            'London Village,4030939,1.98487,-157.475021,KI\n',
+            'London,2643743,51.50853,-0.12574,GB\n',
+            'London,4119617,35.328972,-93.25296,US\n']
+
+        # no matches
         result = instance._match_line('blabla', test_lines)
         self.assertIsNone(result)
+
+        # single exact matches
+        result = instance._match_line('Londoko', test_lines)
+        self.assertEqual('Londoko,2020707,49.033329,131.983337,RU', result)
+        result = instance._match_line('London Borough of Harrow', test_lines)
+        self.assertEqual('London Borough of Harrow,7535661,51.566669,-0.33333,GB',
+                         result)
+
+        # single match with different casing
+        result1 = instance._match_line('LONDOKO', test_lines)
+        result2 = instance._match_line('londoko', test_lines)
+        self.assertEquals(result1, result2)
+        self.assertEqual('Londoko,2020707,49.033329,131.983337,RU', result1)
+        result3 = instance._match_line('London borough of harrow', test_lines)
+        result4 = instance._match_line('london BOROUGH of Harrow', test_lines)
+        self.assertEquals(result3, result4)
+        self.assertEquals('London Borough of Harrow,7535661,51.566669,-0.33333,GB',
+                          result3)
+
+        # homonymies
+        result = instance._match_line('London', test_lines)
+        self.assertEquals('London,2643743,51.50853,-0.12574,GB', result)
+

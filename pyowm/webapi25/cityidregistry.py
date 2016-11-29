@@ -5,6 +5,7 @@ from pkg_resources import resource_stream
 Module containing a registry with lookup methods for OWM-provided city IDs
 """
 
+
 class CityIDRegistry():
 
     """
@@ -22,7 +23,8 @@ class CityIDRegistry():
 
     def id_for(self, city_name):
         """
-        Returns the long ID corresponding to the provided city name.
+        Returns the long ID corresponding to the first city found that matches
+        the provided city name. The lookup is case insensitive.
 
         :param city_name: the city name whose ID is looked up
         :type city_name: str
@@ -34,7 +36,8 @@ class CityIDRegistry():
 
     def location_for(self, city_name):
         """
-        Returns the *Location* object corresponding to the provided city name.
+        Returns the *Location* object corresponding to the first city found
+        that matches the provided city name. The lookup is case insensitive.
 
         :param city_name: the city name you want a *Location* for
         :type city_name: str
@@ -46,7 +49,7 @@ class CityIDRegistry():
             return None
         tokens = line.split(",")
         return Location(tokens[0], float(tokens[3]), float(tokens[2]),
-                        int(tokens[1]), 'NL')
+                        int(tokens[1]), tokens[4])
 
     def _assess_subfile_from(self, city_name):
         c = ord(city_name.lower()[0])
@@ -76,8 +79,16 @@ class CityIDRegistry():
             return lines
     
     def _match_line(self, city_name, lines):
+        """
+        The lookup is case insensitive and returns the first matching line,
+        stripped.
+        :param city_name: str
+        :param lines: list of str
+        :return: str
+        """
         for line in lines:
-            if line.startswith(city_name.lower()):
+            toponym = line.split(',')[0]
+            if toponym.lower() == city_name.lower():
                 return line.strip()
         return None
 
