@@ -1,4 +1,5 @@
 from pyowm.webapi25.location import Location
+from pyowm.abstractions.decorators import deprecated
 from pkg_resources import resource_stream
 
 """
@@ -21,6 +22,7 @@ class CityIDRegistry():
     def __init__(self, filepath_regex):
         self._filepath_regex = filepath_regex
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def id_for(self, city_name):
         """
         Returns the long ID corresponding to the first city found that matches
@@ -52,6 +54,7 @@ class CityIDRegistry():
         """
         raise NotImplementedError()
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def location_for(self, city_name):
         """
         Returns the *Location* object corresponding to the first city found
