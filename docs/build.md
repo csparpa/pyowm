@@ -6,7 +6,7 @@ PyOWM release checklist
 * update city ID files
 * check for domain entities changes and update Django models on https://github.com/csparpa/django-pyowm
 * update README.md
-* update github wiki pages (including changelog) in the /wiki folder
+* update github wiki pages (including changelog+deprecations) in the /wiki folder
 * run tests locally using tox (or setup.py with all Python supported envs)
 * generate documentation locally
 * merge develop branch into master branch (no feature/hotfix branches left open)
