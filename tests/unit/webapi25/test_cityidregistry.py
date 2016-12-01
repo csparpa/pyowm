@@ -29,7 +29,16 @@ Abbeville,3038789,50.099998,1.83333,FR
 Abbeville,4178992,31.992121,-83.306824,US
 Abbeville,4314295,29.974649,-92.134293,US
 Abbeville,4568985,34.178169,-82.379013,US
-Abbeville,4829449,31.57184,-85.250488,US"""
+Abbeville,4829449,31.57184,-85.250488,US
+Bologna,2829449,30.57184,-83.250488,IT"""
+
+    test_filelines = [
+        'Londinieres,2997784,49.831871,1.40232,FR\n',
+        'Londoko,2020707,49.033329,131.983337,RU\n',
+        'London Borough of Harrow,7535661,51.566669,-0.33333,GB\n',
+        'London Village,4030939,1.98487,-157.475021,KI\n',
+        'London,2643743,51.50853,-0.12574,GB\n',
+        'London,4119617,35.328972,-93.25296,US\n']
 
     def _mock_get_lines(self, filename):
         return StringIO(self._test_file_contents).readlines()
@@ -102,37 +111,86 @@ Abbeville,4829449,31.57184,-85.250488,US"""
 
     def test_match_line(self):
         instance = CityIDRegistry('test')
-        test_lines = [
-            'Londinieres,2997784,49.831871,1.40232,FR\n',
-            'Londoko,2020707,49.033329,131.983337,RU\n',
-            'London Borough of Harrow,7535661,51.566669,-0.33333,GB\n',
-            'London Village,4030939,1.98487,-157.475021,KI\n',
-            'London,2643743,51.50853,-0.12574,GB\n',
-            'London,4119617,35.328972,-93.25296,US\n']
 
         # no matches
-        result = instance._match_line('blabla', test_lines)
+        result = instance._match_line('blabla', self.test_filelines)
         self.assertIsNone(result)
 
         # single exact matches
-        result = instance._match_line('Londoko', test_lines)
+        result = instance._match_line('Londoko', self.test_filelines)
         self.assertEqual('Londoko,2020707,49.033329,131.983337,RU', result)
-        result = instance._match_line('London Borough of Harrow', test_lines)
+        result = instance._match_line('London Borough of Harrow', self.test_filelines)
         self.assertEqual('London Borough of Harrow,7535661,51.566669,-0.33333,GB',
                          result)
 
         # single match with different casing
-        result1 = instance._match_line('LONDOKO', test_lines)
-        result2 = instance._match_line('londoko', test_lines)
+        result1 = instance._match_line('LONDOKO', self.test_filelines)
+        result2 = instance._match_line('londoko', self.test_filelines)
         self.assertEquals(result1, result2)
         self.assertEqual('Londoko,2020707,49.033329,131.983337,RU', result1)
-        result3 = instance._match_line('London borough of harrow', test_lines)
-        result4 = instance._match_line('london BOROUGH of Harrow', test_lines)
+        result3 = instance._match_line('London borough of harrow', self.test_filelines)
+        result4 = instance._match_line('london BOROUGH of Harrow', self.test_filelines)
         self.assertEquals(result3, result4)
         self.assertEquals('London Borough of Harrow,7535661,51.566669,-0.33333,GB',
                           result3)
-
         # homonymies
-        result = instance._match_line('London', test_lines)
+        result = instance._match_line('London', self.test_filelines)
         self.assertEquals('London,2643743,51.50853,-0.12574,GB', result)
 
+    def test_ids_for(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
+
+        # No matches
+        result = self._instance.ids_for('aaaaaaaaaa')
+        self.assertIsNone(result)
+
+        # One match
+        result = self._instance.ids_for("Bologna")
+        self.assertEquals(1, len(result))
+        self.assertEquals(2829449, result[0])
+
+        # Multiple matches
+        result = self._instance.ids_for("Abbans-Dessus")
+        self.assertEquals(2, len(result))
+        self.assertTrue(3038800 in result)
+        self.assertTrue(6452202 in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_ids_for_matching_criteria(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
+
+        # case sensitive
+        result = self._instance.ids_for("bologna", matching='exact')
+        self.assertIsNone(result)
+
+        result = self._instance.ids_for("Bologna", matching='exact')
+        self.assertIsNone(result)
+        self.assertEquals(1, len(result))
+        self.assertEquals(2829449, result[0])
+
+        # case insensitive
+        result = self._instance.ids_for("bologna", matching='nocase')
+        self.assertIsNone(result)
+        self.assertEquals(1, len(result))
+        self.assertEquals(2829449, result[0])
+
+        result = self._instance.ids_for("Bologna", matching='nocase')
+        self.assertIsNone(result)
+        self.assertEquals(1, len(result))
+        self.assertEquals(2829449, result[0])
+
+        # like
+        result = self._instance.ids_for("abbans", matching='like')
+        self.assertEquals(2, len(result))
+        self.assertTrue(3038800 in result)
+        self.assertTrue(6452202 in result)
+
+        result = self._instance.ids_for("Dessus", matching='like')
+        self.assertEquals(2, len(result))
+        self.assertTrue(3038800 in result)
+        self.assertTrue(6452202 in result)
+
+        CityIDRegistry._get_lines = ref_to_original

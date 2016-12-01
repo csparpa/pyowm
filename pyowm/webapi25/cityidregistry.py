@@ -34,6 +34,24 @@ class CityIDRegistry():
         line = self._lookup_line_by_city_name(city_name)
         return int(line.split(",")[1]) if line is not None else None
 
+    def ids_for(city_name, country=None, matching='nocase'):
+        """
+        Returns a list of long corresponding to the IDs of the cities that
+        match the provided city name. The rule for identified matchings is
+        according to the provided `matching` parameter value.
+        If `country` is provided, the search is restricted to the cities of
+        the specified country
+        :param country: two character str representing the country where to
+        search for the city. Defaults to `None`, which means: search in all
+        countries.
+        :param matching: str among `exact` (literal, case-sensitive matching),
+        `nocase` (literal, case-insensitive matching) and `like` (matches cities
+        whose name contains as a substring the string fed to the function).
+        Defaults to `nocase`.
+        :return: list of long
+        """
+        raise NotImplementedError()
+
     def location_for(self, city_name):
         """
         Returns the *Location* object corresponding to the first city found
