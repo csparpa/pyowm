@@ -27,11 +27,3 @@ def deprecated(will_be=None, on_version=None):
 
     return outer_function
 
-
-if __name__ == '__main__':
-    @deprecated()
-    def prova(a, b):
-        return a+b
-
-    x = prova(4, 5)
-    print x
