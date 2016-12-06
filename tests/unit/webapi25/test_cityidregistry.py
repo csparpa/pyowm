@@ -148,13 +148,13 @@ Bologna,2829449,30.57184,-83.250488,IT"""
         # One match
         result = self._instance.ids_for("Bologna")
         self.assertEquals(1, len(result))
-        self.assertEquals(2829449, result[0])
+        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
 
         # Multiple matches
         result = self._instance.ids_for("Abbans-Dessus")
         self.assertEquals(2, len(result))
-        self.assertTrue(3038800 in result)
-        self.assertTrue(6452202 in result)
+        self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
+        self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
         CityIDRegistry._get_lines = ref_to_original
 
@@ -185,12 +185,29 @@ Bologna,2829449,30.57184,-83.250488,IT"""
         # like
         result = self._instance.ids_for("abbans", matching='like')
         self.assertEquals(2, len(result))
-        self.assertTrue(3038800 in result)
-        self.assertTrue(6452202 in result)
+        self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
+        self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
         result = self._instance.ids_for("Dessus", matching='like')
         self.assertEquals(2, len(result))
-        self.assertTrue(3038800 in result)
-        self.assertTrue(6452202 in result)
+        self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
+        self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_ids_for_restricted_to_country(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
+
+        result = self._instance.ids_for("Abbeville", country='JP')
+        self.assertIsNone(result)
+
+        result = self._instance.ids_for("Abbeville", country='US')
+        self.assertEquals(1, len(result))
+        self.assertTrue((4178992, 'Abbeville', 'US') in result)
+
+        result = self._instance.ids_for("Abbeville", country='FR')
+        self.assertEquals(1, len(result))
+        self.assertTrue((3038789, 'Abbeville', 'FR') in result)
 
         CityIDRegistry._get_lines = ref_to_original
