@@ -15,17 +15,17 @@ class CityIDRegistry:
         'like': lambda city_name, toponym: city_name.lower() in toponym.lower()
     }
 
-    """
-    Initialise a registry that can be used to lookup info about cities.
-
-    :param filepath_regex: Python format string that gives the path of the files
-           that store the city IDs information.
-           Eg: ``folder1/folder2/%02d-%02d.txt``
-    :type filepath_regex: str
-    :returns: a *CityIDRegistry* instance
-
-    """
     def __init__(self, filepath_regex):
+        """
+        Initialise a registry that can be used to lookup info about cities.
+
+        :param filepath_regex: Python format string that gives the path of the files
+               that store the city IDs information.
+               Eg: ``folder1/folder2/%02d-%02d.txt``
+        :type filepath_regex: str
+        :returns: a *CityIDRegistry* instance
+
+        """
         self._filepath_regex = filepath_regex
 
     @deprecated(will_be='removed', on_version=(3, 0, 0))

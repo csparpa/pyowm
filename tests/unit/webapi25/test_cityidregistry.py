@@ -241,3 +241,19 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self.assertTrue((6550950, 'Thale, Stadt', 'DE') in result)
 
         CityIDRegistry._get_lines = ref_to_original
+
+    def test_city_name_matches(self):
+        self.assertTrue(self._instance._city_name_matches(
+            'test', 'test', 'exact'))
+        self.assertFalse(self._instance._city_name_matches(
+            'Test', 'test', 'exact'))
+        self.assertFalse(self._instance._city_name_matches(
+            'foo', 'bar', 'exact'))
+        self.assertTrue(self._instance._city_name_matches(
+            'tEsT mE', 'teST ME', 'nocase'))
+        self.assertFalse(self._instance._city_name_matches(
+            'foo', 'bar', 'nocase'))
+        self.assertTrue(self._instance._city_name_matches(
+            'test', 'test me', 'like'))
+        self.assertFalse(self._instance._city_name_matches(
+            'foo', 'bar', 'like'))
