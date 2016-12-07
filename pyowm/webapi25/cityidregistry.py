@@ -47,7 +47,7 @@ class CityIDRegistry:
         Returns a list of tuples in the form (long, str, str) corresponding to
         the int IDs and relative toponyms and 2-chars country of the cities
         matching the provided city name.
-        The rule for identified matchings is according to the provided
+        The rule for identifying matchings is according to the provided
         `matching` parameter value.
         If `country` is provided, the search is restricted to the cities of
         the specified country.
@@ -57,8 +57,7 @@ class CityIDRegistry:
         :param matching: str among `exact` (literal, case-sensitive matching),
         `nocase` (literal, case-insensitive matching) and `like` (matches cities
         whose name contains as a substring the string fed to the function, no
-        matter the case).
-        Defaults to `nocase`.
+        matter the case). Defaults to `nocase`.
         :raises ValueError if the value for `matching` is unknown
         :return: list of tuples
         """
@@ -71,6 +70,56 @@ class CityIDRegistry:
             raise ValueError("Country must be a 2-char string")
         splits = self._filter_matching_lines(city_name, country, matching)
         return [(int(item[1]), item[0], item[4]) for item in splits]
+
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
+    def location_for(self, city_name):
+        """
+        Returns the *Location* object corresponding to the first city found
+        that matches the provided city name. The lookup is case insensitive.
+
+        :param city_name: the city name you want a *Location* for
+        :type city_name: str
+        :returns: a *Location* instance or ``None`` if the lookup fails
+
+        """
+        line = self._lookup_line_by_city_name(city_name)
+        if line is None:
+            return None
+        tokens = line.split(",")
+        return Location(tokens[0], float(tokens[3]), float(tokens[2]),
+                        int(tokens[1]), tokens[4])
+
+    def locations_for(self, city_name, country=None, matching='nocase'):
+        """
+        Returns a list of Location objects corresponding to
+        the int IDs and relative toponyms and 2-chars country of the cities
+        matching the provided city name.
+        The rule for identifying matchings is according to the provided
+        `matching` parameter value.
+        If `country` is provided, the search is restricted to the cities of
+        the specified country.
+        :param country: two character str representing the country where to
+        search for the city. Defaults to `None`, which means: search in all
+        countries.
+        :param matching: str among `exact` (literal, case-sensitive matching),
+        `nocase` (literal, case-insensitive matching) and `like` (matches cities
+        whose name contains as a substring the string fed to the function, no
+        matter the case). Defaults to `nocase`.
+        :raises ValueError if the value for `matching` is unknown
+        :return: list of `webapi25.location.Location` objects
+        """
+        if not city_name:
+            return []
+        if matching not in self.MATCHINGS:
+            raise ValueError("Unknown type of matching: "
+                             "allowed values are %s" % ", ".join(self.MATCHINGS))
+        if country is not None and len(country) != 2:
+            raise ValueError("Country must be a 2-char string")
+        splits = self._filter_matching_lines(city_name, country, matching)
+        return [Location(item[0], float(item[3]), float(item[2]),
+                         int(item[1]), item[4]) for item in splits]
+
+    # helper functions
 
     def _filter_matching_lines(self, city_name, country, matching):
         """
@@ -114,24 +163,6 @@ class CityIDRegistry:
     def _city_name_matches(self, city_name, toponym, matching):
         comparison_function = self.MATCHINGS[matching]
         return comparison_function(city_name, toponym)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def location_for(self, city_name):
-        """
-        Returns the *Location* object corresponding to the first city found
-        that matches the provided city name. The lookup is case insensitive.
-
-        :param city_name: the city name you want a *Location* for
-        :type city_name: str
-        :returns: a *Location* instance or ``None`` if the lookup fails
-
-        """
-        line = self._lookup_line_by_city_name(city_name)
-        if line is None:
-            return None
-        tokens = line.split(",")
-        return Location(tokens[0], float(tokens[3]), float(tokens[2]),
-                        int(tokens[1]), tokens[4])
 
     def _lookup_line_by_city_name(self, city_name):
         filename = self._assess_subfile_from(city_name)
