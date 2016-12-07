@@ -69,9 +69,19 @@ class CityIDRegistry:
                              "allowed values are %s" % ", ".join(self.MATCHINGS))
         if country is not None and len(country) != 2:
             raise ValueError("Country must be a 2-char string")
-        return self._filter_matching_lines(city_name, country, matching)
+        splits = self._filter_matching_lines(city_name, country, matching)
+        return [(int(item[1]), item[0], item[4]) for item in splits]
 
     def _filter_matching_lines(self, city_name, country, matching):
+        """
+        Returns an iterable whose items are the lists of split tokens of every
+        text line matched against the city ID files according to the provided
+        combination of city_name, country and matching style
+        :param city_name: str
+        :param country: str or `None`
+        :param matching: str
+        :return: list of lists
+        """
         result = list()
 
         # find the right file to scan and extract its lines. Upon "like"
@@ -97,7 +107,7 @@ class CityIDRegistry:
 
             # check city_name
             if self._city_name_matches(city_name, tokens[0], matching):
-                result.append((int(tokens[1]), tokens[0], tokens[4]))
+                result.append(tokens)
 
         return result
 
