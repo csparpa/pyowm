@@ -19299,7 +19299,7 @@ Southern Highlands Province,2086331,-6.25,143.416672,PG
 Southern Kordofan State,408661,11,30,SD
 Southern Mallee,7839459,-35.367329,140.520294,AU
 Southern Midlands,7839862,-42.41785,147.434143,AU
-Southern Nations, Nationalities, and People's Regional State,444188,6.05862,36.727299,ET
+Southern Nations Nationalities and People's Regional State,444188,6.05862,36.727299,ET
 Southern Pines,4492722,35.174049,-79.39225,US
 Southern Province,1227618,6.16667,80.75,LK
 Southern Province,2403745,8,-12.25,SL
@@ -39512,7 +39512,7 @@ Villa Parque,3832654,-32.87521,-60.733459,AR
 Villa Paula de Sarmiento,3832653,-31.493299,-68.538383,AR
 Villa Paulina,3868168,-33.26667,-70.300003,CL
 Villa Poma,6535246,45.00238,11.1145,IT
-Villa Presidente Frei, Nunoa, Santiago, Chile,7874740,-33.46069,-70.580238,CL
+Villa Presidente Frei Nunoa Santiago Chile,7874740,-33.46069,-70.580238,CL
 Villa Recondo,3427382,-34.705761,-58.476101,AR
 Villa Reduccion,3832648,-33.20105,-63.862339,AR
 Villa Regina,3832647,-39.099998,-67.066673,AR
