@@ -7,7 +7,13 @@ Module containing a registry with lookup methods for OWM-provided city IDs
 """
 
 
-class CityIDRegistry():
+class CityIDRegistry:
+
+    MATCHINGS = {
+        'exact': lambda city_name, toponym: city_name == toponym,
+        'nocase': lambda city_name, toponym: city_name.lower() == toponym.lower(),
+        'like': lambda city_name, toponym: city_name.lower() in toponym.lower()
+    }
 
     """
     Initialise a registry that can be used to lookup info about cities.
@@ -38,23 +44,66 @@ class CityIDRegistry():
 
     def ids_for(self, city_name, country=None, matching='nocase'):
         """
-        Returns a list of tuples in the form (long, str, str) corresponding to the
-        IDs and relative toponyms and 2-chars country of the cities matching
-        the provided city name.
-        The rule for identified matchings is according to the
-        provided `matching` parameter value.
+        Returns a list of tuples in the form (long, str, str) corresponding to
+        the int IDs and relative toponyms and 2-chars country of the cities
+        matching the provided city name.
+        The rule for identified matchings is according to the provided
+        `matching` parameter value.
         If `country` is provided, the search is restricted to the cities of
-        the specified country
+        the specified country.
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
         :param matching: str among `exact` (literal, case-sensitive matching),
         `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function).
+        whose name contains as a substring the string fed to the function, no
+        matter the case).
         Defaults to `nocase`.
+        :raises ValueError if the value for `matching` is unknown
         :return: list of tuples
         """
-        raise NotImplementedError()
+        if not city_name:
+            return []
+        if matching not in self.MATCHINGS:
+            raise ValueError("Unknown type of matching: "
+                             "allowed values are %s" % ", ".join(self.MATCHINGS))
+        if country is not None and len(country) != 2:
+            raise ValueError("Country must be a 2-char string")
+        return self._filter_matching_lines(city_name, country, matching)
+
+    def _filter_matching_lines(self, city_name, country, matching):
+        result = list()
+
+        # find the right file to scan and extract its lines. Upon "like"
+        # matchings, just read all files
+        if matching == 'like':
+            lines = [l.strip() for l in self._get_all_lines()]
+        else:
+            filename = self._assess_subfile_from(city_name)
+            lines = [l.strip() for l in self._get_lines(filename)]
+
+        # look for toponyms matching the specified city_name and according to
+        # the specified matching style
+        for line in lines:
+            tokens = line.split(",")
+            # sometimes city names have an inner comma...
+            if len(tokens) == 6:
+                tokens = [tokens[0]+','+tokens[1], tokens[2], tokens[3],
+                          tokens[4], tokens[5]]
+            # check country
+            if country is not None:
+                if tokens[4] != country:
+                    continue
+
+            # check city_name
+            if self._city_name_matches(city_name, tokens[0], matching):
+                result.append((int(tokens[1]), tokens[0], tokens[4]))
+
+        return result
+
+    def _city_name_matches(self, city_name, toponym, matching):
+        comparison_function = self.MATCHINGS[matching]
+        return comparison_function(city_name, toponym)
 
     @deprecated(will_be='removed', on_version=(3, 0, 0))
     def location_for(self, city_name):
@@ -74,33 +123,40 @@ class CityIDRegistry():
         return Location(tokens[0], float(tokens[3]), float(tokens[2]),
                         int(tokens[1]), tokens[4])
 
-    def _assess_subfile_from(self, city_name):
-        c = ord(city_name.lower()[0])
-        if c < 97: # not a letter
-            raise ValueError('Error: city name must start with a letter')
-        elif c in range(97, 103):  # from a to f
-            return self._filepath_regex % (97, 102)
-        elif c in range(103, 109): # from g to l
-            return self._filepath_regex % (103, 108)
-        elif c in range(109, 115): # from m to r
-            return self._filepath_regex % (109, 114)
-        elif c in range (115, 123): # from s to z
-            return self._filepath_regex % (115, 122)
-        else:
-            raise ValueError('Error: city name must start with a letter')
-
     def _lookup_line_by_city_name(self, city_name):
         filename = self._assess_subfile_from(city_name)
         lines = self._get_lines(filename)
         return self._match_line(city_name, lines)
-    
+
+    def _assess_subfile_from(self, city_name):
+        c = ord(city_name.lower()[0])
+        if c < 97:  # not a letter
+            raise ValueError('Error: city name must start with a letter')
+        elif c in range(97, 103):  # from a to f
+            return self._filepath_regex % (97, 102)
+        elif c in range(103, 109):  # from g to l
+            return self._filepath_regex % (103, 108)
+        elif c in range(109, 115):  # from m to r
+            return self._filepath_regex % (109, 114)
+        elif c in range(115, 123):  # from s to z
+            return self._filepath_regex % (115, 122)
+        else:
+            raise ValueError('Error: city name must start with a letter')
+
     def _get_lines(self, filename):
         with resource_stream(__name__, filename) as f:
             lines = f.readlines()
             if type(lines[0]) is bytes:
                 lines = map(lambda l: l.decode("utf-8"), lines)
             return lines
-    
+
+    def _get_all_lines(self):
+        all_lines = list()
+        for city_name in ['a', 'g', 'm', 's']:  # all available city ID files
+            filename = self._assess_subfile_from(city_name)
+            all_lines.extend(self._get_lines(filename))
+        return all_lines
+
     def _match_line(self, city_name, lines):
         """
         The lookup is case insensitive and returns the first matching line,

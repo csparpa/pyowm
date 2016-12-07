@@ -31,6 +31,8 @@ Abbeville,4314295,29.974649,-92.134293,US
 Abbeville,4568985,34.178169,-82.379013,US
 Abbeville,4829449,31.57184,-85.250488,US
 Bologna,2829449,30.57184,-83.250488,IT"""
+    _test_file_contents_with_commas_in_names = """Thalassery,1254780,11.75,75.533333,IN
+Thale, Stadt,6550950,51.7528,11.058,DE"""
 
     test_filelines = [
         'Londinieres,2997784,49.831871,1.40232,FR\n',
@@ -45,6 +47,12 @@ Bologna,2829449,30.57184,-83.250488,IT"""
 
     def _mock_get_lines_with_homonymies(self, filename):
         return StringIO(self._test_file_contents_with_homonymies).readlines()
+
+    def _mock_get_all_lines(self):
+        return StringIO(self._test_file_contents_with_homonymies).readlines()
+
+    def _mock_test_file_contents_with_commas_in_names(self, filename):
+        return StringIO(self._test_file_contents_with_commas_in_names).readlines()
 
     def test_assess_subfile_from(self):
         self.assertEqual(self._instance._assess_subfile_from('b-city'),
@@ -143,7 +151,7 @@ Bologna,2829449,30.57184,-83.250488,IT"""
 
         # No matches
         result = self._instance.ids_for('aaaaaaaaaa')
-        self.assertIsNone(result)
+        self.assertEquals(0, len(result))
 
         # One match
         result = self._instance.ids_for("Bologna")
@@ -158,29 +166,40 @@ Bologna,2829449,30.57184,-83.250488,IT"""
 
         CityIDRegistry._get_lines = ref_to_original
 
+    def test_ids_for_with_wrong_input_values(self):
+        self.assertRaises(ValueError,
+                          CityIDRegistry.ids_for, self._instance,
+                          "bologna", matching='xyz')
+        self.assertRaises(ValueError,
+                          CityIDRegistry.ids_for, self._instance,
+                          "bologna", country='superlongcountry')
+
     def test_ids_for_matching_criteria(self):
-        ref_to_original = CityIDRegistry._get_lines
+        original_get_lines = CityIDRegistry._get_lines
+        original_get_all_lines = CityIDRegistry._get_all_lines
         CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
+        CityIDRegistry._get_all_lines = self._mock_get_all_lines
+
+        # look for an empty name
+        result = self._instance.ids_for("")
+        self.assertEquals(0, len(result))
 
         # case sensitive
         result = self._instance.ids_for("bologna", matching='exact')
-        self.assertIsNone(result)
+        self.assertEquals(0, len(result))
 
         result = self._instance.ids_for("Bologna", matching='exact')
-        self.assertIsNone(result)
         self.assertEquals(1, len(result))
-        self.assertEquals(2829449, result[0])
+        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
 
         # case insensitive
         result = self._instance.ids_for("bologna", matching='nocase')
-        self.assertIsNone(result)
         self.assertEquals(1, len(result))
-        self.assertEquals(2829449, result[0])
+        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
 
         result = self._instance.ids_for("Bologna", matching='nocase')
-        self.assertIsNone(result)
         self.assertEquals(1, len(result))
-        self.assertEquals(2829449, result[0])
+        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
 
         # like
         result = self._instance.ids_for("abbans", matching='like')
@@ -193,21 +212,32 @@ Bologna,2829449,30.57184,-83.250488,IT"""
         self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
         self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
-        CityIDRegistry._get_lines = ref_to_original
+        CityIDRegistry._get_lines = original_get_lines
+        CityIDRegistry._get_all_lines = original_get_all_lines
 
     def test_ids_for_restricted_to_country(self):
         ref_to_original = CityIDRegistry._get_lines
         CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
 
         result = self._instance.ids_for("Abbeville", country='JP')
-        self.assertIsNone(result)
+        self.assertEquals(0, len(result))
 
         result = self._instance.ids_for("Abbeville", country='US')
-        self.assertEquals(1, len(result))
+        self.assertEquals(4, len(result))
         self.assertTrue((4178992, 'Abbeville', 'US') in result)
 
         result = self._instance.ids_for("Abbeville", country='FR')
         self.assertEquals(1, len(result))
         self.assertTrue((3038789, 'Abbeville', 'FR') in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_ids_for_with_commas_in_city_names(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.ids_for("Thale, Stadt")
+        self.assertEquals(1, len(result))
+        self.assertTrue((6550950, 'Thale, Stadt', 'DE') in result)
 
         CityIDRegistry._get_lines = ref_to_original
