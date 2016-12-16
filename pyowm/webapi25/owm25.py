@@ -11,6 +11,7 @@ from pyowm.webapi25.configuration25 import (
     FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
 from pyowm.webapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
+from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
 from pyowm.commons import weather_client, uv_client, airpollution_client
 from pyowm.utils import timeformatutils
@@ -20,7 +21,7 @@ from pyowm.webapi25 import historian
 
 class OWM25(owm.OWM):
 
-    OWM_API_VERSION = (2, 5, 0)
+    OWM_API_VERSION = '2.5'
 
     """
     OWM subclass providing methods for each OWM web API 2.5 endpoint. The class
@@ -122,21 +123,22 @@ class OWM25(owm.OWM):
         """
         self._API_key = API_key
 
+    @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_API_version(self):
         """
         Returns the currently supported OWM web API version
 
-        :returns: the OWM web API version string
+        :returns: str
 
         """
         return self.OWM_API_VERSION
 
+    @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_version(self):
         """
         Returns the current version of the PyOWM library
 
-        :returns: the current PyOWM library version tuple in the form:
-          (major, minor, patch)
+        :returns: str
 
         """
         return constants.PYOWM_VERSION
