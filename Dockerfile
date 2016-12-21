@@ -8,7 +8,7 @@ RUN echo -ne '\n' |  apt-add-repository ppa:fkrull/deadsnakes
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install python2.7 python3.2 python3.3 python3.5 python-pip \
-    ipython ipython3 -y
+    ipython ipython3 python3-setuptools zlib1g-dev -y
 RUN wget https://bootstrap.pypa.io/ez_setup.py -O - | python && \
     wget https://bootstrap.pypa.io/ez_setup.py -O - | python3
 
