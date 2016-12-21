@@ -43,7 +43,7 @@ def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERS
     :returns: an instance of a proper *OWM* subclass
     :raises: *ValueError* when unsupported OWM API versions are provided
     """
-    if version == "2.5":
+    if version == '2.5':
         if config_module is None:
             config_module = "pyowm.webapi25.configuration25"
         cfg_module = __import__(config_module,  fromlist=[''])

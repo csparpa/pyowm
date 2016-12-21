@@ -71,7 +71,7 @@ def to_date(timeobject):
         return datetime.strptime(timeobject,
                                  '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     else:
-        raise TypeError('The time value must be espressed either by an int ' \
+        raise TypeError('The time value must be expressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 
@@ -101,7 +101,7 @@ def to_ISO8601(timeobject):
     elif isinstance(timeobject, str):
         return timeobject
     else:
-        raise TypeError('The time value must be espressed either by an int ' \
+        raise TypeError('The time value must be expressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 
@@ -129,7 +129,7 @@ def to_UNIXtime(timeobject):
     elif isinstance(timeobject, str):
         return _ISO8601_to_UNIXtime(timeobject)
     else:
-        raise TypeError('The time value must be espressed either by an int ' \
+        raise TypeError('The time value must be expressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 

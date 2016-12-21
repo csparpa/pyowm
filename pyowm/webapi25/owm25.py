@@ -9,8 +9,9 @@ from pyowm.webapi25.configuration25 import (
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
     FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
-from pyowm.webapi25.configuration25 import city_id_registry as zzz
+from pyowm.webapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
+from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
 from pyowm.commons import weather_client, uv_client, airpollution_client
 from pyowm.utils import timeformatutils
@@ -19,6 +20,9 @@ from pyowm.webapi25 import historian
 
 
 class OWM25(owm.OWM):
+
+    OWM_API_VERSION = '2.5'
+
     """
     OWM subclass providing methods for each OWM web API 2.5 endpoint. The class
     is instantiated with *jsonparser* subclasses, each one parsing the response
@@ -96,6 +100,7 @@ class OWM25(owm.OWM):
         try:  # The OWM API expects UTF-8 encoding
             if not isinstance(value, unicode):
                 return value.encode('utf8')
+            return value
         except NameError:
             return value
 
@@ -118,20 +123,22 @@ class OWM25(owm.OWM):
         """
         self._API_key = API_key
 
+    @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_API_version(self):
         """
         Returns the currently supported OWM web API version
 
-        :returns: the OWM web API version string
+        :returns: str
 
         """
-        return "2.5"
+        return self.OWM_API_VERSION
 
+    @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_version(self):
         """
         Returns the current version of the PyOWM library
 
-        :returns: the current PyOWM library version string
+        :returns: str
 
         """
         return constants.PYOWM_VERSION
@@ -171,7 +178,7 @@ class OWM25(owm.OWM):
 
         :returns: a *CityIDRegistry* instance
         """
-        return zzz
+        return reg
 
     def is_API_online(self):
         """
@@ -232,6 +239,31 @@ class OWM25(owm.OWM):
         json_data = self._api.call_API(OBSERVATION_URL,
                                              {'lon': lon, 'lat': lat,
                                                'lang': self._language})
+        return self._parsers['observation'].parse_JSON(json_data)
+
+    def weather_at_zip_code(self, zipcode, country):
+        """
+        Queries the OWM web API for the currently observed weather at the
+        specified zip code and country code (eg: 2037, au).
+        
+        :param zip: the location's zip or postcode
+        :type zip: string
+        :param country: the location's country code
+        :type country: string
+        :returns: an *Observation* instance or ``None`` if no weather data is
+            available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed or *APICallException* when OWM web API can not be
+            reached
+        """
+        OWM25._assert_is_string_or_unicode(zipcode)
+        OWM25._assert_is_string_or_unicode(country)
+        encoded_zip = OWM25._encode_string(zipcode)
+        encoded_country = OWM25._encode_string(country)
+        zip_param = encoded_zip + ',' + encoded_country
+        json_data = self._api.call_API(OBSERVATION_URL,
+                                         {'zip': zip_param,
+                                          'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_id(self, id):

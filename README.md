@@ -11,13 +11,18 @@ PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
 
 It allows quick and easy consumption of OWM weather data from Python applications via a simple object model and in a human-friendly fashion.
 
-No additional libraries are requested: only the Python standard library modules.
+PyOWM runs on Python 2.7 and Python 3.2+, and integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
 
-##  Support
 
-PyOWM currently supports _version 2.5_ of the OWM API
+##  Installation
 
-PyOWM runs on Python 2.7 and Python 3.2+
+Install with `pip` for your ease:
+
+```shell
+$ pip install pyowm
+```
+
+There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), [Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
 
 PyOWM integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
 
@@ -39,7 +44,7 @@ import pyowm
 
 owm = pyowm.OWM('your-API-key')  # You MUST provide a valid API key
 
-# You have a pro subscription? Use:
+# Have a pro subscription? Then use:
 # owm = pyowm.OWM(API_key='your-API-key', subscription_type='pro')
 
 # Will it be sunny tomorrow at this time in Milan (Italy) ?
@@ -63,38 +68,20 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
-##  Installation
-
-Use `pip` for your ease:
-
-```shell
-$ pip install pyowm
-```
-
-There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools),
-[Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and
-common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
+PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
 
 ## Documentation
-Each release has its own changelog on the [changelogs wiki page](https://github.com/csparpa/pyowm/wiki/Changelog).
-
-PyOWM usage examples are available in [the wiki](https://github.com/csparpa/pyowm/wiki/Usage-examples).
+Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 
 The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
 
 
-## License
-[MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
-
-
 ## Contributing
 
-## Development
-_Contributors (code, testing, issues reporting) are welcome!_.
+_Contributors (coding, testing, packaging, reporting issues) are welcome!_.
 
 See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) wiki page to get started.
 
-### Testing
 See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
 
 
@@ -106,3 +93,7 @@ Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here]
 * If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 * [OpenWeatherMap website](http://openweathermap.org/)
 * [OpenWeatherMap web API docs](http://openweathermap.org/api)
+
+
+## License
+[MIT license](https://github.com/csparpa/pyowm/blob/master/LICENSE)
