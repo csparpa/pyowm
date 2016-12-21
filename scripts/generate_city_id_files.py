@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import requests, re, codecs, json, gzip, collections
+import requests, sys, os, codecs, json, gzip, collections
 
 city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
 us_city_list_url = 'http://bulk.openweathermap.org/sample/city.list.us.json.gz'
@@ -118,29 +118,35 @@ def split_keyset(cities_dict):
     return ss
 
 
-def write_subsets_to_files(ssets):
+def write_subsets_to_files(ssets, outdir):
     print 'Writing subsets to files ...'
-    with codecs.open("097-102.txt", "w", "utf-8") as f:
+    with codecs.open("%s%s097-102.txt" % (outdir, os.sep),
+                     "w", "utf-8") as f:
         for city_string in sorted(ssets[0]):
             f.write(city_string+"\n")
-    with codecs.open("103-108.txt", "w", "utf-8") as f:
+    with codecs.open("%s%s103-108.txt" % (outdir, os.sep),
+                     "w", "utf-8") as f:
         for city_string in sorted(ssets[1]):
             f.write(city_string+"\n")
-    with codecs.open("109-114.txt", "w", "utf-8") as f:
+    with codecs.open("%s%s109-114.txt" % (outdir, os.sep),
+                     "w", "utf-8") as f:
         for city_string in sorted(ssets[2]):
             f.write(city_string+"\n")
-    with codecs.open("115-122.txt", "w", "utf-8") as f:
+    with codecs.open("%s%s115-122.txt" % (outdir, os.sep),
+                     "w", "utf-8") as f:
         for city_string in sorted(ssets[3]):
             f.write(city_string+"\n")
     print '... done'
 
 
 if __name__ == '__main__':
+    target_folder = os.path.abspath(sys.argv[1])
+    print 'Will save output files to folder: %s' % (target_folder,)
     print 'Job started'
     download_the_files()
     cities = read_all_cities_into_dict()
     ordered_cities = order_dict_by_city_id(cities)
     ssets = split_keyset(ordered_cities)
-    write_subsets_to_files(ssets)
+    write_subsets_to_files(ssets, target_folder)
     print 'Job finished'
 
