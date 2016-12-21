@@ -33,7 +33,7 @@ Advanced users might want to inject into the library a specific configuration: t
 
     >>> owm = OWM(API_key='abcdef', version='2.5', config_module='mypackage.mysubpackage.myconfigmodule')
 
-Be careful! You must provide a well-formatted configuration module for the library to work properly and your module must be in your PYTHONPATH. More on configuration modules formatting can be found [here](https://github.com/csparpa/pyowm/wiki/Object-model#wiki-the-configuration25-module).
+Be careful! You must provide a well-formatted configuration module for the library to work properly and your module must be in your PYTHONPATH. More on configuration modules formatting can be found [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md#wiki-the-configuration25-module).
 
 # Using a paid (pro) API key subscription
 If you purchased a pro subscription on the OWM web API, you can instantiate the global OWM like this:
@@ -67,11 +67,27 @@ An ``Observation`` object will be returned, containing weather info about the lo
 ### Retrieving city ID for a location
 City IDs can be retrieved using a registry:
 
-    registry = owm.city_id_registry()
-    registry.id_for("New York,US")        # Gives: 5128581
-    registry.location_for("New York,US")  # Gives a Location object instance
+    reg = owm.city_id_registry()
+    reg.ids_for('London')       # [ (123, 'London', 'UK'), (456, 'London', 'MA'), (789, 'London', 'WY')]
+    reg.locations_for("London")  # gives a list of Location instances
 
 You can pass the retrieved IDs with ``owm.weather_at_id`` method.
+
+As multiple locations with the same name exist in different states, the registry
+comes with support for narrowing down queries on specific countries...
+
+    london = reg.ids_for('London', country='UK')            # [ (123, 'London, UK') ]
+    london_loc = reg.locations_for('London', country='UK')  # [ <Location obj> ]
+
+... as well as for changing the type of matches between the provided string and
+the locations' toponyms:
+
+    reg.ids_for("london", matching='exact')  # literal matching
+    reg.ids_for("london", matching='nocase') # case-insensitive
+    reg.ids_for("london", matching='like')   # substring search
+
+Please refer to the SW API docs for details.
+
 
 ### Currently observed weather extended search
 You can query for currently observed weather:

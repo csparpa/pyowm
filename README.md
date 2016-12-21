@@ -66,7 +66,7 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
-PyOWM usage examples are available in [the wiki](https://github.com/csparpa/pyowm/wiki/Usage-examples).
+PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
 
 ## Documentation
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
@@ -94,4 +94,4 @@ Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here]
 
 
 ## License
-[MIT](https://github.com/csparpa/pyowm/blob/master/LICENSE) license
+[MIT license](https://github.com/csparpa/pyowm/blob/master/LICENSE)
