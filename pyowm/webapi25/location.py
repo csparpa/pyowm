@@ -187,7 +187,12 @@ def location_from_dictionary(d):
         lon = data['coord']['lon']
         lat = data['coord']['lat']
     elif 'coord' in data['station']:
-        lon = data['station']['coord']['lon']
+        if 'lon' in data['station']['coord']:
+            lon = data['station']['coord']['lon']
+        elif 'lng' in data['station']['coord']:
+            lon = data['station']['coord']['lng']
+        else:
+            lon = None
         lat = data['station']['coord']['lat']
     else:
         raise KeyError("Impossible to read geographical coordinates from JSON")
