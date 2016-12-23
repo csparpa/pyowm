@@ -7,7 +7,7 @@ python:
   - "3.5"
   - "3.6-dev"
 install:
-  - pip install coverage==3.7.1 tox==1.9.2 virtualenv==13.1.2
+  - pip install coverage==4.2 tox==1.9.2 virtualenv==15.1.0
 script:
   - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
