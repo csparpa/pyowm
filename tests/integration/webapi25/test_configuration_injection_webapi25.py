@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Integration test for checking that external configuration modules can be
 injected by the user and their values are correctly used
-'''
+"""
+
 import unittest
+import os
 import pyowm
-from api_key import API_KEY
 
 
 class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
 
     _config_module_name = 'tests.integration.webapi25.external_configuration'
     _non_existent_config_module_name = 'this_will_never_be_a_config_module'
+    API_KEY = os.getenv('OWM_API_KEY', None)
 
     def test(self):
-        pyowm.OWM(API_KEY, '2.5', self._config_module_name)
+        pyowm.OWM(self.API_KEY, '2.5', self._config_module_name)
 
     def test_library_is_instantiated_with_wrong_API_version(self):
         self.assertRaises(ValueError, pyowm.OWM, 'abcd', '0.0')
@@ -26,7 +28,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         configuration
         """
         try:
-            pyowm.OWM(API_KEY, '2.5', self._config_module_name)
+            pyowm.OWM(self.API_KEY, '2.5', self._config_module_name)
         except Exception:
             self.fail("Error raised during library instantiation")
 
@@ -35,7 +37,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         Test that library instantiation raises an error when trying to inject
         a non-existent external configuration module
         """
-        self.assertRaises(Exception, pyowm.OWM, API_KEY, '2.5',
+        self.assertRaises(Exception, pyowm.OWM, self.API_KEY, '2.5',
                           self._non_existent_config_module_name)
 
     def test_library_performs_API_calls_with_external_config(self):
@@ -46,7 +48,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         """
         try:
             instance = \
-                pyowm.OWM(API_KEY, '2.5',
+                pyowm.OWM(self.API_KEY, '2.5',
                           self._config_module_name)
         except:
             self.fail("Error raised during library instantiation")

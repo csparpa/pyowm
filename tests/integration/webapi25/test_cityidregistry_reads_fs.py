@@ -3,7 +3,7 @@ Integration test case for cityidregistry.py module
 """
 
 import unittest
-from os import path, sep
+from os import sep
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 

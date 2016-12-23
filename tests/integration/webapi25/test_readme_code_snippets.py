@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Integration tests for the README.md code snippets
 These are "live" executions, that of course need the OWM web API to be up
 and running
-'''
+"""
 
 import unittest
+import os
 from pyowm import timeutils
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.webapi25.weather import Weather
 from pyowm.webapi25.observation import Observation
 from pyowm.webapi25.forecaster import Forecaster
-from api_key import API_KEY
 
 
 class IntegrationTestsREADMESnippets(unittest.TestCase):
 
-    __owm = OWM25(parsers, API_KEY)
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', None))
 
     def test_snippets(self):
 

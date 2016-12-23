@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Integration tests for the PyOWM library
 These are "live" executions, that of course need the OWM web API to be up
 and running
-'''
+"""
+
 import unittest
+import os
 from datetime import datetime
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.exceptions import api_call_error, unauthorized_error
-from api_key import API_KEY
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
 
-    __owm = OWM25(parsers, API_KEY)
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', None))
 
     def test_is_API_online(self):
         self.assertTrue(self.__owm.is_API_online())
