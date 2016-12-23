@@ -8,13 +8,14 @@ injected by the user and their values are correctly used
 import unittest
 import os
 import pyowm
+from pyowm.constants import DEFAULT_API_KEY
 
 
 class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
 
     _config_module_name = 'tests.integration.webapi25.external_configuration'
     _non_existent_config_module_name = 'this_will_never_be_a_config_module'
-    API_KEY = os.getenv('OWM_API_KEY', None)
+    API_KEY = os.getenv('OWM_API_KEY', DEFAULT_API_KEY)
 
     def test(self):
         pyowm.OWM(self.API_KEY, '2.5', self._config_module_name)

@@ -8,6 +8,7 @@ and running
 
 import unittest
 import os
+from pyowm.constants import DEFAULT_API_KEY
 from pyowm import timeutils
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
@@ -18,7 +19,7 @@ from pyowm.webapi25.forecaster import Forecaster
 
 class IntegrationTestsREADMESnippets(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', None))
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
 
     def test_snippets(self):
 

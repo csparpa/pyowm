@@ -5,6 +5,7 @@ Integration tests for checking PyOWM caching features
 import unittest
 import os
 from time import time
+from pyowm.constants import DEFAULT_API_KEY
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.caches.lrucache import LRUCache
@@ -41,7 +42,7 @@ class CacheWrapper(OWMCache):
 
 class CacheTestWebAPI25(unittest.TestCase):
 
-    API_KEY = os.getenv('OWM_API_KEY', None)
+    API_KEY = os.getenv('OWM_API_KEY', DEFAULT_API_KEY)
 
     def test_caching_prevents_API_calls(self):
         cache = LRUCache(20, 1000 * 60 * 60)

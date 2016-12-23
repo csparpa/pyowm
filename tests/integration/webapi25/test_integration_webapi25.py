@@ -9,6 +9,7 @@ and running
 import unittest
 import os
 from datetime import datetime
+from pyowm.constants import DEFAULT_API_KEY
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.exceptions import api_call_error, unauthorized_error
@@ -16,7 +17,7 @@ from pyowm.exceptions import api_call_error, unauthorized_error
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', None))
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
 
     def test_is_API_online(self):
         self.assertTrue(self.__owm.is_API_online())
