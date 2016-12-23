@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Functional test for checking that external configuration modules can be
+Integration test for checking that external configuration modules can be
 injected by the user and their values are correctly used
 '''
 import unittest
@@ -11,7 +11,7 @@ from api_key import API_KEY
 
 class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
 
-    _config_module_name = 'tests.functional.webapi25.external_configuration'
+    _config_module_name = 'tests.integration.webapi25.external_configuration'
     _non_existent_config_module_name = 'this_will_never_be_a_config_module'
 
     def test(self):

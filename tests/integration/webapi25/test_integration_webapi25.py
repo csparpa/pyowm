@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Functional tests for the PyOWM library
+Integration tests for the PyOWM library
 These are "live" executions, that of course need the OWM web API to be up
 and running
 '''

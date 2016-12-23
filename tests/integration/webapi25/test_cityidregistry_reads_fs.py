@@ -1,5 +1,5 @@
 """
-Test case for cityidregistry.py module
+Integration test case for cityidregistry.py module
 """
 
 import unittest
@@ -7,16 +7,17 @@ from os import path, sep
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
+
 class TestCityIDRegistryReadsFS(unittest.TestCase):
 
     if path.isfile(path.abspath(path.dirname(__name__))+sep+'097-102.txt'):
         _current_folder = path.abspath(path.dirname(__name__))
     elif path.isfile(path.abspath(path.dirname(__name__) + 
-            path.join('tests', 'functional', 'webapi25', '097-102.txt'))):
-        _current_folder = path.join('..','..','tests','functional','webapi25')
+            path.join('tests', 'integration', 'webapi25', '097-102.txt'))):
+        _current_folder = path.join('..','..','tests','integration','webapi25')
     else:
         _current_folder = path.abspath(path.dirname(__name__))+sep+ \
-                          sep.join(["functional","webapi25"])
+                          sep.join(["integration","webapi25"])
 
     _prefix = _current_folder+sep
     _instance = CityIDRegistry(_prefix+'%03d-%03d.txt')

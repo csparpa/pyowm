@@ -1,5 +1,5 @@
 """
-Functional tests for checking PyOWM caching features
+Integration tests for checking PyOWM caching features
 """
 
 import unittest
