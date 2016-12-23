@@ -1,24 +1,16 @@
 """
-Test case for cityidregistry.py module
+Integration test case for cityidregistry.py module
 """
 
 import unittest
-from os import path, sep
+from os import sep
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
 
+
 class TestCityIDRegistryReadsFS(unittest.TestCase):
 
-    if path.isfile(path.abspath(path.dirname(__name__))+sep+'097-102.txt'):
-        _current_folder = path.abspath(path.dirname(__name__))
-    elif path.isfile(path.abspath(path.dirname(__name__) + 
-            path.join('tests', 'functional', 'webapi25', '097-102.txt'))):
-        _current_folder = path.join('..','..','tests','functional','webapi25')
-    else:
-        _current_folder = path.abspath(path.dirname(__name__))+sep+ \
-                          sep.join(["functional","webapi25"])
-
-    _prefix = _current_folder+sep
+    _prefix = 'cityids'+sep
     _instance = CityIDRegistry(_prefix+'%03d-%03d.txt')
 
     def test_assess_subfile_from(self):
@@ -36,7 +28,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
                           self._instance, '{abc')
 
     def test_lookup_line_by_city_name(self):
-        expected = u'dongen,2756723,51.626671,4.938890,NL'
+        expected = u'Dongen,2756723,51.626671,4.93889,NL'
         self.assertEquals(expected,
                           self._instance._lookup_line_by_city_name('dongen'))
         self.assertTrue(self._instance. \
@@ -51,7 +43,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
                           '123abc')
 
     def test_location_for(self):
-        expected = Location('dongen', 4.938890, 51.626671, 2756723, 'NL')
+        expected = Location('Dongen', 4.938890, 51.626671, 2756723, 'NL')
         result = self._instance.location_for('dongen')
         self.assertEqual(result.get_name(), expected.get_name())
         self.assertEqual(result.get_country(), expected.get_country())
@@ -63,6 +55,27 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
     def test_location_for_fails_with_malformed_inputs(self):
         self.assertRaises(ValueError, CityIDRegistry.location_for,
                           self._instance, '123abc')
+
+    def test_ids_for(self):
+        result = self._instance.ids_for("bologna", matching='exact')
+        self.assertEquals(0, len(result))
+
+        result = self._instance.ids_for("Abbans-Dessus")
+        self.assertEquals(2, len(result))
+        self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
+        self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
+
+        result = self._instance.ids_for("Dessus", matching='like')
+        self.assertEquals(6, len(result))
+
+    def test_locations_for(self):
+        expected1 = Location('Abbans-Dessus', 5.88188, 47.120548, 3038800, 'FR')
+        expected2 = Location('Abbans-Dessus', 5.88333, 47.116669, 6452202, 'FR')
+        result = self._instance.locations_for("Abbans-Dessus")
+        self.assertEquals(2, len(result))
+        for l in result:
+            self.assertTrue(isinstance(l, Location))
+            self.assertTrue(l.get_ID() in [expected1.get_ID(), expected2.get_ID()])
 
 if __name__ == "__main__":
     unittest.main()

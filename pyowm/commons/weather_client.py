@@ -12,9 +12,7 @@ except ImportError:
 
 import socket
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error
-from pyowm.utils import timeformatutils
-from pyowm.webapi25.configuration25 import ROOT_API_URL, ROOT_UV_API_URL, \
-    UV_INDEX_URL
+from pyowm.webapi25.configuration25 import ROOT_API_URL
 
 
 class WeatherHttpClient(object):
@@ -61,7 +59,8 @@ class WeatherHttpClient(object):
                     raise unauthorized_error.UnauthorizedError('Invalid API key')
                 if '404' in str(e):
                     raise not_found_error.NotFoundError('The resource was not found')
-                raise api_call_error.APICallError(str(e), e)
+                if '502' in str(e):
+                    raise api_call_error.BadGatewayError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
             else:

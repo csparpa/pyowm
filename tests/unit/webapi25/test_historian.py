@@ -56,18 +56,18 @@ class TestHistorian(unittest.TestCase):
 
     def test_temperature_series(self):
         expected = [(1362934043, 266.85), (1362933983, 266.25)]
-        self.assertEqual(expected, self.__instance.temperature_series())
+        self.assertEqual(set(expected), set(self.__instance.temperature_series()))
 
     def test_temperature_series_with_different_temperature_units(self):
         expected_kelvin = [(1362934043, 266.85), (1362933983, 266.25)]
         expected_celsius = [(1362934043, -6.3), (1362933983, -6.9)]
         expected_fahrenheit = [(1362934043, 20.66), (1362933983, 19.58)]
-        self.assertEqual(expected_kelvin,
-                         self.__instance.temperature_series(unit='kelvin'))
-        self.assertEqual(expected_celsius,
-                         self.__instance.temperature_series(unit='celsius'))
-        self.assertEqual(expected_fahrenheit,
-                         self.__instance.temperature_series(unit='fahrenheit'))
+        self.assertEqual(set(expected_kelvin),
+                         set(self.__instance.temperature_series(unit='kelvin')))
+        self.assertEqual(set(expected_celsius),
+                         set(self.__instance.temperature_series(unit='celsius')))
+        self.assertEqual(set(expected_fahrenheit),
+                         set(self.__instance.temperature_series(unit='fahrenheit')))
 
     def test_temperature_series_fails_with_unknown_temperature_unit(self):
         self.assertRaises(ValueError, Historian.temperature_series,
@@ -75,19 +75,19 @@ class TestHistorian(unittest.TestCase):
 
     def test_humidity_series(self):
         expected = [(1362934043, 27.7), (1362933983, 27.3)]
-        self.assertEqual(expected, self.__instance.humidity_series())
+        self.assertEqual(set(expected), set(self.__instance.humidity_series()))
 
     def test_pressure_series(self):
         expected = [(1362934043, 1010.09), (1362933983, 1010.02)]
-        self.assertEqual(expected, self.__instance.pressure_series())
+        self.assertEqual(set(expected), set(self.__instance.pressure_series()))
 
     def test_rain_series(self):
         expected = [(1362934043, 2.5), (1362933983, None)]
-        self.assertEqual(expected, self.__instance.rain_series())
+        self.assertEqual(set(expected), set(self.__instance.rain_series()))
 
     def test_wind_series(self):
         expected = [(1362934043, 4.7), (1362933983, 4.7)]
-        self.assertEqual(expected, self.__instance.wind_series())
+        self.assertEqual(set(expected), set(self.__instance.wind_series()))
 
     def test_max_temperature(self):
         expected = (1362934043, 266.85)
