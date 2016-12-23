@@ -63,6 +63,8 @@ class UltraVioletHttpClient(object):
                     raise unauthorized_error.UnauthorizedError('Invalid API key')
                 if '404' in str(e):
                     raise not_found_error.NotFoundError('The resource was not found')
+                if '502' in str(e):
+                    raise api_call_error.BadGatewayError(str(e), e)
                 raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
