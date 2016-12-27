@@ -128,6 +128,9 @@ class OWM25(owm.OWM):
         """
         Returns the currently supported OWM web API version
 
+        .. deprecated:: 3.0.0
+           Will return a tuple instead of a str
+
         :returns: str
 
         """
@@ -137,6 +140,9 @@ class OWM25(owm.OWM):
     def get_version(self):
         """
         Returns the current version of the PyOWM library
+
+        .. deprecated:: 3.0.0
+           Will return a tuple instead of a str
 
         :returns: str
 
