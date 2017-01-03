@@ -83,9 +83,10 @@ See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-de
 See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
 
 
-## Slack Community
-Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here](http://pyowm-slackin.herokuapp.com/)
+## Community
+Join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [here](http://pyowm-slackin.herokuapp.com/)
 
+Here are [some cool projects](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM) that use PyOWM
 
 ## References
 * If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
