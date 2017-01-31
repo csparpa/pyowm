@@ -34,6 +34,9 @@ class CityIDRegistry:
         Returns the long ID corresponding to the first city found that matches
         the provided city name. The lookup is case insensitive.
 
+        .. deprecated:: 3.0.0
+           Use :func:`ids_for` instead.
+
         :param city_name: the city name whose ID is looked up
         :type city_name: str
         :returns: a long or ``None`` if the lookup fails
@@ -80,6 +83,10 @@ class CityIDRegistry:
         :param city_name: the city name you want a *Location* for
         :type city_name: str
         :returns: a *Location* instance or ``None`` if the lookup fails
+
+        .. deprecated:: 3.0.0
+           Use :func:`locations_for` instead.
+
 
         """
         line = self._lookup_line_by_city_name(city_name)

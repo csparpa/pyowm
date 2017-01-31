@@ -24,8 +24,6 @@ $ pip install pyowm
 
 There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), [Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
 
-PyOWM integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
-
 ##  Usage
 
 ### API key
@@ -85,9 +83,10 @@ See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-de
 See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
 
 
-## Slack Community
-Join the [PyOWM public Slack team](https://pyowm.slack.com) by signing up [here](http://pyowm-slackin.herokuapp.com/)
+## Community
+Join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [here](http://pyowm-slackin.herokuapp.com/)
 
+Here are [some cool projects](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM) that use PyOWM
 
 ## References
 * If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!

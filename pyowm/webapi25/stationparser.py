@@ -40,8 +40,12 @@ class StationParser(jsonparser.JSONParser):
             station_type = d['station']['type']
             status = d['station']['status']
             lat = d['station']['coord']['lat']
-            lon = d['station']['coord']['lon']
-
+            if 'lon' in d['station']['coord']:
+                lon = d['station']['coord']['lon']
+            elif 'lng' in d['station']['coord']:
+                lon = d['station']['coord']['lng']
+            else:
+                lon = None
             if 'distance' in d:
                 distance = d['distance']
             else:
