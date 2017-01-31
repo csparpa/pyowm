@@ -1,0 +1,3 @@
+include pyowm/webapi25/cityids/*.txt
+include pyowm/webapi25/xsd/*.xsd
+include pyowm/docs/*.md
