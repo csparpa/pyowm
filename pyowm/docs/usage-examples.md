@@ -58,7 +58,7 @@ By using the ``configuration25.py`` module, it is also possible to leverage exte
 ### Getting currently observed weather for a specific location.
 Querying for current weather is simple: provide an ``OWM`` object with the location you want the current weather be looked up for and the job is done. You can specify the location either by passing its toponym (eg: "London"), the city ID (eg: 2643741) or its geographic coordinates (lon/lat):
 
-    obs = owm.weather_at_place('London,uk')                          # Toponym
+    obs = owm.weather_at_place('London,GB')                    # Toponym
     obs = owm.weather_at_id(2643741)                           # City ID
     obs = owm.weather_at_coords(-0.107331,51.503614)           # lat/lon
 
@@ -68,7 +68,7 @@ An ``Observation`` object will be returned, containing weather info about the lo
 City IDs can be retrieved using a registry:
 
     reg = owm.city_id_registry()
-    reg.ids_for('London')       # [ (123, 'London', 'UK'), (456, 'London', 'MA'), (789, 'London', 'WY')]
+    reg.ids_for('London')       # [ (123, 'London', 'GB'), (456, 'London', 'MA'), (789, 'London', 'WY')]
     reg.locations_for("London")  # gives a list of Location instances
 
 You can pass the retrieved IDs with ``owm.weather_at_id`` method.
@@ -76,8 +76,8 @@ You can pass the retrieved IDs with ``owm.weather_at_id`` method.
 As multiple locations with the same name exist in different states, the registry
 comes with support for narrowing down queries on specific countries...
 
-    london = reg.ids_for('London', country='UK')            # [ (123, 'London, UK') ]
-    london_loc = reg.locations_for('London', country='UK')  # [ <Location obj> ]
+    london = reg.ids_for('London', country='GB')            # [ (123, 'London, GB') ]
+    london_loc = reg.locations_for('London', country='GB')  # [ <Location obj> ]
 
 ... as well as for changing the type of matches between the provided string and
 the locations' toponyms:
