@@ -24,7 +24,7 @@ class APICallError(OWMError):
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
         return ''.join(['Exception in calling OWM web API.', os.linesep,
-                       'Reason: ', self._message.decode('utf-8'), os.linesep,
+                       'Reason: ', self._message, os.linesep,
                        'Caused by: ', str(self._triggering_error)])
 
 

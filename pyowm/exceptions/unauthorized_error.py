@@ -22,4 +22,4 @@ class UnauthorizedError(OWMError):
         """Redefine __str__ hook for pretty-printing"""
         return ''.join(['Your API subscription level does not allow to perform '
                         'this operation', os.linesep,
-                        'Reason: ', self._message.decode('utf-8')])
+                        'Reason: ', self._message])

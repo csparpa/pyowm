@@ -22,4 +22,4 @@ class APIResponseError(OWMError):
         """Redefine __str__ hook for pretty-printing"""
         return ''.join(['An error HTTP status code was returned by the ' + \
                         'OWM API', os.linesep, 'Reason: ',
-                        self._message]).decode('utf-8')
+                        self._message])
