@@ -26,5 +26,6 @@ Packaging and Distribution
 
 Wiki
 ----
+  * [lardconcepts] (https://github.com/lardconcepts)
   * [richarddunks] (https://github.com/richarddunks)
   * [solumos] (https://github.com/solumos)
