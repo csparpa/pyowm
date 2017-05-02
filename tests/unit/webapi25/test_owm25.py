@@ -209,6 +209,16 @@ class TestOWM25(unittest.TestCase):
         except:
             pass
 
+    def test_obfuscate_API_key(self):
+        API_key = '22e28da2669c4283acdbd9cfa7dc0903'
+        expected = '************************a7dc0903'
+
+        instance = OWM25(self.__test_parsers, API_key)
+        self.assertEqual(expected, instance._obfuscate_API_key())
+
+        instance = OWM25(self.__test_parsers, None)
+        self.assertIsNone(instance._obfuscate_API_key())
+
     def test_wrong_API_key(self):
         try:
             OWM25(self.__test_parsers, 1234)

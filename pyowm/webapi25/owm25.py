@@ -104,6 +104,15 @@ class OWM25(owm.OWM):
         except NameError:
             return value
 
+    def _obfuscate_API_key(self):
+        """
+        Return a mostly obfuscated version of the API Key
+
+        :return: str
+        """
+        if self._API_key is not None:
+            return (len(self._API_key)-8)*'*'+self._API_key[-8:]
+
     def get_API_key(self):
         """
         Returns the str OWM API key
@@ -1129,7 +1138,7 @@ class OWM25(owm.OWM):
                "subscription type=%s, PyOWM version=%s, language=%s>" % \
                                     (__name__,
                                       self.__class__.__name__,
-                                      self._API_key,
+                                      self._obfuscate_API_key() if self._API_key is not None else 'None',
                                       self.get_API_version(),
                                       self._subscription_type,
                                       self.get_version(),
