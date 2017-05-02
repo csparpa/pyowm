@@ -11,6 +11,7 @@ install:
 script:
   - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+  - bash tests/installation_test.sh
 after_success:
   coveralls
 notifications:
