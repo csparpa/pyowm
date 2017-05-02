@@ -476,10 +476,12 @@ def weather_from_dictionary(d):
             wind = d['last']['wind'].copy()
         else:
             wind = dict()
-    elif 'speed' in d:
-        wind = dict(speed=d['speed'])
     else:
         wind = dict()
+        if 'speed' in d:
+            wind['speed'] = d['speed']
+        if 'deg' in d:
+            wind['deg'] = d['deg']
     # -- humidity
     if 'humidity' in d:
         humidity = d['humidity']
