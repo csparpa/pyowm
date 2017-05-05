@@ -134,3 +134,58 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         self.assertEquals(expected_url, result)
 
         self.__instance._lookup_cache_or_invoke_API = bkp
+
+    def test_get_no2(self):
+
+        # case: current NO2 index
+        params = {'lon': 8.25, 'lat': 43.75, 'start': None, 'interval': None}
+        bkp = self.__instance._lookup_cache_or_invoke_API
+
+        def mock_func(cache, API_full_url, timeout):
+            return API_full_url
+
+        self.__instance._lookup_cache_or_invoke_API = mock_func
+
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/current.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+
+        # case: no interval specified
+        params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': None}
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/2016Z.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        # case: 'minute' specified
+        params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': 'minute'}
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/2016-05-12T08:27Z.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        # case: 'hour' specified
+        params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': 'hour'}
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/2016-05-12T08Z.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        # case: 'day' specified
+        params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': 'day'}
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/2016-05-12Z.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        # case: 'month' specified
+        params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': 'month'}
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/2016-05Z.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        # case: 'year' specified
+        params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': 'year'}
+        expected_url = 'http://api.openweathermap.org/pollution/v1/no2/43.75,8.25/2016Z.json?appid=xyz'
+        result = self.__instance.get_no2(params)
+        self.assertEquals(expected_url, result)
+
+        self.__instance._lookup_cache_or_invoke_API = bkp

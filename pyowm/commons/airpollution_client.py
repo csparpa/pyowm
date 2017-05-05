@@ -10,7 +10,7 @@ import socket
 from pyowm.exceptions import api_call_error, not_found_error, unauthorized_error
 from pyowm.utils import timeformatutils
 from pyowm.webapi25.configuration25 import ROOT_POLLUTION_API_URL, \
-    CO_INDEX_URL, OZONE_URL
+    CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL
 
 
 class AirPollutionHttpClient(object):
@@ -136,6 +136,39 @@ class AirPollutionHttpClient(object):
                     timeformatutils.to_date(start), interval)
 
         url = url_template % (ROOT_POLLUTION_API_URL, OZONE_URL, lat, lon,
+                              timeref, self._API_key)
+        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+
+    def get_no2(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        """
+        Invokes the NO2 Index endpoint
+
+        :param params_dict: dict of parameters
+        :param timeout: how many seconds to wait for connection establishment \
+            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
+        :type timeout: int
+        :returns: a string containing raw JSON data
+        :raises: *ValueError*, *APICallError*
+
+        """
+        lat = str(params_dict['lat'])
+        lon = str(params_dict['lon'])
+        start = params_dict['start']
+        interval = params_dict['interval']
+
+        # build request URL
+        url_template = '%s%s/%s,%s/%s.json?appid=%s'
+        if start is None:
+            timeref = 'current'
+        else:
+            if interval is None:
+                timeref = self._trim_to(
+                    timeformatutils.to_date(start), 'year')
+            else:
+                timeref = self._trim_to(
+                    timeformatutils.to_date(start), interval)
+
+        url = url_template % (ROOT_POLLUTION_API_URL, NO2_INDEX_URL, lat, lon,
                               timeref, self._API_key)
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
