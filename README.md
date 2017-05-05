@@ -24,6 +24,13 @@ $ pip install pyowm
 
 There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), [Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
 
+Eager to fetch the very latest updates to PyOWM? Install the development trunk:
+
+```shell
+$ pip install git+https://github.com/csparpa/pyowm.git@develop
+```
+
+
 ##  Usage
 
 ### API key
