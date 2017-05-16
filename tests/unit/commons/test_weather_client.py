@@ -55,6 +55,10 @@ class TestOWMHTTPClient(unittest.TestCase):
         """Mock implementation of urllib2.urlopen raising HTTPError"""
         raise HTTPError(None, 404, "Failure", None, None)
 
+    def mock_urlopen_raising_unusual_HTTPError(self, url, data, timeout):
+        """Mock implementation of urllib2.urlopen raising an uncharted HTTPError"""
+        raise HTTPError(None, 579, "Uncharted failure", None, None)
+
     def mock_urlopen_raising_URLError(self, url, data, timeout):
         """Mock implementation of urllib2.urlopen raising URLError"""
         raise URLError("Failure")
@@ -132,6 +136,14 @@ class TestOWMHTTPClient(unittest.TestCase):
             urllib2.urlopen = self.mock_urlopen_raising_URLError
         else:  # Python 3.x
             urllib.request.urlopen = self.mock_urlopen_raising_URLError
+        self.assertRaises(APICallError, self.__instance.call_API,
+                          'http://tests.com/api', {'a': 1, 'b': 2})
+
+        # Test raising URLError upon unusual (eg. non 401, 404, 502) HTTP errors
+        if 'urllib2' in context:  # Python 2.x
+            urllib2.urlopen = self.mock_urlopen_raising_unusual_HTTPError
+        else:  # Python 3.x
+            urllib.request.urlopen = self.mock_urlopen_raising_unusual_HTTPError
         self.assertRaises(APICallError, self.__instance.call_API,
                           'http://tests.com/api', {'a': 1, 'b': 2})
 
