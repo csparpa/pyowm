@@ -23,6 +23,10 @@ class TestCOIndexParser(unittest.TestCase):
         self.assertIsNone(result.get_interval())
         self.assertNotEquals(0, len(result.get_co_samples()))
 
+    def test_parse_JSON_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, COIndexParser.parse_JSON,
+                          self.__instance, None)
+
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, COIndexParser.parse_JSON,
                           self.__instance, COINDEX_MALFORMED_JSON)

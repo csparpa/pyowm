@@ -30,6 +30,8 @@ class NO2IndexParser(jsonparser.JSONParser):
             string embeds an HTTP status error (this is an OWM web API 2.5 bug)
 
         """
+        if JSON_string is None:
+            raise parse_response_error.ParseResponseError('JSON data is None')
         d = json.loads(JSON_string)
         try:
             # -- reference time (strip away Z and T on ISO8601 format)

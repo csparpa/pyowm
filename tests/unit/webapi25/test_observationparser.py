@@ -25,6 +25,10 @@ class TestObservationParser(unittest.TestCase):
         weat = result.get_weather()
         self.assertFalse(weat is None)
 
+    def test_parse_JSON_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, ObservationParser.parse_JSON,
+                          self.__instance, None)
+
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, ObservationParser.parse_JSON,
                           self.__instance, self.__bad_json)

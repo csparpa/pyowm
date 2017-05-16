@@ -8,7 +8,6 @@ import json
 from pyowm.abstractions.jsonparser import JSONParser
 from pyowm.webapi25.stationparser import StationParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
 
 
 class StationListParser(JSONParser):
@@ -33,6 +32,8 @@ class StationListParser(JSONParser):
             returns a HTTP status error (this is an OWM web API 2.5 bug)
 
         """
+        if JSON_string is None:
+            raise ParseResponseError('JSON data is None')
         d = json.loads(JSON_string)
         station_parser = StationParser()
         return [station_parser.parse_JSON(json.dumps(item)) for item in d]

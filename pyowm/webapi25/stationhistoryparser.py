@@ -35,6 +35,8 @@ class StationHistoryParser(jsonparser.JSONParser):
             string embeds an HTTP status error (this is an OWM web API 2.5 bug)
 
         """
+        if JSON_string is None:
+            raise parse_response_error.ParseResponseError('JSON data is None')
         d = json.loads(JSON_string)
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API but it's supposed to be

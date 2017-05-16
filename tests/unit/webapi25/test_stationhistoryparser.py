@@ -22,6 +22,10 @@ class TestStationHistoryParser(unittest.TestCase):
         self.assertTrue(isinstance(result, StationHistory))
         self.assertTrue(result.get_measurements())
 
+    def test_parse_JSON_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, StationHistoryParser.parse_JSON,
+                          self.__instance, None)
+
     def test_parse_JSON_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, StationHistoryParser.parse_JSON, 
                           self.__instance, self.__bad_json)

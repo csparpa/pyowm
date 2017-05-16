@@ -26,6 +26,10 @@ class TestObservationParser(unittest.TestCase):
         self.assertIsNone(result.get_interval())
         self.assertIsNotNone(result.get_value())
 
+    def test_parse_JSON_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, UVIndexParser.parse_JSON,
+                          self.__instance, None)
+
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, UVIndexParser.parse_JSON,
                           self.__instance, UVINDEX_MALFORMED_JSON)
