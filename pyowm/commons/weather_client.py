@@ -61,8 +61,7 @@ class WeatherHttpClient(object):
                     raise not_found_error.NotFoundError('The resource was not found')
                 if '502' in str(e):
                     raise api_call_error.BadGatewayError(str(e), e)
-                else:
-                    raise api_call_error.APICallError(str(e), e)
+                raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
             else:
