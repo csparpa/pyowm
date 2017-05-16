@@ -1133,6 +1133,92 @@ class OWM25(owm.OWM):
             ozone._interval = interval
         return ozone
 
+    def no2index_around_coords(self, lat, lon, start=None, interval=None):
+        """
+        Queries the OWM web API for Nitrogen Dioxide values sampled in the
+        surroundings of the provided geocoordinates and in the specified time
+        interval.
+        A *NO2Index* object instance is returned, encapsulating a
+        *Location* object and the list of NO2 samples
+        If `start` is not provided, the latest available NO2 samples are retrieved
+        If `start` is provided but `interval` is not, then `interval` defaults
+        to the maximum extent, which is: `year`
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time
+            window start (defaults to ``None``). If not provided, the latest
+            available NO2 samples value are retrieved
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param interval: the length of the search time window starting at
+           `start` (defaults to ``None``). If not provided, 'year' is used
+        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
+        :return: a *NO2Index* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        json_data = self._pollapi.get_no2(params)
+        no2index = self._parsers['no2index'].parse_JSON(json_data)
+        if interval is None:
+            interval = 'year'
+        no2index._interval = interval
+        return no2index
+
+    def so2index_around_coords(self, lat, lon, start=None, interval=None):
+        """
+        Queries the OWM web API for Sulphur Dioxide values sampled in the
+        surroundings of the provided geocoordinates and in the specified time
+        interval.
+        A *SO2Index* object instance is returned, encapsulating a
+        *Location* object and the list of SO2 samples
+        If `start` is not provided, the latest available SO2 samples are retrieved
+        If `start` is provided but `interval` is not, then `interval` defaults
+        to the maximum extent, which is: `year`
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time
+            window start (defaults to ``None``). If not provided, the latest
+            available SO2 samples value are retrieved
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param interval: the length of the search time window starting at
+           `start` (defaults to ``None``). If not provided, 'year' is used
+        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
+        :return: a *SO2Index* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        json_data = self._pollapi.get_so2(params)
+        so2index = self._parsers['so2index'].parse_JSON(json_data)
+        if interval is None:
+            interval = 'year'
+        so2index._interval = interval
+        return so2index
+
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \
                "subscription type=%s, PyOWM version=%s, language=%s>" % \
