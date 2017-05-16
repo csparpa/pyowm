@@ -584,5 +584,17 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.get_location())
 
+    def test_so2index_around_coords(self):
+        """
+        Test feature: get SO2 index around geo-coordinates.
+        """
+        u = self.__owm.so2index_around_coords(45, 9)
+        self.assertIsNotNone(u)
+        self.assertIsNotNone(u.get_so2_samples())
+        self.assertIsNotNone(u.get_reception_time())
+        self.assertIsNotNone(u.get_reference_time())
+        self.assertIsNotNone(u.get_interval())
+        self.assertIsNotNone(u.get_location())
+
 if __name__ == "__main__":
     unittest.main()

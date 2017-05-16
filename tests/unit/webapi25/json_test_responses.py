@@ -184,3 +184,7 @@ OZONE_MALFORMED_JSON = '{"time":"2016-10-06T13:32:53Z", "x": 1234}'
 NO2INDEX_JSON = '{"time":"2016-03-03T12:00:00Z","location":{"latitude":0.0,"longitude":10.0},"data":{"no2":{"precision":1.436401748934656e+15,"value":2.550915831693312e+15},"no2_strat":{"precision":2.00000000753664e+14,"value":1.780239650783232e+15},"no2_trop":{"precision":1.464945698930688e+15,"value":7.7067618091008e+14}}}'
 
 NO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","abc":[]}'
+
+SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
+
+SO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
