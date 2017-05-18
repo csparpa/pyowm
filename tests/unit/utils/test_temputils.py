@@ -48,3 +48,17 @@ class TestTempUtils(unittest.TestCase):
 
     def test_kelvin_to_fahrenheit_fails_with_negative_values(self):
         self.assertRaises(ValueError, temputils.kelvin_to_fahrenheit, -137.0)
+
+    def test_metric_wind_dict_to_imperial(self):
+        input = {
+            'speed': 2,
+            'gust': 3,
+            'deg': 7.89
+        }
+        expected = {
+            'speed': 4.47388,
+            'gust': 6.71082,
+            'deg': 7.89
+        }
+        result = temputils.metric_wind_dict_to_imperial(input)
+        self.assertEqual(expected, result)

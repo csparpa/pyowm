@@ -6,6 +6,7 @@ import unittest
 from pyowm.webapi25.weather import Weather, weather_from_dictionary
 from pyowm.utils.timeformatutils import UTC
 from tests.unit.webapi25.json_test_dumps import WEATHER_JSON_DUMP
+from tests.unit.webapi25.xml_test_dumps import WEATHER_XML_DUMP
 from datetime import datetime
 
 
@@ -22,7 +23,8 @@ class TestWeather(unittest.TestCase):
     __test_clouds = 67
     __test_rain = {"all": 20}
     __test_snow = {"all": 0}
-    __test_wind = {"deg": 252.002, "speed": 1.100}
+    __test_wind = {"deg": 252.002, "speed": 1.100, "gust": 2.09}
+    __test_imperial_wind = {"deg": 252.002, "speed": 2.460634, "gust": 4.6752046}
     __test_humidity = 57
     __test_pressure = {"press": 1030.119, "sea_level": 1038.589}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
@@ -378,6 +380,21 @@ class TestWeather(unittest.TestCase):
 
     def test_get_temperature_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.get_temperature,
+                          self.__test_instance, 'xyz')
+
+    def test_returning_different_units_for_wind_values(self):
+        result_imperial = self.__test_instance.get_wind(unit='miles_hour')
+        result_metric = self.__test_instance.get_wind(unit='meters_sec')
+        result_unspecified = self.__test_instance.get_wind()
+        self.assertEqual(result_unspecified, result_metric)
+        for item in self.__test_wind:
+            self.assertEqual(result_metric[item],
+                             self.__test_wind[item])
+            self.assertEqual(result_imperial[item],
+                             self.__test_imperial_wind[item])
+
+    def test_get_wind_fails_with_unknown_units(self):
+        self.assertRaises(ValueError, Weather.get_wind,
                           self.__test_instance, 'xyz')
 
     # Test JSON and XML comparisons by ordering strings (this overcomes
