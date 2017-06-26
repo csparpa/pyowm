@@ -85,7 +85,7 @@ The library API documentation is available on [Read the Docs](https://pyowm.read
 
 _Contributors (coding, testing, packaging, reporting issues) are welcome!_.
 
-See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) wiki page to get started.
+See the [CONTRIBUTING.md](https://github.com/csparpa/pyowm/blob/master/CONTRIBUTING.md) file to get started.
 
 See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
 
