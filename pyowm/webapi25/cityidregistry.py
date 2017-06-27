@@ -1,6 +1,8 @@
+import gzip
+import csv
 from pyowm.webapi25.location import Location
 from pyowm.abstractions.decorators import deprecated
-from pkg_resources import resource_stream
+from pkg_resources import resource_stream, resource_filename
 
 """
 Module containing a registry with lookup methods for OWM-provided city IDs
@@ -192,8 +194,9 @@ class CityIDRegistry:
             raise ValueError('Error: city name must start with a letter')
 
     def _get_lines(self, filename):
-        with resource_stream(__name__, filename) as f:
-            lines = f.readlines()
+        res_name = resource_filename(__name__, filename)
+        with gzip.open(res_name, "rt") as fh:
+            lines = fh.readlines()
             if type(lines[0]) is bytes:
                 lines = map(lambda l: l.decode("utf-8"), lines)
             return lines
