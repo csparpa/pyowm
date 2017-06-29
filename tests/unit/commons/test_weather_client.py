@@ -72,29 +72,31 @@ class TestOWMHTTPClient(unittest.TestCase):
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL(self):
-        instance = WeatherHttpClient('test_API_key', self.__test_cache)
-        API_subset_URL = '/subset'
+        instance = WeatherHttpClient('test_API_key', self.__test_cache,
+                                     subscription_type='free')
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
         params = {'a': 1}
-        result = instance._build_full_URL(API_subset_URL, params)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/subset?a=1&APPID=test_API_key'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/subset?APPID=test_API_key&a=1'
+        result = instance._build_full_URL(API_endpoint, params)
+        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=test_API_key'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=test_API_key&a=1'
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL_with_no_API_key(self):
-        API_subset_URL = '/subset'
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
         params = {'a': 1, 'b': 2}
-        result = self.__instance._build_full_URL(API_subset_URL, params)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/subset?a=1&b=2'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/subset?b=2&a=1'
+        result = self.__instance._build_full_URL(API_endpoint, params)
+        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&b=2'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?b=2&a=1'
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_build_full_URL_with_unicode_chars_in_API_key(self):
-        instance = WeatherHttpClient('£°test££', self.__test_cache)
-        API_subset_URL = '/subset'
+        instance = WeatherHttpClient('£°test££', self.__test_cache,
+                                     subscription_type='free')
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
         params = {'a': 1}
-        result = instance._build_full_URL(API_subset_URL, params)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/subset?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/subset?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
+        result = instance._build_full_URL(API_endpoint, params)
+        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
         self.assertTrue(result == expected_1 or result == expected_2)
 
     def test_call_API(self):
@@ -106,7 +108,7 @@ class TestOWMHTTPClient(unittest.TestCase):
             ref_to_original_urlopen = urllib.request.urlopen
             urllib.request.urlopen = self.mock_urlopen
         result_output = \
-            self.__instance.call_API('http://tests.com/api', {'a': 1, 'b': 2})
+            self.__instance.call_API('http://%s.tests.com/api', {'a': 1, 'b': 2})
         # Tear down monkey patching
         if 'urllib2' in context:  # Python 2.x
             urllib2.urlopen = ref_to_original_urlopen
@@ -129,7 +131,7 @@ class TestOWMHTTPClient(unittest.TestCase):
                 self.mock_urlopen_raising_HTTPError
         self.assertRaises(not_found_error.NotFoundError,
                           self.__instance.call_API,
-                          'http://tests.com/api', {'a': 1, 'b': 2})
+                          'http://%s.tests.com/api', {'a': 1, 'b': 2})
 
         # Test raising URLError
         if 'urllib2' in context:  # Python 2.x
@@ -137,7 +139,7 @@ class TestOWMHTTPClient(unittest.TestCase):
         else:  # Python 3.x
             urllib.request.urlopen = self.mock_urlopen_raising_URLError
         self.assertRaises(APICallError, self.__instance.call_API,
-                          'http://tests.com/api', {'a': 1, 'b': 2})
+                          'http://%s.tests.com/api', {'a': 1, 'b': 2})
 
         # Test raising URLError upon unusual (eg. non 401, 404, 502) HTTP errors
         if 'urllib2' in context:  # Python 2.x
@@ -145,7 +147,7 @@ class TestOWMHTTPClient(unittest.TestCase):
         else:  # Python 3.x
             urllib.request.urlopen = self.mock_urlopen_raising_unusual_HTTPError
         self.assertRaises(APICallError, self.__instance.call_API,
-                          'http://tests.com/api', {'a': 1, 'b': 2})
+                          'http://%s.tests.com/api', {'a': 1, 'b': 2})
 
         # Tear down monkey patching
         if 'urllib2' in context:  # Python 2.x
