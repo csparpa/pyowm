@@ -43,33 +43,34 @@ def read_all_cities_into_dict():
 
     # All cities
     with gzip.open(city_list_gz, "rb", "utf-8") as i:
-        cities = i.readlines()
-        for city in cities:
-            # eg. {"_id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
-            city_dict = json.loads(city)
-            if city_dict['_id'] in all_cities:
-                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['_id'], city_dict)
+        cities = json.loads(i.read())
+        for city_dict in cities:
+            # eg. {"id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
+            if city_dict['id'] in all_cities:
+                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['id'], city_dict)
                 continue
             else:
-                all_cities[city_dict['_id']] = dict(name=city_dict['name'],
+                all_cities[city_dict['id']] = dict(name=city_dict['name'],
                                                     country=city_dict['country'],
                                                     lon=city_dict['coord']['lon'],
                                                     lat=city_dict['coord']['lat'])
 
     # US cities
     with gzip.open(us_city_list_gz, "rb", "utf-8") as f:
-        cities = f.readlines()
-        for city in cities:
-            # eg. {"_id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
-            city_dict = json.loads(city)
-            if city_dict['_id'] in all_cities:
-                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['_id'], city_dict)
-                continue
-            else:
-                all_cities[city_dict['_id']] = dict(name=city_dict['name'],
-                                                    country=city_dict['country'],
-                                                    lon=city_dict['coord']['lon'],
-                                                    lat=city_dict['coord']['lat'])
+        try:
+            cities = json.loads(f.read())
+            for city_dict in cities:
+                # eg. {"id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
+                if city_dict['id'] in all_cities:
+                    print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['id'], city_dict)
+                    continue
+                else:
+                    all_cities[city_dict['id']] = dict(name=city_dict['name'],
+                                                        country=city_dict['country'],
+                                                        lon=city_dict['coord']['lon'],
+                                                        lat=city_dict['coord']['lat'])
+        except Exception as e:
+            print 'Impossible to read US cities: {}'.format(e)
 
     print '... done'
     return all_cities
@@ -164,11 +165,11 @@ if __name__ == '__main__':
     target_folder = os.path.abspath(sys.argv[1])
     print 'Will save output files to folder: %s' % (target_folder,)
     print 'Job started'
-    #download_the_files()
-    #cities = read_all_cities_into_dict()
-    #ordered_cities = order_dict_by_city_id(cities)
-    #ssets = split_keyset(ordered_cities)
-    #write_subsets_to_files(ssets, target_folder)
+    download_the_files()
+    cities = read_all_cities_into_dict()
+    ordered_cities = order_dict_by_city_id(cities)
+    ssets = split_keyset(ordered_cities)
+    write_subsets_to_files(ssets, target_folder)
     gzip_all(target_folder)
     print 'Job finished'
 
