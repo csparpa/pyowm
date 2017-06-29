@@ -30,8 +30,6 @@ class UVIndex(object):
     :type location: *Location*
     :param value: the observed UV intensity value
     :type value: float
-    :param interval: the time granularity of the UV observation
-    :type interval: str
     :param reception_time: GMT UNIXtime telling when the observation has
         been received from the OWM web API
     :type reception_time: int
@@ -41,12 +39,11 @@ class UVIndex(object):
 
     """
 
-    def __init__(self, reference_time, location, interval, value, reception_time):
+    def __init__(self, reference_time, location, value, reception_time):
         if reference_time < 0:
             raise ValueError("'referencetime' must be greater than 0")
         self._reference_time = reference_time
         self._location = location
-        self._interval = interval
         if value < 0.0:
             raise ValueError("'UV intensity must be greater than 0")
         self._value = value
@@ -94,14 +91,6 @@ class UVIndex(object):
         """
         return self._location
 
-    def get_interval(self):
-        """
-        Returns the time granularity interval for this UV observation
-
-        :return: str
-        """
-        return self._interval
-
     def get_value(self):
         """
         Returns the UV intensity for this observation
@@ -110,15 +99,6 @@ class UVIndex(object):
 
         """
         return self._value
-
-    def is_forecast(self):
-        """
-        Tells if the current UV observation refers to the future with respect
-        to the current date
-        :return: bool
-        """
-        return timeutils.now(timeformat='unix') < \
-               self.get_reference_time(timeformat='unix')
 
     def get_exposure_risk(self):
         """
@@ -136,7 +116,6 @@ class UVIndex(object):
         """
         return json.dumps({"reference_time": self._reference_time,
                            "location": json.loads(self._location.to_JSON()),
-                           "interval": self._interval,
                            "value": self._value,
                            "reception_time": self._reception_time,
                            })
@@ -176,8 +155,6 @@ class UVIndex(object):
         reference_time_node.text = str(self._reference_time)
         reception_time_node = ET.SubElement(root_node, "reception_time")
         reception_time_node.text = str(self._reception_time)
-        interval_node = ET.SubElement(root_node, "interval")
-        interval_node.text = str(self._interval)
         value_node = ET.SubElement(root_node, "value")
         value_node.text = str(self._value)
         root_node.append(self._location._to_DOM())
@@ -185,11 +162,10 @@ class UVIndex(object):
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
-               "interval=%s, value=%s>" % (
+               "value=%s>" % (
                     __name__,
                     self.__class__.__name__,
                     self.get_reference_time('iso'),
                     self.get_reception_time('iso'),
                     str(self._location),
-                    self._interval,
                     str(self._value))

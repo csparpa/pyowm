@@ -39,26 +39,25 @@ class UVIndexParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError('JSON data is None')
         d = json.loads(JSON_string)
         try:
-            # -- reference time (strip away Z and T on ISO8601 format)
-            ref_t = d['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = timeformatutils._ISO8601_to_UNIXtime(ref_t)
+            # -- reference time
+            reference_time = d['date']
 
             # -- reception time (now)
             reception_time = timeutils.now('unix')
 
             # -- location
-            lon = float(d['location']['longitude'])
-            lat = float(d['location']['latitude'])
+            lon = float(d['lon'])
+            lat = float(d['lat'])
             place = location.Location(None, lon, lat, None)
 
             # -- UV intensity
-            uv_intensity = float(d['data'])
+            uv_intensity = float(d['value'])
 
         except KeyError:
             raise parse_response_error.ParseResponseError(
                       ''.join([__name__, ': impossible to parse UV Index']))
 
-        return uvindex.UVIndex(reference_time, place, None, uv_intensity,
+        return uvindex.UVIndex(reference_time, place, uv_intensity,
                                reception_time)
 
     def __repr__(self):

@@ -82,7 +82,7 @@ STATION_JSON_DUMP = '{"status": 50, "distance": 18.95, "weather": {"status": ' \
 
 UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
-                   '"ID": 987}, "interval": "day", "value": 6.8, ' \
+                   '"ID": 987}, "value": 6.8, ' \
                     '"reception_time": 1475283600}'
 
 COINDEX_JSON_DUMP = '{"reference_time": 1234567, "co_samples": [{"pressure": ' \
