@@ -545,7 +545,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_value())
         self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.get_location())
 
     def test_coindex_around_coords(self):

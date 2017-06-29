@@ -24,8 +24,8 @@ CITY_WEATHER_HISTORY_URL = ROOT_HISTORY_URL + '/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
 # OWM UV web API URLs
-ROOT_UV_API_URL = 'http://api.openweathermap.org/v3'
-UV_INDEX_URL = '/uvi'
+ROOT_UV_API_URL = 'http://api.openweathermap.org/data/2.5'
+UV_INDEX_URL = ROOT_UV_API_URL + '/uvi'
 
 # OWM Air Pollution API URLs
 ROOT_POLLUTION_API_URL = 'http://api.openweathermap.org/pollution/v1'

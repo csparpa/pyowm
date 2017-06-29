@@ -897,7 +897,6 @@ class TestOWM25(unittest.TestCase):
         self.assertIsNotNone(loc.get_lat())
         self.assertIsNotNone(loc.get_lon())
         self.assertIsNotNone(result.get_value())
-        self.assertIsNotNone(result.get_interval())
 
     def test_uvindex_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, OWM25.uvindex_around_coords, \

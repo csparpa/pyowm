@@ -87,23 +87,10 @@ class UltraVioletHttpClient(object):
         """
         lat = str(params_dict['lat'])
         lon = str(params_dict['lon'])
-        start = params_dict['start']
-        interval = params_dict['interval']
 
         # build request URL
-        url_template = '%s%s/%s,%s/%s.json?appid=%s'
-        if start is None:
-            timeref = 'current'
-        else:
-            if interval is None:
-                timeref = self._trim_to(
-                    timeformatutils.to_date(start), 'year')
-            else:
-                timeref = self._trim_to(
-                    timeformatutils.to_date(start), interval)
-
-        url = url_template % (ROOT_UV_API_URL, UV_INDEX_URL, lat, lon,
-                              timeref, self._API_key)
+        url_template = '%s?appid=%s&lat=%s&lon=%s'
+        url = url_template % (UV_INDEX_URL, self._API_key, lat, lon)
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def __repr__(self):
