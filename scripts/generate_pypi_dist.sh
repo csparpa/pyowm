@@ -3,6 +3,7 @@
 set -o errexit
 
 cd ..
+rm -fv build/*
 rm -fv dist/*
 echo 'Generating source and binary PyPi distributions...'
 python2.7 setup.py sdist
