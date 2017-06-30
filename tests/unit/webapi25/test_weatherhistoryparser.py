@@ -24,6 +24,10 @@ class TestWeatherHistoryParser(unittest.TestCase):
         for weather in result:
             self.assertTrue(weather is not None)
 
+    def test_parse_JSON_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, WeatherHistoryParser.parse_JSON,
+                          self.__instance, None)
+
     def test_parse_JSON_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, WeatherHistoryParser.parse_JSON,
                           self.__instance, self.__bad_json)

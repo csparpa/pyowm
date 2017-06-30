@@ -40,8 +40,7 @@ class WeatherHttpClient(object):
     def __init__(self, API_key, cache, subscription_type='free'):
         self._API_key = API_key
         self._cache = cache
-        self._API_root_URL = ROOT_API_URL % \
-                     (self.API_SUBSCRIPTION_SUBDOMAINS[subscription_type],)
+        self._subscription_type = subscription_type
 
     def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
         cached = cache.get(API_full_url)
@@ -61,6 +60,7 @@ class WeatherHttpClient(object):
                     raise not_found_error.NotFoundError('The resource was not found')
                 if '502' in str(e):
                     raise api_call_error.BadGatewayError(str(e), e)
+                raise api_call_error.APICallError(str(e), e)
             except URLError as e:
                 raise api_call_error.APICallError(str(e), e)
             else:
@@ -86,7 +86,11 @@ class WeatherHttpClient(object):
         :raises: *APICallError*
 
         """
-        url = self._build_full_URL(API_endpoint_URL, params_dict)
+        try:
+            escaped = API_endpoint_URL % (self.API_SUBSCRIPTION_SUBDOMAINS[self._subscription_type],)
+        except:
+            escaped = API_endpoint_URL
+        url = self._build_full_URL(escaped, params_dict)
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def _build_full_URL(self, API_endpoint_URL, params_dict):
@@ -104,11 +108,10 @@ class WeatherHttpClient(object):
         :returns: a full string HTTP request URL
 
         """
-        url =self._API_root_URL + API_endpoint_URL
         params = params_dict.copy()
         if self._API_key is not None:
             params['APPID'] = self._API_key
-        return self._build_query_parameters(url, params)
+        return self._build_query_parameters(API_endpoint_URL, params)
 
     def _build_query_parameters(self, base_URL, params_dict):
         """

@@ -5,12 +5,13 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-  - "3.6-dev"
+  - "3.6"
 install:
   - pip install coverage==3.7.1 tox==1.9.2 virtualenv==13.1.2
 script:
   - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+  - bash tests/installation_test.sh
 after_success:
   coveralls
 notifications:

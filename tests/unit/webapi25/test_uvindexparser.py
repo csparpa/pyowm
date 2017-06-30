@@ -8,7 +8,7 @@ from tests.unit.webapi25.json_test_responses import (
     UVINDEX_JSON, UVINDEX_MALFORMED_JSON)
 
 
-class TestObservationParser(unittest.TestCase):
+class TestUVIndexParser(unittest.TestCase):
 
     __instance = UVIndexParser()
 
@@ -23,8 +23,11 @@ class TestObservationParser(unittest.TestCase):
         self.assertIsNone(loc.get_ID())
         self.assertIsNotNone(loc.get_lon())
         self.assertIsNotNone(loc.get_lat())
-        self.assertIsNone(result.get_interval())
         self.assertIsNotNone(result.get_value())
+
+    def test_parse_JSON_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, UVIndexParser.parse_JSON,
+                          self.__instance, None)
 
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, UVIndexParser.parse_JSON,

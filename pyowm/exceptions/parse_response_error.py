@@ -20,4 +20,4 @@ class ParseResponseError(OWMError):
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
         return ''.join(['Exception in parsing OWM web API response',
-                        os.linesep, 'Reason: ', self._message.decode('utf-8')])
+                        os.linesep, 'Reason: ', self._message])

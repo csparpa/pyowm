@@ -23,7 +23,8 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
      DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
      STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON, 
-     WEATHER_AT_STATION_IN_BBOX_JSON, UVINDEX_JSON, COINDEX_JSON, OZONE_JSON)
+     WEATHER_AT_STATION_IN_BBOX_JSON, UVINDEX_JSON, COINDEX_JSON, OZONE_JSON,
+     NO2INDEX_JSON, SO2INDEX_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.weather_client import WeatherHttpClient
@@ -40,6 +41,8 @@ from pyowm.webapi25.historian import Historian
 from pyowm.webapi25.uvindex import UVIndex
 from pyowm.webapi25.coindex import COIndex
 from pyowm.webapi25.ozone import Ozone
+from pyowm.webapi25.no2index import NO2Index
+from pyowm.webapi25.so2index import SO2Index
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 from pyowm.webapi25.observationlistparser import ObservationListParser
@@ -50,6 +53,8 @@ from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
 from pyowm.webapi25.uvindexparser import UVIndexParser
 from pyowm.webapi25.coindexparser import COIndexParser
 from pyowm.webapi25.ozone_parser import OzoneParser
+from pyowm.webapi25.no2indexparser import NO2IndexParser
+from pyowm.webapi25.so2indexparser import SO2IndexParser
 
 
 class TestOWM25(unittest.TestCase):
@@ -64,7 +69,9 @@ class TestOWM25(unittest.TestCase):
       'station_list': StationListParser(),
       'uvindex': UVIndexParser(),
       'coindex': COIndexParser(),
-      'ozone': OzoneParser()
+      'ozone': OzoneParser(),
+      'no2index': NO2IndexParser(),
+      'so2index': SO2IndexParser()
     }
     __test_instance = OWM25(__test_parsers, 'test_API_key')
 
@@ -175,6 +182,12 @@ class TestOWM25(unittest.TestCase):
     def mock_get_o3_returning_coindex_around_coords(self, params_dict):
         return OZONE_JSON
 
+    def mock_get_no2_returning_no2index_around_coords(self, params_dict):
+        return NO2INDEX_JSON
+
+    def mock_get_so2_returning_so2index_around_coords(self, params_dict):
+        return SO2INDEX_JSON
+
     # Tests
 
     def test_encode_string(self):
@@ -208,6 +221,16 @@ class TestOWM25(unittest.TestCase):
             OWM25._assert_is_string_or_unicode(unicode_value)
         except:
             pass
+
+    def test_obfuscate_API_key(self):
+        API_key = '22e28da2669c4283acdbd9cfa7dc0903'
+        expected = '************************a7dc0903'
+
+        instance = OWM25(self.__test_parsers, API_key)
+        self.assertEqual(expected, instance._obfuscate_API_key())
+
+        instance = OWM25(self.__test_parsers, None)
+        self.assertIsNone(instance._obfuscate_API_key())
 
     def test_wrong_API_key(self):
         try:
@@ -858,6 +881,8 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_station_type(), int))
             self.assertTrue(isinstance(result.get_status(), int))
 
+    #  ---- Pollution API methods tests ---
+
     def test_uvindex_around_coords(self):
         ref_to_original = UltraVioletHttpClient.get_uvi
         UltraVioletHttpClient.get_uvi = \
@@ -872,7 +897,6 @@ class TestOWM25(unittest.TestCase):
         self.assertIsNotNone(loc.get_lat())
         self.assertIsNotNone(loc.get_lon())
         self.assertIsNotNone(result.get_value())
-        self.assertIsNotNone(result.get_interval())
 
     def test_uvindex_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
@@ -934,4 +958,56 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.ozone_around_coords, \
                           self.__test_instance, -200, 2.5)
         self.assertRaises(ValueError, OWM25.ozone_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_no2index_around_coords(self):
+        ref_to_original = AirPollutionHttpClient.get_no2
+        AirPollutionHttpClient.get_no2 = \
+            self.mock_get_no2_returning_no2index_around_coords
+        result = self.__test_instance.no2index_around_coords(45, 9)
+        AirPollutionHttpClient.get_no2 = ref_to_original
+        self.assertTrue(isinstance(result, NO2Index))
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_no2_samples())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_no2index_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.no2index_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, OWM25.no2index_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, OWM25.no2index_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, OWM25.no2index_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_so2index_around_coords(self):
+        ref_to_original = AirPollutionHttpClient.get_so2
+        AirPollutionHttpClient.get_so2 = \
+            self.mock_get_so2_returning_so2index_around_coords
+        result = self.__test_instance.so2index_around_coords(45, 9)
+        AirPollutionHttpClient.get_so2 = ref_to_original
+        self.assertTrue(isinstance(result, SO2Index))
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_so2_samples())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_so2index_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, OWM25.so2index_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, OWM25.so2index_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, OWM25.so2index_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, OWM25.so2index_around_coords, \
                           self.__test_instance, 200, 2.5)

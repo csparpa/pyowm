@@ -32,6 +32,8 @@ class ObservationListParser(JSONParser):
             returns a HTTP status error (this is an OWM web API 2.5 bug)
 
         """
+        if JSON_string is None:
+            raise ParseResponseError('JSON data is None')
         d = json.loads(JSON_string)
         observation_parser = ObservationParser()
         if 'cod' in d:

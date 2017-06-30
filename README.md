@@ -4,7 +4,7 @@ A Python wrapper around the OpenWeatherMap API
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/csparpa/pyowm/badge.png?branch=develop)](https://coveralls.io/r/csparpa/pyowm?branch=develop)
-[![Downloads](https://img.shields.io/pypi/dm/pyowm.svg)](https://img.shields.io/pypi/dm/pyowm.svg)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
 
 ##  What is it?
 PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
@@ -23,6 +23,14 @@ $ pip install pyowm
 ```
 
 There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), [Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
+
+Eager to fetch the very latest updates to PyOWM? Install the development trunk:
+
+```shell
+$ pip install git+https://github.com/csparpa/pyowm.git@develop
+```
+
+
 
 ##  Usage
 
@@ -78,7 +86,7 @@ The library API documentation is available on [Read the Docs](https://pyowm.read
 
 _Contributors (coding, testing, packaging, reporting issues) are welcome!_.
 
-See the [notes on development](https://github.com/csparpa/pyowm/wiki/Notes-on-development) wiki page to get started.
+See the [CONTRIBUTING.md](https://github.com/csparpa/pyowm/blob/master/CONTRIBUTING.md) file to get started.
 
 See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
 

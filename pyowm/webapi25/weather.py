@@ -163,13 +163,22 @@ class Weather(object):
         """
         return self._snow
 
-    def get_wind(self):
+    def get_wind(self, unit='meters_sec'):
         """Returns a dict containing wind info
-
+        
+        :param unit: the unit of measure for the wind values. May be:
+            '*meters_sec*' (default) or '*miles_hour*'
+        :type unit: str
         :returns: a dict containing wind info
 
         """
-        return self._wind
+        if unit == 'meters_sec':
+            return self._wind
+        elif unit == 'miles_hour':
+            wind_dict = {k: self._wind[k] for k in self._wind if self._wind[k] is not None}
+            return temputils.metric_wind_dict_to_imperial(wind_dict)
+        else:
+            raise ValueError("Invalid value for target wind conversion unit")
 
     def get_humidity(self):
         """Returns the atmospheric humidity as an int
@@ -476,10 +485,12 @@ def weather_from_dictionary(d):
             wind = d['last']['wind'].copy()
         else:
             wind = dict()
-    elif 'speed' in d:
-        wind = dict(speed=d['speed'])
     else:
         wind = dict()
+        if 'speed' in d:
+            wind['speed'] = d['speed']
+        if 'deg' in d:
+            wind['deg'] = d['deg']
     # -- humidity
     if 'humidity' in d:
         humidity = d['humidity']

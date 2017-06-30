@@ -2,7 +2,7 @@ from pyowm.caches import nullcache
 from pyowm.webapi25 import observationparser, observationlistparser, \
     forecastparser, weatherhistoryparser, stationparser, stationlistparser, \
     stationhistoryparser, uvindexparser, coindexparser, weathercoderegistry,\
-    cityidregistry, ozone_parser
+    cityidregistry, ozone_parser, no2indexparser, so2indexparser
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
@@ -10,26 +10,29 @@ Configuration for the PyOWM library specific to OWM web API version 2.5
 
 # OWM web API URLs
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
+ROOT_HISTORY_URL = 'http://history.openweathermap.org/data/2.5'
 ICONS_BASE_URL = 'http://openweathermap.org/img/w'
-OBSERVATION_URL = '/weather'
-GROUP_OBSERVATIONS_URL = '/group'
-STATION_URL = '/station'
-FIND_OBSERVATIONS_URL = '/find'
-FIND_STATION_URL = '/station/find'
-BBOX_STATION_URL = '/box/station'
-THREE_HOURS_FORECAST_URL = '/forecast'
-DAILY_FORECAST_URL = '/forecast/daily'
-CITY_WEATHER_HISTORY_URL = '/history/city'
-STATION_WEATHER_HISTORY_URL = '/history/station'
+OBSERVATION_URL = ROOT_API_URL + '/weather'
+GROUP_OBSERVATIONS_URL = ROOT_API_URL + '/group'
+STATION_URL = ROOT_API_URL + '/station'
+FIND_OBSERVATIONS_URL = ROOT_API_URL + '/find'
+FIND_STATION_URL = ROOT_API_URL + '/station/find'
+BBOX_STATION_URL = ROOT_API_URL + '/box/station'
+THREE_HOURS_FORECAST_URL = ROOT_API_URL + '/forecast'
+DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
+CITY_WEATHER_HISTORY_URL = ROOT_HISTORY_URL + '/history/city'
+STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
 # OWM UV web API URLs
-ROOT_UV_API_URL = 'http://api.openweathermap.org/v3'
-UV_INDEX_URL = '/uvi'
+ROOT_UV_API_URL = 'http://api.openweathermap.org/data/2.5'
+UV_INDEX_URL = ROOT_UV_API_URL + '/uvi'
 
 # OWM Air Pollution API URLs
 ROOT_POLLUTION_API_URL = 'http://api.openweathermap.org/pollution/v1'
 CO_INDEX_URL = '/co'
 OZONE_URL = '/o3'
+NO2_INDEX_URL = '/no2'
+SO2_INDEX_URL = '/so2'
 
 
 # Parser objects injection for OWM web API responses parsing
@@ -43,11 +46,13 @@ parsers = {
   'station_list': stationlistparser.StationListParser(),
   'uvindex': uvindexparser.UVIndexParser(),
   'coindex': coindexparser.COIndexParser(),
-  'ozone': ozone_parser.OzoneParser()
+  'ozone': ozone_parser.OzoneParser(),
+  'no2index': no2indexparser.NO2IndexParser(),
+  'so2index': so2indexparser.SO2IndexParser()
 }
 
 # City ID registry
-city_id_registry = cityidregistry.CityIDRegistry('cityids/%03d-%03d.txt')
+city_id_registry = cityidregistry.CityIDRegistry('cityids/%03d-%03d.txt.gz')
 
 # Cache provider to be used
 cache = nullcache.NullCache()

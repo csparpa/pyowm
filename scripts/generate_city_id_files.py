@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
+<<<<<<< HEAD
 import requests, sys, os, codecs, json, gzip, collections
+=======
+import requests, sys, os, codecs, json, gzip, collections, csv
+>>>>>>> develop
 
 city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
 us_city_list_url = 'http://bulk.openweathermap.org/sample/city.list.us.json.gz'
@@ -43,33 +47,34 @@ def read_all_cities_into_dict():
 
     # All cities
     with gzip.open(city_list_gz, "rb", "utf-8") as i:
-        cities = i.readlines()
-        for city in cities:
-            # eg. {"_id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
-            city_dict = json.loads(city)
-            if city_dict['_id'] in all_cities:
-                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['_id'], city_dict)
+        cities = json.loads(i.read())
+        for city_dict in cities:
+            # eg. {"id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
+            if city_dict['id'] in all_cities:
+                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['id'], city_dict)
                 continue
             else:
-                all_cities[city_dict['_id']] = dict(name=city_dict['name'],
+                all_cities[city_dict['id']] = dict(name=city_dict['name'],
                                                     country=city_dict['country'],
                                                     lon=city_dict['coord']['lon'],
                                                     lat=city_dict['coord']['lat'])
 
     # US cities
     with gzip.open(us_city_list_gz, "rb", "utf-8") as f:
-        cities = f.readlines()
-        for city in cities:
-            # eg. {"_id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
-            city_dict = json.loads(city)
-            if city_dict['_id'] in all_cities:
-                print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['_id'], city_dict)
-                continue
-            else:
-                all_cities[city_dict['_id']] = dict(name=city_dict['name'],
-                                                    country=city_dict['country'],
-                                                    lon=city_dict['coord']['lon'],
-                                                    lat=city_dict['coord']['lat'])
+        try:
+            cities = json.loads(f.read())
+            for city_dict in cities:
+                # eg. {"id":707860,"name":"Hurzuf","country":"UA","coord":{"lon":34.283333,"lat":44.549999}}
+                if city_dict['id'] in all_cities:
+                    print 'Warning: city ID %d was already processed! Data chunk is: %s' % (city_dict['id'], city_dict)
+                    continue
+                else:
+                    all_cities[city_dict['id']] = dict(name=city_dict['name'],
+                                                        country=city_dict['country'],
+                                                        lon=city_dict['coord']['lon'],
+                                                        lat=city_dict['coord']['lat'])
+        except Exception as e:
+            print 'Impossible to read US cities: {}'.format(e)
 
     print '... done'
     return all_cities
@@ -139,6 +144,27 @@ def write_subsets_to_files(ssets, outdir):
     print '... done'
 
 
+def gzip_csv_compress(plaintext_csv, target_gzip):
+    print 'G-zipping: %s -> %s ...' % (plaintext_csv, target_gzip)
+    with open(plaintext_csv, 'r') as source:
+        source_rows = csv.reader(source)
+        with gzip.open(target_gzip, "wt") as file:
+            writer = csv.writer(file)
+            for row in source_rows:
+                writer.writerow(row)
+    print  '... done'
+
+
+def gzip_all(outdir):
+    gzip_csv_compress('%s%s097-102.txt' % (outdir, os.sep),
+                      '%s%s097-102.txt.gz' % (outdir, os.sep))
+    gzip_csv_compress('%s%s103-108.txt' % (outdir, os.sep),
+                      '%s%s103-108.txt.gz' % (outdir, os.sep))
+    gzip_csv_compress('%s%s109-114.txt' % (outdir, os.sep),
+                      '%s%s109-114.txt.gz' % (outdir, os.sep))
+    gzip_csv_compress('%s%s115-122.txt' % (outdir, os.sep),
+                      '%s%s115-122.txt.gz' % (outdir, os.sep))
+
 if __name__ == '__main__':
     target_folder = os.path.abspath(sys.argv[1])
     print 'Will save output files to folder: %s' % (target_folder,)
@@ -148,5 +174,6 @@ if __name__ == '__main__':
     ordered_cities = order_dict_by_city_id(cities)
     ssets = split_keyset(ordered_cities)
     write_subsets_to_files(ssets, target_folder)
+    gzip_all(target_folder)
     print 'Job finished'
 

@@ -104,6 +104,15 @@ class OWM25(owm.OWM):
         except NameError:
             return value
 
+    def _obfuscate_API_key(self):
+        """
+        Return a mostly obfuscated version of the API Key
+
+        :return: str
+        """
+        if self._API_key is not None:
+            return (len(self._API_key)-8)*'*'+self._API_key[-8:]
+
     def get_API_key(self):
         """
         Returns the str OWM API key
@@ -218,7 +227,8 @@ class OWM25(owm.OWM):
         OWM25._assert_is_string_or_unicode(name)
         encoded_name = OWM25._encode_string(name)
         json_data = self._api.call_API(OBSERVATION_URL,
-                                             {'q': encoded_name,'lang': self._language})
+                                       {'q': encoded_name,
+                                        'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_coords(self, lat, lon):
@@ -243,8 +253,8 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
         json_data = self._api.call_API(OBSERVATION_URL,
-                                             {'lon': lon, 'lat': lat,
-                                               'lang': self._language})
+                                       {'lon': lon, 'lat': lat,
+                                        'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_zip_code(self, zipcode, country):
@@ -268,8 +278,8 @@ class OWM25(owm.OWM):
         encoded_country = OWM25._encode_string(country)
         zip_param = encoded_zip + ',' + encoded_country
         json_data = self._api.call_API(OBSERVATION_URL,
-                                         {'zip': zip_param,
-                                          'lang': self._language})
+                                       {'zip': zip_param,
+                                        'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_id(self, id):
@@ -289,8 +299,8 @@ class OWM25(owm.OWM):
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
         json_data = self._api.call_API(OBSERVATION_URL,
-                                             {'id': id,
-                                               'lang': self._language})
+                                       {'id': id,
+                                        'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_ids(self, ids_list):
@@ -310,10 +320,11 @@ class OWM25(owm.OWM):
         for id in ids_list:
             assert type(id) is int, "'ids_list' must be a list of integers"
             if id < 0:
-                raise ValueError("id values in 'ids_list' must be greater than 0")
+                raise ValueError("id values in 'ids_list' must be greater "
+                                 "than 0")
         json_data = self._api.call_API(GROUP_OBSERVATIONS_URL,
-                                             {'id': ','.join(list(map(str, ids_list))),
-                                               'lang': self._language})
+                                       {'id': ','.join(list(map(str, ids_list))),
+                                       'lang': self._language})
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_at_places(self, pattern, searchtype, limit=None):
@@ -371,8 +382,8 @@ class OWM25(owm.OWM):
         if station_id < 0:
             raise ValueError("'station_id' value must be greater than 0")
         json_data = self._api.call_API(STATION_URL,
-                                             {'id': station_id,
-                                               'lang': self._language})
+                                      {'id': station_id,
+                                       'lang': self._language})
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_stations_in_bbox(self, lat_top_left, lon_top_left,
@@ -494,7 +505,8 @@ class OWM25(owm.OWM):
         OWM25._assert_is_string_or_unicode(name)
         encoded_name = OWM25._encode_string(name)
         json_data = self._api.call_API(THREE_HOURS_FORECAST_URL,
-                                             {'q': encoded_name, 'lang': self._language})
+                                       {'q': encoded_name,
+                                        'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -556,8 +568,8 @@ class OWM25(owm.OWM):
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
         json_data = self._api.call_API(THREE_HOURS_FORECAST_URL,
-                                             {'id': id,
-                                               'lang': self._language})
+                                       {'id': id,
+                                        'lang': self._language})
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -738,9 +750,10 @@ class OWM25(owm.OWM):
     def weather_history_at_coords(self, lat, lon, start=None, end=None):
         """
         Queries the OWM web API for weather history for the specified at the
-        specified geographic (eg: 51.503614, -0.107331). A list of *Weather* objects is returned. It is
-        possible to query for weather history in a closed time period, whose
-        boundaries can be passed as optional parameters.
+        specified geographic (eg: 51.503614, -0.107331). A list of *Weather*
+        objects is returned. It is possible to query for weather history in a
+        closed time period, whose boundaries can be passed as optional
+        parameters.
 
         :param lat: the location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
@@ -997,13 +1010,14 @@ class OWM25(owm.OWM):
             station_history.set_interval(interval)
         return station_history
 
-    def uvindex_around_coords(self, lat, lon, start=None, interval=None):
+    def uvindex_around_coords(self, lat, lon):
         """
         Queries the OWM web API for Ultra Violet value sampled in the
         surroundings of the provided geocoordinates and in the specified time
         interval. A *UVIndex* object instance is returned, encapsulating a
         *Location* object and the UV intensity value.
-        If `start` is not provided, the latest available UVIndex value is retrieved.
+        If `start` is not provided, the latest available UVIndex value is
+        retrieved.
         If `start` is provided but `interval` is not, then `interval` defaults
         to the maximum extent, which is: `year`
 
@@ -1011,14 +1025,6 @@ class OWM25(owm.OWM):
         :type lat: int/float
         :param lon: the location's longitude, must be between -180.0 and 180.0
         :type lon: int/float
-        :param start: the object conveying the start value of the search time
-            window start (defaults to ``None``). If not provided, the latest
-            available UVIndex value is retrieved
-        :type start: int, ``datetime.datetime`` or ISO8601-formatted
-            string
-        :param interval: the length of the search time window starting at
-           `start` (defaults to ``None``). If not provided, 'year' is used
-        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
         :return: a *UVIndex* instance or ``None`` if data is not available
         :raises: *ParseResponseException* when OWM web API responses' data
             cannot be parsed, *APICallException* when OWM web API can not be
@@ -1031,12 +1037,9 @@ class OWM25(owm.OWM):
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
 
-        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        params = {'lon': lon, 'lat': lat}
         json_data = self._uvapi.get_uvi(params)
         uvindex = self._parsers['uvindex'].parse_JSON(json_data)
-        if interval is None:
-            interval = 'year'
-        uvindex._interval = interval
         return uvindex
 
     def coindex_around_coords(self, lat, lon, start=None, interval=None):
@@ -1046,7 +1049,8 @@ class OWM25(owm.OWM):
         interval.
         A *COIndex* object instance is returned, encapsulating a
         *Location* object and the list of CO samples
-        If `start` is not provided, the latest available CO samples are retrieved
+        If `start` is not provided, the latest available CO samples are
+        retrieved
         If `start` is provided but `interval` is not, then `interval` defaults
         to the maximum extent, which is: `year`
 
@@ -1085,10 +1089,11 @@ class OWM25(owm.OWM):
     def ozone_around_coords(self, lat, lon, start=None, interval=None):
         """
         Queries the OWM web API for Ozone (O3) value in Dobson Units sampled in
-        the surroundings of the provided geocoordinates and in the specified time
-        interval. An *Ozone* object instance is returned, encapsulating a
+        the surroundings of the provided geocoordinates and in the specified
+        time interval. An *Ozone* object instance is returned, encapsulating a
         *Location* object and the UV intensity value.
-        If `start` is not provided, the latest available ozone value is retrieved.
+        If `start` is not provided, the latest available ozone value is
+        retrieved.
         If `start` is provided but `interval` is not, then `interval` defaults
         to the maximum extent, which is: `year`
 
@@ -1124,13 +1129,101 @@ class OWM25(owm.OWM):
             ozone._interval = interval
         return ozone
 
+    def no2index_around_coords(self, lat, lon, start=None, interval=None):
+        """
+        Queries the OWM web API for Nitrogen Dioxide values sampled in the
+        surroundings of the provided geocoordinates and in the specified time
+        interval.
+        A *NO2Index* object instance is returned, encapsulating a
+        *Location* object and the list of NO2 samples
+        If `start` is not provided, the latest available NO2 samples are
+        retrieved
+        If `start` is provided but `interval` is not, then `interval` defaults
+        to the maximum extent, which is: `year`
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time
+            window start (defaults to ``None``). If not provided, the latest
+            available NO2 samples value are retrieved
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param interval: the length of the search time window starting at
+           `start` (defaults to ``None``). If not provided, 'year' is used
+        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
+        :return: a *NO2Index* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        json_data = self._pollapi.get_no2(params)
+        no2index = self._parsers['no2index'].parse_JSON(json_data)
+        if interval is None:
+            interval = 'year'
+        no2index._interval = interval
+        return no2index
+
+    def so2index_around_coords(self, lat, lon, start=None, interval=None):
+        """
+        Queries the OWM web API for Sulphur Dioxide values sampled in the
+        surroundings of the provided geocoordinates and in the specified time
+        interval.
+        A *SO2Index* object instance is returned, encapsulating a
+        *Location* object and the list of SO2 samples
+        If `start` is not provided, the latest available SO2 samples are
+        retrieved
+        If `start` is provided but `interval` is not, then `interval` defaults
+        to the maximum extent, which is: `year`
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time
+            window start (defaults to ``None``). If not provided, the latest
+            available SO2 samples value are retrieved
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted
+            string
+        :param interval: the length of the search time window starting at
+           `start` (defaults to ``None``). If not provided, 'year' is used
+        :type interval: str among: 'minute', 'hour', 'day', 'month, 'year'
+        :return: a *SO2Index* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
+        json_data = self._pollapi.get_so2(params)
+        so2index = self._parsers['so2index'].parse_JSON(json_data)
+        if interval is None:
+            interval = 'year'
+        so2index._interval = interval
+        return so2index
+
     def __repr__(self):
         return "<%s.%s - API key=%s, OWM web API version=%s, " \
                "subscription type=%s, PyOWM version=%s, language=%s>" % \
-                                    (__name__,
-                                      self.__class__.__name__,
-                                      self._API_key,
-                                      self.get_API_version(),
-                                      self._subscription_type,
-                                      self.get_version(),
-                                      self._language)
+                    (__name__,
+                      self.__class__.__name__,
+                      self._obfuscate_API_key() if self._API_key is not None else 'None',
+                      self.get_API_version(),
+                      self._subscription_type,
+                      self.get_version(),
+                      self._language)
