@@ -1,4 +1,4 @@
-#  PyOWM
+#  PyOWM :sunny: :umbrella: :snake:
 A Python wrapper around the OpenWeatherMap API
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
