@@ -6,7 +6,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.webapi25.xsd.xmlnsconfig import (
     FORECAST_XMLNS_PREFIX, FORECAST_XMLNS_URL)
-from pyowm.utils import timeformatutils, xmlutils
+from pyowm.utils import timeutils, timeformatutils, xmlutils
 
 
 class ForecastIterator(object):
@@ -157,6 +157,16 @@ class Forecast(object):
 
         """
         return len(self._weathers)
+
+    def actualize(self):
+        """
+        Removes from this forecast all the *Weather* objects having a reference
+        timestamp in the past with respect to the current timestamp
+        """
+        current_time = timeutils.now(timeformat='unix')
+        for w in self._weathers:
+            if w.get_reference_time(timeformat='unix') < current_time:
+                self._weathers.remove(w)
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string

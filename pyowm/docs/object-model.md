@@ -127,6 +127,13 @@ This class also provides an iterator for easily iterating over the encapsulated 
 	('2013-09-14 17:00:00+0','Clear')
 	('2013-09-14 20:00:00+0','Clouds')
 
+Sometimes - due to caching on the OWM API side - the weather objects returned inside a _Forecast_ object
+may refer to timestamps in the recent past. In order to remove those outdated weather items
+from the forecast, you can do:
+
+    >>> fcst.actualize()
+
+
 ### The Forecaster class
 Instances of this class are returned by weather forecast queries such as:
 
