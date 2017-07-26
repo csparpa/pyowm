@@ -19,6 +19,9 @@ setup(
     data from Python applications via a simple object model and in a
     human-friendly fashion.""",
     include_package_data=True,
+    install_requires=[
+        'requests==2.18.2,<2.19'
+    ],
     classifiers=[
       "License :: OSI Approved :: MIT License",
       "Programming Language :: Python",
