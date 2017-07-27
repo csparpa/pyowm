@@ -856,6 +856,7 @@ class OWM25(owm.OWM):
                                              params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def station_at_coords(self, lat, lon, limit=None):
         """
         Queries the OWM web API for weather stations nearest to the
