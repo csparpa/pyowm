@@ -14,9 +14,10 @@ from pyowm.abstractions import owm
 from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
 from pyowm.commons import weather_client, uv_client, airpollution_client
-from pyowm.utils import timeformatutils
+from pyowm.utils import timeformatutils, stringutils
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
+from pyowm.stationsapi30 import stations_manager
 
 
 class OWM25(owm.OWM):
@@ -104,15 +105,6 @@ class OWM25(owm.OWM):
         except NameError:
             return value
 
-    def _obfuscate_API_key(self):
-        """
-        Return a mostly obfuscated version of the API Key
-
-        :return: str
-        """
-        if self._API_key is not None:
-            return (len(self._API_key)-8)*'*'+self._API_key[-8:]
-
     def get_API_key(self):
         """
         Returns the str OWM API key
@@ -138,7 +130,7 @@ class OWM25(owm.OWM):
         Returns the currently supported OWM web API version
 
         .. deprecated:: 3.0.0
-           Will return a tuple instead of a str
+           Will return a dict of tuples instead of a str
 
         :returns: str
 
@@ -194,6 +186,14 @@ class OWM25(owm.OWM):
         :returns: a *CityIDRegistry* instance
         """
         return reg
+
+    def stations_manager(self):
+        """
+        Gives a *StationsManager* instance that can be used to read/write
+        meteostations data.
+        :returns: a *StationsManager* instance
+        """
+        return stations_manager.StationsManager(self._API_key)
 
     def is_API_online(self):
         """
@@ -1223,7 +1223,7 @@ class OWM25(owm.OWM):
                "subscription type=%s, PyOWM version=%s, language=%s>" % \
                     (__name__,
                       self.__class__.__name__,
-                      self._obfuscate_API_key() if self._API_key is not None else 'None',
+                      stringutils.obfuscate_API_key(self._API_key) if self._API_key is not None else 'None',
                       self.get_API_version(),
                       self._subscription_type,
                       self.get_version(),
