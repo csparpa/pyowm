@@ -27,8 +27,40 @@ class StationsManager(object):
 
     def __init__(self, API_key):
         assert API_key is not None, 'You must provide a valid API Key'
-        self._API_key = API_key
+        self.API_key = API_key
         self.stations_parser = StationParser()
 
     def stations_api_version(self):
         return self.STATIONS_API_VERSION
+
+    # STATIONS Methods
+
+    def get_stations(self):
+        """
+        Retrieves all of the user's stations registered on the Stations API.
+
+        :returns: list of *pyowm.stationsapi30.station.Station* objects
+
+        """
+        resp = requests.get('http://api.openweathermap.org/data/3.0/stations',
+                            params={'appid': self.API_key},
+                            headers={'Content-Type': 'application/json'})
+        data = resp.json()
+        HttpClient.check_status_code(resp.status_code, json.dumps(data))
+        return [self.stations_parser.parse_JSON(item) for item in data]
+
+    def get_station(self, id):
+        """
+        Retrieves a named station registered on the Stations API.
+
+        :param id: the ID of the station
+        :type id: str
+        :returns: a *pyowm.stationsapi30.station.Station* object
+
+        """
+        resp = requests.get('http://api.openweathermap.org/data/3.0/stations/%s' % id,
+                            params={'appid': self.API_key},
+                            headers={'Content-Type': 'application/json'})
+        data = resp.json()
+        HttpClient.check_status_code(resp.status_code, json.dumps(data))
+        self.stations_parser.parse_JSON(data)
