@@ -1,8 +1,37 @@
+import json
 from datetime import datetime as dt
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.timeformatutils import UTC, timeformat, to_ISO8601
+import xml.etree.ElementTree as ET
+from pyowm.stationsapi30.xsd.xmlnsconfig import (
+    STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
+from pyowm.utils import xmlutils
 
 
 class Station:
+    """
+    A class representing a meteostation in Stations API.
+    A reference about OWM stations can be found at:
+    http://openweathermap.org/stations
+
+    :param id: unique OWM identifier for the station
+    :type id: str
+    :param created_at: UTC timestamp marking the station registration.
+    :type created_at: str in format %Y-%m-%dT%H:%M:%S.%fZ
+    :param updated_at: UTC timestamp marking the last update to this station
+    :type updated_at: str in format %Y-%m-%dT%H:%M:%S.%fZ
+    :param external_id: user-given identifier for the station
+    :type external_id: str
+    :param name: user-given name for the station
+    :type name: str
+    :param lon: longitude of the station
+    :type lon: float
+    :param lat: latitude of the station
+    :type lat: float
+    :param alt: altitude of the station
+    :type alt: float
+    :param rank: station rank
+    :type rank: int
+    """
 
     def __init__(self, id, created_at, updated_at, external_id, name,
                  lon, lat, alt, rank):
@@ -21,15 +50,88 @@ class Station:
         self.id = id
         self.created_at = created_at
         if self.created_at is not None:
-            self.created_at = dt.strptime(created_at,
-                                          '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
+            t = dt.strptime(created_at, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
+            self.created_at = timeformat(t, 'unix')
         self.updated_at = updated_at
         if self.updated_at is not None:
-            self.updated_at = dt.strptime(updated_at,
-                                          '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
+            t = dt.strptime(updated_at, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
+            self.updated_at = timeformat(t, 'unix')
         self.external_id = external_id
         self.name = name
         self.lon = lon
         self.lat = lat
         self.alt = alt
         self.rank = rank
+
+    def to_JSON(self):
+        """Dumps object fields into a JSON formatted string
+
+        :returns: the JSON string
+
+        """
+        return json.dumps({'id': self.id,
+                           'external_id': self.external_id,
+                           'name': self.name,
+                           'created_at': to_ISO8601(self.created_at),
+                           'updated_at': to_ISO8601(self.updated_at),
+                           'lat': self.lat,
+                           'lon': self.lon,
+                           'alt': self.alt,
+                           'rank': self.rank})
+
+    def to_XML(self, xml_declaration=True, xmlns=True):
+        """
+        Dumps object fields to an XML-formatted string. The 'xml_declaration'
+        switch  enables printing of a leading standard XML line containing XML
+        version and encoding. The 'xmlns' switch enables printing of qualified
+        XMLNS prefixes.
+
+        :param XML_declaration: if ``True`` (default) prints a leading XML
+            declaration line
+        :type XML_declaration: bool
+        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
+        :type xmlns: bool
+        :returns: an XML-formatted string
+
+        """
+        root_node = self._to_DOM()
+        if xmlns:
+            xmlutils.annotate_with_XMLNS(root_node,
+                                         STATION_XMLNS_PREFIX,
+                                         STATION_XMLNS_URL)
+        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+
+    def _to_DOM(self):
+        """
+        Dumps object data to a fully traversable DOM representation of the
+        object.
+
+        :returns: a ``xml.etree.Element`` object
+
+        """
+        root_node = ET.Element('station')
+        created_at_node = ET.SubElement(root_node, "created_at")
+        created_at_node.text = to_ISO8601(self.created_at)if self.created_at is not None else 'null'
+        updated_at_node = ET.SubElement(root_node, "updated_at")
+        updated_at_node.text = to_ISO8601(self.updated_at)if self.updated_at is not None else 'null'
+        station_id_node = ET.SubElement(root_node, 'id')
+        station_id_node.text = str(self.id)
+        station_id_node = ET.SubElement(root_node, 'external_id')
+        station_id_node.text = str(self.external_id)
+        station_name_node = ET.SubElement(root_node, 'name')
+        station_name_node.text = str(self.name) if self.name is not None else 'null'
+        lat_node = ET.SubElement(root_node, 'lat')
+        lat_node.text = str(self.lat)
+        lon_node = ET.SubElement(root_node, 'lon')
+        lon_node.text = str(self.lon)
+        alt_node = ET.SubElement(root_node, 'alt')
+        alt_node.text = str(self.alt)
+        rank_node = ET.SubElement(root_node, 'rank')
+        rank_node.text = str(self.rank) if self.rank is not None else 'null'
+
+        return root_node
+
+    def __repr__(self):
+        return '<%s.%s - id=%s, external_id=%s, name=%s>' \
+               % (__name__, self.__class__.__name__,
+                  self.id, self.external_id, self.name)

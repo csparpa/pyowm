@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+   <xs:element name="station">
+      <xs:complexType>
+         <xs:sequence>
+             <xs:element name="name" type="xs:string" />
+             <xs:element name="id" type="xs:string" />
+             <xs:element name="created_at" type="xs:decimal" />
+             <xs:element name="updated_at" type="xs:decimal" />
+             <xs:element name="external_id" type="xs:string" />
+             <xs:element name="lon" type="xs:decimal" />
+             <xs:element name="lat" type="xs:decimal" />
+             <xs:element name="alt" type="xs:decimal" />
+             <xs:element name="rank" type="xs:unsignedInt" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>
