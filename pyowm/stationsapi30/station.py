@@ -4,7 +4,7 @@ from pyowm.utils.timeformatutils import UTC, timeformat, to_ISO8601
 import xml.etree.ElementTree as ET
 from pyowm.stationsapi30.xsd.xmlnsconfig import (
     STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
-from pyowm.utils import xmlutils
+from pyowm.utils import xmlutils, timeformatutils
 
 
 class Station:
@@ -62,6 +62,38 @@ class Station:
         self.lat = lat
         self.alt = alt
         self.rank = rank
+
+    def creation_time(self, timeformat='unix'):
+        """Returns the UTC time of creation of this station
+
+        :param timeformat: the format for the time value. May be:
+            '*unix*' (default) for UNIX time, '*iso*' for ISO8601-formatted
+            string in the format ``YYYY-MM-DD HH:MM:SS+00`` or `date` for
+            a ``datetime.datetime`` object
+        :type timeformat: str
+        :returns: an int or a str or a ``datetime.datetime`` object or None
+        :raises: ValueError
+
+        """
+        if self.created_at is None:
+            return None
+        return timeformatutils.timeformat(self.created_at, timeformat)
+
+    def last_update_time(self, timeformat='unix'):
+        """Returns the UTC time of the last update on this station's metadata
+
+        :param timeformat: the format for the time value. May be:
+            '*unix*' (default) for UNIX time, '*iso*' for ISO8601-formatted
+            string in the format ``YYYY-MM-DD HH:MM:SS+00`` or `date` for
+            a ``datetime.datetime`` object
+        :type timeformat: str
+        :returns: an int or a str or a ``datetime.datetime`` object or None
+        :raises: ValueError
+
+        """
+        if self.updated_at is None:
+            return None
+        return timeformatutils.timeformat(self.updated_at, timeformat)
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
