@@ -8,7 +8,8 @@ import xml.etree.ElementTree as ET
 from pyowm.webapi25 import weather
 from pyowm.webapi25.xsd.xmlnsconfig import (
     LIST_STATION_XMLNS_PREFIX, LIST_STATION_XMLNS_URL)
-from pyowm.utils import timeformatutils, xmlutils
+from pyowm.utils import xmlutils
+from pyowm.abstractions.decorators import deprecated
 
 
 class Station(object):
@@ -38,6 +39,8 @@ class Station(object):
 
     """
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0),
+                name='webapi25.station.Station')
     def __init__(self, name, station_ID, station_type, status, lat, lon,
                  distance=None, last_weather=None):
 
