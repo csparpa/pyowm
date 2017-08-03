@@ -17,8 +17,7 @@ stat = mgr.get_station('583436dd9643a9000196b8d6')
 
 # Create a new station?appid=b1b15e88fa797225412429c1c50c122a1
 # POST http://api.openweathermap.org/data/3.0/stations
-stat = mgr.create_station(external_id="SF_TEST001", name="San Francisco Test Station",
-           lat=37.76, lon=-122.43, alt=150)
+stat = mgr.create_station("SF_TEST001", "San Francisco Test Station", 37.76, -122.43, 150)
 
 # Modify a named station
 # PUT http://api.openweathermap.org/data/3.0/stations/583436dd9643a9000196b8d6?appid=b1b15e88fa797225412429c1c50c122a1

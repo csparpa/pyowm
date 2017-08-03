@@ -3,8 +3,6 @@ Object that can read/write meteostations metadata and extract related
 measurements
 """
 
-import requests
-import json
 from pyowm.commons.http_client import HttpClient
 from pyowm.stationsapi30.station_parser import StationParser
 
@@ -29,6 +27,7 @@ class StationsManager(object):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
         self.stations_parser = StationParser()
+        self.http_client = HttpClient()
 
     def stations_api_version(self):
         return self.STATIONS_API_VERSION
@@ -43,7 +42,7 @@ class StationsManager(object):
 
         """
 
-        status, data = HttpClient.get_json(
+        status, data = self.http_client.get_json(
             'http://api.openweathermap.org/data/3.0/stations',
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
@@ -58,8 +57,43 @@ class StationsManager(object):
         :returns: a *pyowm.stationsapi30.station.Station* object
 
         """
-        status, data = HttpClient.get_json(
-            'http://api.openweathermap.org/data/3.0/stations/%s' % id,
+        status, data = self.http_client.get_json(
+            'http://api.openweathermap.org/data/3.0/stations/%s' % str(id),
              params={'appid': self.API_key},
              headers={'Content-Type': 'application/json'})
-        self.stations_parser.parse_dict(data)
+        return self.stations_parser.parse_dict(data)
+
+    def create_station(self, external_id, name, lat, lon, alt=None):
+        """
+        Create a new station on the Station API with the given parameters
+
+        :param external_id: the user-given ID of the station
+        :type external_id: str
+        :param name: the name of the station
+        :type name: str
+        :param lat: latitude of the station
+        :type lat: float
+        :param lon: longitude of the station
+        :type lon: float
+        :param alt: altitude of the station
+        :type alt: float
+        :returns: the new *pyowm.stationsapi30.station.Station* object
+        """
+        assert external_id is not None
+        assert name is not None
+        assert lon is not None
+        assert lat is not None
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        if alt is not None:
+            if alt < 0.0:
+                raise ValueError("'alt' value must not be negative")
+        status, payload = self.http_client.post(
+            'http://api.openweathermap.org/data/3.0/stations',
+             params={'appid': self.API_key},
+             data=dict(external_id=external_id, name=name, lat=lat,
+                       lon=lon, alt=alt),
+             headers={'Content-Type': 'application/json'})
+        return self.stations_parser.parse_dict(payload)

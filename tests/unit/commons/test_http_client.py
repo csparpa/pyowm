@@ -29,7 +29,7 @@ class TestHTTPClient(unittest.TestCase):
             return MockResponse(200, expected_data)
 
         requests.get = monkey_patched_get
-        status, data = HttpClient.get_json('http://anyurl.com')
+        status, data = HttpClient().get_json('http://anyurl.com')
         self.assertEquals(json.loads(expected_data), data)
         requests.get = self.requests_original_get
 
@@ -40,7 +40,7 @@ class TestHTTPClient(unittest.TestCase):
 
         requests.get = monkey_patched_get
         self.assertRaises(parse_response_error.ParseResponseError,
-                          HttpClient.get_json,
+                          HttpClient().get_json,
                           'http://anyurl.com',
                           params=dict(a=1, b=2))
         requests.get = self.requests_original_get

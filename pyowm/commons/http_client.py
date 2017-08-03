@@ -5,9 +5,17 @@ from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error
 
 class HttpClient(object):
 
-    @classmethod
-    def get_json(cls, uri, params=None, headers=None):
+    def get_json(self, uri, params=None, headers=None):
         resp = requests.get(uri, params=params, headers=headers)
+        HttpClient.check_status_code(resp.status_code, resp.text)
+        try:
+            return resp.status_code, resp.json()
+        except:
+            raise parse_response_error.ParseResponseError('Impossible to parse'
+                                                          'API response data')
+
+    def post(self, uri, params=None, data=None, headers=None):
+        resp = requests.post(uri, params=params, json=data, headers=headers)
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.json()
@@ -20,7 +28,7 @@ class HttpClient(object):
         if status_code < 400:
             return
         if status_code == 400:
-            raise api_call_error.APICallError('Wrong input data')
+            raise api_call_error.APICallError(payload)
         elif status_code == 401:
             raise unauthorized_error.UnauthorizedError('Invalid API Key provided')
         elif status_code == 404:
