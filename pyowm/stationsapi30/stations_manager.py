@@ -42,12 +42,12 @@ class StationsManager(object):
         :returns: list of *pyowm.stationsapi30.station.Station* objects
 
         """
-        resp = requests.get('http://api.openweathermap.org/data/3.0/stations',
-                            params={'appid': self.API_key},
-                            headers={'Content-Type': 'application/json'})
-        data = resp.json()
-        HttpClient.check_status_code(resp.status_code, json.dumps(data))
-        return [self.stations_parser.parse_JSON(item) for item in data]
+
+        status, data = HttpClient.get_json(
+            'http://api.openweathermap.org/data/3.0/stations',
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
+        return [self.stations_parser.parse_dict(item) for item in data]
 
     def get_station(self, id):
         """
@@ -58,9 +58,8 @@ class StationsManager(object):
         :returns: a *pyowm.stationsapi30.station.Station* object
 
         """
-        resp = requests.get('http://api.openweathermap.org/data/3.0/stations/%s' % id,
-                            params={'appid': self.API_key},
-                            headers={'Content-Type': 'application/json'})
-        data = resp.json()
-        HttpClient.check_status_code(resp.status_code, json.dumps(data))
-        self.stations_parser.parse_JSON(data)
+        status, data = HttpClient.get_json(
+            'http://api.openweathermap.org/data/3.0/stations/%s' % id,
+             params={'appid': self.API_key},
+             headers={'Content-Type': 'application/json'})
+        self.stations_parser.parse_dict(data)

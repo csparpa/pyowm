@@ -22,9 +22,20 @@ class StationParser(jsonparser.JSONParser):
     def __init__(self):
         pass
 
+    def parse_dict(self, data_dict):
+        """
+        Parses a dictionary representing the attributes of a
+        *pyowm.stationsapi30.station.Station* entity
+        :param data_dict: dict
+        :return: *pyowm.stationsapi30.station.Station*
+        """
+        assert isinstance(data_dict, dict)
+        string_repr = json.dumps(data_dict)
+        return self.parse_JSON(string_repr)
+
     def parse_JSON(self, JSON_string):
         """
-        Parses a *pyowm.stationsapi30.station.Station** instance out of raw JSON
+        Parses a *pyowm.stationsapi30.station.Station* instance out of raw JSON
         data.
 
         :param JSON_string: a raw JSON string
