@@ -41,13 +41,6 @@ class TestStation(unittest.TestCase):
                     "SF_TEST001",
                     "San Francisco Test Station",
                     -122.43, None, 150, 0)
-        with self.assertRaises(AssertionError):
-            Station("583436dd9643a9000196b8d6",
-                    "2016-11-22T12:15:25.967Z",
-                    "2016-11-22T12:15:25.967Z",
-                    "SF_TEST001",
-                    "San Francisco Test Station",
-                    -122.43, 37.76, None, 0)
 
     def test_instantiations_failing_upon_wrong_geocoords(self):
         with self.assertRaises(ValueError):

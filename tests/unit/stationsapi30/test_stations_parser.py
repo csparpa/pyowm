@@ -7,7 +7,7 @@ from pyowm.exceptions import parse_response_error
 
 class TestStationsParser(unittest.TestCase):
 
-    test_station_json = '''{"id": "583436dd9643a9000196b8d6",
+    test_station_json = '''{"ID": "583436dd9643a9000196b8d6",
         "created_at": "2016-11-22T12:15:25.967Z",
         "updated_at": "2016-11-22T12:15:25.967Z",
         "external_id": "SF_TEST001",

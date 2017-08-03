@@ -39,14 +39,14 @@ class Station:
         assert external_id is not None
         assert lon is not None
         assert lat is not None
-        assert alt is not None
         if lon < -180.0 or lon > 180.0:
             raise ValueError("'lon' value must be between -180 and 180")
         self._lon = float(lon)
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        if alt < 0.0:
-            raise ValueError("'alt' value must not be negative")
+        if alt is not None:
+            if alt < 0.0:
+                raise ValueError("'alt' value must not be negative")
         self.id = id
         self.created_at = created_at
         if self.created_at is not None:
@@ -108,7 +108,7 @@ class Station:
                            'updated_at': to_ISO8601(self.updated_at),
                            'lat': self.lat,
                            'lon': self.lon,
-                           'alt': self.alt,
+                           'alt': self.alt if self.alt is not None else 'None',
                            'rank': self.rank})
 
     def to_XML(self, xml_declaration=True, xmlns=True):
@@ -157,7 +157,7 @@ class Station:
         lon_node = ET.SubElement(root_node, 'lon')
         lon_node.text = str(self.lon)
         alt_node = ET.SubElement(root_node, 'alt')
-        alt_node.text = str(self.alt)
+        alt_node.text = str(self.alt) if self.alt is not None else 'null'
         rank_node = ET.SubElement(root_node, 'rank')
         rank_node.text = str(self.rank) if self.rank is not None else 'null'
 

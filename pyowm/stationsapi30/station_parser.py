@@ -50,7 +50,7 @@ class StationParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError('JSON data is None')
         d = json.loads(JSON_string)
         try:
-            id = d.get('id', None)
+            id = d.get('ID', None) or d.get('id', None)
             external_id = d.get('external_id', None)
             lon = d.get('longitude', None)
             lat = d.get('latitude', None)
