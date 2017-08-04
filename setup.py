@@ -20,7 +20,7 @@ setup(
     human-friendly fashion.""",
     include_package_data=True,
     install_requires=[
-        'requests==2.18.2,<2.19'
+        'requests>=2.18.2,<2.19'
     ],
     classifiers=[
       "License :: OSI Approved :: MIT License",
