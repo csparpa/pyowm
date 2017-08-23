@@ -32,6 +32,15 @@ class HttpClient(object):
             raise parse_response_error.ParseResponseError('Impossible to parse'
                                                           'API response data')
 
+    def delete(self, uri, params=None, data=None, headers=None):
+        resp = requests.delete(uri, params=params, json=data, headers=headers)
+        HttpClient.check_status_code(resp.status_code, resp.text)
+        try:
+            return resp.status_code, resp.json()
+        except:
+            return resp.status_code, None
+
+
     @classmethod
     def check_status_code(cls, status_code, payload):
         if status_code < 400:

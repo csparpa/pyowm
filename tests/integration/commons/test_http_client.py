@@ -37,3 +37,12 @@ class TestHTTPClient(unittest.TestCase):
         status, data = self.instance.put('http://httpbin.org/put', data=formdata)
         self.assertEqual(200, status)
         self.assertIsInstance(data, dict)
+        self.assertEquals(formdata, data['json'])
+
+    def test_delete_against_httpbin(self):
+        # https://httpbin.org/delete
+        formdata = dict(a=1, b=2, c=3)
+        status, data = self.instance.delete('http://httpbin.org/delete', data=formdata)
+        self.assertEqual(200, status)
+        self.assertIsInstance(data, dict)
+        self.assertEquals(formdata, data['json'])

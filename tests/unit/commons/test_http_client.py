@@ -20,6 +20,9 @@ class MockResponse:
 class TestHTTPClient(unittest.TestCase):
 
     requests_original_get = requests.get
+    requests_original_post = requests.post
+    requests_original_put= requests.put
+    requests_original_delete = requests.delete
 
     def test_get_json(self):
 
@@ -44,6 +47,51 @@ class TestHTTPClient(unittest.TestCase):
                           'http://anyurl.com',
                           params=dict(a=1, b=2))
         requests.get = self.requests_original_get
+
+    def test_post(self):
+        expected_data = '{"key": "value"}'
+
+        def monkey_patched_post(uri, params=None, headers=None, json=None):
+            return MockResponse(201, expected_data)
+
+        requests.post = monkey_patched_post
+        status, data = HttpClient().post('http://anyurl.com', data=dict(key='value'))
+        self.assertEquals(json.loads(expected_data), data)
+
+        requests.post = self.requests_original_post
+
+    def test_put(self):
+        expected_data = '{"key": "value"}'
+
+        def monkey_patched_put(uri, params=None, headers=None, json=None):
+            return MockResponse(200, expected_data)
+
+        requests.put = monkey_patched_put
+        status, data = HttpClient().put('http://anyurl.com', data=dict(key=7))
+        self.assertEquals(json.loads(expected_data), data)
+
+        requests.put = self.requests_original_put
+
+    def test_delete(self):
+        # in case an empty payload is returned
+        def monkey_patched_delete(uri, params=None, headers=None, json=None):
+            return MockResponse(204, None)
+
+        requests.delete = monkey_patched_delete
+        status, data = HttpClient().delete('http://anyurl.com')
+        self.assertIsNone(data)
+
+        # in case a non-empty payload is returned
+        expected_data = '{"message": "deleted"}'
+
+        def monkey_patched_delete_returning_payload(uri, params=None, headers=None, json=None):
+            return MockResponse(204, expected_data)
+
+        requests.delete = monkey_patched_delete_returning_payload
+        status, data = HttpClient().delete('http://anyurl.com')
+        self.assertEquals(json.loads(expected_data), data)
+
+        requests.delete = self.requests_original_delete
 
     def test_check_status_code(self):
         msg = 'Generic error'

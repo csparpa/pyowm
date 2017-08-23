@@ -1,6 +1,5 @@
 import unittest
 import json
-import copy
 from pyowm.stationsapi30.station import Station
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.commons.http_client import HttpClient
@@ -27,6 +26,9 @@ class MockHttpClient(HttpClient):
 
     def put(self, uri, params=None, data=None, headers=None):
         return 200, None
+
+    def delete(self, uri, params=None, data=None, headers=None):
+        return 204, None
 
 
 class MockHttpClientOneStation(HttpClient):
@@ -107,4 +109,19 @@ class TestStationManager(unittest.TestCase):
         modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
         modified_station.id = None
         with self.assertRaises(AssertionError):
-            result = instance.update_station(modified_station)
+            instance.update_station(modified_station)
+
+    def test_delete_station(self):
+        instance = self.factory(MockHttpClient)
+        parser = StationParser()
+        station = parser.parse_JSON(MockHttpClient.test_station_json)
+        result = instance.delete_station(station)
+        self.assertIsNone(result)
+
+    def test_delete_station_fails_when_id_is_none(self):
+        instance = self.factory(MockHttpClient)
+        parser = StationParser()
+        station = parser.parse_JSON(MockHttpClient.test_station_json)
+        station.id = None
+        with self.assertRaises(AssertionError):
+            instance.delete_station(station)

@@ -103,15 +103,32 @@ class StationsManager(object):
         Updates the Station API record identified by the ID of the provided
         *pyowm.stationsapi30.station.Station* object with all of its fields
 
-        :param station: the *pyowm.stationsapi30.station.Station* object
+        :param station: the *pyowm.stationsapi30.station.Station* object to be
+        updated
         :type *pyowm.stationsapi30.station.Station*
         :returns: `None` if update is successful, an exception otherwise
         """
         assert station.id is not None
         status, _ = self.http_client.put(
-            'http://api.openweathermap.org/data/3.0/stations/%s' % str(id),
+            'http://api.openweathermap.org/data/3.0/stations/%s' % str(station.id),
             params={'appid': self.API_key},
             data=dict(external_id=station.external_id, name=station.name,
                       lat=station.lat, lon=station.lon, alt=station.alt),
             headers={'Content-Type': 'application/json'})
-        return
+
+    def delete_station(self, station):
+        """
+        Deletes the Station API record identified by the ID of the provided
+        *pyowm.stationsapi30.station.Station*, along with all its related
+        measurements
+
+        :param station: the *pyowm.stationsapi30.station.Station* object to be
+        deleted
+        :type *pyowm.stationsapi30.station.Station*
+        :returns: `None` if deletion is successful, an exception otherwise
+        """
+        assert station.id is not None
+        status, _ = self.http_client.delete(
+            'http://api.openweathermap.org/data/3.0/stations/%s' % str(station.id),
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
