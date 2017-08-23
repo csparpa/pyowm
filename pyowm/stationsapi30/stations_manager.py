@@ -59,8 +59,8 @@ class StationsManager(object):
         """
         status, data = self.http_client.get_json(
             'http://api.openweathermap.org/data/3.0/stations/%s' % str(id),
-             params={'appid': self.API_key},
-             headers={'Content-Type': 'application/json'})
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
         return self.stations_parser.parse_dict(data)
 
     def create_station(self, external_id, name, lat, lon, alt=None):
@@ -92,8 +92,26 @@ class StationsManager(object):
                 raise ValueError("'alt' value must not be negative")
         status, payload = self.http_client.post(
             'http://api.openweathermap.org/data/3.0/stations',
-             params={'appid': self.API_key},
-             data=dict(external_id=external_id, name=name, lat=lat,
-                       lon=lon, alt=alt),
-             headers={'Content-Type': 'application/json'})
+            params={'appid': self.API_key},
+            data=dict(external_id=external_id, name=name, lat=lat,
+                      lon=lon, alt=alt),
+            headers={'Content-Type': 'application/json'})
         return self.stations_parser.parse_dict(payload)
+
+    def update_station(self, station):
+        """
+        Updates the Station API record identified by the ID of the provided
+        *pyowm.stationsapi30.station.Station* object with all of its fields
+
+        :param station: the *pyowm.stationsapi30.station.Station* object
+        :type *pyowm.stationsapi30.station.Station*
+        :returns: `None` if update is successful, an exception otherwise
+        """
+        assert station.id is not None
+        status, _ = self.http_client.put(
+            'http://api.openweathermap.org/data/3.0/stations/%s' % str(id),
+            params={'appid': self.API_key},
+            data=dict(external_id=station.external_id, name=station.name,
+                      lat=station.lat, lon=station.lon, alt=station.alt),
+            headers={'Content-Type': 'application/json'})
+        return

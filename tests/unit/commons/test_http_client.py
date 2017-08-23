@@ -58,3 +58,11 @@ class TestHTTPClient(unittest.TestCase):
             HttpClient.check_status_code(502, msg)
         with self.assertRaises(api_call_error.APICallError):
             HttpClient.check_status_code(555, msg)
+
+    def test_is_success(self):
+        self.assertTrue(HttpClient.is_success(200))
+        self.assertTrue(HttpClient.is_success(201))
+        self.assertTrue(HttpClient.is_success(299))
+        self.assertFalse(HttpClient.is_success(300))
+        self.assertFalse(HttpClient.is_success(400))
+        self.assertFalse(HttpClient.is_success(500))

@@ -23,6 +23,15 @@ class HttpClient(object):
             raise parse_response_error.ParseResponseError('Impossible to parse'
                                                           'API response data')
 
+    def put(self, uri, params=None, data=None, headers=None):
+        resp = requests.put(uri, params=params, json=data, headers=headers)
+        HttpClient.check_status_code(resp.status_code, resp.text)
+        try:
+            return resp.status_code, resp.json()
+        except:
+            raise parse_response_error.ParseResponseError('Impossible to parse'
+                                                          'API response data')
+
     @classmethod
     def check_status_code(cls, status_code, payload):
         if status_code < 400:
@@ -37,3 +46,9 @@ class HttpClient(object):
             raise api_call_error.BadGatewayError('Unable to contact the upstream server')
         else:
             raise api_call_error.APICallError(payload)
+
+    @classmethod
+    def is_success(cls, status_code):
+        if 200 <= status_code < 300:
+            return True
+        return False

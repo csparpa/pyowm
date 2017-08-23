@@ -1,8 +1,10 @@
 import unittest
 import json
+import copy
 from pyowm.stationsapi30.station import Station
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.commons.http_client import HttpClient
+from pyowm.stationsapi30.station_parser import StationParser
 
 
 class MockHttpClient(HttpClient):
@@ -17,11 +19,14 @@ class MockHttpClient(HttpClient):
         "altitude": 150,
         "rank": 0}'''
 
-    def get_json(cls, uri, params=None, headers=None):
-        return 200, [json.loads(cls.test_station_json)]
+    def get_json(self, uri, params=None, headers=None):
+        return 200, [json.loads(self.test_station_json)]
 
-    def post(cls, uri, params=None, data=None, headers=None):
-        return 200, json.loads(cls.test_station_json)
+    def post(self, uri, params=None, data=None, headers=None):
+        return 200, json.loads(self.test_station_json)
+
+    def put(self, uri, params=None, data=None, headers=None):
+        return 200, None
 
 
 class MockHttpClientOneStation(HttpClient):
@@ -35,8 +40,8 @@ class MockHttpClientOneStation(HttpClient):
         "altitude": 150,
         "rank": 0}'''
 
-    def get_json(cls, uri, params=None, headers=None):
-        return 200, json.loads(cls.test_station_json)
+    def get_json(self, uri, params=None, headers=None):
+        return 200, json.loads(self.test_station_json)
 
 
 class TestStationManager(unittest.TestCase):
@@ -87,3 +92,19 @@ class TestStationManager(unittest.TestCase):
             instance.create_station("TEST2", "test2", 37.76, -8122.43)
         with self.assertRaises(ValueError):
             instance.create_station("TEST2", "test2", 37.76, -122.43, alt=-3)
+
+    def test_update_station(self):
+        instance = self.factory(MockHttpClient)
+        parser = StationParser()
+        modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
+        modified_station.external_id = 'CHNG'
+        result = instance.update_station(modified_station)
+        self.assertIsNone(result)
+
+    def test_update_station_fails_when_id_is_none(self):
+        instance = self.factory(MockHttpClient)
+        parser = StationParser()
+        modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
+        modified_station.id = None
+        with self.assertRaises(AssertionError):
+            result = instance.update_station(modified_station)
