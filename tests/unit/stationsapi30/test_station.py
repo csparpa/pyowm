@@ -12,6 +12,24 @@ class TestStation(unittest.TestCase):
                              "San Francisco Test Station",
                              -122.43, 37.76, 150, 0)
 
+    def test_format_micros(self):
+        # micros are present and must be padded
+        input_string = "2016-11-22T12:15:25.967Z"
+        expected = "2016-11-22T12:15:25.000967Z"
+        result = self._test_instance._format_micros(input_string)
+        self.assertEquals(expected, result)
+
+        # micros are present but too many digits
+        input_string = "2017-08-25T18:16:16.487887736Z"
+        expected = "2017-08-25T18:16:16.487887Z"
+        result = self._test_instance._format_micros(input_string)
+        self.assertEquals(expected, result)
+
+        # no micros at all
+        input_string = "2016-11-22T12:15:25Z"
+        result = self._test_instance._format_micros(input_string)
+        self.assertEquals(input_string, result)
+
     def test_failing_instantiations(self):
         with self.assertRaises(AssertionError):
             Station(None,

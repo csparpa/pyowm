@@ -4,8 +4,6 @@ returning a Station instance
 """
 
 import json
-from datetime import datetime as dt
-from pyowm.utils.timeformatutils import UTC
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
 from pyowm.stationsapi30.station import Station

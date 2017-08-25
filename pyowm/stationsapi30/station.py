@@ -50,11 +50,15 @@ class Station:
         self.id = id
         self.created_at = created_at
         if self.created_at is not None:
-            t = dt.strptime(created_at, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
+            padded_created_at = self._format_micros(created_at)
+            t = dt.strptime(padded_created_at,
+                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
             self.created_at = timeformat(t, 'unix')
         self.updated_at = updated_at
         if self.updated_at is not None:
-            t = dt.strptime(updated_at, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
+            padded_updated_at = self._format_micros(updated_at)
+            t = dt.strptime(padded_updated_at,
+                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
             self.updated_at = timeformat(t, 'unix')
         self.external_id = external_id
         self.name = name
@@ -62,6 +66,18 @@ class Station:
         self.lat = lat
         self.alt = alt
         self.rank = rank
+
+    def _format_micros(self, datestring):
+        parts = datestring[:-1].split('.')
+        if len(parts) == 1:
+            return datestring
+        else:
+            if len(parts[-1]) > 6:
+                micros = parts[-1][:6]
+            else:
+                micros = parts[-1]
+            return '.'.join(
+                parts[:-1] + ['{:06d}'.format(int(micros))]) + 'Z'
 
     def creation_time(self, timeformat='unix'):
         """Returns the UTC time of creation of this station
