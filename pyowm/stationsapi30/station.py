@@ -1,6 +1,5 @@
 import json
 from datetime import datetime as dt
-from pyowm.utils.timeformatutils import UTC, timeformat, to_ISO8601
 import xml.etree.ElementTree as ET
 from pyowm.stationsapi30.xsd.xmlnsconfig import (
     STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
@@ -52,14 +51,16 @@ class Station:
         if self.created_at is not None:
             padded_created_at = self._format_micros(created_at)
             t = dt.strptime(padded_created_at,
-                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
-            self.created_at = timeformat(t, 'unix')
+                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(
+                                tzinfo=timeformatutils.UTC())
+            self.created_at = timeformatutils.timeformat(t, 'unix')
         self.updated_at = updated_at
         if self.updated_at is not None:
             padded_updated_at = self._format_micros(updated_at)
             t = dt.strptime(padded_updated_at,
-                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=UTC())
-            self.updated_at = timeformat(t, 'unix')
+                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(
+                                tzinfo=timeformatutils.UTC())
+            self.updated_at = timeformatutils.timeformat(t, 'unix')
         self.external_id = external_id
         self.name = name
         self.lon = lon
@@ -120,8 +121,8 @@ class Station:
         return json.dumps({'id': self.id,
                            'external_id': self.external_id,
                            'name': self.name,
-                           'created_at': to_ISO8601(self.created_at),
-                           'updated_at': to_ISO8601(self.updated_at),
+                           'created_at': timeformatutils.to_ISO8601(self.created_at),
+                           'updated_at': timeformatutils.to_ISO8601(self.updated_at),
                            'lat': self.lat,
                            'lon': self.lon,
                            'alt': self.alt if self.alt is not None else 'None',
@@ -159,9 +160,11 @@ class Station:
         """
         root_node = ET.Element('station')
         created_at_node = ET.SubElement(root_node, "created_at")
-        created_at_node.text = to_ISO8601(self.created_at)if self.created_at is not None else 'null'
+        created_at_node.text = \
+            timeformatutils.to_ISO8601(self.created_at)if self.created_at is not None else 'null'
         updated_at_node = ET.SubElement(root_node, "updated_at")
-        updated_at_node.text = to_ISO8601(self.updated_at)if self.updated_at is not None else 'null'
+        updated_at_node.text = \
+            timeformatutils.to_ISO8601(self.updated_at)if self.updated_at is not None else 'null'
         station_id_node = ET.SubElement(root_node, 'id')
         station_id_node.text = str(self.id)
         station_id_node = ET.SubElement(root_node, 'external_id')
