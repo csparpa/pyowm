@@ -38,8 +38,8 @@ class StationParser(jsonparser.JSONParser):
 
         :param JSON_string: a raw JSON string
         :type JSON_string: str
-        :returns: a *pyowm.stationsapi30.station.Station** instance or ``None``
-        if no data is available
+        :return: a *pyowm.stationsapi30.station.Station** instance or ``None``
+            if no data is available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result
 

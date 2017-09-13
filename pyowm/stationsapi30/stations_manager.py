@@ -103,9 +103,8 @@ class StationsManager(object):
         Updates the Station API record identified by the ID of the provided
         *pyowm.stationsapi30.station.Station* object with all of its fields
 
-        :param station: the *pyowm.stationsapi30.station.Station* object to be
-        updated
-        :type *pyowm.stationsapi30.station.Station*
+        :param station: the *pyowm.stationsapi30.station.Station* object to be updated
+        :type station: *pyowm.stationsapi30.station.Station*
         :returns: `None` if update is successful, an exception otherwise
         """
         assert station.id is not None
@@ -122,9 +121,8 @@ class StationsManager(object):
         *pyowm.stationsapi30.station.Station*, along with all its related
         measurements
 
-        :param station: the *pyowm.stationsapi30.station.Station* object to be
-        deleted
-        :type *pyowm.stationsapi30.station.Station*
+        :param station: the *pyowm.stationsapi30.station.Station* object to be deleted
+        :type station: *pyowm.stationsapi30.station.Station*
         :returns: `None` if deletion is successful, an exception otherwise
         """
         assert station.id is not None
