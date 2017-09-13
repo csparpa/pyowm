@@ -105,3 +105,6 @@ class TestStation(unittest.TestCase):
                            -122.43, 37.76, 150, 0)
         result = instance.to_JSON()
         self.assertEquals(json.loads(expected), json.loads(result))
+
+    def test_repr(self):
+        str(self._test_instance)
