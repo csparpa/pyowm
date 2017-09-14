@@ -5,6 +5,7 @@ measurements
 
 from pyowm.commons.http_client import HttpClient
 from pyowm.stationsapi30.station_parser import StationParser
+from pyowm.stationsapi30.aggregated_measurement_parser import AggregatedMeasurementParser
 
 
 class StationsManager(object):
@@ -27,6 +28,7 @@ class StationsManager(object):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
         self.stations_parser = StationParser()
+        self.aggregated_measurements_parser = AggregatedMeasurementParser()
         self.http_client = HttpClient()
 
     def stations_api_version(self):
@@ -134,13 +136,102 @@ class StationsManager(object):
     # Measurements-related methods
 
     def send_measurement(self, measurement):
-        raise NotImplementedError()
+        """
+        Posts the provided Measurement object's data to the Station API.
 
-    def send_measurements(self, list_of_raw_measurements):
-        raise NotImplementedError()
+        :param measurement: the *pyowm.stationsapi30.measurement.Measurement*
+          object to be posted
+        :type measurement: *pyowm.stationsapi30.measurement.Measurement* instance
+        :returns: `None` if creation is successful, an exception otherwise
+        """
+        assert measurement is not None
+        assert measurement.station_id is not None
+        status, _ = self.http_client.post(
+            'http://api.openweathermap.org/data/3.0/measurements',
+            params={'appid': self.API_key},
+            data=measurement.to_dict(),
+            headers={'Content-Type': 'application/json'})
 
-    def get_measurements(self, station_id, interval, limit=None):
-        raise NotImplementedError()
+    def send_measurements(self, list_of_measurements):
+        """
+        Posts data about the provided list of Measurement objects to the
+        Station API. The objects may be related to different station IDs.
+
+        :param list_of_measurements: list of *pyowm.stationsapi30.measurement.Measurement*
+          objects to be posted
+        :type list_of_measurements: list of *pyowm.stationsapi30.measurement.Measurement*
+          instances
+        :returns: `None` if creation is successful, an exception otherwise
+        """
+        assert list_of_measurements is not None
+        assert all([m.station_id is not None for m in list_of_measurements])
+        for msmt in list_of_measurements:
+            status, _ = self.http_client.post(
+                'http://api.openweathermap.org/data/3.0/measurements',
+                params={'appid': self.API_key},
+                data=msmt.to_dict(),
+                headers={'Content-Type': 'application/json'})
+
+    def get_measurements(self, station_id, aggregated_on, from_timestamp,
+                         to_timestamp, limit=None):
+        """
+        Reads measurements of a specified station recorded in the specified time
+        window and aggregated on minute, hour or day. Optionally, the number of
+        resulting measurements can be limited.
+
+        :param station_id: unique station identifier
+        :type station_id: str
+        :param aggregated_on: aggregation time-frame for this measurement
+        :type aggregated_on: string between 'm','h' and 'd'
+        :param from_timestamp: Unix timestamp corresponding to the beginning of
+          the time window
+        :type from_timestamp: int
+        :param to_timestamp: Unix timestamp corresponding to the end of the
+          time window
+        :type to_timestamp: int
+        :param limit: max number of items to be returned
+        :type limit: int
+        :returns: list of *pyowm.stationsapi30.measurement.AggregatedMeasurement*
+          objects
+        """
+        assert station_id is not None
+        assert aggregated_on is not None
+        assert from_timestamp is not None
+        assert from_timestamp > 0
+        assert to_timestamp is not None
+        assert to_timestamp > 0
+        if to_timestamp < from_timestamp:
+            raise ValueError("End timestamp can't be earlier than begin timestamp")
+        if limit is not None:
+            assert isinstance(limit, int)
+            assert limit >= 0
+        query = {'appid': self.API_key,
+                 'station_id': station_id,
+                 'type': aggregated_on,
+                 'from': from_timestamp,
+                 'to': to_timestamp}
+        if limit is not None:
+            query['limit'] = limit
+        status, data = self.http_client.get_json(
+            'http://api.openweathermap.org/data/3.0/measurements',
+            params=query,
+            headers={'Content-Type': 'application/json'})
+        return [self.aggregated_measurements_parser.parse_dict(item) for item in data]
 
     def send_buffer(self, buffer):
-        raise NotImplementedError()
+        """
+        Posts to the Stations API data about the Measurement objects contained
+        into the provided Buffer instance.
+
+        :param buffer: the *pyowm.stationsapi30.buffer.Buffer* instance whose
+          measurements are to be posted
+        :type buffer: *pyowm.stationsapi30.buffer.Buffer* instance
+        :returns: `None` if creation is successful, an exception otherwise
+        """
+        assert buffer is not None
+        for msmt in buffer:
+            status, _ = self.http_client.post(
+                'http://api.openweathermap.org/data/3.0/measurements',
+                params={'appid': self.API_key},
+                data=msmt.to_dict(),
+                headers={'Content-Type': 'application/json'})
