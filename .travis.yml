@@ -16,4 +16,5 @@ after_success:
 notifications:
   email:
     on_failure: change
+dist: precise
 sudo: false
