@@ -130,3 +130,17 @@ class StationsManager(object):
             'http://api.openweathermap.org/data/3.0/stations/%s' % str(station.id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
+
+    # Measurements-related methods
+
+    def send_measurement(self, measurement):
+        raise NotImplementedError()
+
+    def send_measurements(self, list_of_raw_measurements):
+        raise NotImplementedError()
+
+    def get_measurements(self, station_id, interval, limit=None):
+        raise NotImplementedError()
+
+    def send_buffer(self, buffer):
+        raise NotImplementedError()
