@@ -121,6 +121,19 @@ class TestMeasurement(unittest.TestCase):
         with self.assertRaises(KeyError):
             Measurement.from_dict(dict(station_id='mytest'))
 
+    def test_to_dict(self):
+        expected_dict = {
+            "station_id": "mytest",
+            "timestamp": 1378459200,
+            "temperature": {"min":0, "max": 100},
+            "wind_speed": 2.1,
+            "wind_gust": 67,
+            "humidex": 77,
+            "weather_other": {"key": "val"}}
+        result_dict = self._test_instance.to_dict()
+        self.assertTrue(all(item in result_dict.items()
+                            for item in expected_dict.items()))
+
     def test_to_JSON(self):
         expected = '''
         {"station_id": "mytest",

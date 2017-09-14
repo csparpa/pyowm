@@ -188,40 +188,49 @@ class Measurement:
             weather_proximity=weather_proximity,weather_obscuration=weather_obscuration,
             weather_other=weather_other)
 
+    def to_dict(self):
+        """Dumps object fields into a dictionary
+
+        :returns: a dict
+
+        """
+        return {
+            'station_id': self.station_id,
+            'timestamp': self.timestamp,
+            'temperature': self.temperature,
+            'wind_speed': self.wind_speed,
+            'wind_gust': self.wind_gust,
+            'wind_deg': self.wind_deg,
+            'pressure': self.pressure,
+            'humidity': self.humidity,
+            'rain_1h': self.rain_1h,
+            'rain_6h': self.rain_6h,
+            'rain_24h': self.rain_24h,
+            'snow_1h': self.snow_1h,
+            'snow_6h': self.snow_6h,
+            'snow_24h': self.snow_24h,
+            'dew_point': self.dew_point,
+            'humidex': self.humidex,
+            'heat_index': self.heat_index,
+            'visibility_distance': self.visibility_distance,
+            'visibility_prefix': self.visibility_prefix,
+            'clouds_distance': self.clouds_distance,
+            'clouds_condition': self.clouds_condition,
+            'clouds_cumulus': self.clouds_cumulus,
+            'weather_precipitation': self.weather_precipitation,
+            'weather_descriptor': self.weather_descriptor,
+            'weather_intensity': self.weather_intensity,
+            'weather_proximity': self.weather_proximity,
+            'weather_obscuration': self.weather_obscuration,
+            'weather_other': self.weather_other}
+
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
 
         :returns: the JSON string
 
         """
-        return json.dumps({'station_id': self.station_id,
-                           'timestamp': self.timestamp,
-                           'temperature': self.temperature,
-                           'wind_speed': self.wind_speed,
-                           'wind_gust': self.wind_gust,
-                           'wind_deg': self.wind_deg,
-                           'pressure': self.pressure,
-                           'humidity': self.humidity,
-                           'rain_1h': self.rain_1h,
-                           'rain_6h': self.rain_6h,
-                           'rain_24h': self.rain_24h,
-                           'snow_1h': self.snow_1h,
-                           'snow_6h': self.snow_6h,
-                           'snow_24h': self.snow_24h,
-                           'dew_point': self.dew_point,
-                           'humidex': self.humidex,
-                           'heat_index': self.heat_index,
-                           'visibility_distance': self.visibility_distance,
-                           'visibility_prefix': self.visibility_prefix,
-                           'clouds_distance': self.clouds_distance,
-                           'clouds_condition': self.clouds_condition,
-                           'clouds_cumulus': self.clouds_cumulus,
-                           'weather_precipitation': self.weather_precipitation,
-                           'weather_descriptor': self.weather_descriptor,
-                           'weather_intensity': self.weather_intensity,
-                           'weather_proximity': self.weather_proximity,
-                           'weather_obscuration': self.weather_obscuration,
-                           'weather_other': self.weather_other})
+        return json.dumps(self.to_dict())
 
     def __repr__(self):
         return '<%s.%s - station_id=%s, created_at=%s>' \
