@@ -55,6 +55,20 @@ class TestAggregatedMeasurement(unittest.TestCase):
         with self.assertRaises(ValueError):
             self._test_instance.creation_time(timeformat='unknown')
 
+    def test_to_dict(self):
+        expected_dict = {
+            "station_id": "mytest",
+            "timestamp": 1378459200,
+            "aggregated_on": "m",
+            "temp":{"min": 0, "max": 100},
+            "humidity": {"min": 10, "max": 110},
+            "wind": {"speed": 2.1,"gust": 67},
+            "pressure": {},
+            "precipitation": {}}
+        result_dict = self._test_instance.to_dict()
+        self.assertTrue(all(item in result_dict.items()
+                            for item in expected_dict.items()))
+
     def test_to_JSON(self):
         expected = '''
         {"station_id": "mytest",

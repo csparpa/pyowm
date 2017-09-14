@@ -61,20 +61,28 @@ class AggregatedMeasurement:
             return None
         return timeformatutils.timeformat(self.timestamp, timeformat)
 
+    def to_dict(self):
+        """Dumps object fields into a dict
+
+        :returns: a dict
+
+        """
+        return {'station_id': self.station_id,
+                'timestamp': self.timestamp,
+                'aggregated_on': self.aggregated_on,
+                'temp': self.temp,
+                'humidity': self.humidity,
+                'wind': self.wind,
+                'pressure': self.pressure,
+                'precipitation': self.precipitation}
+
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
 
         :returns: the JSON string
 
         """
-        return json.dumps({'station_id': self.station_id,
-                           'timestamp': self.timestamp,
-                           'aggregated_on': self.aggregated_on,
-                           'temp': self.temp,
-                           'humidity': self.humidity,
-                           'wind': self.wind,
-                           'pressure': self.pressure,
-                           'precipitation': self.precipitation})
+        return json.dumps(self.to_dict())
 
     def __repr__(self):
         return '<%s.%s - station_id=%s, created_at=%s>' \

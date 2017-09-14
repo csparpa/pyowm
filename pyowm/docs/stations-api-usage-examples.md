@@ -39,8 +39,9 @@ mgr.send_measurement(measurement_obj)
 # Send new raw measurements for multiple stations
 msmsts = mgr.send_measurements(list_of_raw_measurement_objs)
 
-# Read aggregated measurements for a station
-aggr_msmts = mgr.get_measurements(station_id, interval, limit=None)
+# Read aggregated measurements (on day, hour or minute) for a station in a given
+# time interval
+aggr_msmts = mgr.get_measurements(station_id, 'h', 1505424648, 1505425648, limit=5)
 
 ```
 
