@@ -86,19 +86,14 @@ You can load/save data in Buffers to/from any persistent datastore:
 from pyowm.stationsapi30 import persistence_backend
 
 # PyOWM provides pre-configured persistence backends...
-csv_be = persistence_backend.CSVPersistenceBackend('/home/myfile.csv', station_id,
-                                                   separator=';')
 json_be = persistence_backend.JSONPersistenceBackend('/home/myfile.json', station_id)
 my_custom_be = YourCustomPersistenceBackend()
 
 # ..which you can use to load buffers...
-
-buf = csv_be.load_to_buffer()
 buf = json_be.load_to_buffer()
 buf = my_custom_be.load_to_buffer()
 
 # ...and save buffers
-csv_be.persist_buffer(buf)
 json_be.persist_buffer(buf)
 my_custom_be.persist_buffer(buf)
 ```

@@ -31,7 +31,7 @@ setup(
       "Intended Audience :: Developers",
       "Topic :: Software Development :: Libraries"],
     package_data={
-        '': ['*.gz', '*.xsd', '*.md']
+        '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
     },
     keywords='openweathermap web api client wrapper weather forecast data OWM',
     license='MIT'
