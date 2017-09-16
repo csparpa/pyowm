@@ -11,17 +11,17 @@ from pyowm.webapi25.location import Location
 class TestCityIDRegistryReadsFS(unittest.TestCase):
 
     _prefix = 'cityids'+sep
-    _instance = CityIDRegistry(_prefix+'%03d-%03d.txt')
+    _instance = CityIDRegistry(_prefix+'%03d-%03d.txt.gz')
 
     def test_assess_subfile_from(self):
         self.assertEqual(self._instance._assess_subfile_from('b-city'),
-                         self._prefix+'097-102.txt')
+                         self._prefix+'097-102.txt.gz')
         self.assertEqual(self._instance._assess_subfile_from('h-city'),
-                         self._prefix+'103-108.txt')
+                         self._prefix+'103-108.txt.gz')
         self.assertEqual(self._instance._assess_subfile_from('n-city'),
-                         self._prefix+'109-114.txt')
+                         self._prefix+'109-114.txt.gz')
         self.assertEqual(self._instance._assess_subfile_from('t-city'),
-                         self._prefix+'115-122.txt')
+                         self._prefix+'115-122.txt.gz')
         self.assertRaises(ValueError, CityIDRegistry._assess_subfile_from,
                           self._instance, '123abc')
         self.assertRaises(ValueError, CityIDRegistry._assess_subfile_from,
