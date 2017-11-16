@@ -45,6 +45,8 @@ Please notice that the free API subscription plan is subject to requests throttl
 
 ### Examples
 
+That's what you can do with PyOWM and a free OWM API Key:
+
 ```python
 import pyowm
 
@@ -52,11 +54,6 @@ owm = pyowm.OWM('your-API-key')  # You MUST provide a valid API key
 
 # Have a pro subscription? Then use:
 # owm = pyowm.OWM(API_key='your-API-key', subscription_type='pro')
-
-# Will it be sunny tomorrow at this time in Milan (Italy) ?
-forecast = owm.daily_forecast("Milan,it")
-tomorrow = pyowm.timeutils.tomorrow()
-forecast.will_be_sunny_at(tomorrow)  # Always True in Italy, right? ;-)
 
 # Search for current weather in London (UK)
 observation = owm.weather_at_place('London,uk')
@@ -74,7 +71,20 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
-PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
+And this is a usage example with a paid OWM API key:
+
+```python
+import pyowm
+
+paid_owm = pyowm.OWM(API_key='your-pro-API-key', subscription_type='pro')
+
+# Will it be sunny tomorrow at this time in Milan (Italy) ?
+forecast = paid_owm.daily_forecast("Milan,IT")
+tomorrow = pyowm.timeutils.tomorrow()
+forecast.will_be_sunny_at(tomorrow)  # Always True in Italy, right? ;-)
+```
+
+More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
 
 ## Documentation
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
