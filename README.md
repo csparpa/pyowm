@@ -76,6 +76,29 @@ observation_list = owm.weather_around_coords(-22.57, -43.12)
 
 PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
 
+
+## Alpine docker support
+
+Build a single image with its specific Dockerfile:
+```shell
+docker build  . -f Dockerfile.alpine-py2small -t csparpa/pyowm.alpine-py2small
+```
+
+Or build all dockerfiles:
+
+```shell
+cd scripts && ./generate_alpine_docker_images.sh
+```
+
+Use the sample getTemp.py script to test it:
+
+```shell
+# docker run csparpa/pyowm.alpine-py2small getTemp.py -k your_api_key -p "Omsk"
+Using key your_api_key to query temperature in "Omsk"...
+Coordinates of Omsk: lon=73.4 lat=55.0
+Temperature at 2017-12-11 20:00:00: -12.0C
+```
+
 ## Documentation
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 

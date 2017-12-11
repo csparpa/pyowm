@@ -1,0 +1,11 @@
+FROM alpine:3.7
+MAINTAINER Claudio Sparpaglione <csparpa@gmail.com>
+
+RUN apk add --update python3 py-pip
+
+ADD . /pyowm
+WORKDIR /pyowm
+COPY examples/getTemp.py /usr/bin
+RUN python setup.py install
+
+
