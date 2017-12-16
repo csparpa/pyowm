@@ -9,7 +9,7 @@ RUN apk add --update wget gcc linux-headers musl-dev ca-certificates zlib && \
 # Mount latest source code
 ADD . /pyowm
 WORKDIR /pyowm
-COPY examples/getTemp.py /usr/bin
+COPY examples/get_temperature.py /usr/bin
 
 # 
 RUN python setup.py install && \

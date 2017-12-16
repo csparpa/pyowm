@@ -1,10 +1,11 @@
 FROM alpine:3.7
 MAINTAINER Claudio Sparpaglione <csparpa@gmail.com>
 
-RUN apk add --update python py-pip
+RUN apk add --update python3 py-pip
+
 ADD . /pyowm
 WORKDIR /pyowm
-COPY examples/getTemp.py /usr/bin
+COPY examples/get_temperature.py /usr/bin
 RUN python setup.py install
 
 
