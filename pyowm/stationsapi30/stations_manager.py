@@ -149,7 +149,7 @@ class StationsManager(object):
         status, _ = self.http_client.post(
             'http://api.openweathermap.org/data/3.0/measurements',
             params={'appid': self.API_key},
-            data=measurement.to_dict(),
+            data=[measurement.to_dict()],
             headers={'Content-Type': 'application/json'})
 
     def send_measurements(self, list_of_measurements):
@@ -165,12 +165,12 @@ class StationsManager(object):
         """
         assert list_of_measurements is not None
         assert all([m.station_id is not None for m in list_of_measurements])
-        for msmt in list_of_measurements:
-            status, _ = self.http_client.post(
-                'http://api.openweathermap.org/data/3.0/measurements',
-                params={'appid': self.API_key},
-                data=msmt.to_dict(),
-                headers={'Content-Type': 'application/json'})
+        msmts = [m.to_dict() for m in list_of_measurements]
+        status, _ = self.http_client.post(
+            'http://api.openweathermap.org/data/3.0/measurements',
+            params={'appid': self.API_key},
+            data=msmts,
+            headers={'Content-Type': 'application/json'})
 
     def get_measurements(self, station_id, aggregated_on, from_timestamp,
                          to_timestamp, limit=None):
@@ -229,9 +229,41 @@ class StationsManager(object):
         :returns: `None` if creation is successful, an exception otherwise
         """
         assert buffer is not None
-        for msmt in buffer:
-            status, _ = self.http_client.post(
-                'http://api.openweathermap.org/data/3.0/measurements',
-                params={'appid': self.API_key},
-                data=msmt.to_dict(),
-                headers={'Content-Type': 'application/json'})
+        msmts = []
+        for x in buffer.measurements:
+            m = x.to_dict()
+            item = dict()
+            item['station_id'] = m['station_id']
+            item['dt'] = m['timestamp']
+            item['temperature'] = m['temperature']
+            item['wind_speed'] = m['wind_speed']
+            item['wind_gust'] = m['wind_gust']
+            item['wind_deg'] = m['wind_deg']
+            item['pressure'] = m['pressure']
+            item['humidity'] = m['humidity']
+            item['rain_1h'] = m['rain_1h']
+            item['rain_6h'] = m['rain_6h']
+            item['rain_24h'] = m['rain_24h']
+            item['snow_1h'] = m['snow_1h']
+            item['snow_6h'] = m['snow_6h']
+            item['snow_24h'] = m['snow_24h']
+            item['dew_point'] = m['dew_point']
+            item['humidex'] = m['humidex']
+            item['heat_index'] = m['heat_index']
+            item['visibility_distance'] = m['visibility_distance']
+            item['visibility_prefix'] = m['visibility_prefix']
+            item['clouds'] = dict(distance=m['clouds_distance'],
+                                  condition=m['clouds_condition'],
+                                  cumulus=m['clouds_cumulus'])
+            item['weather'] = dict(precipitation=m['weather_precipitation'],
+                      descriptor=m['weather_descriptor'],
+                      intensity=m['weather_intensity'],
+                      proximity=m['weather_proximity'],
+                      obscuration=m['weather_obscuration'],
+                      other=m['weather_other'])
+            msmts.append(item)
+        status, _ = self.http_client.post(
+            'http://api.openweathermap.org/data/3.0/measurements',
+            params={'appid': self.API_key},
+            data=msmts,
+            headers={'Content-Type': 'application/json'})

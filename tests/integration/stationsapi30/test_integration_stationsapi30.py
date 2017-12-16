@@ -4,6 +4,7 @@ import copy
 from pyowm.constants import DEFAULT_API_KEY
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
+from pyowm.stationsapi30.buffer import Buffer
 
 
 class IntegrationTestsStationsAPI30(unittest.TestCase):
@@ -46,6 +47,26 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
         self.assertEquals(stat2.lon, result.lon)
         self.assertEquals(stat2.alt, result.alt)
 
+        # create and bufferize some measurements for station n.1
+        buf = Buffer(stat1.id)
+        buf.append_from_dict(dict(station_id=stat1.id, timestamp=1505231630,
+                        temperature=100, wind_speed=2.1,
+                        wind_gust=67, humidex=77))
+        buf.append_from_dict(dict(station_id=stat1.id, timestamp=1505415230,
+                        temperature=100, wind_speed=2.1,
+                        wind_gust=67, humidex=77))
+        buf.append_from_dict(dict(station_id=stat1.id, timestamp=1505429694,
+                        temperature=100, wind_speed=2.1,
+                        wind_gust=67, humidex=77))
+        mgr.send_buffer(buf)
+        buf.empty()
+
+        # read the measurements for station 1
+        msmts = mgr.get_measurements(stat1.id, 'd', 1505200000, 1505430000)
+        self.assertEqual(2, len(msmts))
+        for m in msmts:
+            self.assertEquals(m.station_id, stat1.id)
+
         # Update a station
         modified_stat2 = copy.deepcopy(stat2)
         modified_stat2.eternal = 'modified_pyowm_test_station_2'
@@ -59,7 +80,7 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
         self.assertEquals(modified_stat2.lon, result.lon)
         self.assertEquals(modified_stat2.alt, result.alt)
 
-        # Delete one by one
+        # Delete stations one by one
         mgr.delete_station(stat1)
         stations = mgr.get_stations()
         self.assertEqual(n_old_stations + 1, len(stations))
