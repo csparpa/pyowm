@@ -20,7 +20,7 @@ ADD . /pyowm
 WORKDIR /pyowm
 
 # Update pip and install dev requirements
-RUN pip install --upgrade setuptools pip && \
+RUN pip install setuptools pip && \
     pip install -r /pyowm/dev-requirements.txt
 
 CMD tail -f /dev/null
