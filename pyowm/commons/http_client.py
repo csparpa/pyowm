@@ -21,29 +21,34 @@ class HttpClient(object):
             print(resp.text)
         except:
             print(resp.content)
+        print(resp.status_code)
         HttpClient.check_status_code(resp.status_code, resp.text)
+        # this is a defense against OWM API responses cointaining an empty body!
         try:
-            return resp.status_code, resp.json()
+            json_data = resp.json()
         except:
-            raise parse_response_error.ParseResponseError('Impossible to parse'
-                                                          'API response data')
+            json_data = {}
+        return resp.status_code, json_data
 
     def put(self, uri, params=None, data=None, headers=None):
         resp = requests.put(uri, params=params, json=data, headers=headers)
         HttpClient.check_status_code(resp.status_code, resp.text)
+        # this is a defense against OWM API responses cointaining an empty body!
         try:
-            return resp.status_code, resp.json()
+            json_data = resp.json()
         except:
-            raise parse_response_error.ParseResponseError('Impossible to parse'
-                                                          'API response data')
+            json_data = {}
+        return resp.status_code, json_data
 
     def delete(self, uri, params=None, data=None, headers=None):
         resp = requests.delete(uri, params=params, json=data, headers=headers)
         HttpClient.check_status_code(resp.status_code, resp.text)
+        # this is a defense against OWM API responses cointaining an empty body!
         try:
-            return resp.status_code, resp.json()
+            json_data = resp.json()
         except:
-            return resp.status_code, None
+            json_data = None
+        return resp.status_code, json_data
 
 
     @classmethod
