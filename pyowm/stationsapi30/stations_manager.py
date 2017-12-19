@@ -6,11 +6,10 @@ measurements
 from pyowm.commons.http_client import HttpClient
 from pyowm.stationsapi30.station_parser import StationParser
 from pyowm.stationsapi30.aggregated_measurement_parser import AggregatedMeasurementParser
+from pyowm.constants import STATIONS_API_VERSION
 
 
 class StationsManager(object):
-
-    STATIONS_API_VERSION = (3, 0, 0)
 
     """
     A manager objects that provides a full interface to OWM Stations API. Mainly
@@ -32,7 +31,7 @@ class StationsManager(object):
         self.http_client = HttpClient()
 
     def stations_api_version(self):
-        return self.STATIONS_API_VERSION
+        return STATIONS_API_VERSION
 
     # STATIONS Methods
 
