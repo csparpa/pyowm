@@ -33,25 +33,54 @@ class Buffer:
         return timeformatutils.timeformat(self.created_at, timeformat)
 
     def append(self, measurement):
+        """
+        Appends the specified ``Measurement`` object to the buffer
+        :param measurement: a ``measurement.Measurement`` instance
+
+        """
         assert isinstance(measurement, Measurement)
         assert measurement.station_id == self.station_id
         self.measurements.append(measurement)
 
     def append_from_dict(self, the_dict):
+        """
+        Creates a ``measurement.Measurement`` object from the supplied dict
+        and then appends it to the buffer
+        :param the_dict: dict
+
+        """
         m = Measurement.from_dict(the_dict)
         self.append(m)
 
     def append_from_json(self, json_string):
+        """
+        Creates a ``measurement.Measurement`` object from the supplied JSON string
+        and then appends it to the buffer
+        :param json_string: the JSON formatted string
+
+        """
         a_dict = json.loads(json_string)
         self.append_from_dict(a_dict)
 
     def empty(self):
+        """
+        Drops all measurements of this buffer instance
+
+        """
         self.measurements = list()
 
     def sort_chronologically(self):
+        """
+        Sorts the measurements of this buffer in chronological order
+
+        """
         self.measurements.sort(key=lambda m: m.timestamp)
 
     def sort_reverse_chronologically(self):
+        """
+        Sorts the measurements of this buffer in reverse chronological order
+
+        """
         self.measurements.sort(key=lambda m: m.timestamp, reverse=True)
 
     # Magic methods
