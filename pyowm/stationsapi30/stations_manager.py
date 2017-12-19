@@ -172,7 +172,7 @@ class StationsManager(object):
             headers={'Content-Type': 'application/json'})
 
     def get_measurements(self, station_id, aggregated_on, from_timestamp,
-                         to_timestamp, limit=None):
+                         to_timestamp, limit=100):
         """
         Reads measurements of a specified station recorded in the specified time
         window and aggregated on minute, hour or day. Optionally, the number of
@@ -188,7 +188,7 @@ class StationsManager(object):
         :param to_timestamp: Unix timestamp corresponding to the end of the
           time window
         :type to_timestamp: int
-        :param limit: max number of items to be returned
+        :param limit: max number of items to be returned. Defaults to 100
         :type limit: int
         :returns: list of *pyowm.stationsapi30.measurement.AggregatedMeasurement*
           objects
@@ -201,16 +201,14 @@ class StationsManager(object):
         assert to_timestamp > 0
         if to_timestamp < from_timestamp:
             raise ValueError("End timestamp can't be earlier than begin timestamp")
-        if limit is not None:
-            assert isinstance(limit, int)
-            assert limit >= 0
+        assert isinstance(limit, int)
+        assert limit >= 0
         query = {'appid': self.API_key,
                  'station_id': station_id,
                  'type': aggregated_on,
                  'from': from_timestamp,
-                 'to': to_timestamp}
-        if limit is not None:
-            query['limit'] = limit
+                 'to': to_timestamp,
+                 'limit': limit}
         status, data = self.http_client.get_json(
             'http://api.openweathermap.org/data/3.0/measurements',
             params=query,
@@ -251,15 +249,16 @@ class StationsManager(object):
             item['heat_index'] = m['heat_index']
             item['visibility_distance'] = m['visibility_distance']
             item['visibility_prefix'] = m['visibility_prefix']
-            item['clouds'] = dict(distance=m['clouds_distance'],
-                                  condition=m['clouds_condition'],
-                                  cumulus=m['clouds_cumulus'])
-            item['weather'] = dict(precipitation=m['weather_precipitation'],
-                      descriptor=m['weather_descriptor'],
-                      intensity=m['weather_intensity'],
-                      proximity=m['weather_proximity'],
-                      obscuration=m['weather_obscuration'],
-                      other=m['weather_other'])
+            item['clouds'] = [dict(distance=m['clouds_distance']),
+                              dict(condition=m['clouds_condition']),
+                              dict(cumulus=m['clouds_cumulus'])]
+            item['weather'] = [
+                dict(precipitation=m['weather_precipitation']),
+                dict(descriptor=m['weather_descriptor']),
+                dict(intensity=m['weather_intensity']),
+                dict(proximity=m['weather_proximity']),
+                dict(obscuration=m['weather_obscuration']),
+                dict(other=m['weather_other'])]
             msmts.append(item)
         status, _ = self.http_client.post(
             'http://api.openweathermap.org/data/3.0/measurements',
