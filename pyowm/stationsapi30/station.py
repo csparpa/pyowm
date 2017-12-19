@@ -71,6 +71,10 @@ class Station:
     def _format_micros(self, datestring):
         parts = datestring[:-1].split('.')
         if len(parts) == 1:
+            if datestring.endswith('Z'):
+                return datestring[:-1] + '.000000Z'
+            else:
+                return datestring + '.000000Z'
             return datestring
         else:
             if len(parts[-1]) > 6:

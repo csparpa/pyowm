@@ -27,8 +27,15 @@ class TestStation(unittest.TestCase):
 
         # no micros at all
         input_string = "2016-11-22T12:15:25Z"
+        expected = "2016-11-22T12:15:25.000000Z"
         result = self._test_instance._format_micros(input_string)
-        self.assertEquals(input_string, result)
+        self.assertEquals(expected, result)
+
+        # no micros at all n.2
+        input_string = "2016-11-22T12:15:25"
+        expected = "2016-11-22T12:15:25.000000Z"
+        result = self._test_instance._format_micros(input_string)
+        self.assertEquals(expected, result)
 
     def test_failing_instantiations(self):
         with self.assertRaises(AssertionError):
