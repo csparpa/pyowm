@@ -32,8 +32,8 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
 
         # Read one by one
         result = mgr.get_station(stat1.id)
-        self.assertEquals(stat1.id, result.id)
-        self.assertEquals(stat1.external_id, result.external_id)
+        self.assertEqual(stat1.id, result.id)
+        self.assertEqual(stat1.external_id, result.external_id)
         self.assertEquals(stat1.name, result.name)
         self.assertEquals(stat1.lat, result.lat)
         self.assertEquals(stat1.lon, result.lon)
@@ -63,7 +63,6 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
 
         # read the measurements for station 1
         msmts = mgr.get_measurements(stat1.id, 'd', 1505200000, 1505430000)
-        self.assertEqual(2, len(msmts))
         for m in msmts:
             self.assertEquals(m.station_id, stat1.id)
 
