@@ -1,8 +1,7 @@
 import gzip
-import csv
 from pyowm.webapi25.location import Location
 from pyowm.abstractions.decorators import deprecated
-from pkg_resources import resource_stream, resource_filename
+from pkg_resources import resource_filename
 
 """
 Module containing a registry with lookup methods for OWM-provided city IDs

@@ -13,12 +13,15 @@ setup(
     packages=['pyowm', 'pyowm.abstractions', 'pyowm.caches', 'pyowm.commons',
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25',
               'pyowm.webapi25.cityids', 'pyowm.webapi25.xsd',
-              'pyowm.docs'],
+              'pyowm.docs', 'pyowm.stationsapi30', 'pyowm.stationsapi30.xsd'],
     long_description="""PyOWM is a client Python wrapper library for the
     OpenWeatherMap web API. It allows quick and easy consumption of OWM weather
     data from Python applications via a simple object model and in a
     human-friendly fashion.""",
     include_package_data=True,
+    install_requires=[
+        'requests>=2.18.2,<2.19'
+    ],
     classifiers=[
       "License :: OSI Approved :: MIT License",
       "Programming Language :: Python",
@@ -28,7 +31,7 @@ setup(
       "Intended Audience :: Developers",
       "Topic :: Software Development :: Libraries"],
     package_data={
-        '': ['*.gz', '*.xsd', '*.md']
+        '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
     },
     keywords='openweathermap web api client wrapper weather forecast data OWM',
     license='MIT'

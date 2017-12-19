@@ -10,6 +10,7 @@ Subpackages
     pyowm.caches
     pyowm.commons
     pyowm.exceptions
+    pyowm.stationsapi30
     pyowm.utils
     pyowm.webapi25
 
