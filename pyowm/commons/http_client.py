@@ -16,12 +16,6 @@ class HttpClient(object):
 
     def post(self, uri, params=None, data=None, headers=None):
         resp = requests.post(uri, params=params, json=data, headers=headers)
-        print((uri, params, data, headers))
-        try:
-            print(resp.text)
-        except:
-            print(resp.content)
-        print(resp.status_code)
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses cointaining an empty body!
         try:
