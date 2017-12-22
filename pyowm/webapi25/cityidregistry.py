@@ -194,7 +194,7 @@ class CityIDRegistry:
 
     def _get_lines(self, filename):
         res_name = resource_filename(__name__, filename)
-        with gzip.open(res_name, mode='r', encoding='utf8') as fh:
+        with gzip.open(res_name, mode='r') as fh:
             lines = fh.readlines()
             if type(lines[0]) is bytes:
                 lines = map(lambda l: l.decode("utf-8"), lines)
