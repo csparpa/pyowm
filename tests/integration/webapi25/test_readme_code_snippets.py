@@ -23,13 +23,13 @@ class IntegrationTestsREADMESnippets(unittest.TestCase):
 
     def test_snippets(self):
 
-        # Will it be sunny tomorrow at this time in Milan (Italy) ?
+        # Will it be clear tomorrow at this time in Milan (Italy) ?
         f_milan = self.__owm.daily_forecast("Milan,it")
         self.assertIsNotNone(f_milan)
         self.assertTrue(isinstance(f_milan, Forecaster))
         tomorrow = timeutils.tomorrow()
-        willbesunny = f_milan.will_be_sunny_at(tomorrow)
-        self.assertTrue(isinstance(willbesunny, bool))
+        will_be_clear = f_milan.will_be_clear_at(tomorrow)
+        self.assertTrue(isinstance(will_be_clear, bool))
 
         # Search for current weather in London (UK)
         o_london = self.__owm.weather_at_place('London,uk')

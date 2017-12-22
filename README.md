@@ -78,10 +78,10 @@ import pyowm
 
 paid_owm = pyowm.OWM(API_key='your-pro-API-key', subscription_type='pro')
 
-# Will it be sunny tomorrow at this time in Milan (Italy) ?
+# Will it be clear tomorrow at this time in Milan (Italy) ?
 forecast = paid_owm.daily_forecast("Milan,IT")
 tomorrow = pyowm.timeutils.tomorrow()
-forecast.will_be_sunny_at(tomorrow)  # Always True in Italy, right? ;-)
+forecast.will_be_clear_at(tomorrow)  # The sun always shines on Italy, right? ;-)
 ```
 
 More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
