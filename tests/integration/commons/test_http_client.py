@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pyowm.exceptions import parse_response_error
+from pyowm.exceptions import parse_response_error, api_call_error
 from pyowm.commons.http_client import HttpClient
 
 
@@ -18,10 +18,10 @@ class TestHTTPClient(unittest.TestCase):
     def test_get_json_against_httpbin_status_code_ko(self):
         # https://httpbin.org/status/400
         expected_status = 400
-        status, data = self.instance.get_json('https://httpbin.org/status/' +
+
+        self.assertRaises(api_call_error.APICallError, HttpClient.get_json,
+                          self.instance, 'https://httpbin.org/status/' +
                                               str(expected_status))
-        self.assertEqual(expected_status, status)
-        self.assertIsInstance(data, dict)
 
     def test_get_json_against_httpbin_parse_error(self):
         # https://httpbin.org/xml
