@@ -373,6 +373,14 @@ value will be returned, telling if the queried weather condition will apply to t
 
 When calling the ``when_*()``  methods you will be provided with a sublist of the ``Weather`` objects list in into the ``Forecaster`` instance, with items having as weather condition the one the method queries for.
 
+### Note on weather forecast items reference timestamps
+Sometimes - due to caching on the OWM API side - the weather objects returned inside a _Forecast_ object
+may refer to timestamps in the recent past. In order to remove those outdated weather items
+from the forecast, you can do:
+
+    >>> fcst.actualize()
+
+
 ### Note on weather history
 Weather history retrieval is a *[paid OWM API feature](https://openweathermap.org/price)*.
 

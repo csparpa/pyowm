@@ -22,7 +22,8 @@ Testing
 
 Packaging and Distribution
 --------------------------
-  * [Diapente] (]https://github.com/Diapente)
+  * [Diapente] (https://github.com/Diapente)
+  * [Simone-Zabberoni] (https://github.com/Simone-Zabberoni)
 
 Wiki
 ----

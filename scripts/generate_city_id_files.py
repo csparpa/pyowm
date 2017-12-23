@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-<<<<<<< HEAD
-import requests, sys, os, codecs, json, gzip, collections
-=======
 import requests, sys, os, codecs, json, gzip, collections, csv
->>>>>>> develop
+
 
 city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
 us_city_list_url = 'http://bulk.openweathermap.org/sample/city.list.us.json.gz'

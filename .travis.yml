@@ -1,13 +1,12 @@
 language: python
 python:
   - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
   - "3.5"
   - "3.6"
 install:
-  - pip install coverage==3.7.1 tox==1.9.2 virtualenv==13.1.2
+  - pip install coverage==3.7.1 tox-travis virtualenv==13.1.2 coveralls
 script:
   - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
@@ -17,4 +16,5 @@ after_success:
 notifications:
   email:
     on_failure: change
+dist: trusty
 sudo: false

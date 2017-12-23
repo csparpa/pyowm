@@ -184,16 +184,16 @@ def location_from_dictionary(d):
     else:
         ID = None
     if 'coord' in data:
-        lon = data['coord']['lon']
-        lat = data['coord']['lat']
+        lon = data['coord'].get('lon', 0.0)
+        lat = data['coord'].get('lat', 0.0)
     elif 'coord' in data['station']:
         if 'lon' in data['station']['coord']:
-            lon = data['station']['coord']['lon']
+            lon = data['station']['coord'].get('lon', 0.0)
         elif 'lng' in data['station']['coord']:
-            lon = data['station']['coord']['lng']
+            lon = data['station']['coord'].get('lng', 0.0)
         else:
-            lon = None
-        lat = data['station']['coord']['lat']
+            lon = 0.0
+        lat = data['station']['coord'].get('lat', 0.0)
     else:
         raise KeyError("Impossible to read geographical coordinates from JSON")
     if 'country' in data:

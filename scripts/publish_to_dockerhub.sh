@@ -2,9 +2,15 @@
 
 set -o errexit
 
-VERSION="$1"
+BASEIMAGENAME="csparpa/pyowm"
 
-echo "Publishing image: csparpa/pyowm:$VERSION to DockerHub..."
-docker push csparpa/pyowm:${VERSION}
-docker push csparpa/pyowm:latest
-echo "done"
+
+docker images csparpa/pyowm | grep '^csparpa/pyowm' | while IFS= read -r line ; do
+    version=$(echo $line | awk '{print $2}')
+    echo "Publishing image: csparpa/pyowm:$version to DockerHub..."
+    docker push csparpa/pyowm:${version}
+    echo "done"
+    echo ""
+done
+
+echo "All images successfully pushed"

@@ -1,8 +1,7 @@
 import gzip
-import csv
 from pyowm.webapi25.location import Location
 from pyowm.abstractions.decorators import deprecated
-from pkg_resources import resource_stream, resource_filename
+from pkg_resources import resource_filename
 
 """
 Module containing a registry with lookup methods for OWM-provided city IDs
@@ -195,7 +194,7 @@ class CityIDRegistry:
 
     def _get_lines(self, filename):
         res_name = resource_filename(__name__, filename)
-        with gzip.open(res_name, "rt") as fh:
+        with gzip.open(res_name, mode='r') as fh:
             lines = fh.readlines()
             if type(lines[0]) is bytes:
                 lines = map(lambda l: l.decode("utf-8"), lines)

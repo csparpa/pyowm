@@ -60,6 +60,24 @@ class TestLocation(unittest.TestCase):
         self.assertTrue(result3.get_name() is None)
         self.assertTrue(result3.get_ID() is None)
 
+    def test_from_dictionary_holds_the_lack_of_geocoords(self):
+        dict1 = {"station":{"coord":{}}}
+        dict2 = {"coord":{}}
+        result1 = location_from_dictionary(dict1)
+        self.assertTrue(isinstance(result1, Location))
+        self.assertEqual(result1.get_lat(), 0.0)
+        self.assertEqual(result1.get_lon(), 0.0)
+        self.assertTrue(result1.get_country() is None)
+        self.assertTrue(result1.get_name() is None)
+        self.assertTrue(result1.get_ID() is None)
+        result2 = location_from_dictionary(dict2)
+        self.assertTrue(isinstance(result2, Location))
+        self.assertEqual(result2.get_lat(), 0.0)
+        self.assertEqual(result2.get_lon(), 0.0)
+        self.assertTrue(result2.get_country() is None)
+        self.assertTrue(result2.get_name() is None)
+        self.assertTrue(result2.get_ID() is None)
+
     def test_getters_return_expected_data(self):
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
                             self.__test_ID, self.__test_country)

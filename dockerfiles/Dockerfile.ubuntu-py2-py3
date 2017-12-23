@@ -19,8 +19,11 @@ RUN wget https://bootstrap.pypa.io/ez_setup.py -O - | python && \
 ADD . /pyowm
 WORKDIR /pyowm
 
+# Simple test script to check containers are OK
+COPY tests/get_temperature.py /usr/bin
+
 # Update pip and install dev requirements
-RUN pip install --upgrade setuptools pip && \
+RUN pip install setuptools pip && \
     pip install -r /pyowm/dev-requirements.txt
 
 CMD tail -f /dev/null
