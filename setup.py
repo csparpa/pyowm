@@ -25,6 +25,12 @@ setup(
     classifiers=[
       "License :: OSI Approved :: MIT License",
       "Programming Language :: Python",
+      "Programming Language :: Python :: 2.7",
+      "Programming Language :: Python :: 3.2",
+      "Programming Language :: Python :: 3.3",
+      "Programming Language :: Python :: 3.4",
+      "Programming Language :: Python :: 3.5",
+      "Programming Language :: Python :: 3.6",
       "Natural Language :: English",
       "Operating System :: OS Independent",
       "Development Status :: 5 - Production/Stable",
@@ -33,6 +39,6 @@ setup(
     package_data={
         '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
     },
-    keywords='openweathermap web api client wrapper weather forecast data OWM',
+    keywords='openweathermap web api client wrapper weather forecast data owm pollution sdk meteostation',
     license='MIT'
 )
