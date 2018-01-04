@@ -2,6 +2,7 @@
 A Python wrapper around the OpenWeatherMap API
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
+[![Latest Release Documentation](https://readthedocs.org/projects/pyowm/badge/?version=stable)](https://pyowm.readthedocs.org/en/stable/)
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/github/csparpa/pyowm/badge.svg?branch=master)](https://coveralls.io/github/csparpa/pyowm?branch=master)
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
@@ -90,7 +91,7 @@ More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/
 ## Documentation
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 
-The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org).
+The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org/en/stable/).
 
 
 ## Contributing
