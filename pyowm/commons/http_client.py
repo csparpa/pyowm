@@ -17,7 +17,7 @@ class HttpClient(object):
     def post(self, uri, params=None, data=None, headers=None):
         resp = requests.post(uri, params=params, json=data, headers=headers)
         HttpClient.check_status_code(resp.status_code, resp.text)
-        # this is a defense against OWM API responses cointaining an empty body!
+        # this is a defense against OWM API responses containing an empty body!
         try:
             json_data = resp.json()
         except:
@@ -27,7 +27,7 @@ class HttpClient(object):
     def put(self, uri, params=None, data=None, headers=None):
         resp = requests.put(uri, params=params, json=data, headers=headers)
         HttpClient.check_status_code(resp.status_code, resp.text)
-        # this is a defense against OWM API responses cointaining an empty body!
+        # this is a defense against OWM API responses containing an empty body!
         try:
             json_data = resp.json()
         except:
@@ -37,7 +37,7 @@ class HttpClient(object):
     def delete(self, uri, params=None, data=None, headers=None):
         resp = requests.delete(uri, params=params, json=data, headers=headers)
         HttpClient.check_status_code(resp.status_code, resp.text)
-        # this is a defense against OWM API responses cointaining an empty body!
+        # this is a defense against OWM API responses containing an empty body!
         try:
             json_data = resp.json()
         except:
@@ -65,3 +65,11 @@ class HttpClient(object):
         if 200 <= status_code < 300:
             return True
         return False
+
+    @classmethod
+    def to_url(cls, API_endpoint_URL, params_dict, API_key):
+        params = params_dict.copy()
+        if API_key is not None:
+            params['APPID'] = API_key
+        r = requests.Request('GET', API_endpoint_URL, params=params).prepare()
+        return r.url

@@ -63,42 +63,6 @@ class TestOWMHTTPClient(unittest.TestCase):
         """Mock implementation of urllib2.urlopen raising URLError"""
         raise URLError("Failure")
 
-    def test_build_query_parameters(self):
-        root = "http://test.com"
-        params_dict = {"a": 1, "b": 2}
-        result = self.__instance._build_query_parameters(root, params_dict)
-        expected_1 = "http://test.com?a=1&b=2"
-        expected_2 = "http://test.com?b=2&a=1"
-        self.assertTrue(result == expected_1 or result == expected_2)
-
-    def test_build_full_URL(self):
-        instance = WeatherHttpClient('test_API_key', self.__test_cache,
-                                     subscription_type='free')
-        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
-        params = {'a': 1}
-        result = instance._build_full_URL(API_endpoint, params)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=test_API_key'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=test_API_key&a=1'
-        self.assertTrue(result == expected_1 or result == expected_2)
-
-    def test_build_full_URL_with_no_API_key(self):
-        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
-        params = {'a': 1, 'b': 2}
-        result = self.__instance._build_full_URL(API_endpoint, params)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&b=2'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?b=2&a=1'
-        self.assertTrue(result == expected_1 or result == expected_2)
-
-    def test_build_full_URL_with_unicode_chars_in_API_key(self):
-        instance = WeatherHttpClient('£°test££', self.__test_cache,
-                                     subscription_type='free')
-        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
-        params = {'a': 1}
-        result = instance._build_full_URL(API_endpoint, params)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
-        self.assertTrue(result == expected_1 or result == expected_2)
-
     def test_call_API(self):
         # Setup monkey patching
         if 'urllib2' in context:  # Python 2.x

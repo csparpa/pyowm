@@ -12,6 +12,7 @@ except ImportError:
 
 import socket
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error
+from pyowm.commons.http_client import HttpClient
 from pyowm.webapi25.configuration25 import API_SUBSCRIPTION_SUBDOMAINS
 
 
@@ -85,44 +86,8 @@ class WeatherHttpClient(object):
             escaped = API_endpoint_URL % (API_SUBSCRIPTION_SUBDOMAINS[self._subscription_type],)
         except:
             escaped = API_endpoint_URL
-        url = self._build_full_URL(escaped, params_dict)
+        url = HttpClient.to_url(escaped, params_dict, self._API_key)
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
-
-    def _build_full_URL(self, API_endpoint_URL, params_dict):
-        """
-        Adds the API key and the query parameters dictionary to the specified
-        API endpoint URL, returning a complete HTTP request URL.
-
-        :param API_endpoint_URL: the API endpoint base URL
-        :type API_endpoint_URL: str
-        :param params_dict: a dictionary containing the query parameters to be
-            used in the HTTP request (given as key-value couples in the dict)
-        :type params_dict: dict
-        :param API_key: the OWM web API key
-        :type API_key: str
-        :returns: a full string HTTP request URL
-
-        """
-        params = params_dict.copy()
-        if self._API_key is not None:
-            params['APPID'] = self._API_key
-        return self._build_query_parameters(API_endpoint_URL, params)
-
-    def _build_query_parameters(self, base_URL, params_dict):
-        """
-        Turns dictionary items into query parameters and adds them to the base
-        URL
-
-        :param base_URL: the base URL whom the query parameters must be added
-            to
-        :type base_URL: str
-        :param params_dict: a dictionary containing the query parameters to be
-            used in the HTTP request (given as key-value couples in the dict)
-        :type params_dict: dict
-        :returns: a full string HTTP request URL
-
-        """
-        return base_URL + '?' + urlencode(params_dict)
 
     def __repr__(self):
         return "<%s.%s - cache=%s>" % \

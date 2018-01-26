@@ -114,3 +114,29 @@ class TestHTTPClient(unittest.TestCase):
         self.assertFalse(HttpClient.is_success(300))
         self.assertFalse(HttpClient.is_success(400))
         self.assertFalse(HttpClient.is_success(500))
+
+    def test_to_url(self):
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
+        params = {'a': 1}
+        API_key = 'test_API_key'
+        result = HttpClient.to_url(API_endpoint, params, API_key)
+        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=test_API_key'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=test_API_key&a=1'
+        self.assertTrue(result == expected_1 or result == expected_2)
+
+    def test_to_url_with_no_API_key(self):
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
+        params = {'a': 1, 'b': 2}
+        result = HttpClient.to_url(API_endpoint, params, None)
+        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&b=2'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?b=2&a=1'
+        self.assertTrue(result == expected_1 or result == expected_2)
+
+    def test_to_url_with_unicode_chars_in_API_key(self):
+        API_key = '£°test££'
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep'
+        params = {'a': 1}
+        result = HttpClient.to_url(API_endpoint, params, API_key)
+        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
+        self.assertTrue(result == expected_1 or result == expected_2)
