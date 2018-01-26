@@ -1,12 +1,19 @@
 import requests
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error, \
     parse_response_error
-
+from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT
 
 class HttpClient(object):
 
+    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT):
+        self.timeout = timeout
+
     def get_json(self, uri, params=None, headers=None):
-        resp = requests.get(uri, params=params, headers=headers)
+        try:
+            resp = requests.get(uri, params=params, headers=headers,
+                                timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.json()
@@ -15,7 +22,11 @@ class HttpClient(object):
                                                           'API response data')
 
     def post(self, uri, params=None, data=None, headers=None):
-        resp = requests.post(uri, params=params, json=data, headers=headers)
+        try:
+            resp = requests.post(uri, params=params, json=data, headers=headers,
+                                 timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses containing an empty body!
         try:
@@ -25,7 +36,11 @@ class HttpClient(object):
         return resp.status_code, json_data
 
     def put(self, uri, params=None, data=None, headers=None):
-        resp = requests.put(uri, params=params, json=data, headers=headers)
+        try:
+            resp = requests.put(uri, params=params, json=data, headers=headers,
+                                timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses containing an empty body!
         try:
@@ -35,7 +50,11 @@ class HttpClient(object):
         return resp.status_code, json_data
 
     def delete(self, uri, params=None, data=None, headers=None):
-        resp = requests.delete(uri, params=params, json=data, headers=headers)
+        try:
+            resp = requests.delete(uri, params=params, json=data, headers=headers,
+                                   timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses containing an empty body!
         try:
