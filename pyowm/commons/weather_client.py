@@ -12,15 +12,10 @@ except ImportError:
 
 import socket
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error
-from pyowm.webapi25.configuration25 import ROOT_API_URL
+from pyowm.webapi25.configuration25 import API_SUBSCRIPTION_SUBDOMAINS
 
 
 class WeatherHttpClient(object):
-
-    API_SUBSCRIPTION_SUBDOMAINS = {
-        'free': 'api',
-        'pro': 'pro'
-    }
 
     """
     An HTTP client class for the OWM web API. The class can leverage a
@@ -87,7 +82,7 @@ class WeatherHttpClient(object):
 
         """
         try:
-            escaped = API_endpoint_URL % (self.API_SUBSCRIPTION_SUBDOMAINS[self._subscription_type],)
+            escaped = API_endpoint_URL % (API_SUBSCRIPTION_SUBDOMAINS[self._subscription_type],)
         except:
             escaped = API_endpoint_URL
         url = self._build_full_URL(escaped, params_dict)

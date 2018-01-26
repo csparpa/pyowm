@@ -8,6 +8,12 @@ from pyowm.webapi25 import observationparser, observationlistparser, \
 Configuration for the PyOWM library specific to OWM web API version 2.5
 """
 
+# Subdomains mapping
+API_SUBSCRIPTION_SUBDOMAINS = {
+    'free': 'api',
+    'pro': 'pro'
+}
+
 # OWM web API URLs
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
 ROOT_HISTORY_URL = 'http://history.openweathermap.org/data/2.5'
