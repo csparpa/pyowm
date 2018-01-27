@@ -82,11 +82,7 @@ class WeatherHttpClient(object):
         :raises: *APICallError*
 
         """
-        try:
-            escaped = API_endpoint_URL % (API_SUBSCRIPTION_SUBDOMAINS[self._subscription_type],)
-        except:
-            escaped = API_endpoint_URL
-        url = HttpClient.to_url(escaped, params_dict, self._API_key)
+        url = HttpClient.to_url(API_endpoint_URL, params_dict, self._API_key, self._subscription_type)
         return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
 
     def __repr__(self):

@@ -1,12 +1,19 @@
 import requests
+from pyowm.caches import nullcache
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error, \
     parse_response_error
-from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT
+from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
+    API_SUBSCRIPTION_SUBDOMAINS
+
 
 class HttpClient(object):
 
-    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT):
+    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None):
         self.timeout = timeout
+        if cache is None:
+            self.cache = nullcache.NullCache()
+        else:
+            self.cache = cache
 
     def get_json(self, uri, params=None, headers=None):
         try:
@@ -86,9 +93,21 @@ class HttpClient(object):
         return False
 
     @classmethod
-    def to_url(cls, API_endpoint_URL, params_dict, API_key):
+    def to_url(cls, API_endpoint_URL, params_dict, API_key, subscription_type):
         params = params_dict.copy()
+        # Add API Key to query params
         if API_key is not None:
             params['APPID'] = API_key
-        r = requests.Request('GET', API_endpoint_URL, params=params).prepare()
+        # Escape subscription subdomain if needed
+        escaped_url = HttpClient._escape_subdomain(API_endpoint_URL, subscription_type)
+        r = requests.Request('GET', escaped_url, params=params).prepare()
         return r.url
+
+    @classmethod
+    def _escape_subdomain(cls, API_endpoint_URL, subscription_type):
+        try:
+            return API_endpoint_URL % (API_SUBSCRIPTION_SUBDOMAINS[subscription_type],)
+        except KeyError as e:
+            raise ValueError('Unexistent API subscription type')
+        except:
+            return API_endpoint_URL
