@@ -1,4 +1,5 @@
 import requests
+import json
 from pyowm.caches import nullcache
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error, \
     parse_response_error
@@ -27,6 +28,16 @@ class HttpClient(object):
         except:
             raise parse_response_error.ParseResponseError('Impossible to parse'
                                                           'API response data')
+
+    def cacheable_get_json(self, uri, params=None, headers=None):
+        # check if already cached
+        cached = self.cache.get(uri)
+        if cached:
+            return 200, cached
+        status_code, data = self.get_json(uri, params=params, headers=headers)
+        self.cache.set(uri, json.dumps(data))
+        return status_code, data
+
 
     def post(self, uri, params=None, data=None, headers=None):
         try:

@@ -17,6 +17,17 @@ class MockResponse:
         return json.loads(self.text)
 
 
+class MockCache:
+    def __init__(self, expected_back):
+        self.expected_back = expected_back
+
+    def get(self, url):
+        return self.expected_back
+
+    def set(self, url, json_str):
+        pass
+
+
 class TestHTTPClient(unittest.TestCase):
 
     requests_original_get = requests.get
@@ -33,7 +44,7 @@ class TestHTTPClient(unittest.TestCase):
 
         requests.get = monkey_patched_get
         status, data = HttpClient().get_json('http://anyurl.com')
-        self.assertEquals(json.loads(expected_data), data)
+        self.assertEqual(json.loads(expected_data), data)
         requests.get = self.requests_original_get
 
     def test_get_json_parse_error(self):
@@ -48,6 +59,24 @@ class TestHTTPClient(unittest.TestCase):
                           params=dict(a=1, b=2))
         requests.get = self.requests_original_get
 
+    def cacheable_get_json(self):
+
+        cached_data = '{"name": "james bond", "designation": "007"}'
+        other_data = '{"name": "doctor no"}'
+
+        def monkey_patched_get(uri, params=None, headers=None, timeout=None):
+            return MockResponse(200, other_data)
+        requests.get = monkey_patched_get
+
+        cache = MockCache(cached_data)
+        instance = HttpClient(cache=cache)
+
+        status, data = instance.cacheable_get_json('http://anyurl.com')
+        self.assertEqual(200, status)
+        self.assertEqual(json.loads(cached_data), data)
+        requests.get = self.requests_original_get
+
+
     def test_post(self):
         expected_data = '{"key": "value"}'
 
@@ -57,7 +86,7 @@ class TestHTTPClient(unittest.TestCase):
 
         requests.post = monkey_patched_post
         status, data = HttpClient().post('http://anyurl.com', data=dict(key='value'))
-        self.assertEquals(json.loads(expected_data), data)
+        self.assertEqual(json.loads(expected_data), data)
 
         requests.post = self.requests_original_post
 
@@ -70,7 +99,7 @@ class TestHTTPClient(unittest.TestCase):
 
         requests.put = monkey_patched_put
         status, data = HttpClient().put('http://anyurl.com', data=dict(key=7))
-        self.assertEquals(json.loads(expected_data), data)
+        self.assertEqual(json.loads(expected_data), data)
 
         requests.put = self.requests_original_put
 
@@ -93,7 +122,7 @@ class TestHTTPClient(unittest.TestCase):
 
         requests.delete = monkey_patched_delete_returning_payload
         status, data = HttpClient().delete('http://anyurl.com')
-        self.assertEquals(json.loads(expected_data), data)
+        self.assertEqual(json.loads(expected_data), data)
 
         requests.delete = self.requests_original_delete
 
