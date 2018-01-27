@@ -68,12 +68,20 @@ class TestHTTPClient(unittest.TestCase):
             return MockResponse(200, other_data)
         requests.get = monkey_patched_get
 
+        # cache hit
         cache = MockCache(cached_data)
         instance = HttpClient(cache=cache)
-
         status, data = instance.cacheable_get_json('http://anyurl.com')
         self.assertEqual(200, status)
         self.assertEqual(json.loads(cached_data), data)
+
+        # cache miss
+        cache = MockCache(None)
+        instance = HttpClient(cache=cache)
+        status, data = instance.cacheable_get_json('http://anyurl.com')
+        self.assertEqual(200, status)
+        self.assertEqual(json.loads(other_data), data)
+
         requests.get = self.requests_original_get
 
 
