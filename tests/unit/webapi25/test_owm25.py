@@ -2,7 +2,7 @@
 
 """
 Test case for owm.py module.
-Here we don't use mock objects because we don't want to rely on exeternal
+Here we don't use mock objects because we don't want to rely on external
 mocking libraries; we use monkey patching instead.
 Monkey patching pattern:
   1. Keep a reference to the original function to be patched
@@ -27,9 +27,10 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
      NO2INDEX_JSON, SO2INDEX_JSON)
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
-from pyowm.commons.weather_client import WeatherHttpClient
+from pyowm.commons.http_client import HttpClient
 from pyowm.commons.uv_client import UltraVioletHttpClient
 from pyowm.commons.airpollution_client import AirPollutionHttpClient
+from pyowm.exceptions.api_call_error import APICallTimeoutError
 from pyowm.webapi25.forecast import Forecast
 from pyowm.webapi25.observation import Observation
 from pyowm.webapi25.weather import Weather
@@ -76,102 +77,68 @@ class TestOWM25(unittest.TestCase):
     __test_instance = OWM25(__test_parsers, 'test_API_key')
 
     # Mock functions
-    def mock_httputils_call_API_returning_single_obs(self, API_subset_URL,
-                                                     params_dict):
-        return OBSERVATION_JSON
+    def mock_api_call_returning_single_obs(self, uri, params=None, headers=None):
+        return 200, OBSERVATION_JSON
 
-    def mock_httputils_call_API_returning_single_station_obs(self,
-                                                             API_subset_URL,
-                                                             params_dict):
-        return STATION_OBSERVATION_JSON
+    def mock_api_call_returning_single_station_obs(self, uri, params=None, headers=None):
+        return 200, STATION_OBSERVATION_JSON
 
-    def mock_httputils_call_API_ping(self, API_subset_URL, params_dict,
-                                     API_timeout):
-        return OBSERVATION_JSON
+    def mock_api_call_ping(self, uri, params=None, headers=None):
+        return 200, OBSERVATION_JSON
 
-    def mock_httputils_call_API_failing_ping(self, API_subset_URL, params_dict,
-                                            API_timeout):
-        return None
+    def mock_api_call_failing_ping(self, uri, params=None, headers=None):
+        raise APICallTimeoutError('timeout')
 
-    def mock_httputils_call_API_returning_multiple_obs(self, API_subset_URL,
-                                                     params_dict):
-        return SEARCH_RESULTS_JSON
+    def mock_api_call_returning_multiple_obs(self, uri, params=None, headers=None):
+        return 200, SEARCH_RESULTS_JSON
 
-    def mock_httputils_call_API_returning_3h_forecast(self, API_subset_URL,
-                                                     params_dict):
-        return THREE_HOURS_FORECAST_JSON
+    def mock_api_call_returning_3h_forecast(self, uri, params=None, headers=None):
+        return 200, THREE_HOURS_FORECAST_JSON
 
-    def mock_httputils_call_API_returning_3h_forecast_with_no_items(self,
-                                                API_subset_URL, params_dict):
-        return THREE_HOURS_FORECAST_NOT_FOUND_JSON
+    def mock_api_call_returning_empty_3h_forecast(self, uri, params=None, headers=None):
+        return 200, THREE_HOURS_FORECAST_NOT_FOUND_JSON
 
-    def mock_httputils_call_API_returning_daily_forecast_with_no_items(self,
-                                                API_subset_URL, params_dict):
-        return DAILY_FORECAST_NOT_FOUND_JSON
+    def mock_api_call_returning_empty_daily_forecast(self, uri, params=None, headers=None):
+        return 200, DAILY_FORECAST_NOT_FOUND_JSON
 
-    def mock_httputils_call_API_returning_3h_forecast_at_coords(self,
-                                                     API_subset_URL,
-                                                     params_dict):
-        return THREE_HOURS_FORECAST_AT_COORDS_JSON
+    def mock_api_call_returning_3h_forecast_at_coords(self,uri, params=None, headers=None):
+        return 200, THREE_HOURS_FORECAST_AT_COORDS_JSON
 
-    def mock_httputils_call_API_returning_3h_forecast_at_id(self,
-                                                            API_subset_URL,
-                                                            params_dict):
-        return THREE_HOURS_FORECAST_AT_ID_JSON
+    def mock_api_call_returning_3h_forecast_at_id(self, uri, params=None, headers=None):
+        return 200, THREE_HOURS_FORECAST_AT_ID_JSON
 
-    def mock_httputils_call_API_returning_daily_forecast(self, API_subset_URL,
-                                                     params_dict):
-        return DAILY_FORECAST_JSON
+    def mock_api_call_returning_daily_forecast(self, uri, params=None, headers=None):
+        return 200, DAILY_FORECAST_JSON
 
-    def mock_httputils_call_API_returning_daily_forecast_at_coords(self,
-                                                     API_subset_URL,
-                                                     params_dict):
-        return DAILY_FORECAST_AT_COORDS_JSON
+    def mock_api_call_returning_daily_forecast_at_coords(self, uri, params=None, headers=None):
+        return 200, DAILY_FORECAST_AT_COORDS_JSON
 
-    def mock_httputils_call_API_returning_daily_forecast_at_id(self,
-                                                               API_subset_URL,
-                                                               params_dict):
-        return DAILY_FORECAST_AT_ID_JSON
+    def mock_api_call_returning_daily_forecast_at_id(self, uri, params=None, headers=None):
+        return 200, DAILY_FORECAST_AT_ID_JSON
 
-    def mock_httputils_call_API_returning_city_weather_history(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return CITY_WEATHER_HISTORY_JSON
+    def mock_api_call_returning_city_weather_history(self, uri, params=None, headers=None):
+        return 200, CITY_WEATHER_HISTORY_JSON
 
-    def mock_httputils_call_API_returning_station_tick_weather_history(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return STATION_TICK_WEATHER_HISTORY_JSON
+    def mock_api_call_returning_station_tick_weather_history(self, uri, params=None, headers=None):
+        return 200, STATION_TICK_WEATHER_HISTORY_JSON
 
-    def mock_httputils_call_API_returning_station_hour_weather_history(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return STATION_WEATHER_HISTORY_JSON
+    def mock_api_call_returning_station_hour_weather_history(self, uri, params=None, headers=None):
+        return 200, STATION_WEATHER_HISTORY_JSON
 
-    def mock_httputils_call_API_returning_station_day_weather_history(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return STATION_WEATHER_HISTORY_JSON
+    def mock_call_api_returning_station_day_weather_history(self, uri, params=None, headers=None):
+        return 200, STATION_WEATHER_HISTORY_JSON
 
-    def mock_httputils_call_API_returning_station_history_with_no_items(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return STATION_HISTORY_NO_ITEMS_JSON
+    def mock_call_api_returning_station_history_with_no_items(self, uri, params=None, headers=None):
+        return 200, STATION_HISTORY_NO_ITEMS_JSON
 
-    def mock_httputils_call_API_returning_weather_at_stations_in_bbox(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return WEATHER_AT_STATION_IN_BBOX_JSON
+    def mock_api_call_returning_weather_at_stations_in_bbox(self, uri, params=None, headers=None):
+        return 200, WEATHER_AT_STATION_IN_BBOX_JSON
 
-    def mock_httputils_call_API_returning_station_at_coords(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return STATION_AT_COORDS_JSON
+    def mock_api_call_returning_station_at_coords(self, uri, params=None, headers=None):
+        return 200, STATION_AT_COORDS_JSON
 
-    def mock_httputils_call_API_returning_weather_history_at_coords(self,
-                                                       API_subset_URL,
-                                                       params_dict):
-        return CITY_WEATHER_HISTORY_JSON
+    def mock_api_call_returning_weather_history_at_coords(self, uri, params=None, headers=None):
+        return 200, CITY_WEATHER_HISTORY_JSON
 
     def mock_get_uvi_returning_uvindex_around_coords(self, params_dict):
         return UVINDEX_JSON
@@ -194,7 +161,7 @@ class TestOWM25(unittest.TestCase):
         name = 'testname'
         if sys.version_info > (3, 0):
             result = OWM25._encode_string(name)
-            self.assertEquals(result, name)
+            self.assertEqual(result, name)
         else:  # Python 2
             result = OWM25._encode_string(name)
             try:
@@ -251,19 +218,19 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual(owm_paid.get_subscription_type(), 'pro')
 
     def test_is_API_online(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_ping
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_ping
         result = self.__test_instance.is_API_online()
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.call_API = original_func
         self.assertTrue(result)
 
     def test_is_API_online_failure(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_failing_ping
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_failing_ping
         result = self.__test_instance.is_API_online()
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertFalse(result)
 
     def test_city_id_registry(self):
@@ -287,11 +254,11 @@ class TestOWM25(unittest.TestCase):
         self.assertEqual("ru", self.__test_instance.get_language())
 
     def test_weather_at_place(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_single_obs
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_single_obs
         result = self.__test_instance.weather_at_place("London,uk")
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)
         loc = result.get_location()
@@ -305,11 +272,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 3)
 
     def test_weather_at_coords(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_single_obs
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_single_obs
         result = self.__test_instance.weather_at_coords(57.0, -2.15)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)
         loc = result.get_location()
@@ -319,11 +286,11 @@ class TestOWM25(unittest.TestCase):
         self.assertTrue(weat is not None)
 
     def test_weather_at_zip_code(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_single_obs
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_single_obs
         result = self.__test_instance.weather_at_zip_code("2000", "AU")
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)
         loc = result.get_location()
@@ -346,11 +313,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 200, 2.5)
 
     def test_weather_at_id(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_single_obs
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_single_obs
         result = self.__test_instance.weather_at_id(5128581)  # New York city, US
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)
         loc = result.get_location()
@@ -364,11 +331,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, -156667)
 
     def test_weather_at_ids(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_multiple_obs
+        ref_to_original_call_API = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_multiple_obs
         result = self.__test_instance.weather_at_ids([5128581, 15647, 78654])
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = ref_to_original_call_API
         self.assertTrue(isinstance(result, list))
         for obs in result:
             self.assertTrue(obs is not None)
@@ -383,11 +350,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, [-1, 2, 3])
 
     def test_weather_at_station(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_single_station_obs
+        original_call = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_single_station_obs
         result = self.__test_instance.weather_at_station(1000)  # station: PAKP
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_call
         self.assertTrue(isinstance(result, Observation))
         self.assertTrue(result.get_reception_time() is not None)
         loc = result.get_location()
@@ -400,12 +367,12 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, -156667)
 
     def test_weather_at_places(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_multiple_obs
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json= \
+            self.mock_api_call_returning_multiple_obs
         result = \
             self.__test_instance.weather_at_places("London", "accurate")
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, list))
         self.assertEqual(2, len(result))
         for item in result:
@@ -424,11 +391,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, "London", "accurate", -5)
 
     def test_weather_around_coords(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_multiple_obs
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_multiple_obs
         result = self.__test_instance.weather_around_coords(57.0, -2.15)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, list))
         for item in result:
             self.assertTrue(item is not None)
@@ -457,11 +424,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 43.7, 20.0, -3)
 
     def test_three_hours_forecast(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_3h_forecast
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_3h_forecast
         result = self.__test_instance.three_hours_forecast("London,uk")
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
         self.assertTrue(isinstance(forecast, Forecast))
@@ -473,21 +440,21 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_three_hours_forecast_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_3h_forecast_with_no_items
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_empty_3h_forecast
         result = self.__test_instance.three_hours_forecast("London,uk")
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_three_hours_forecast_at_coords(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_3h_forecast_at_coords
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_3h_forecast_at_coords
         result = \
             self.__test_instance\
                 .three_hours_forecast_at_coords(51.50853, -0.12574)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
         self.assertTrue(isinstance(forecast, Forecast))
@@ -499,12 +466,11 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_three_hours_forecast_at_coords_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_3h_forecast_with_no_items
-        result = self.__test_instance.three_hours_forecast_at_coords(51.50853,
-                                                                     -0.12574)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_empty_3h_forecast
+        result = self.__test_instance.three_hours_forecast_at_coords(51.50853, -0.12574)
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_three_hours_forecast_at_coords_fails_with_wrong_params(self):
@@ -518,11 +484,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 0.0, 200.0)
 
     def test_three_hours_forecast_at_id(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_3h_forecast_at_id
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_3h_forecast_at_id
         result = self.__test_instance.three_hours_forecast_at_id(2643743)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
         self.assertTrue(isinstance(forecast, Forecast))
@@ -534,11 +500,11 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
 
     def test_three_hours_forecast_at_id_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_3h_forecast_with_no_items
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_empty_3h_forecast
         result = self.__test_instance.three_hours_forecast_at_id(2643743)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_three_hours_forecast_at_id_fails_with_wrong_params(self):
@@ -546,11 +512,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, -1234)
 
     def test_daily_forecast(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_daily_forecast
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_daily_forecast
         result = self.__test_instance.daily_forecast("London,uk", 2)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
         self.assertTrue(isinstance(forecast, Forecast))
@@ -568,20 +534,20 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, "London,uk", -3)
 
     def test_daily_forecast_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_daily_forecast_with_no_items
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_empty_daily_forecast
         result = self.__test_instance.daily_forecast('London,uk')
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_daily_forecast_at_coords(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_daily_forecast_at_coords
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_daily_forecast_at_coords
         result = \
             self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574, 2)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
         self.assertTrue(isinstance(forecast, Forecast))
@@ -605,20 +571,20 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 0.0, 200.0)
 
     def test_daily_forecast_at_coords_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_daily_forecast_with_no_items
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_empty_daily_forecast
         result = self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_daily_forecast_at_id(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_daily_forecast_at_id
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_daily_forecast_at_id
         result = \
             self.__test_instance.daily_forecast_at_id(2643743, 2)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.get_forecast()
         self.assertTrue(isinstance(forecast, Forecast))
@@ -636,29 +602,29 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 123456, -3)
 
     def test_daily_forecast_at_id_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_daily_forecast_with_no_items
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_empty_daily_forecast
         result = self.__test_instance.daily_forecast_at_id(123456)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_weather_history_at_place(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_city_weather_history
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_city_weather_history
         result = self.__test_instance.weather_history_at_place("London,uk")
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, list))
         for weather in result:
             self.assertTrue(isinstance(weather, Weather))
 
     def test_weather_history_at_coords(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_weather_history_at_coords
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_weather_history_at_coords
         result = self.__test_instance.weather_history_at_coords(51.503614, -0.107331)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, list))
         for weather in result:
             self.assertTrue(isinstance(weather, Weather))
@@ -738,11 +704,11 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 1, "test", 1234567)
 
     def test_weather_history_at_id(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_city_weather_history
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_city_weather_history
         result = self.__test_instance.weather_history_at_id(12345)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, list))
         for weather in result:
             self.assertTrue(isinstance(weather, Weather))
@@ -782,12 +748,12 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 12345, 1234567, "test")
 
     def test_weather_at_station_in_bbox(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_weather_at_stations_in_bbox
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_weather_at_stations_in_bbox
         results = self.__test_instance\
                 .weather_at_stations_in_bbox(49.07,8.87,61.26,65.21)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(results, list))
         for result in results:
             self.assertTrue(isinstance(result, Observation))
@@ -796,11 +762,11 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(result.get_reception_time() is not None)
 
     def test_station_tick_history(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_station_tick_weather_history
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_station_tick_weather_history
         result = self.__test_instance.station_tick_history(1234, limit=4)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Historian))
         station_history = result.get_station_history()
         self.assertTrue(isinstance(station_history, StationHistory))
@@ -811,19 +777,19 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 1234, -3)
 
     def test_station_tick_history_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_station_history_with_no_items
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_call_api_returning_station_history_with_no_items
         result = self.__test_instance.station_tick_history(1234, limit=4)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertIsNone(result)
 
     def test_station_hour_history(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_station_hour_weather_history
+        original_call = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_station_hour_weather_history
         result = self.__test_instance.station_hour_history(1234, limit=4)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_call
         self.assertTrue(isinstance(result, Historian))
         station_history = result.get_station_history()
         self.assertTrue(isinstance(station_history, StationHistory))
@@ -834,19 +800,19 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 1234, -3)
 
     def test_station_hour_history_when_forecast_not_found(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_station_history_with_no_items
+        original_call = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_call_api_returning_station_history_with_no_items
         result = self.__test_instance.station_hour_history(1234, limit=4)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_call
         self.assertIsNone(result)
 
     def test_station_day_history(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_station_day_weather_history
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_call_api_returning_station_day_weather_history
         result = self.__test_instance.station_day_history(1234, limit=4)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Historian))
         station_history = result.get_station_history()
         self.assertTrue(isinstance(station_history, StationHistory))
@@ -857,12 +823,12 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 1234, -3)
 
     def test_station_at_coords(self):
-        ref_to_original_call_API = WeatherHttpClient.call_API
-        WeatherHttpClient.call_API = \
-            self.mock_httputils_call_API_returning_station_at_coords
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_station_at_coords
         results = self.__test_instance.station_at_coords(51.5073509,
                                                          -0.1277583, 2)
-        WeatherHttpClient.call_API = ref_to_original_call_API
+        HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(results, list))
         for result in results:
             self.assertTrue(isinstance(result, Station))

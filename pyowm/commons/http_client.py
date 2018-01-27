@@ -35,8 +35,9 @@ class HttpClient(object):
         if cached:
             return 200, cached
         status_code, data = self.get_json(uri, params=params, headers=headers)
-        self.cache.set(uri, json.dumps(data))
-        return status_code, data
+        json_string = json.dumps(data)
+        self.cache.set(uri, json_string)
+        return status_code, json_string
 
 
     def post(self, uri, params=None, data=None, headers=None):
