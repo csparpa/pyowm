@@ -1,36 +1,26 @@
-# Python 2.x/3.x compatibility imports
-try:
-    from urllib.error import HTTPError, URLError
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib2 import HTTPError, URLError
-    from urllib import urlencode
-
-import socket
 from pyowm.exceptions import api_call_error, not_found_error, unauthorized_error
 from pyowm.utils import timeformatutils
-from pyowm.webapi25.configuration25 import ROOT_POLLUTION_API_URL, \
-    CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
+from pyowm.webapi25.configuration25 import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
+from pyowm.commons import http_client
 
 
 class AirPollutionHttpClient(object):
 
     """
-    An HTTP client class for the OWM Air Pollution web API. The class can
-    leverage a caching mechanism
+    A class representing the OWM Air Pollution web API, which is a subset of the
+    overall OWM API.
 
     :param API_key: a Unicode object representing the OWM Air Pollution web API key
     :type API_key: Unicode
-    :param cache: an *OWMCache* concrete instance that will be used to \
-         cache OWM Air Pollution web API responses.
-    :type cache: an *OWMCache* concrete instance
+    :param httpclient: an *httpclient.HttpClient* instance that will be used to \
+         send requests to the OWM Air Pollution web API.
+    :type httpclient: an *httpclient.HttpClient* instance
 
     """
 
-    def __init__(self, API_key, cache):
+    def __init__(self, API_key, httpclient):
         self._API_key = API_key
-        self._cache = cache
-        self._API_root_URL = ROOT_POLLUTION_API_URL
+        self._client = httpclient
 
     def _trim_to(self, date_object, interval):
         if interval == 'minute':
@@ -73,14 +63,11 @@ class AirPollutionHttpClient(object):
                 cache.set(API_full_url, data)
                 return data
 
-    def get_coi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def get_coi(self, params_dict):
         """
         Invokes the CO Index endpoint
 
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment \
-            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
-        :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
 
@@ -91,29 +78,25 @@ class AirPollutionHttpClient(object):
         interval = params_dict['interval']
 
         # build request URL
-        url_template = '%s%s/%s,%s/%s.json?appid=%s'
         if start is None:
             timeref = 'current'
         else:
             if interval is None:
-                timeref = self._trim_to(
-                    timeformatutils.to_date(start), 'year')
+                timeref = self._trim_to(timeformatutils.to_date(start), 'year')
             else:
-                timeref = self._trim_to(
-                    timeformatutils.to_date(start), interval)
+                timeref = self._trim_to(timeformatutils.to_date(start), interval)
 
-        url = url_template % (ROOT_POLLUTION_API_URL, CO_INDEX_URL, lat, lon,
-                              timeref, self._API_key)
-        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+        fixed_url = '%s/%s,%s/%s.json' % (CO_INDEX_URL, lat, lon, timeref)
+        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
+        _, json_data = self._client.cacheable_get_json(uri)
+        return json_data
 
-    def get_o3(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+
+    def get_o3(self, params_dict):
         """
         Invokes the O3 Index endpoint
 
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment \
-            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
-        :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
 
@@ -124,7 +107,6 @@ class AirPollutionHttpClient(object):
         interval = params_dict['interval']
 
         # build request URL
-        url_template = '%s%s/%s,%s/%s.json?appid=%s'
         if start is None:
             timeref = 'current'
         else:
@@ -135,18 +117,17 @@ class AirPollutionHttpClient(object):
                 timeref = self._trim_to(
                     timeformatutils.to_date(start), interval)
 
-        url = url_template % (ROOT_POLLUTION_API_URL, OZONE_URL, lat, lon,
-                              timeref, self._API_key)
-        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+        fixed_url = '%s/%s,%s/%s.json' % (OZONE_URL, lat, lon, timeref)
+        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
+        _, json_data = self._client.cacheable_get_json(uri)
+        return json_data
 
-    def get_no2(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+
+    def get_no2(self, params_dict):
         """
         Invokes the NO2 Index endpoint
 
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment \
-            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
-        :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
 
@@ -157,7 +138,6 @@ class AirPollutionHttpClient(object):
         interval = params_dict['interval']
 
         # build request URL
-        url_template = '%s%s/%s,%s/%s.json?appid=%s'
         if start is None:
             timeref = 'current'
         else:
@@ -168,18 +148,17 @@ class AirPollutionHttpClient(object):
                 timeref = self._trim_to(
                     timeformatutils.to_date(start), interval)
 
-        url = url_template % (ROOT_POLLUTION_API_URL, NO2_INDEX_URL, lat, lon,
-                              timeref, self._API_key)
-        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+        fixed_url = '%s/%s,%s/%s.json' % (NO2_INDEX_URL, lat, lon, timeref)
+        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
+        _, json_data = self._client.cacheable_get_json(uri)
+        return json_data
 
-    def get_so2(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+
+    def get_so2(self, params_dict):
         """
         Invokes the SO2 Index endpoint
 
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment \
-            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
-        :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
 
@@ -190,7 +169,6 @@ class AirPollutionHttpClient(object):
         interval = params_dict['interval']
 
         # build request URL
-        url_template = '%s%s/%s,%s/%s.json?appid=%s'
         if start is None:
             timeref = 'current'
         else:
@@ -201,10 +179,11 @@ class AirPollutionHttpClient(object):
                 timeref = self._trim_to(
                     timeformatutils.to_date(start), interval)
 
-        url = url_template % (ROOT_POLLUTION_API_URL, SO2_INDEX_URL, lat, lon,
-                              timeref, self._API_key)
-        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+        fixed_url = '%s/%s,%s/%s.json' % (SO2_INDEX_URL, lat, lon, timeref)
+        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
+        _, json_data = self._client.cacheable_get_json(uri)
+        return json_data
 
     def __repr__(self):
-        return "<%s.%s - cache=%s>" % \
-               (__name__, self.__class__.__name__, repr(self._cache))
+        return "<%s.%s - httpclient=%s>" % \
+               (__name__, self.__class__.__name__, str(self._client))
