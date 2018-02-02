@@ -206,7 +206,6 @@ class OWM25(owm.OWM):
         """
         params = {'q': 'London,UK'}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         try:
@@ -233,7 +232,6 @@ class OWM25(owm.OWM):
         encoded_name = OWM25._encode_string(name)
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -262,7 +260,6 @@ class OWM25(owm.OWM):
             raise ValueError("'lat' value must be between -90 and 90")
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -290,7 +287,6 @@ class OWM25(owm.OWM):
         zip_param = encoded_zip + ',' + encoded_country
         params = {'zip': zip_param, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -314,7 +310,6 @@ class OWM25(owm.OWM):
             raise ValueError("'id' value must be greater than 0")
         params = {'id': id, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -341,7 +336,6 @@ class OWM25(owm.OWM):
                                  "than 0")
         params = {'id': ','.join(list(map(str, ids_list))), 'lang': self._language}
         uri = http_client.HttpClient.to_url(GROUP_OBSERVATIONS_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -383,7 +377,6 @@ class OWM25(owm.OWM):
             # fix for OWM 2.5 API bug!
             params['cnt'] = limit - 1
         uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -407,7 +400,6 @@ class OWM25(owm.OWM):
             raise ValueError("'station_id' value must be greater than 0")
         params = {'id': station_id, 'lang': self._language}
         uri = http_client.HttpClient.to_url(STATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -476,7 +468,6 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(BBOX_STATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -514,7 +505,6 @@ class OWM25(owm.OWM):
                 raise ValueError("'limit' must be None or greater than zero")
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -540,7 +530,6 @@ class OWM25(owm.OWM):
         encoded_name = OWM25._encode_string(name)
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -578,7 +567,6 @@ class OWM25(owm.OWM):
             raise ValueError("'lat' value must be between -90 and 90")
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -610,7 +598,6 @@ class OWM25(owm.OWM):
             raise ValueError("'id' value must be greater than 0")
         params = {'id': id, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -651,7 +638,6 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -699,7 +685,6 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -742,7 +727,6 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -800,7 +784,6 @@ class OWM25(owm.OWM):
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
         uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -829,7 +812,6 @@ class OWM25(owm.OWM):
             not available for the specified location
 
         """
-        pass
         assert type(lon) is float or type(lon) is int, "'lon' must be a float"
         if lon < -180.0 or lon > 180.0:
             raise ValueError("'lon' value must be between -180 and 180")
@@ -861,7 +843,6 @@ class OWM25(owm.OWM):
                 raise ValueError("Error: the start time boundary must "
                                  "precede the end time!")
         uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -915,7 +896,6 @@ class OWM25(owm.OWM):
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
         uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -957,7 +937,6 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(FIND_STATION_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)
@@ -1072,7 +1051,6 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(STATION_WEATHER_HISTORY_URL,
-                                            params,
                                             self._API_key,
                                             self._subscription_type)
         _, json_data = self._api.cacheable_get_json(uri, params=params)

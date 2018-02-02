@@ -105,9 +105,9 @@ class HttpClient(object):
         return False
 
     @classmethod
-    def to_url(cls, API_endpoint_URL, params_dict, API_key, subscription_type):
-        params = params_dict.copy()
+    def to_url(cls, API_endpoint_URL, API_key, subscription_type):
         # Add API Key to query params
+        params = dict()
         if API_key is not None:
             params['APPID'] = API_key
         # Escape subscription subdomain if needed
@@ -117,9 +117,11 @@ class HttpClient(object):
 
     @classmethod
     def _escape_subdomain(cls, API_endpoint_URL, subscription_type):
+        if subscription_type is None:
+            return API_endpoint_URL
         try:
             return API_endpoint_URL % (API_SUBSCRIPTION_SUBDOMAINS[subscription_type],)
-        except KeyError as e:
+        except KeyError:
             raise ValueError('Unexistent API subscription type')
-        except:
+        except TypeError:  # API endpoint URL is not escapable
             return API_endpoint_URL

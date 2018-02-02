@@ -158,32 +158,27 @@ class TestHTTPClient(unittest.TestCase):
 
     def test_to_url(self):
         API_endpoint = 'http://%s.openweathermap.org/data/2.5/ep'
-        params = {'a': 1}
         API_key = 'test_API_key'
         api_subscription = 'free'
-        result = HttpClient.to_url(API_endpoint, params, API_key, api_subscription)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=test_API_key'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=test_API_key&a=1'
-        self.assertTrue(result == expected_1 or result == expected_2)
+        result = HttpClient.to_url(API_endpoint, API_key, api_subscription)
+        expected = 'http://api.openweathermap.org/data/2.5/ep?APPID=test_API_key'
+        self.assertEqual(expected, expected)
 
     def test_to_url_with_no_API_key(self):
         API_endpoint = 'http://%s.openweathermap.org/data/2.5/ep'
         params = {'a': 1, 'b': 2}
         api_subscription = 'pro'
-        result = HttpClient.to_url(API_endpoint, params, None, api_subscription)
-        expected_1 = 'http://pro.openweathermap.org/data/2.5/ep?a=1&b=2'
-        expected_2 = 'http://pro.openweathermap.org/data/2.5/ep?b=2&a=1'
-        self.assertTrue(result == expected_1 or result == expected_2)
+        result = HttpClient.to_url(API_endpoint, None, api_subscription)
+        expected = 'http://pro.openweathermap.org/data/2.5/ep'
+        self.assertEqual(expected, result)
 
     def test_to_url_with_unicode_chars_in_API_key(self):
         API_key = '£°test££'
         API_endpoint = 'http://%s.openweathermap.org/data/2.5/ep'
-        params = {'a': 1}
         api_subscription = 'free'
-        result = HttpClient.to_url(API_endpoint, params, API_key, api_subscription)
-        expected_1 = 'http://api.openweathermap.org/data/2.5/ep?a=1&APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
-        expected_2 = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3&a=1'
-        self.assertTrue(result == expected_1 or result == expected_2)
+        result = HttpClient.to_url(API_endpoint, API_key, api_subscription)
+        expected = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        self.assertEqual(expected, result)
 
     def test_escape_subdomain(self):
         # correct subscription type
@@ -201,12 +196,15 @@ class TestHTTPClient(unittest.TestCase):
         except ValueError:
             pass
 
-        # no subdomain escaping
-        API_endpoint = 'http://www.openweathermap.org/data/2.5/ep'
-        api_subscription = 'free'
-        expected = API_endpoint
+        # no subdomains needed
+        API_endpoint = 'http://test.com'
         result = HttpClient._escape_subdomain(API_endpoint, api_subscription)
-        self.assertEqual(expected, result)
+        self.assertEqual(API_endpoint, result)
+
+        # subscription type is None
+        API_endpoint = 'http://test.com'
+        result = HttpClient._escape_subdomain(API_endpoint, None)
+        self.assertEqual(API_endpoint, result)
 
 
     def test_timeouts(self):
