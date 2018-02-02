@@ -1,4 +1,3 @@
-from pyowm.exceptions import api_call_error, not_found_error, unauthorized_error
 from pyowm.utils import timeformatutils
 from pyowm.webapi25.configuration25 import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
 from pyowm.commons import http_client
@@ -36,32 +35,6 @@ class AirPollutionHttpClient(object):
         else:
             raise ValueError("The interval provided for the search "
                              "window is invalid")
-
-    def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
-        cached = cache.get(API_full_url)
-        if cached:
-            return cached
-        else:
-            try:
-                try:
-                    from urllib.request import urlopen
-                except ImportError:
-                    from urllib2 import urlopen
-                response = urlopen(API_full_url, None, timeout)
-            except HTTPError as e:
-                if '401' in str(e):
-                    raise unauthorized_error.UnauthorizedError('Invalid API key')
-                if '404' in str(e):
-                    raise not_found_error.NotFoundError('The resource was not found')
-                if '502' in str(e):
-                    raise api_call_error.BadGatewayError(str(e), e)
-                raise api_call_error.APICallError(str(e), e)
-            except URLError as e:
-                raise api_call_error.APICallError(str(e), e)
-            else:
-                data = response.read().decode('utf-8')
-                cache.set(API_full_url, data)
-                return data
 
     def get_coi(self, params_dict):
         """
