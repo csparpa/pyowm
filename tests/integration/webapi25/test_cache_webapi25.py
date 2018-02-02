@@ -110,10 +110,10 @@ class CacheTestWebAPI25(unittest.TestCase):
         o3 = owm.weather_at_place('London,uk')  # Comes from cache
         after_cache_hit_2 = time()
         #Check results: difference in reception time should not be less than 20 sec
-        self.assertAlmostEquals(o1.get_reception_time(),
+        self.assertAlmostEqual(o1.get_reception_time(),
                                 o2.get_reception_time(),
                                 places=None, msg=None, delta=20)
-        self.assertAlmostEquals(o1.get_reception_time(),
+        self.assertAlmostEqual(o1.get_reception_time(),
                                 o3.get_reception_time(),
                                 places=None, msg=None, delta=20)
         #Check times: all cache hit times must be less than the former OWM web

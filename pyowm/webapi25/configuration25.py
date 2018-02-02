@@ -8,6 +8,12 @@ from pyowm.webapi25 import observationparser, observationlistparser, \
 Configuration for the PyOWM library specific to OWM web API version 2.5
 """
 
+# Subdomains mapping
+API_SUBSCRIPTION_SUBDOMAINS = {
+    'free': 'api',
+    'pro': 'pro'
+}
+
 # OWM web API URLs
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
 ROOT_HISTORY_URL = 'http://history.openweathermap.org/data/2.5'
@@ -29,10 +35,10 @@ UV_INDEX_URL = ROOT_UV_API_URL + '/uvi'
 
 # OWM Air Pollution API URLs
 ROOT_POLLUTION_API_URL = 'http://api.openweathermap.org/pollution/v1'
-CO_INDEX_URL = '/co'
-OZONE_URL = '/o3'
-NO2_INDEX_URL = '/no2'
-SO2_INDEX_URL = '/so2'
+CO_INDEX_URL = ROOT_POLLUTION_API_URL + '/co'
+OZONE_URL = ROOT_POLLUTION_API_URL + '/o3'
+NO2_INDEX_URL = ROOT_POLLUTION_API_URL + '/no2'
+SO2_INDEX_URL = ROOT_POLLUTION_API_URL + '/so2'
 
 
 # Parser objects injection for OWM web API responses parsing

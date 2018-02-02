@@ -40,3 +40,16 @@ class BadGatewayError(APICallError):
     :type triggering_error: an *Exception* subtype
     """
     pass
+
+
+class APICallTimeoutError(APICallError):
+    """
+    Error class that represents response timeout conditions
+
+    :param message: the message of the error
+    :type message: str
+    :param triggering_error: optional *Exception* object that triggered this
+        error (defaults to ``None``)
+    :type triggering_error: an *Exception* subtype
+    """
+    pass

@@ -58,7 +58,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
 
     def test_ids_for(self):
         result = self._instance.ids_for("bologna", matching='exact')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         result = self._instance.ids_for("Abbans-Dessus")
         self.assertEquals(2, len(result))
