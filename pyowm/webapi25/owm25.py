@@ -55,7 +55,7 @@ class OWM25(owm.OWM):
             OWM25._assert_is_string(API_key)
         self._API_key = API_key
         self._wapi = http_client.HttpClient(cache=cache)
-        self._uvapi = uv_client.UltraVioletHttpClient(API_key, cache)
+        self._uvapi = uv_client.UltraVioletHttpClient(API_key, self._wapi)
         self._pollapi = airpollution_client.AirPollutionHttpClient(API_key, self._wapi)
         self._language = language
         if API_key is None and subscription_type == 'pro':

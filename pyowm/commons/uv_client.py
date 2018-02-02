@@ -1,36 +1,24 @@
-# Python 2.x/3.x compatibility imports
-try:
-    from urllib.error import HTTPError, URLError
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib2 import HTTPError, URLError
-    from urllib import urlencode
-
-import socket
-from pyowm.exceptions import api_call_error, not_found_error, unauthorized_error
-from pyowm.utils import timeformatutils
-from pyowm.webapi25.configuration25 import ROOT_UV_API_URL, \
-    UV_INDEX_URL
+from pyowm.webapi25.configuration25 import UV_INDEX_URL
+from pyowm.commons import http_client
 
 
 class UltraVioletHttpClient(object):
 
     """
-    An HTTP client class for the OWM UV web API. The class can leverage a
-    caching mechanism
+    An HTTP client class for the OWM UV web API, which is a subset of the
+    overall OWM API.
 
     :param API_key: a Unicode object representing the OWM UV web API key
     :type API_key: Unicode
-    :param cache: an *OWMCache* concrete instance that will be used to
-      cache OWM UV web API responses.
-    :type cache: an *OWMCache* concrete instance
+    :param httpclient: an *httpclient.HttpClient* instance that will be used to \
+         send requests to the OWM Air Pollution web API.
+    :type httpclient: an *httpclient.HttpClient* instance
 
     """
 
-    def __init__(self, API_key, cache):
+    def __init__(self, API_key, httpclient):
         self._API_key = API_key
-        self._cache = cache
-        self._API_root_URL = ROOT_UV_API_URL
+        self._client = httpclient
 
     def _trim_to(self, date_object, interval):
         if interval == 'minute':
@@ -47,52 +35,26 @@ class UltraVioletHttpClient(object):
             raise ValueError("The interval provided for UVIndex search "
                              "window is invalid")
 
-    def _lookup_cache_or_invoke_API(self, cache, API_full_url, timeout):
-        cached = cache.get(API_full_url)
-        if cached:
-            return cached
-        else:
-            try:
-                try:
-                    from urllib.request import urlopen
-                except ImportError:
-                    from urllib2 import urlopen
-                response = urlopen(API_full_url, None, timeout)
-            except HTTPError as e:
-                if '401' in str(e):
-                    raise unauthorized_error.UnauthorizedError('Invalid API key')
-                if '404' in str(e):
-                    raise not_found_error.NotFoundError('The resource was not found')
-                if '502' in str(e):
-                    raise api_call_error.BadGatewayError(str(e), e)
-                raise api_call_error.APICallError(str(e), e)
-            except URLError as e:
-                raise api_call_error.APICallError(str(e), e)
-            else:
-                data = response.read().decode('utf-8')
-                cache.set(API_full_url, data)
-                return data
 
-    def get_uvi(self, params_dict, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def get_uvi(self, params_dict):
         """
         Invokes the UV Index endpoint
 
         :param params_dict: dict of parameters
-        :param timeout: how many seconds to wait for connection establishment
-            (defaults to ``socket._GLOBAL_DEFAULT_TIMEOUT``)
-        :type timeout: int
         :returns: a string containing raw JSON data
         :raises: *ValueError*, *APICallError*
 
         """
         lat = str(params_dict['lat'])
         lon = str(params_dict['lon'])
+        params = dict(lat=lat, lon=lon)
 
         # build request URL
-        url_template = '%s?appid=%s&lat=%s&lon=%s'
-        url = url_template % (UV_INDEX_URL, self._API_key, lat, lon)
-        return self._lookup_cache_or_invoke_API(self._cache, url, timeout)
+        uri = http_client.HttpClient.to_url(UV_INDEX_URL, self._API_key, None)
+        _, json_data = self._client.cacheable_get_json(uri, params=params)
+        return json_data
+
 
     def __repr__(self):
-        return "<%s.%s - cache=%s>" % \
-               (__name__, self.__class__.__name__, repr(self._cache))
+        return "<%s.%s - httpclient=%s>" % \
+               (__name__, self.__class__.__name__, str(self._client))
