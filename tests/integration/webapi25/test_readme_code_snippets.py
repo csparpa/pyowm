@@ -49,3 +49,6 @@ class IntegrationTestsREADMESnippets(unittest.TestCase):
         self.assertTrue(len(os_rio) > 0)
         for o in os_rio:
             self.assertTrue(isinstance(o, Observation))
+
+if __name__ == '__main__':
+    unittest.main()
