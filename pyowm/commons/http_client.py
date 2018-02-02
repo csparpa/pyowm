@@ -125,3 +125,8 @@ class HttpClient(object):
             raise ValueError('Unexistent API subscription type')
         except TypeError:  # API endpoint URL is not escapable
             return API_endpoint_URL
+
+    def __repr__(self):
+        return "<%s.%s - timeout=%s - cache=%s>" % \
+               (__name__, self.__class__.__name__, repr(self.timeout),
+                str(self.cache) if self.cache is not None else 'None')
