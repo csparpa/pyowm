@@ -179,8 +179,7 @@ and then access weather data using the following methods:
     >>> w.get_sunset_time('iso')                           # Sunset time (GMT UNIXtime or ISO 8601)
     '2013-08-30 20:07:57+00'
 
-Support to weather data interpreting can be found [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Data#Description-parameters)
-and [here](http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes) you can read about OWM weather condition codes and icons.
+Support to weather data interpretation and lists of OWM weather conditions, codes and icons can be found [here](https://openweathermap.org/weather-conditions).
 
 As said, ``Observation`` objects also contain a ``Location`` object with info about the weather location:
 
@@ -195,7 +194,7 @@ As said, ``Observation`` objects also contain a ``Location`` object with info ab
     2643743
 
 The last call returns the OWM city ID of the location - refer to the
-[OWM API documentation](http://bugs.openweathermap.org/projects/api/wiki/Api_2_5_weather#3-By-city-ID)
+[OWM API documentation](https://openweathermap.org/current)
 for details.
 
 ### Getting weather forecasts
