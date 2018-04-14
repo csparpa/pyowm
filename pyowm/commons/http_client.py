@@ -4,23 +4,27 @@ from pyowm.caches import nullcache
 from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error, \
     parse_response_error
 from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
-    API_SUBSCRIPTION_SUBDOMAINS
+    API_SUBSCRIPTION_SUBDOMAINS, VERIFY_SSL_CERTS
 
 
 class HttpClient(object):
 
-    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None, use_ssl=False):
+    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None,
+                 use_ssl=False, verify_ssl_certs=VERIFY_SSL_CERTS):
         self.timeout = timeout
         if cache is None:
             self.cache = nullcache.NullCache()
         else:
             self.cache = cache
         self.use_ssl = use_ssl
+        self.verify_ssl_certs = verify_ssl_certs
 
     def get_json(self, uri, params=None, headers=None):
         try:
             resp = requests.get(uri, params=params, headers=headers,
-                                timeout=self.timeout)
+                                timeout=self.timeout, verify=self.verify_ssl_certs)
+        except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -40,11 +44,12 @@ class HttpClient(object):
         self.cache.set(uri, json_string)
         return status_code, json_string
 
-
     def post(self, uri, params=None, data=None, headers=None):
         try:
             resp = requests.post(uri, params=params, json=data, headers=headers,
-                                 timeout=self.timeout)
+                                 timeout=self.timeout, verify=self.verify_ssl_certs)
+        except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -58,7 +63,9 @@ class HttpClient(object):
     def put(self, uri, params=None, data=None, headers=None):
         try:
             resp = requests.put(uri, params=params, json=data, headers=headers,
-                                timeout=self.timeout)
+                                timeout=self.timeout, verify=self.verify_ssl_certs)
+        except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -72,7 +79,9 @@ class HttpClient(object):
     def delete(self, uri, params=None, data=None, headers=None):
         try:
             resp = requests.delete(uri, params=params, json=data, headers=headers,
-                                   timeout=self.timeout)
+                                   timeout=self.timeout, verify=self.verify_ssl_certs)
+        except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -82,7 +91,6 @@ class HttpClient(object):
         except:
             json_data = None
         return resp.status_code, json_data
-
 
     @classmethod
     def check_status_code(cls, status_code, payload):

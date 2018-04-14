@@ -45,11 +45,14 @@ class OWM25(owm.OWM):
            Can be 'free' (free subscription) or 'pro' (paid subscription),
            Defaults to: 'free'
     :type subscription_type: str
+    :param use_ssl: whether API calls should be made via SSL or not.
+           Defaults to: False
+    :type use_ssl: bool
     :returns: an *OWM25* instance
 
     """
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
-                 language="en", subscription_type='free'):
+                 language="en", subscription_type='free', use_ssl=False):
         self._parsers = parsers
         if API_key is not None:
             OWM25._assert_is_string(API_key)
@@ -61,6 +64,7 @@ class OWM25(owm.OWM):
         if API_key is None and subscription_type == 'pro':
             raise AssertionError('You must provide an API Key for paid subscriptions')
         self._subscription_type = subscription_type
+        self._use_ssl = use_ssl
 
     @staticmethod
     def _assert_is_string(value):
@@ -232,7 +236,8 @@ class OWM25(owm.OWM):
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -260,7 +265,8 @@ class OWM25(owm.OWM):
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -287,7 +293,8 @@ class OWM25(owm.OWM):
         params = {'zip': zip_param, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -310,7 +317,8 @@ class OWM25(owm.OWM):
         params = {'id': id, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -336,7 +344,8 @@ class OWM25(owm.OWM):
         params = {'id': ','.join(list(map(str, ids_list))), 'lang': self._language}
         uri = http_client.HttpClient.to_url(GROUP_OBSERVATIONS_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
@@ -377,7 +386,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit - 1
         uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
@@ -400,7 +410,8 @@ class OWM25(owm.OWM):
         params = {'id': station_id, 'lang': self._language}
         uri = http_client.HttpClient.to_url(STATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
@@ -468,7 +479,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(BBOX_STATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
@@ -505,7 +517,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
@@ -530,7 +543,8 @@ class OWM25(owm.OWM):
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -567,7 +581,8 @@ class OWM25(owm.OWM):
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -598,7 +613,8 @@ class OWM25(owm.OWM):
         params = {'id': id, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -638,7 +654,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -685,7 +702,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -727,7 +745,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
@@ -784,7 +803,8 @@ class OWM25(owm.OWM):
                              "while the other is not!")
         uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
@@ -843,7 +863,8 @@ class OWM25(owm.OWM):
                                  "precede the end time!")
         uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
@@ -896,7 +917,8 @@ class OWM25(owm.OWM):
                              "while the other is not!")
         uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
@@ -937,7 +959,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(FIND_STATION_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['station_list'].parse_JSON(json_data)
 
@@ -1051,7 +1074,8 @@ class OWM25(owm.OWM):
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(STATION_WEATHER_HISTORY_URL,
                                             self._API_key,
-                                            self._subscription_type)
+                                            self._subscription_type,
+                                            self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         station_history = \
             self._parsers['station_history'].parse_JSON(json_data)
