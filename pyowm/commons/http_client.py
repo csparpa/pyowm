@@ -9,12 +9,13 @@ from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
 
 class HttpClient(object):
 
-    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None):
+    def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None, use_ssl=False):
         self.timeout = timeout
         if cache is None:
             self.cache = nullcache.NullCache()
         else:
             self.cache = cache
+        self.use_ssl = use_ssl
 
     def get_json(self, uri, params=None, headers=None):
         try:
@@ -105,15 +106,22 @@ class HttpClient(object):
         return False
 
     @classmethod
-    def to_url(cls, API_endpoint_URL, API_key, subscription_type):
+    def to_url(cls, API_endpoint_URL, API_key, subscription_type, use_ssl=False):
         # Add API Key to query params
         params = dict()
         if API_key is not None:
             params['APPID'] = API_key
         # Escape subscription subdomain if needed
         escaped_url = HttpClient._escape_subdomain(API_endpoint_URL, subscription_type)
-        r = requests.Request('GET', escaped_url, params=params).prepare()
+        url = HttpClient._fix_schema(escaped_url, use_ssl)
+        r = requests.Request('GET', url, params=params).prepare()
         return r.url
+
+    @classmethod
+    def _fix_schema(cls, url, use_ssl):
+        if use_ssl:
+            return url.replace('http', 'https')
+        return url
 
     @classmethod
     def _escape_subdomain(cls, API_endpoint_URL, subscription_type):

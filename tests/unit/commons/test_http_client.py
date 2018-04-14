@@ -84,7 +84,6 @@ class TestHTTPClient(unittest.TestCase):
 
         requests.get = self.requests_original_get
 
-
     def test_post(self):
         expected_data = '{"key": "value"}'
 
@@ -178,6 +177,17 @@ class TestHTTPClient(unittest.TestCase):
         api_subscription = 'free'
         result = HttpClient.to_url(API_endpoint, API_key, api_subscription)
         expected = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        self.assertEqual(expected, result)
+
+    def test_fix_schema_to_http(self):
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        result = HttpClient._fix_schema(API_endpoint, False)
+        self.assertEqual(API_endpoint, result)
+
+    def test_fix_schema_to_https(self):
+        API_endpoint = 'http://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        expected = 'https://api.openweathermap.org/data/2.5/ep?APPID=%C2%A3%C2%B0test%C2%A3%C2%A3'
+        result = HttpClient._fix_schema(API_endpoint, True)
         self.assertEqual(expected, result)
 
     def test_escape_subdomain(self):
