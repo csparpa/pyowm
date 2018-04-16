@@ -19,7 +19,7 @@ from pyowm.webapi25.forecaster import Forecaster
 
 class IntegrationTestsREADMESnippets(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = OWM25(parsers, API_key=os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
 
     def test_snippets(self):
 
@@ -49,6 +49,7 @@ class IntegrationTestsREADMESnippets(unittest.TestCase):
         self.assertTrue(len(os_rio) > 0)
         for o in os_rio:
             self.assertTrue(isinstance(o, Observation))
+
 
 if __name__ == '__main__':
     unittest.main()
