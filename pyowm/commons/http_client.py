@@ -36,12 +36,13 @@ class HttpClient(object):
 
     def cacheable_get_json(self, uri, params=None, headers=None):
         # check if already cached
-        cached = self.cache.get(uri)
+        cached_url_key = requests.Request('GET', uri, params=params).prepare().url
+        cached = self.cache.get(cached_url_key)
         if cached:
             return 200, cached
         status_code, data = self.get_json(uri, params=params, headers=headers)
         json_string = json.dumps(data)
-        self.cache.set(uri, json_string)
+        self.cache.set(cached_url_key, json_string)
         return status_code, json_string
 
     def post(self, uri, params=None, data=None, headers=None):

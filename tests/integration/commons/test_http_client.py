@@ -47,6 +47,13 @@ class TestHTTPClient(unittest.TestCase):
         self.assertIsInstance(data, dict)
         self.assertEqual(formdata, data['json'])
 
+    def test_ssl_certs_verification_failure(self):
+        # https://wrong.host.badssl.com does not have a valid SSL cert
+        client = HttpClient(timeout=4, use_ssl=True, verify_ssl_certs=True)
+        self.assertRaises(api_call_error.APIInvalidSSLCertificateError,
+                          HttpClient.get_json,
+                          client, 'https://wrong.host.badssl.com')
+
 
 if __name__ == "__main__":
     unittest.main()

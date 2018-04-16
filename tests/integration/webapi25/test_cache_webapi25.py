@@ -47,7 +47,7 @@ class CacheTestWebAPI25(unittest.TestCase):
     def test_caching_prevents_API_calls(self):
         cache = LRUCache(20, 1000 * 60 * 60)
         wrapped_cache = CacheWrapper(cache)
-        owm = OWM25(parsers, self.API_KEY, wrapped_cache)
+        owm = OWM25(parsers, API_key=self.API_KEY, cache=wrapped_cache)
         self.assertFalse(wrapped_cache.last_request_was_hit())
         self.assertEqual(0, wrapped_cache.api_calls())
         owm.weather_at_place('London,GB')  # Comes from OWM web API
@@ -76,7 +76,7 @@ class CacheTestWebAPI25(unittest.TestCase):
         """
         cache = LRUCache(3, 1000 * 60 * 60)  # Only three cacheable elements!
         wrapped_cache = CacheWrapper(cache)
-        owm = OWM25(parsers, self.API_KEY, wrapped_cache)
+        owm = OWM25(parsers, API_key=self.API_KEY, cache=wrapped_cache)
         owm.weather_at_place('London,GB')  # Comes from OWM web API
         owm.weather_at_place('Kiev')       # Comes from OWM web API
         owm.weather_at_place('Madrid')     # Comes from OWM web API
@@ -96,7 +96,7 @@ class CacheTestWebAPI25(unittest.TestCase):
         non-null cache.
         """
         cache = LRUCache(20, 1000 * 60 * 60)
-        owm = OWM25(parsers, self.API_KEY, cache)
+        owm = OWM25(parsers, API_key=self.API_KEY, cache=cache)
         before_request = time()
         o1 = owm.weather_at_place('London,GB')  # Comes from OWM web API
         after_request = time()
