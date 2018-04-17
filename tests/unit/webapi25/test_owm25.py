@@ -157,38 +157,6 @@ class TestOWM25(unittest.TestCase):
 
     # Tests
 
-    def test_encode_string(self):
-        name = 'testname'
-        if sys.version_info > (3, 0):
-            result = OWM25._encode_string(name)
-            self.assertEqual(result, name)
-        else:  # Python 2
-            result = OWM25._encode_string(name)
-            try:
-                result.decode('ascii')
-            except:
-                self.fail()
-
-    def test_assert_is_string(self):
-        a_string = 'test'
-        a_non_string = 123
-        OWM25._assert_is_string(a_string)
-        self.assertRaises(AssertionError, OWM25._assert_is_string, a_non_string)
-
-    def test_assert_is_string_or_unicode(self):
-        a_string = 'test'
-        a_non_string = 123
-        OWM25._assert_is_string_or_unicode(a_string)
-        self.assertRaises(AssertionError,
-                          OWM25._assert_is_string_or_unicode,
-                          a_non_string)
-
-        try:  # only for Python 2
-            unicode_value = unicode('test')
-            OWM25._assert_is_string_or_unicode(unicode_value)
-        except:
-            pass
-
     def test_wrong_API_key(self):
         try:
             OWM25(self.__test_parsers, 1234)

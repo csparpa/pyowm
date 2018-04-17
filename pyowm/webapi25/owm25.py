@@ -55,7 +55,7 @@ class OWM25(owm.OWM):
                  language="en", subscription_type='free', use_ssl=False):
         self._parsers = parsers
         if API_key is not None:
-            OWM25._assert_is_string(API_key)
+            stringutils.assert_is_string(API_key)
         self._API_key = API_key
         self._wapi = http_client.HttpClient(cache=cache)
         self._uvapi = uv_client.UltraVioletHttpClient(API_key, self._wapi)
@@ -65,49 +65,6 @@ class OWM25(owm.OWM):
             raise AssertionError('You must provide an API Key for paid subscriptions')
         self._subscription_type = subscription_type
         self._use_ssl = use_ssl
-
-    @staticmethod
-    def _assert_is_string(value):
-        """
-        Checks if the provided value is a valid string instance
-
-        :param value: value to be checked
-        :return: None
-        """
-        try:  # Python 2.x
-            assert isinstance(value, basestring), "Value must be a string or unicode"
-        except NameError:  # Python 3.x
-            assert isinstance(value, str), "Value must be a string"
-
-
-    @staticmethod
-    def _assert_is_string_or_unicode(value):
-        """
-        Checks if the provided value is a valid string or unicode instance
-        On Python 3.x it just checks that the value is a string instance.
-        :param value: value to be checked
-        :return: None
-        """
-        try:
-            assert isinstance(value, basestring) or isinstance(value, unicode), \
-                "Value must be a string or unicode"
-        except NameError:
-            assert isinstance(value, str), "Value must be a string"
-
-    @staticmethod
-    def _encode_string(value):
-        """
-        Turns the provided value to UTF-8 encoding
-
-        :param value: input value
-        :return: UTF-8 encoded value
-        """
-        try:  # The OWM API expects UTF-8 encoding
-            if not isinstance(value, unicode):
-                return value.encode('utf8')
-            return value
-        except NameError:
-            return value
 
     def get_API_key(self):
         """
@@ -231,8 +188,8 @@ class OWM25(owm.OWM):
             reached
         """
 
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
@@ -285,10 +242,10 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        OWM25._assert_is_string_or_unicode(zipcode)
-        OWM25._assert_is_string_or_unicode(country)
-        encoded_zip = OWM25._encode_string(zipcode)
-        encoded_country = OWM25._encode_string(country)
+        stringutils.assert_is_string_or_unicode(zipcode)
+        stringutils.assert_is_string_or_unicode(country)
+        encoded_zip = stringutils.encode_to_utf8(zipcode)
+        encoded_country = stringutils.encode_to_utf8(country)
         zip_param = encoded_zip + ',' + encoded_country
         params = {'zip': zip_param, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
@@ -538,8 +495,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
                                             self._API_key,
@@ -643,8 +600,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -781,8 +738,8 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
         params = {'q': encoded_name, 'lang': self._language}
         if start is None and end is None:
             pass
