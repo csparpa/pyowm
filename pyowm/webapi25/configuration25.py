@@ -14,6 +14,10 @@ API_SUBSCRIPTION_SUBDOMAINS = {
     'pro': 'pro'
 }
 
+# Default usage of SSL on OWM API calls
+USE_SSL = False
+VERIFY_SSL_CERTS = True
+
 # OWM web API URLs
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
 ROOT_HISTORY_URL = 'http://history.openweathermap.org/data/2.5'
@@ -69,7 +73,7 @@ language = 'en'
 # Default API subscription type ('free' or 'pro')
 API_SUBSCRIPTION_TYPE = 'free'
 
-# OWM web API availability test timeout in seconds
+# OWM web API availability timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 
 # Weather status code registry

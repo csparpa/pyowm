@@ -53,3 +53,17 @@ class APICallTimeoutError(APICallError):
     :type triggering_error: an *Exception* subtype
     """
     pass
+
+
+class APIInvalidSSLCertificateError(APICallError):
+    """
+    Error class that represents failure in verifying the SSL certificate provided
+    by the OWM API
+
+    :param message: the message of the error
+    :type message: str
+    :param triggering_error: optional *Exception* object that triggered this
+        error (defaults to ``None``)
+    :type triggering_error: an *Exception* subtype
+    """
+    pass

@@ -61,7 +61,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         self.assertEqual(0, len(result))
 
         result = self._instance.ids_for("Abbans-Dessus")
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
         self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
