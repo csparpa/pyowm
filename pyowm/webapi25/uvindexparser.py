@@ -8,7 +8,7 @@ from pyowm.webapi25 import uvindex
 from pyowm.webapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
-from pyowm.utils import timeformatutils, timeutils
+from pyowm.utils import timeutils
 
 
 class UVIndexParser(jsonparser.JSONParser):

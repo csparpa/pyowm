@@ -173,6 +173,18 @@ UVINDEX_JSON = '{"lat":43.75,"lon":8.25,"date_iso":"2016-09-27T12:00:00Z",' \
 UVINDEX_MALFORMED_JSON = '{"lat":43.75,"lon":8.25,"zzz":"2016-09-27T12:00:00Z",' \
                '"date":1474977600,"test":4.58}'
 
+UVINDEX_LIST_JSON = '[{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-22T12:00:00Z",' \
+                    '"date":1498132800,"value":9.92},{"lat":37.75,"lon":-122.37,' \
+                    '"date_iso":"2017-06-23T12:00:00Z","date":1498219200,' \
+                    '"value":10.09},{"lat":37.75,"lon":-122.37,"date_iso":' \
+                    '"2017-06-24T12:00:00Z","date":1498305600,"value":10.95},' \
+                    '{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-25T12:00:00Z",' \
+                    '"date":1498392000,"value":11.03},{"lat":37.75,"lon":-122.37,' \
+                    '"date_iso":"2017-06-26T12:00:00Z","date":1498478400,"value":10.06}]'
+
+UVINDEX_LIST_MALFORMED_JSON = '[{"lat":43.75,"lon":8.25,"zzz":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"test":4.58}]'
+
 COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
 
 COINDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
