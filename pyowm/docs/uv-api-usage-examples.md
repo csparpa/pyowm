@@ -8,18 +8,44 @@ Please refer to the official API docs for [UV](http://openweathermap.org/api/uvi
 
 Getting the data is easy:
 
-```
+```python
 uvi = owm.uvindex_around_coords(lat, lon)
 ```
 
 The query returns an UV Index value entity instance
 
 
+### Querying UV index forecasts
+
+As easy as:
+
+```python
+uvi_list = owm.uvindex_forecast_around_coords(lat, lon)
+```
+
+### Querying UV index history
+
+As easy as: 
+
+```python
+uvi_history_list = owm.uvindex_history_around_coords(
+    lat, lon,
+    datetime.datetime(2017, 8, 1, 0, 0),
+    end=datetime.datetime(2018, 2, 15, 0, 0))
+```
+
+`start` and `end` can be ISO-8601 date strings, unix timestamps or Python datetime
+objects.
+
+In case `end` is not provided, then UV historical values will be retrieved
+dating back to `start` up to the current timestamp.
+
+
 ### `UVIndex` entity
 `UVIndex` is an entity representing a UV intensity measurement on a certain geopoint.
 Here are some of the methods:
 
-```
+```python
 uvi.get_value()
 uvi.get_reference_time()
 uvi.get_reception_time()

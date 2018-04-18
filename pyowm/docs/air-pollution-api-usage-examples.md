@@ -105,3 +105,7 @@ oz.get_reception_time()
 
 If you want to know if an Ozone measurement refers to the future - aka: is a forecast - wth respect to the
 current timestamp, then use the `is_forecast()` method
+
+
+### Querying Nitrogen dioxide (NO2) and Sulfur Dioxide (SO2) data
+This works exactly as for O2 adata - please refer to that bit of the docs

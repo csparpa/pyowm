@@ -1,4 +1,4 @@
-from pyowm.webapi25.configuration25 import UV_INDEX_URL
+from pyowm.webapi25.configuration25 import UV_INDEX_URL, UV_INDEX_FORECAST_URL
 from pyowm.commons import http_client
 
 
@@ -35,7 +35,6 @@ class UltraVioletHttpClient(object):
             raise ValueError("The interval provided for UVIndex search "
                              "window is invalid")
 
-
     def get_uvi(self, params_dict):
         """
         Invokes the UV Index endpoint
@@ -54,6 +53,25 @@ class UltraVioletHttpClient(object):
         _, json_data = self._client.cacheable_get_json(uri, params=params)
         return json_data
 
+    def get_uvi_forecast(self, params_dict):
+        """
+        Invokes the UV Index Forecast endpoint
+
+        :param params_dict: dict of parameters
+        :returns: a string containing raw JSON data
+        :raises: *ValueError*, *APICallError*
+
+        """
+        lat = str(params_dict['lat'])
+        lon = str(params_dict['lon'])
+        params = dict(lat=lat, lon=lon)
+
+        # build request URL
+        uri = http_client.HttpClient.to_url(UV_INDEX_FORECAST_URL,
+                                            self._API_key,
+                                            None)
+        _, json_data = self._client.cacheable_get_json(uri, params=params)
+        return json_data
 
     def __repr__(self):
         return "<%s.%s - httpclient=%s>" % \
