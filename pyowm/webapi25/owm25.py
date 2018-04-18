@@ -15,7 +15,7 @@ from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
 from pyowm.commons import http_client, uv_client, airpollution_client
 from pyowm.exceptions import api_call_error
-from pyowm.utils import timeformatutils, stringutils
+from pyowm.utils import timeformatutils, stringutils, timeutils
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
 from pyowm.stationsapi30 import stations_manager
@@ -1121,7 +1121,22 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        raise NotImplementedError()
+        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
+        if lon < -180.0 or lon > 180.0:
+            raise ValueError("'lon' value must be between -180 and 180")
+        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
+        if lat < -90.0 or lat > 90.0:
+            raise ValueError("'lat' value must be between -90 and 90")
+        assert start is not None
+        start = timeformatutils.timeformat(start, 'unix')
+        if end is None:
+            end = timeutils.now(timeformat='unix')
+        else:
+            end = timeformatutils.timeformat(end, 'unix')
+        params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
+        json_data = self._uvapi.get_uvi_history(params)
+        uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)
+        return uvindex_list
 
     #  --- POLLUTION API ENDPOINTS ---
 

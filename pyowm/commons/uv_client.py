@@ -1,4 +1,5 @@
-from pyowm.webapi25.configuration25 import UV_INDEX_URL, UV_INDEX_FORECAST_URL
+from pyowm.webapi25.configuration25 import UV_INDEX_URL, UV_INDEX_FORECAST_URL, \
+    UV_INDEX_HISTORY_URL
 from pyowm.commons import http_client
 
 
@@ -68,6 +69,28 @@ class UltraVioletHttpClient(object):
 
         # build request URL
         uri = http_client.HttpClient.to_url(UV_INDEX_FORECAST_URL,
+                                            self._API_key,
+                                            None)
+        _, json_data = self._client.cacheable_get_json(uri, params=params)
+        return json_data
+
+    def get_uvi_history(self, params_dict):
+        """
+        Invokes the UV Index History endpoint
+
+        :param params_dict: dict of parameters
+        :returns: a string containing raw JSON data
+        :raises: *ValueError*, *APICallError*
+
+        """
+        lat = str(params_dict['lat'])
+        lon = str(params_dict['lon'])
+        start = str(params_dict['start'])
+        end = str(params_dict['end'])
+        params = dict(lat=lat, lon=lon, start=start, end=end)
+
+        # build request URL
+        uri = http_client.HttpClient.to_url(UV_INDEX_HISTORY_URL,
                                             self._API_key,
                                             None)
         _, json_data = self._client.cacheable_get_json(uri, params=params)

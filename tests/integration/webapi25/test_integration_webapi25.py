@@ -17,7 +17,7 @@ from pyowm.exceptions import unauthorized_error, not_found_error
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', '0f7d1d702ba2d055ab90a14bd7799090'))
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
 
     def test_is_API_online(self):
         self.assertTrue(self.__owm.is_API_online())
@@ -554,6 +554,21 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         Test feature: get UV index forecast around geo-coordinates.
         """
         uv_list = self.__owm.uvindex_forecast_around_coords(45, 9)
+        self.assertIsInstance(uv_list, list)
+        for item in uv_list:
+            self.assertIsNotNone(item.get_value())
+            self.assertIsNotNone(item.get_reception_time())
+            self.assertIsNotNone(item.get_location())
+
+    def test_uvindex_history_around_coords(self):
+        """
+        Test feature: get UV index history around geo-coordinates.
+        """
+        start = datetime(2017, 6, 21)
+        end = datetime(2017, 6, 27)
+        uv_list = self.__owm.uvindex_history_around_coords(37.7, -122.37,
+                                                           start,
+                                                           end=end)
         self.assertIsInstance(uv_list, list)
         for item in uv_list:
             self.assertIsNotNone(item.get_value())

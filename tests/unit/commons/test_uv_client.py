@@ -33,7 +33,8 @@ class TestOWMHttpUVClient(unittest.TestCase):
 
     def test_get_uvi(self):
         # case: current UV index
-        params = {'lon': '8.25', 'lat': '43.75'}
+        params = {'lon': 8.25, 'lat': 43.75}
+        expected = {k: str(v) for k, v in params.items()}
 
         def mock_func(uri, params=None, headers=None):
             return 200, (uri, params)
@@ -43,10 +44,11 @@ class TestOWMHttpUVClient(unittest.TestCase):
         result = self.__instance.get_uvi(params)
         self.assertEqual('http://api.openweathermap.org/data/2.5/uvi?APPID=xyz',
                          result[0])
-        self.assertEqual(params, result[1])
+        self.assertEqual(expected, result[1])
 
     def test_get_uvi_forecast(self):
-        params = {'lon': '8.25', 'lat': '43.75'}
+        params = {'lon': 8.25, 'lat': 43.75}
+        expected = {k: str(v) for k, v in params.items()}
 
         def mock_func(uri, params=None, headers=None):
             return 200, (uri, params)
@@ -56,4 +58,19 @@ class TestOWMHttpUVClient(unittest.TestCase):
         result = self.__instance.get_uvi_forecast(params)
         self.assertEqual('http://api.openweathermap.org/data/2.5/uvi/forecast?APPID=xyz',
                          result[0])
-        self.assertEqual(params, result[1])
+        self.assertEqual(expected, result[1])
+
+    def test_get_uvi_history(self):
+        params = {'lon': 8.25, 'lat': 43.75, 'start': 1498049953,
+                  'end': 1498481991}
+        expected = {k: str(v) for k, v in params.items()}
+
+        def mock_func(uri, params=None, headers=None):
+            return 200, (uri, params)
+
+        self.__instance._client.cacheable_get_json = mock_func
+
+        result = self.__instance.get_uvi_history(params)
+        self.assertEqual('http://api.openweathermap.org/data/2.5/uvi/history?APPID=xyz',
+                         result[0])
+        self.assertEqual(expected, result[1])
