@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6161ab4fa0db423a72dfafd1dc173fec7d8631bfda9ec28087ebacc1ba207781"
+            "sha256": "ce9db6576698d1326a2e2de524bb70647072658dee268cccade8fd05b4e739b1"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -16,10 +16,10 @@
     "default": {
         "certifi": {
             "hashes": [
-                "sha256:14131608ad2fd56836d33a71ee60fa1c82bc9d2c8d98b7bdbc631fe1b3cd1296",
-                "sha256:edbc3f203427eef571f79a7692bb160a2b0f7ccaa31953e99bd17e307cf63f7d"
+                "sha256:13e698f54293db9f89122b0581843a782ad0934a4fe0172d2a980ba77fc61bb7",
+                "sha256:9fa520c1bacfb634fa7af20a76bcbd3d5fb390481724c597da32c719a7dca4b0"
             ],
-            "version": "==2018.1.18"
+            "version": "==2018.4.16"
         },
         "chardet": {
             "hashes": [
@@ -27,6 +27,14 @@
                 "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
             ],
             "version": "==3.0.4"
+        },
+        "geojson": {
+            "hashes": [
+                "sha256:8831556d1ac18805c4955aa881e022e6ddcef44020b315200680eec6dd209e40",
+                "sha256:c8873d12421665f6731b8e4c3b2484a4516c0d9b286c26cb7cffa781d062301a"
+            ],
+            "index": "pypi",
+            "version": "==2.3.0"
         },
         "idna": {
             "hashes": [
@@ -54,10 +62,10 @@
     "develop": {
         "certifi": {
             "hashes": [
-                "sha256:14131608ad2fd56836d33a71ee60fa1c82bc9d2c8d98b7bdbc631fe1b3cd1296",
-                "sha256:edbc3f203427eef571f79a7692bb160a2b0f7ccaa31953e99bd17e307cf63f7d"
+                "sha256:13e698f54293db9f89122b0581843a782ad0934a4fe0172d2a980ba77fc61bb7",
+                "sha256:9fa520c1bacfb634fa7af20a76bcbd3d5fb390481724c597da32c719a7dca4b0"
             ],
-            "version": "==2018.1.18"
+            "version": "==2018.4.16"
         },
         "chardet": {
             "hashes": [
@@ -179,10 +187,10 @@
         },
         "tqdm": {
             "hashes": [
-                "sha256:059e7dd579f2c1a2b9103a8ec76fb0bc32cc16904d7d65977edfed6b5745dc48",
-                "sha256:a180389a780f6b52268c30f40fdcb0443ab3d925574579d987eadf10c59ff90c"
+                "sha256:597e7526c85df881d51e094360181a84533aede1cb3f5a1cada8bbd4de557efd",
+                "sha256:fe3d218d5b61993d415aa2a9db6dd64c0e4cefb90164ebb197ef3b1d99f531dc"
             ],
-            "version": "==4.22.0"
+            "version": "==4.23.0"
         },
         "twine": {
             "hashes": [
