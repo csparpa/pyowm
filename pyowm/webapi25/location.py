@@ -38,11 +38,9 @@ class Location(object):
         self._name = name
         if lon is None or lat is None:
             raise ValueError("Either 'lon' or 'lat' must be specified")
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         self._lon = float(lon)
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
         self._lat = float(lat)
         self._ID = ID
         self._country = country

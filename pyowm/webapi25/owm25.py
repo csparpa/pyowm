@@ -15,7 +15,7 @@ from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
 from pyowm.commons import http_client, uv_client, airpollution_client
 from pyowm.exceptions import api_call_error
-from pyowm.utils import timeformatutils, stringutils, timeutils
+from pyowm.utils import timeformatutils, stringutils, timeutils, geo
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
 from pyowm.stationsapi30 import stations_manager
@@ -215,12 +215,8 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
@@ -405,28 +401,13 @@ class OWM25(owm.OWM):
             reached, *ValueError* when coordinates values are out of bounds or
             negative values are provided for limit
         """
-        assert type(lat_top_left) in (float, int), \
-                "'lat_top_left' must be a float"
-        assert type(lon_top_left) in (float, int), \
-                "'lon_top_left' must be a float"
-        assert type(lat_bottom_right) in (float, int), \
-                "'lat_bottom_right' must be a float"
-        assert type(lon_bottom_right) in (float, int), \
-                "'lon_bottom_right' must be a float"
         assert type(cluster) is bool, "'cluster' must be a bool"
         assert type(limit) in (int, type(None)), \
                 "'limit' must be an int or None"
-        if lat_top_left < -90.0 or lat_top_left > 90.0:
-            raise ValueError("'lat_top_left' value must be between -90 and 90")
-        if lon_top_left < -180.0 or lon_top_left > 180.0:
-            raise ValueError("'lon_top_left' value must be between -180 and" \
-                             +" 180")
-        if lat_bottom_right < -90.0 or lat_bottom_right > 90.0:
-            raise ValueError("'lat_bottom_right' value must be between -90" \
-                             +" and 90")
-        if lon_bottom_right < -180.0 or lon_bottom_right > 180.0:
-            raise ValueError("'lon_bottom_right' value must be between -180 "\
-                             +"and 180")
+        geo.assert_is_lon(lon_top_left)
+        geo.assert_is_lon(lon_bottom_right)
+        geo.assert_is_lat(lat_top_left)
+        geo.assert_is_lat(lat_bottom_right)
         if limit is not None and limit < 1:
             raise ValueError("'limit' must be None or greater than zero")
         params = {'bbox': ','.join([str(lon_top_left),
@@ -462,12 +443,8 @@ class OWM25(owm.OWM):
             reached, *ValueError* when coordinates values are out of bounds or
             negative values are provided for limit
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
@@ -531,12 +508,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
                                             self._API_key,
@@ -646,12 +619,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -790,15 +759,9 @@ class OWM25(owm.OWM):
             not available for the specified location
 
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-
         if start is not None:
             unix_start = timeformatutils.to_UNIXtime(start)
 
@@ -903,12 +866,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be int or None"
             if limit < 1:
@@ -1061,13 +1020,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self._uvapi.get_uvi(params)
         uvindex = self._parsers['uvindex'].parse_JSON(json_data)
@@ -1087,13 +1041,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self._uvapi.get_uvi_forecast(params)
         uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)
@@ -1121,12 +1070,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         assert start is not None
         start = timeformatutils.timeformat(start, 'unix')
         if end is None:
@@ -1169,13 +1114,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_coi(params)
         coindex = self._parsers['coindex'].parse_JSON(json_data)
@@ -1212,13 +1152,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_o3(params)
         ozone = self._parsers['ozone'].parse_JSON(json_data)
@@ -1256,13 +1191,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_no2(params)
         no2index = self._parsers['no2index'].parse_JSON(json_data)
@@ -1300,13 +1230,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_so2(params)
         so2index = self._parsers['so2index'].parse_JSON(json_data)

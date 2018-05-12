@@ -1,6 +1,5 @@
 import json
 import geojson
-import math
 
 
 def assert_is_lat(val):
