@@ -6,7 +6,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.webapi25.xsd.xmlnsconfig import (
     LOCATION_XMLNS_URL, LOCATION_XMLNS_PREFIX)
-from pyowm.utils import xmlutils
+from pyowm.utils import xmlutils, geo
 
 
 class Location(object):
@@ -91,6 +91,18 @@ class Location(object):
 
         """
         return self._country
+
+    def to_geopoint(self):
+        """
+        Returns the geoJSON compliant representation of this location
+
+        :returns: a ``pyowm.utils.geo.Point`` instance
+
+        """
+        if self._lon is None or self._lat is None:
+            return None
+        return geo.Point(self._lon, self._lat)
+
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
