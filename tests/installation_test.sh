@@ -21,14 +21,14 @@ fi
 echo " --- Test import of library was OK"
 
 # Test dependencies installation
-python -c "import requests" && python -c "import geojson"
-if [ $? -ne 0 ]; then
-    echo " --- Test import of dependencies failed!"
-    deactivate
-    rm -rf "$venv"
-    exit 3
-fi
-echo " --- Test import of dependencies was OK"
+#python -c "import requests" && python -c "import geojson"
+#if [ $? -ne 0 ]; then
+#    echo " --- Test import of dependencies failed!"
+#    deactivate
+#    rm -rf "$venv"
+#    exit 3
+#fi
+#echo " --- Test import of dependencies was OK"
 
 # Cleanup
 deactivate
