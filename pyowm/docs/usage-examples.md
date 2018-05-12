@@ -68,16 +68,18 @@ An ``Observation`` object will be returned, containing weather info about the lo
 City IDs can be retrieved using a registry:
 
     reg = owm.city_id_registry()
-    reg.ids_for('London')       # [ (123, 'London', 'GB'), (456, 'London', 'MA'), (789, 'London', 'WY')]
+    reg.ids_for('London')        # [ (123, 'London', 'GB'), (456, 'London', 'MA'), (789, 'London', 'WY')]
     reg.locations_for("London")  # gives a list of Location instances
+    reg.geopoints_for("London")  # gives a list of pyowm.utils.geo.Point objects
 
 You can pass the retrieved IDs with ``owm.weather_at_id`` method.
 
 As multiple locations with the same name exist in different states, the registry
 comes with support for narrowing down queries on specific countries...
 
-    london = reg.ids_for('London', country='GB')            # [ (123, 'London, GB') ]
-    london_loc = reg.locations_for('London', country='GB')  # [ <Location obj> ]
+    london = reg.ids_for('London', country='GB')                 # [ (123, 'London, GB') ]
+    london_loc = reg.locations_for('London', country='GB')       # [ <Location obj> ]
+    london_geopoint = reg.geopoints_for('London', country='GB')  # [ <Point obj> ]
 
 ... as well as for changing the type of matches between the provided string and
 the locations' toponyms:
