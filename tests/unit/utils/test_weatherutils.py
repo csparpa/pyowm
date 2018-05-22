@@ -4,7 +4,7 @@ Test case for weatherutils.py module
 
 import unittest
 from pyowm.webapi25.weather import Weather
-from pyowm.webapi25 import weatherutils
+from pyowm.utils import weatherutils
 from pyowm.webapi25.weathercoderegistry import WeatherCodeRegistry
 from pyowm.exceptions.not_found_error import NotFoundError
 
@@ -59,7 +59,7 @@ class TestWeatherUtils(unittest.TestCase):
                                                    "sun", self.__test_registry))
         self.assertFalse(weatherutils.any_status_is(self.__test_weathers,
                                                    "storm",
-                                                   self.__test_registry))
+                                                    self.__test_registry))
 
     def test_filter_by_status(self):
         result_1 = weatherutils.filter_by_status(self.__test_weathers,
@@ -79,14 +79,14 @@ class TestWeatherUtils(unittest.TestCase):
     def test_find_closest_weather(self):
         self.assertEqual(self.__test_weather_rain,
                          weatherutils.find_closest_weather(self.__test_weathers,
-                                                   self.__test_time_low + 200))
+                                                           self.__test_time_low + 200))
         self.assertEqual(self.__test_weather_sun,
                          weatherutils.find_closest_weather(self.__test_weathers,
-                                                   self.__test_time_high - 200))
+                                                           self.__test_time_high - 200))
 
     def test_find_closest_weather_with_empty_list(self):
         self.assertFalse(weatherutils.find_closest_weather([],
-                                                   self.__test_time_low + 200))
+                                                           self.__test_time_low + 200))
 
     def test_find_closest_fails_when_unixtime_not_in_coverage(self):
         self.assertRaises(NotFoundError, weatherutils.find_closest_weather,
@@ -102,9 +102,9 @@ class TestWeatherUtils(unittest.TestCase):
         self.assertTrue(weatherutils.is_in_coverage(self.__test_time_high,
                                                     self.__test_weathers))
         self.assertFalse(weatherutils.is_in_coverage(self.__test_time_low - 200,
-                                                    self.__test_weathers))
+                                                     self.__test_weathers))
         self.assertFalse(weatherutils.is_in_coverage(self.__test_time_high + 200,
-                                                    self.__test_weathers))
+                                                     self.__test_weathers))
 
     def test_is_in_coverage_with_empty_list(self):
         self.assertFalse(weatherutils.is_in_coverage(1234567, []))

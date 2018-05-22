@@ -2,8 +2,7 @@
 Module containing weather forecast abstraction classes and data structures.
 """
 
-from pyowm.utils import timeformatutils
-from pyowm.webapi25 import weatherutils
+from pyowm.utils import timeformatutils, weatherutils
 from pyowm.webapi25.configuration25 import weather_code_registry
 from pyowm.abstractions.decorators import deprecated
 
@@ -78,7 +77,7 @@ class Forecaster(object):
 
         """        
         return weatherutils.any_status_is(self._forecast.get_weathers(), "rain",
-                                   weather_code_registry)
+                                          weather_code_registry)
 
     @deprecated(will_be='removed', on_version=(3, 0, 0))
     def will_have_sun(self):
