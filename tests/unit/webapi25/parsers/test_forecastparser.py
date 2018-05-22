@@ -3,7 +3,7 @@ Test case for forecastparser.py module
 """
 
 import unittest
-from pyowm.webapi25.forecastparser import ForecastParser
+from pyowm.webapi25.parsers.forecastparser import ForecastParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from tests.unit.webapi25.json_test_responses import (

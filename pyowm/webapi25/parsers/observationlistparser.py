@@ -5,7 +5,7 @@ returning lists of Observation objects
 
 import json
 from pyowm.abstractions.jsonparser import JSONParser
-from pyowm.webapi25.observationparser import ObservationParser
+from pyowm.webapi25.parsers.observationparser import ObservationParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 

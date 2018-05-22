@@ -12,7 +12,7 @@ setup(
     url='http://github.com/csparpa/pyowm',
     packages=['pyowm', 'pyowm.abstractions', 'pyowm.caches', 'pyowm.commons',
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25',
-              'pyowm.webapi25.cityids', 'pyowm.webapi25.xsd',
+              'pyowm.webapi25.cityids', 'pyowm.webapi25.parsers', 'pyowm.webapi25.xsd',
               'pyowm.docs', 'pyowm.stationsapi30', 'pyowm.stationsapi30.xsd'],
     long_description="""PyOWM is a client Python wrapper library for the
     OpenWeatherMap web API. It allows quick and easy consumption of OWM weather

@@ -1,19 +1,16 @@
-"""
-Test case for uvindexparser.py module
-"""
 import unittest
-from pyowm.webapi25.uvindexparser import UVIndexParser
+from pyowm.webapi25.parsers.ozoneparser import OzoneParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from tests.unit.webapi25.json_test_responses import (
-    UVINDEX_JSON, UVINDEX_MALFORMED_JSON)
+    OZONE_JSON, OZONE_MALFORMED_JSON)
 
 
-class TestUVIndexParser(unittest.TestCase):
+class TestObservationParser(unittest.TestCase):
 
-    __instance = UVIndexParser()
+    __instance = OzoneParser()
 
     def test_parse_JSON(self):
-        result = self.__instance.parse_JSON(UVINDEX_JSON)
+        result = self.__instance.parse_JSON(OZONE_JSON)
         self.assertIsNotNone(result)
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
@@ -23,14 +20,15 @@ class TestUVIndexParser(unittest.TestCase):
         self.assertIsNone(loc.get_ID())
         self.assertIsNotNone(loc.get_lon())
         self.assertIsNotNone(loc.get_lat())
-        self.assertIsNotNone(result.get_value())
+        self.assertIsNone(result.get_interval())
+        self.assertIsNotNone(result.get_du_value())
 
     def test_parse_JSON_fails_when_JSON_data_is_None(self):
-        self.assertRaises(ParseResponseError, UVIndexParser.parse_JSON,
+        self.assertRaises(ParseResponseError, OzoneParser.parse_JSON,
                           self.__instance, None)
 
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
-        self.assertRaises(ParseResponseError, UVIndexParser.parse_JSON,
-                          self.__instance, UVINDEX_MALFORMED_JSON)
+        self.assertRaises(ParseResponseError, OzoneParser.parse_JSON,
+                          self.__instance, OZONE_MALFORMED_JSON)
 
 

@@ -1,19 +1,19 @@
 import unittest
-from pyowm.webapi25.ozone_parser import OzoneParser
+from pyowm.webapi25.parsers.so2indexparser import SO2IndexParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from tests.unit.webapi25.json_test_responses import (
-    OZONE_JSON, OZONE_MALFORMED_JSON)
+    SO2INDEX_JSON, SO2INDEX_MALFORMED_JSON)
 
 
-class TestObservationParser(unittest.TestCase):
+class TestSO2IndexParser(unittest.TestCase):
 
-    __instance = OzoneParser()
+    __instance = SO2IndexParser()
 
     def test_parse_JSON(self):
-        result = self.__instance.parse_JSON(OZONE_JSON)
+        result = self.__instance.parse_JSON(SO2INDEX_JSON)
         self.assertIsNotNone(result)
         self.assertIsNotNone(result.get_reference_time())
-        self.assertIsNotNone(result.get_reception_time())
+        self.assertIsNotNone(result.get_reference_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)
         self.assertIsNone(loc.get_name())
@@ -21,14 +21,12 @@ class TestObservationParser(unittest.TestCase):
         self.assertIsNotNone(loc.get_lon())
         self.assertIsNotNone(loc.get_lat())
         self.assertIsNone(result.get_interval())
-        self.assertIsNotNone(result.get_du_value())
+        self.assertNotEquals(0, len(result.get_so2_samples()))
 
     def test_parse_JSON_fails_when_JSON_data_is_None(self):
-        self.assertRaises(ParseResponseError, OzoneParser.parse_JSON,
+        self.assertRaises(ParseResponseError, SO2IndexParser.parse_JSON,
                           self.__instance, None)
 
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
-        self.assertRaises(ParseResponseError, OzoneParser.parse_JSON,
-                          self.__instance, OZONE_MALFORMED_JSON)
-
-
+        self.assertRaises(ParseResponseError, SO2IndexParser.parse_JSON,
+                          self.__instance, SO2INDEX_MALFORMED_JSON)

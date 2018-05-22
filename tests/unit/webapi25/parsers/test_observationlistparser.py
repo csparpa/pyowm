@@ -2,7 +2,7 @@
 Test case for observationlistparser.py module
 """
 import unittest
-from pyowm.webapi25.observationlistparser import ObservationListParser
+from pyowm.webapi25.parsers.observationlistparser import ObservationListParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from tests.unit.webapi25.json_test_responses import (

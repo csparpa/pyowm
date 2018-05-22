@@ -6,7 +6,7 @@ returning a list of Station instances
 import json
 
 from pyowm.abstractions.jsonparser import JSONParser
-from pyowm.webapi25.stationparser import StationParser
+from pyowm.webapi25.parsers.stationparser import StationParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 
 

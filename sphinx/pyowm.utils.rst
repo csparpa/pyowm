@@ -4,6 +4,22 @@ pyowm.utils package
 Submodules
 ----------
 
+pyowm.utils.geo module
+----------------------
+
+.. automodule:: pyowm.utils.geo
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.utils.alerting module
+----------------------------
+
+.. automodule:: pyowm.utils.alerting
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.utils.temputils module
 ----------------------------
 

@@ -43,19 +43,19 @@ from pyowm.webapi25.coindex import COIndex
 from pyowm.webapi25.ozone import Ozone
 from pyowm.webapi25.no2index import NO2Index
 from pyowm.webapi25.so2index import SO2Index
-from pyowm.webapi25.forecastparser import ForecastParser
-from pyowm.webapi25.observationparser import ObservationParser
-from pyowm.webapi25.observationlistparser import ObservationListParser
-from pyowm.webapi25.stationparser import StationParser
-from pyowm.webapi25.stationlistparser import StationListParser
-from pyowm.webapi25.stationhistoryparser import StationHistoryParser
-from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
-from pyowm.webapi25.uvindexparser import UVIndexParser
-from pyowm.webapi25.uvindexlistparser import UVIndexListParser
-from pyowm.webapi25.coindexparser import COIndexParser
-from pyowm.webapi25.ozone_parser import OzoneParser
-from pyowm.webapi25.no2indexparser import NO2IndexParser
-from pyowm.webapi25.so2indexparser import SO2IndexParser
+from pyowm.webapi25.parsers.forecastparser import ForecastParser
+from pyowm.webapi25.parsers.observationparser import ObservationParser
+from pyowm.webapi25.parsers.observationlistparser import ObservationListParser
+from pyowm.webapi25.parsers.stationparser import StationParser
+from pyowm.webapi25.parsers.stationlistparser import StationListParser
+from pyowm.webapi25.parsers.stationhistoryparser import StationHistoryParser
+from pyowm.webapi25.parsers.weatherhistoryparser import WeatherHistoryParser
+from pyowm.webapi25.parsers.uvindexparser import UVIndexParser
+from pyowm.webapi25.parsers.uvindexlistparser import UVIndexListParser
+from pyowm.webapi25.parsers.coindexparser import COIndexParser
+from pyowm.webapi25.parsers.ozoneparser import OzoneParser
+from pyowm.webapi25.parsers.no2indexparser import NO2IndexParser
+from pyowm.webapi25.parsers.so2indexparser import SO2IndexParser
 
 
 class TestOWM25(unittest.TestCase):

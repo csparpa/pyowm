@@ -2,7 +2,7 @@
 Test case for stationhistoryparser.py module
 """
 import unittest
-from pyowm.webapi25.stationhistoryparser import StationHistoryParser
+from pyowm.webapi25.parsers.stationhistoryparser import StationHistoryParser
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError

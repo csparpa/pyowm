@@ -1,9 +1,8 @@
 from pyowm.caches import nullcache
-from pyowm.webapi25 import observationparser, observationlistparser, \
-    forecastparser, weatherhistoryparser, stationparser, stationlistparser, \
-    stationhistoryparser, uvindexparser, uvindexlistparser, coindexparser, \
-    weathercoderegistry, cityidregistry, ozone_parser, no2indexparser, \
-    so2indexparser
+from pyowm.webapi25 import weathercoderegistry, cityidregistry
+from pyowm.webapi25.parsers import coindexparser, forecastparser, no2indexparser, observationlistparser, \
+    observationparser, ozoneparser, so2indexparser, stationhistoryparser, stationlistparser, stationparser, \
+    uvindexlistparser, uvindexparser, weatherhistoryparser
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
@@ -60,7 +59,7 @@ parsers = {
   'uvindex': uvindexparser.UVIndexParser(),
   'uvindex_list': uvindexlistparser.UVIndexListParser(),
   'coindex': coindexparser.COIndexParser(),
-  'ozone': ozone_parser.OzoneParser(),
+  'ozone': ozoneparser.OzoneParser(),
   'no2index': no2indexparser.NO2IndexParser(),
   'so2index': so2indexparser.SO2IndexParser()
 }

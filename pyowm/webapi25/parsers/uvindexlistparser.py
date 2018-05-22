@@ -1,7 +1,7 @@
 import json
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
-from pyowm.webapi25.uvindexparser import UVIndexParser
+from pyowm.webapi25.parsers.uvindexparser import UVIndexParser
 
 
 class UVIndexListParser(jsonparser.JSONParser):

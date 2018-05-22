@@ -2,7 +2,7 @@
 Test case for weatherhistoryparser.py module
 """
 import unittest
-from pyowm.webapi25.weatherhistoryparser import WeatherHistoryParser
+from pyowm.webapi25.parsers.weatherhistoryparser import WeatherHistoryParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from tests.unit.webapi25.json_test_responses import (CITY_WEATHER_HISTORY_JSON,

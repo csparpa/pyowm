@@ -1,6 +1,6 @@
 import unittest
 from pyowm.webapi25.uvindex import UVIndex
-from pyowm.webapi25.uvindexlistparser import UVIndexListParser
+from pyowm.webapi25.parsers.uvindexlistparser import UVIndexListParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from tests.unit.webapi25.json_test_responses import (
     UVINDEX_LIST_JSON, UVINDEX_LIST_MALFORMED_JSON)
