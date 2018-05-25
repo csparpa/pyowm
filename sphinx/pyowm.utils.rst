@@ -12,13 +12,6 @@ pyowm.utils.geo module
     :undoc-members:
     :show-inheritance:
 
-pyowm.utils.alerting module
-----------------------------
-
-.. automodule:: pyowm.utils.alerting
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 pyowm.utils.temputils module
 ----------------------------
