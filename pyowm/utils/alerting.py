@@ -62,7 +62,6 @@ class Condition:
     the weather parameter against a numerical value with respect to an operator.
     Allowed weather params and operators are specified by the `pyowm.utils.alerting.WeatherParametersEnum` and
     `pyowm.utils.alerting.OperatorsEnum` enumerator classes.
-
     :param weather_param: the weather variable to be checked (eg. TEMPERATURE, CLOUDS, ...)
     :type weather_param: str
     :param operator: the comparison operator to be applied to the weather variable (eg. GREATER_THAN, EQUAL, ...)

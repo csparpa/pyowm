@@ -140,7 +140,6 @@ class Polygon(Geometry):
     A Polygon geotype. Each Polygon is made up by one or more lines: a line represents a set of connected geographic
     points and is conveyed by a list of points, the last one of which must coincide with the its very first one.
     As said, Polygons can be also made up by multiple lines (therefore, Polygons with "holes" are allowed)
-
     :param list_of_lists: list of lists, each sublist being a line and being composed by tuples - each one being the
     (lon, lat) couple of a geopoint. The last point specified MUST coincide with the first one specified
     :type list_of_tuples: list

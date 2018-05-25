@@ -1,6 +1,6 @@
 import unittest
 import json
-from pyowm.stationsapi30.aggregated_measurement_parser import AggregatedMeasurementParser
+from pyowm.stationsapi30.parsers.aggregated_measurement_parser import AggregatedMeasurementParser
 from pyowm.stationsapi30.measurement import AggregatedMeasurement
 from pyowm.exceptions import parse_response_error
 

@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     pyowm.webapi25.cityids
+    pyowm.webapi25.parsers
     pyowm.webapi25.xsd
 
 Submodules
@@ -108,13 +109,6 @@ pyowm.webapi25.weathercoderegistry module
     :undoc-members:
     :show-inheritance:
 
-pyowm.webapi25.weatherutils module
-----------------------------------
-
-.. automodule:: pyowm.webapi25.weatherutils
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 pyowm.webapi25.uvindex module
 -----------------------------

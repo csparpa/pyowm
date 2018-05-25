@@ -44,6 +44,16 @@ pyowm.utils.timeutils module
     :undoc-members:
     :show-inheritance:
 
+
+pyowm.utils.weatherutils module
+-------------------------------
+
+.. automodule:: pyowm.utils.weatherutils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 pyowm.utils.xmlutils module
 ---------------------------
 

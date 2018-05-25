@@ -1,6 +1,6 @@
 import unittest
 import json
-from pyowm.stationsapi30.station_parser import StationParser
+from pyowm.stationsapi30.parsers.station_parser import StationParser
 from pyowm.stationsapi30.station import Station
 from pyowm.exceptions import parse_response_error
 

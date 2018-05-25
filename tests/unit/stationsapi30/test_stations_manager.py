@@ -6,7 +6,7 @@ from pyowm.stationsapi30.measurement import Measurement, AggregatedMeasurement
 from pyowm.stationsapi30.buffer import Buffer
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.station_parser import StationParser
+from pyowm.stationsapi30.parsers.station_parser import StationParser
 
 
 class MockHttpClient(HttpClient):

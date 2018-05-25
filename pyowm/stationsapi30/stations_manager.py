@@ -4,8 +4,8 @@ measurements
 """
 
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.station_parser import StationParser
-from pyowm.stationsapi30.aggregated_measurement_parser import AggregatedMeasurementParser
+from pyowm.stationsapi30.parsers.station_parser import StationParser
+from pyowm.stationsapi30.parsers.aggregated_measurement_parser import AggregatedMeasurementParser
 from pyowm.constants import STATIONS_API_VERSION
 
 

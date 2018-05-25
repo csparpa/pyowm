@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    pyowm.stationsapi30.parsers
     pyowm.stationsapi30.xsd
 
 Submodules
@@ -43,13 +44,6 @@ pyowm.stationsapi30.station module
     :undoc-members:
     :show-inheritance:
 
-pyowm.stationsapi30.station_parser module
------------------------------------------
-
-.. automodule:: pyowm.stationsapi30.station_parser
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 pyowm.stationsapi30.stations_manager module
 -------------------------------------------
