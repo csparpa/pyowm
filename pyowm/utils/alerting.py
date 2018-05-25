@@ -19,12 +19,12 @@ class WeatherParametersEnum:
 
         """
         return [
-            ('TEMPERATURE', 'temp'),
-            ('PRESSURE', 'pressure'),
-            ('HUMIDITY', 'humidity'),
-            ('WIND_SPEED', 'wind_speed'),
-            ('WIND_DIRECTION', 'wind_direction'),
-            ('CLOUDS', 'clouds')
+            ('TEMPERATURE', self.TEMPERATURE),
+            ('PRESSURE', self.PRESSURE),
+            ('HUMIDITY', self.HUMIDITY),
+            ('WIND_SPEED', self.WIND_SPEED),
+            ('WIND_DIRECTION', self.WIND_DIRECTION),
+            ('CLOUDS', self.CLOUDS)
         ]
 
 
@@ -47,12 +47,12 @@ class OperatorsEnum:
 
         """
         return [
-            ('GREATER_THAN', '$gt'),
-            ('GREATER_THAN_EQUAL', '$gte'),
-            ('LESS_THAN', '$lt'),
-            ('LESS_THAN_EQUAL', '$lte'),
-            ('EQUAL', '$eq'),
-            ('NOT_EQUAL', '$ne')
+            ('GREATER_THAN', self.GREATER_THAN),
+            ('GREATER_THAN_EQUAL', self.GREATER_THAN_EQUAL),
+            ('LESS_THAN', self.LESS_THAN),
+            ('LESS_THAN_EQUAL', self.LESS_THAN_EQUAL),
+            ('EQUAL', self.EQUAL),
+            ('NOT_EQUAL', self.NOT_EQUAL)
         ]
 
 
@@ -93,3 +93,32 @@ class Condition:
         self.amount = amount
         self.id = id
 
+
+class AlertChannel:
+    """
+    Base class representing a channel through which one can acknowledge that a weather alert has been issued.
+    Examples: OWM API polling, push notifications, email notifications, etc.
+    This feature is yet to be implemented by the OWM API.
+    :returns:  an *AlertChannel* instance
+
+    """
+    def __init__(self, name):
+        self.name = name
+
+
+class AlertChannelsEnum:
+    """
+    Allowed alert channels
+
+    """
+    OWM_API = AlertChannel('OWM API')
+
+    def items(self):
+        """
+        All values for this enum
+        :return: list of tuples
+
+        """
+        return [
+            ('OWM_API', self.OWM_API)
+        ]
