@@ -1,5 +1,3 @@
-from pyowm.alertingapi30.enums import WeatherParametersEnum, OperatorsEnum
-
 
 class Condition:
     """
@@ -16,22 +14,18 @@ class Condition:
     :param id: optional unique ID for this Condition instance
     :type id: str
     :returns:  a *Condition* instance
-    :raises: *ValueError* when either the weather param has wrong type or is not allowed, or the operator has wrong type
-    or is not allowed, or the amount has wrong type
+    :raises: *AssertionError* when either the weather param has wrong type or the operator has wrong type or the
+    amount has wrong type
 
     """
     def __init__(self, weather_param, operator, amount, id=None):
+        assert weather_param is not None
         assert isinstance(weather_param, str)
-        try:
-            self.weather_param = getattr(WeatherParametersEnum, weather_param.upper())
-        except AttributeError as e:
-            raise ValueError(e)
+        self.weather_param = weather_param
 
+        assert operator is not None
         assert isinstance(operator, str)
-        try:
-            self.operator = getattr(OperatorsEnum, operator.upper())
-        except AttributeError as e:
-            raise ValueError(e)
+        self.operator = operator
 
         assert amount is not None
         assert isinstance(amount, int) or isinstance(amount, float)

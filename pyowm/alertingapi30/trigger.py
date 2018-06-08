@@ -57,10 +57,58 @@ class Trigger:
         self.id = id
 
     def get_alerts(self):
+        """
+        Returns all of the alerts for this `Trigger`
+        :return: a list of `Alert` objects
+        """
         return self.alerts
 
     def get_alert(self, alert_id):
+        """
+        Returns the `Alert` of this `Trigger` having the specified ID
+        :param alert_id: str, the ID of the alert
+        :return: `Alert` instance
+        """
         for alert in self.alerts:
             if alert.id == alert_id:
                 return alert
         return None
+
+    def get_alerts_since(self, timestamp):
+        """
+        Returns all the `Alert` objects of this `Trigger` that were fired since the specified timestamp.
+        :param timestamp: time object representing the point in time since when alerts have to be fetched
+        :type timestamp: int, ``datetime.datetime`` or ISO8601-formatted string
+        :return: list of `Alert` instances
+        """
+        unix_timestamp = timeformatutils.to_UNIXtime(timestamp)
+        result = []
+        for alert in self.alerts:
+            if alert.last_update >= unix_timestamp:
+                result.append(alert)
+        return result
+
+    def get_alerts_on(self, weather_param):
+        """
+        Returns all the `Alert` objects of this `Trigger` that refer to the specified weather parameter (eg. 'temp',
+        'pressure', etc.). The allowed weather params are the ones enumerated by class
+        `pyowm.alertingapi30.enums.WeatherParametersEnum`
+        :param weather_param: str, values in `pyowm.alertingapi30.enums.WeatherParametersEnum`
+        :return: list of `Alert` instances
+        """
+        result = []
+        for alert in self.alerts:
+            for met_condition in alert.met_conditions:
+                if met_condition['condition'].weather_param == weather_param:
+                    result.append(alert)
+                    break
+        return result
+
+    def __repr__(self):
+        return "<%s.%s - id=%s, start=%s, end=%s, alerts=%s>" % (
+                    __name__,
+                    self.__class__.__name__,
+                    self.id if self.id is not None else 'None',
+                    timeformatutils.to_ISO8601(self.start),
+                    timeformatutils.to_ISO8601(self.end),
+                    str(len(self.alerts)))
