@@ -7,6 +7,7 @@ from pyowm.stationsapi30.buffer import Buffer
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.commons.http_client import HttpClient
 from pyowm.stationsapi30.parsers.station_parser import StationParser
+from pyowm.constants import STATIONS_API_VERSION
 
 
 class MockHttpClient(HttpClient):
@@ -100,6 +101,7 @@ class TestStationManager(unittest.TestCase):
         instance = StationsManager('APIKey')
         result = instance.stations_api_version()
         self.assertIsInstance(result, tuple)
+        self.assertEqual(result, STATIONS_API_VERSION)
 
     def test_get_stations(self):
         instance = self.factory(MockHttpClient)
