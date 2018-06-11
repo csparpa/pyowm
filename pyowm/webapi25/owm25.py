@@ -19,6 +19,7 @@ from pyowm.utils import timeformatutils, stringutils, timeutils, geo
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
 from pyowm.stationsapi30 import stations_manager
+from pyowm.alertapi30 import alert_manager
 
 
 class OWM25(owm.OWM):
@@ -155,6 +156,13 @@ class OWM25(owm.OWM):
         :returns: a *StationsManager* instance
         """
         return stations_manager.StationsManager(self._API_key)
+
+    def alert_manager(self):
+        """
+        Gives an *AlertManager* instance that can be used to read/write weather triggers and alerts data.
+        :return: an *AlertManager* instance
+        """
+        return alert_manager.AlertManager(self._API_key)
 
     def is_API_online(self):
         """

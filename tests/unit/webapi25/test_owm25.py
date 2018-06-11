@@ -56,6 +56,8 @@ from pyowm.webapi25.parsers.coindexparser import COIndexParser
 from pyowm.webapi25.parsers.ozoneparser import OzoneParser
 from pyowm.webapi25.parsers.no2indexparser import NO2IndexParser
 from pyowm.webapi25.parsers.so2indexparser import SO2IndexParser
+from pyowm.stationsapi30.stations_manager import StationsManager
+from pyowm.alertapi30.alert_manager import AlertManager
 
 
 class TestOWM25(unittest.TestCase):
@@ -215,6 +217,12 @@ class TestOWM25(unittest.TestCase):
     def test_stations_manager(self):
         result = self.__test_instance.stations_manager()
         self.assertTrue(result is not None)
+        self.assertIsInstance(result, StationsManager)
+
+    def test_alert_manager(self):
+        result = self.__test_instance.alert_manager()
+        self.assertTrue(result is not None)
+        self.assertIsInstance(result, AlertManager)
 
     def test_get_API_version(self):
         self.assertEqual(self.__test_instance.OWM_API_VERSION,
