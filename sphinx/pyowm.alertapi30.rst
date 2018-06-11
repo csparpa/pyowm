@@ -4,10 +4,19 @@ pyowm.alertapi30 package
 Submodules
 ----------
 
-pyowm.alertapi30.enums module
+pyowm.alertapi30.alert_manager module
+-------------------------------------
+
+.. automodule:: pyowm.alertapi30.alert_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+pyowm.alertapi30.alert module
 -----------------------------
 
-.. automodule:: pyowm.alertapi30.enums
+.. automodule:: pyowm.alertapi30.alert
     :members:
     :undoc-members:
     :show-inheritance:
@@ -22,10 +31,10 @@ pyowm.alertapi30.condition module
     :show-inheritance:
 
 
-pyowm.alertapi30.enums alert
-----------------------------
+pyowm.alertapi30.enums module
+-----------------------------
 
-.. automodule:: pyowm.alertapi30.alert
+.. automodule:: pyowm.alertapi30.enums
     :members:
     :undoc-members:
     :show-inheritance:
