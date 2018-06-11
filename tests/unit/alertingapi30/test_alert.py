@@ -1,5 +1,5 @@
 import unittest
-from pyowm.alertingapi30.alert import Alert
+from pyowm.alertapi30.alert import Alert
 
 
 class TestAlert(unittest.TestCase):

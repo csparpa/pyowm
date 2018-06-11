@@ -1,9 +1,9 @@
 import unittest
 from pyowm.utils import geo
-from pyowm.alertingapi30.condition import Condition
-from pyowm.alertingapi30.trigger import Trigger
-from pyowm.alertingapi30.enums import AlertChannelsEnum
-from pyowm.alertingapi30.alert import Alert
+from pyowm.alertapi30.condition import Condition
+from pyowm.alertapi30.trigger import Trigger
+from pyowm.alertapi30.enums import AlertChannelsEnum
+from pyowm.alertapi30.alert import Alert
 
 
 class TestTrigger(unittest.TestCase):

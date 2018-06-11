@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
 
     pyowm.abstractions
-    pyowm.alertingapi30
+    pyowm.alertapi30
     pyowm.caches
     pyowm.commons
     pyowm.exceptions

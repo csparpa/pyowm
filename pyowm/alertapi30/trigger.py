@@ -1,5 +1,5 @@
 from pyowm.utils import timeformatutils
-from pyowm.alertingapi30.enums import AlertChannelsEnum
+from pyowm.alertapi30.enums import AlertChannelsEnum
 
 
 class Trigger:
@@ -9,21 +9,21 @@ class Trigger:
     `Trigger` is met, the OWM API crates an alert and binds it to the the `Trigger`.
     A `Trigger` is the local proxy for the corresponding entry on the OWM API, therefore it can get ouf of sync as
     time goes by and conditions are met: it's up to you to "refresh" the local trigger by using a
-    `pyowm.utils.alertingapi30.AlertManager` instance.
+    `pyowm.utils.alertapi30.AlertManager` instance.
     :param start: time object representing the time when the trigger begins to be checked
     :type start: int, ``datetime.datetime`` or ISO8601-formatted string
     :param end: time object representing the time when the trigger ends to be checked
     :type end: int, ``datetime.datetime`` or ISO8601-formatted string
     :param alerts: the `Alert` objects representing the alerts that have been fired for this `Trigger` so far. Defaults
     to `None`
-    :type alerts: list of `pyowm.utils.alertingapi30.Alert` instances
+    :type alerts: list of `pyowm.utils.alertapi30.Alert` instances
     :param conditions: the `Condition` objects representing the set of checks to be done on weather variables
-    :type conditions: list of `pyowm.utils.alertingapi30.Condition` instances
+    :type conditions: list of `pyowm.utils.alertapi30.Condition` instances
     :param area: the geographic are over which conditions are checked: it can be composed by multiple geoJSON types
     :type area: list of geoJSON types (str)
     :param alert_channels: the alert channels through which alerts originating from this `Trigger` can be consumed.
     Defaults to OWM API polling
-    :type alert_channels: list of `pyowm.utils.alertingapi30.AlertChannel` instances
+    :type alert_channels: list of `pyowm.utils.alertapi30.AlertChannel` instances
     :param id: optional unique ID for this `Trigger` instance
     :type id: str
     :returns:  a *Trigger* instance
@@ -92,8 +92,8 @@ class Trigger:
         """
         Returns all the `Alert` objects of this `Trigger` that refer to the specified weather parameter (eg. 'temp',
         'pressure', etc.). The allowed weather params are the ones enumerated by class
-        `pyowm.alertingapi30.enums.WeatherParametersEnum`
-        :param weather_param: str, values in `pyowm.alertingapi30.enums.WeatherParametersEnum`
+        `pyowm.alertapi30.enums.WeatherParametersEnum`
+        :param weather_param: str, values in `pyowm.alertapi30.enums.WeatherParametersEnum`
         :return: list of `Alert` instances
         """
         result = []

@@ -1,6 +1,6 @@
 import unittest
-from pyowm.alertingapi30.condition import Condition
-from pyowm.alertingapi30.enums import WeatherParametersEnum, OperatorsEnum
+from pyowm.alertapi30.condition import Condition
+from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum
 
 
 class TestCondition(unittest.TestCase):

@@ -10,7 +10,7 @@ setup(
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
     url='http://github.com/csparpa/pyowm',
-    packages=['pyowm', 'pyowm.abstractions', 'pyowm.alertingapi30',
+    packages=['pyowm', 'pyowm.abstractions', 'pyowm.alertapi30',
               'pyowm.caches', 'pyowm.commons',
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25',
               'pyowm.webapi25.cityids', 'pyowm.webapi25.parsers', 'pyowm.webapi25.xsd',

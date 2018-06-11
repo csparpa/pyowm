@@ -1,4 +1,4 @@
-from pyowm.alertingapi30.alert import AlertChannel
+from pyowm.alertapi30.alert import AlertChannel
 
 
 class WeatherParametersEnum:

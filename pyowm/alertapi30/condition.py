@@ -3,8 +3,8 @@ class Condition:
     """
     Object representing a condition to be checked on a specific weather parameter. A condition is given when comparing
     the weather parameter against a numerical value with respect to an operator.
-    Allowed weather params and operators are specified by the `pyowm.utils.alertingapi30.WeatherParametersEnum` and
-    `pyowm.utils.alertingapi30.OperatorsEnum` enumerator classes.
+    Allowed weather params and operators are specified by the `pyowm.utils.alertapi30.WeatherParametersEnum` and
+    `pyowm.utils.alertapi30.OperatorsEnum` enumerator classes.
     :param weather_param: the weather variable to be checked (eg. TEMPERATURE, CLOUDS, ...)
     :type weather_param: str
     :param operator: the comparison operator to be applied to the weather variable (eg. GREATER_THAN, EQUAL, ...)
