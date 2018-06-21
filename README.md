@@ -12,7 +12,7 @@ PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
 
 It allows quick and easy consumption of OWM weather data from Python applications via a simple object model and in a human-friendly fashion.
 
-PyOWM runs on Python 2.7 and Python 3.2+ (but watch out! Python 2.x support will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
+PyOWM runs on Python 2.7 and Python 3.3+ (but watch out! Python 2.x and <3.5 support will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
 
 PyOWM also integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
 
