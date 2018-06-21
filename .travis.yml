@@ -6,7 +6,8 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install coverage==3.7.1 tox-travis virtualenv==13.1.2 coveralls
+  - pip install --upgrade pip
+  - pip install coverage tox-travis virtualenv coveralls
 script:
   - tox
   - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
