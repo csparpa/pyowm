@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ce9db6576698d1326a2e2de524bb70647072658dee268cccade8fd05b4e739b1"
+            "sha256": "bf9a6de0ca43ba2df89da2cf2f81f4e6996556cf06e6beb32b495d192b96a704"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -187,10 +187,10 @@
         },
         "tqdm": {
             "hashes": [
-                "sha256:597e7526c85df881d51e094360181a84533aede1cb3f5a1cada8bbd4de557efd",
-                "sha256:fe3d218d5b61993d415aa2a9db6dd64c0e4cefb90164ebb197ef3b1d99f531dc"
+                "sha256:224291ee0d8c52d91b037fd90806f48c79bcd9994d3b0abc9e44b946a908fccd",
+                "sha256:77b8424d41b31e68f437c6dd9cd567aebc9a860507cb42fbd880a5f822d966fe"
             ],
-            "version": "==4.23.0"
+            "version": "==4.23.4"
         },
         "twine": {
             "hashes": [
