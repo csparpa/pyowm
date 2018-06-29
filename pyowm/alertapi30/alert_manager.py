@@ -1,5 +1,7 @@
 from pyowm.constants import ALERT_API_VERSION
 from pyowm.commons.http_client import HttpClient
+from pyowm.alertapi30.parsers import TriggerParser
+from pyowm.alertapi30.uris import TRIGGERS_URI
 
 
 class AlertManager:
@@ -18,6 +20,7 @@ class AlertManager:
     def __init__(self, API_key):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
+        self.trigger_parser = TriggerParser()
         self.http_client = HttpClient()
 
     def alert_api_version(self):
@@ -29,7 +32,17 @@ class AlertManager:
         raise NotImplementedError()
 
     def get_triggers(self):
-        raise NotImplementedError()
+        """
+        Retrieves all of the user's triggers that are set on the Weather Alert API.
+
+        :returns: list of `pyowm.alertapi30.trigger.Trigger` objects
+
+        """
+        status, data = self.http_client.get_json(
+            TRIGGERS_URI,
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
+        return [self.trigger_parser.parse_dict(item) for item in data]
 
     def get_trigger(self, trigger_id):
         raise NotImplementedError()
