@@ -84,6 +84,13 @@ class Point(Geometry):
     def as_dict(self):
         return json.loads(self.geojson())
 
+    @classmethod
+    def from_dict(self, the_dict):
+        geom = geojson.loads(json.dumps(the_dict))
+        result = Point(0, 0)
+        result._geom = geom
+        return result
+
 
 class MultiPoint(Geometry):
     """
@@ -134,6 +141,13 @@ class MultiPoint(Geometry):
     def as_dict(self):
         return json.loads(self.geojson())
 
+    @classmethod
+    def from_dict(self, the_dict):
+        geom = geojson.loads(json.dumps(the_dict))
+        result = MultiPoint([(0, 0), (0, 0)])
+        result._geom = geom
+        return result
+
 
 class Polygon(Geometry):
     """
@@ -164,6 +178,13 @@ class Polygon(Geometry):
 
     def as_dict(self):
         return json.loads(self.geojson())
+
+    @classmethod
+    def from_dict(self, the_dict):
+        geom = geojson.loads(json.dumps(the_dict))
+        result = Polygon([[[0, 0], [0, 0]]])
+        result._geom = geom
+        return result
 
     @classmethod
     def from_points(cls, list_of_lists):
@@ -210,6 +231,16 @@ class MultiPolygon(Geometry):
         return json.loads(self.geojson())
 
     @classmethod
+    def from_dict(self, the_dict):
+        geom = geojson.loads(json.dumps(the_dict))
+        result = MultiPolygon([
+            [[[0, 0], [0, 0]]],
+            [[[1, 1], [1, 1]]]
+        ])
+        result._geom = geom
+        return result
+
+    @classmethod
     def from_polygons(cls, iterable_of_polygons):
         """
         Creates a *MultiPolygon* instance out of an iterable of Polygon geotypes
@@ -219,3 +250,20 @@ class MultiPolygon(Geometry):
 
         """
         return MultiPolygon([polygon.as_dict()['coordinates'] for polygon in iterable_of_polygons])
+
+
+class GeometryBuilder:
+
+    @classmethod
+    def build(cls, the_dict):
+        geom_type = the_dict.get('type', None)
+        if geom_type == 'Point':
+            return Point.from_dict(the_dict)
+        elif geom_type == 'MultiPoint':
+            return MultiPoint.from_dict(the_dict)
+        elif geom_type == 'Polygon':
+            return Polygon.from_dict(the_dict)
+        elif geom_type == 'MultiPolygon':
+            return MultiPolygon.from_dict(the_dict)
+        else:
+            raise ValueError('Unable to build a GeoType object: unrecognized geometry type')

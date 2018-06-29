@@ -47,6 +47,17 @@ class TestGeo(unittest.TestCase):
         self.assertEqual(lon, point.lon)
         self.assertEqual(lat, point.lat)
 
+    def test_point_from_dict(self):
+        the_dict = {
+            "coordinates": [34, -56.3],
+            "type": "Point"
+        }
+        expected = geo.Point(34, -56.3)
+        result = geo.Point.from_dict(the_dict)
+        self.assertIsInstance(result, geo.Point)
+        self.assertEqual(expected.lat, result.lat)
+        self.assertEqual(expected.lon, result.lon)
+
     # -- Multipoint --
 
     def test_multipoint_with_wrong_inputs(self):
@@ -87,6 +98,15 @@ class TestGeo(unittest.TestCase):
         result = geo.MultiPoint.from_points(list_of_points)
         self.assertIsInstance(result, geo.MultiPoint)
         self.assertEqual(expected.as_dict(), result.as_dict())
+
+    def test_multipoint_from_dict(self):
+        the_dict = {"coordinates": [[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]],
+                    "type": "MultiPoint"}
+        expected = geo.MultiPoint([[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]])
+        result = geo.MultiPoint.from_dict(the_dict)
+        self.assertIsInstance(result, geo.MultiPoint)
+        self.assertEqual(expected.latitudes.sort(), result.latitudes.sort())
+        self.assertEqual(expected.longitudes.sort(), result.longitudes.sort())
 
     # -- Polygon --
 
@@ -132,6 +152,13 @@ class TestGeo(unittest.TestCase):
         self.assertIsInstance(result, geo.Polygon)
         self.assertEqual(expected.as_dict(), result.as_dict())
 
+    def test_polygon_from_dict(self):
+        the_dict = {"coordinates": [
+            [[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]
+        ], "type": "Polygon"}
+        result = geo.Polygon.from_dict(the_dict)
+        self.assertIsInstance(result, geo.Polygon)
+
     # -- MultiPolygon --
 
     def test_multipolygon_with_wrong_inputs(self):
@@ -166,6 +193,14 @@ class TestGeo(unittest.TestCase):
         ])
         self.assertEqual(expected, mp.as_dict())
 
+    def test_multipolygon_from_dict(self):
+        the_dict = {"coordinates": [
+            [[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]],
+            [[[6.3, 77.32], [13.19, -30.2], [-110.4, 17.15], [6.3, 77.32]]]
+        ], "type": "MultiPolygon"}
+        result = geo.MultiPolygon.from_dict(the_dict)
+        self.assertIsInstance(result, geo.MultiPolygon)
+
     def test_from_polygons(self):
         expected = geo.MultiPolygon([
             [[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]],
@@ -178,3 +213,45 @@ class TestGeo(unittest.TestCase):
         result = geo.MultiPolygon.from_polygons(iterable_of_polygons)
         self.assertIsInstance(result, geo.MultiPolygon)
         self.assertEqual(expected.as_dict(), result.as_dict())
+
+
+class TestGeometryBuilder(unittest.TestCase):
+
+    def test_unrecognized_geom_type(self):
+        self.assertRaises(ValueError, geo.GeometryBuilder.build, {"type": "Unknown"})
+        self.assertRaises(ValueError, geo.GeometryBuilder.build, {})
+
+    def test_bulding_points(self):
+        the_dict = {
+            "coordinates": [34, -56.3],
+            "type": "Point"
+        }
+        expected = geo.Point(34, -56.3)
+        result = geo.GeometryBuilder.build(the_dict)
+        self.assertIsInstance(result, geo.Point)
+        self.assertEqual(expected.lat, result.lat)
+        self.assertEqual(expected.lon, result.lon)
+
+    def test_building_multipoints(self):
+        the_dict = {"coordinates": [[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]],
+                    "type": "MultiPoint"}
+        expected = geo.MultiPoint([[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]])
+        result = geo.GeometryBuilder.build(the_dict)
+        self.assertIsInstance(result, geo.MultiPoint)
+        self.assertEqual(expected.latitudes.sort(), result.latitudes.sort())
+        self.assertEqual(expected.longitudes.sort(), result.longitudes.sort())
+
+    def test_building_polygons(self):
+        the_dict = {"coordinates": [
+            [[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]
+        ], "type": "Polygon"}
+        result = geo.GeometryBuilder.build(the_dict)
+        self.assertIsInstance(result, geo.Polygon)
+
+    def test_building_multipolygons(self):
+        the_dict = {"coordinates": [
+            [[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]],
+            [[[6.3, 77.32], [13.19, -30.2], [-110.4, 17.15], [6.3, 77.32]]]
+        ], "type": "MultiPolygon"}
+        result = geo.GeometryBuilder.build(the_dict)
+        self.assertIsInstance(result, geo.MultiPolygon)
