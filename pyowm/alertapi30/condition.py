@@ -31,3 +31,12 @@ class Condition:
         assert isinstance(amount, int) or isinstance(amount, float)
         self.amount = amount
         self.id = id
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        assert isinstance(the_dict, dict)
+        weather_param = the_dict['name']
+        operator = the_dict['expression']
+        amount = the_dict['amount']
+        the_id = the_dict.get('_id', None)
+        return Condition(weather_param, operator, amount, id=the_id)

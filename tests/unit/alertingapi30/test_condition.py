@@ -18,3 +18,13 @@ class TestCondition(unittest.TestCase):
                           WeatherParametersEnum.HUMIDITY, OperatorsEnum.EQUAL, None)
         self.assertRaises(AssertionError, Condition,
                           WeatherParametersEnum.HUMIDITY, OperatorsEnum.EQUAL, 'string')
+
+    def test_from_dict(self):
+        expected = Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456')
+        the_dict = dict(name='temp', expression='$gt',
+                        amount=78.6, _id='123456')
+        result = Condition.from_dict(the_dict)
+        self.assertEqual(expected.weather_param, result.weather_param)
+        self.assertEqual(expected.operator, result.operator)
+        self.assertEqual(expected.amount, result.amount)
+        self.assertEqual(expected.id, result.id)
