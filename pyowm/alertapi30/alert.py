@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils
+from pyowm.utils import timeformatutils, stringutils
 
 
 class AlertChannel:
@@ -35,11 +35,11 @@ class Alert:
     """
     def __init__(self, id, trigger_id, met_conditions, coordinates, last_update=None):
         assert id is not None
-        assert isinstance(id, str)
+        stringutils.assert_is_string_or_unicode(id)
         self.id = id
 
         assert trigger_id is not None
-        assert isinstance(trigger_id, str)
+        stringutils.assert_is_string_or_unicode(trigger_id)
         self.trigger_id = trigger_id
 
         assert met_conditions is not None

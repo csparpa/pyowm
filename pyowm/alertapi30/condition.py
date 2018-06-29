@@ -1,3 +1,5 @@
+from pyowm.utils import stringutils
+
 
 class Condition:
     """
@@ -20,11 +22,11 @@ class Condition:
     """
     def __init__(self, weather_param, operator, amount, id=None):
         assert weather_param is not None
-        assert isinstance(weather_param, str)
+        stringutils.assert_is_string_or_unicode(weather_param)
         self.weather_param = weather_param
 
         assert operator is not None
-        assert isinstance(operator, str)
+        stringutils.assert_is_string_or_unicode(operator)
         self.operator = operator
 
         assert amount is not None
