@@ -2,6 +2,7 @@ import unittest
 import json
 from pyowm.alertapi30.alert_manager import AlertManager
 from pyowm.alertapi30.trigger import Trigger
+from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.parsers import TriggerParser
 from pyowm.commons.http_client import HttpClient
@@ -26,10 +27,10 @@ class MockHttpClient(HttpClient):
         return 200, json.loads(self.test_trigger_json)
 
     def put(self, uri, params=None, data=None, headers=None):
-        return 200, None
+        return 200, [json.loads(self.test_trigger_json)]
 
     def delete(self, uri, params=None, data=None, headers=None):
-        return 204, None
+        return 204, [json.loads(self.test_trigger_json)]
 
 
 class MockHttpClientTwoTriggers(HttpClient):
@@ -61,11 +62,47 @@ class MockHttpClientOneTrigger(HttpClient):
         return 200, json.loads(self.test_trigger_json)
 
 
+class MockHttpClientTwoAlerts(HttpClient):
+    # 2 alerts
+    test_alerts_json = '''[{"_id": "5853dbe27416a400011b1b77","date": "2016-12-17T00:00:00.000Z","last_update": 
+    "2016-12-16T11:19:46.352Z","triggerId": "5852816a9aaacb00153134a3","__v": 0,"conditions": [{"current_value": 
+    {"max": 258.62,"min": 258.62},"_id": "5853dbe27416a400011b1b78","condition": {"amount": 273,"expression": 
+    "$lt","name": "temp"}}],"coordinates": {"lat": "53","lon": "37"}},{"_id": "5853dbe27416a400011b1b79","date": 
+    "2016-12-17T03:00:00.000Z","last_update": "2016-12-16T11:19:46.352Z","triggerId": "5852816a9aaacb00153134a3",
+    "__v": 0,"conditions": [{"current_value": {"max": 259.277,"min": 259.277},"_id": "5853dbe27416a400011b1b7a",
+    "condition": {"amount": 273,"expression": "$lt","name": "temp"}}],"coordinates": {"lat": "53","lon": "37"}}]'''
+
+    def get_json(self, uri, params=None, headers=None):
+        return 200, json.loads(self.test_alerts_json)
+
+    def delete(self, uri, params=None, data=None, headers=None):
+        return 204, json.loads(self.test_alerts_json)
+
+
+class MockHttpClientOneAlert(HttpClient):
+    # 1 alert
+    test_alert_json = '''{"_id": "5853dbe27416a400011b1b77","date": "2016-12-17T00:00:00.000Z","last_update": 
+    "2016-12-16T11:19:46.352Z","triggerId": "5852816a9aaacb00153134a3","__v": 0,"conditions": [{"current_value": 
+    {"max": 258.62,"min": 258.62},"_id": "5853dbe27416a400011b1b78","condition": {"amount": 273,"expression": 
+    "$lt","name": "temp"}}],"coordinates": {"lat": "53","lon": "37"}}'''
+
+    def get_json(self, uri, params=None, headers=None):
+        return 200, json.loads(self.test_alert_json)
+
+    def delete(self, uri, params=None, data=None, headers=None):
+        return 204, json.loads(self.test_alert_json)
+
+
 class TestAlertManager(unittest.TestCase):
     _cond1 = Condition('humidity', 'LESS_THAN', 10)
     _cond2 = Condition('temp', 'GREATER_THAN_EQUAL', 100.6)
     _trigger = Trigger(1526809375, 1527809375, [_cond1, _cond2],
                        [geo.Point(13.6, 46.9)], alerts=[], alert_channels=None, id='trigger-id')
+    _alert = Alert('alert1', 'trigger1', [{
+                "current_value": 263.576,
+                "condition": _cond1
+            }],
+            {"lon": 37, "lat": 53}, 1481802090232)
 
     def factory(self, _kls):
         sm = AlertManager('APIKey')
@@ -152,4 +189,71 @@ class TestAlertManager(unittest.TestCase):
         modified_trigger.id = '5852816a9aaacb00153134a3'
         modified_trigger.end = self._trigger.end + 10000
         result = instance.update_trigger(modified_trigger)
+        self.assertIsNone(result)
+
+    def test_get_alerts_for_fails_with_wrong_input(self):
+        instance = AlertManager('APIKey')
+        with self.assertRaises(AssertionError):
+            instance.get_alerts_for(None)
+        with self.assertRaises(AssertionError):
+            self._trigger.id = 123
+            instance.get_alerts_for(self._trigger)
+
+    def test_get_alerts_for(self):
+        instance = self.factory(MockHttpClientTwoAlerts)
+        self._trigger.id = 'trigger-id'
+        results = instance.get_alerts_for(self._trigger)
+        self.assertEqual(2, len(results))
+        self.assertIsInstance(results[0], Alert)
+        self.assertIsInstance(results[1], Alert)
+
+    def test_get_alert_fails_with_wrong_input(self):
+        instance = AlertManager('APIKey')
+        with self.assertRaises(AssertionError):
+            instance.get_alert(None, self._trigger)
+        with self.assertRaises(AssertionError):
+            instance.get_alert(123, self._trigger)
+        with self.assertRaises(AssertionError):
+            instance.get_alert('alert-id', None)
+        with self.assertRaises(AssertionError):
+            self._trigger.id = 123
+            instance.get_alert('alert-id', self._trigger)
+
+    def test_get_alert(self):
+        self._trigger.id = 'trigger-id'
+        instance = self.factory(MockHttpClientOneAlert)
+        result = instance.get_alert('alert-id', self._trigger)
+        self.assertIsInstance(result, Alert)
+
+    def test_delete_all_alerts_for_fails_with_wrong_input(self):
+        instance = AlertManager('APIKey')
+        with self.assertRaises(AssertionError):
+            instance.delete_all_alerts_for(None)
+        with self.assertRaises(AssertionError):
+            self._trigger.id = 123
+            instance.delete_all_alerts_for(self._trigger)
+
+    def test_delete_all_alerts_for(self):
+        instance = self.factory(MockHttpClientTwoAlerts)
+        result = instance.delete_all_alerts_for(self._trigger)
+        self.assertIsNone(result)
+
+    def test_delete_alert_fails_with_wrong_input(self):
+        instance = AlertManager('APIKey')
+        with self.assertRaises(AssertionError):
+            instance.delete_alert(None)
+        with self.assertRaises(AssertionError):
+            self._alert.id = 123
+            instance.delete_alert(self._alert)
+        self._alert.id = 'alert-id'
+        self._alert.trigger_id = None
+        with self.assertRaises(AssertionError):
+            instance.delete_alert(self._alert)
+        self._alert.trigger_id = 789
+        with self.assertRaises(AssertionError):
+            instance.delete_alert(self._alert)
+
+    def test_delete_alert(self):
+        instance = self.factory(MockHttpClientOneAlert)
+        result = instance.delete_alert(self._alert)
         self.assertIsNone(result)

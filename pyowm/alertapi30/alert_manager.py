@@ -1,7 +1,7 @@
 from pyowm.constants import ALERT_API_VERSION
 from pyowm.commons.http_client import HttpClient
-from pyowm.alertapi30.parsers import TriggerParser
-from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI
+from pyowm.alertapi30.parsers import TriggerParser, AlertParser
+from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
 from pyowm.utils import timeformatutils
 from pyowm.utils import stringutils
 
@@ -23,6 +23,7 @@ class AlertManager:
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
         self.trigger_parser = TriggerParser()
+        self.alert_parser = AlertParser()
         self.http_client = HttpClient()
 
     def alert_api_version(self):
@@ -119,7 +120,7 @@ class AlertManager:
 
         :param trigger: the Trigger with updated data
         :type trigger: `pyowm.alertapi30.trigger.Trigger`
-        :return: ``None``
+        :return: ``None`` if update is successful, an error otherwise
         """
         assert trigger is not None
         stringutils.assert_is_string_or_unicode(trigger.id)
@@ -154,21 +155,72 @@ class AlertManager:
         assert trigger is not None
         stringutils.assert_is_string_or_unicode(trigger.id)
         status, _ = self.http_client.delete(
-            NAMED_TRIGGER_URI % str(trigger.id),
+            NAMED_TRIGGER_URI % trigger.id,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
 
     # ALERTS methods
 
     def get_alerts_for(self, trigger):
-        raise NotImplementedError()
+        """
+        Retrieves all of the alerts that were fired for the specified Trigger
+        :param trigger: the trigger
+        :type trigger: `pyowm.alertapi30.trigger.Trigger`
+        :return: list of `pyowm.alertapi30.alert.Alert` objects
+        """
+        assert trigger is not None
+        stringutils.assert_is_string_or_unicode(trigger.id)
+        status, data = self.http_client.get_json(
+            ALERTS_URI % trigger.id,
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
+        return [self.alert_parser.parse_dict(item) for item in data]
 
-    def get_alert(self, alert_id):
-        raise NotImplementedError()
+    def get_alert(self, alert_id, trigger):
+        """
+        Retrieves info about the alert record on the Alert API that has the specified ID and belongs to the specified
+        parent Trigger object
+        :param trigger: the parent trigger
+        :type trigger: `pyowm.alertapi30.trigger.Trigger`
+        :param alert_id: the ID of the alert
+        :type alert_id `pyowm.alertapi30.alert.Alert`
+        :return: an `pyowm.alertapi30.alert.Alert` instance
+        """
+        assert trigger is not None
+        assert alert_id is not None
+        stringutils.assert_is_string_or_unicode(alert_id)
+        stringutils.assert_is_string_or_unicode(trigger.id)
+        status, data = self.http_client.get_json(
+            NAMED_ALERT_URI % (trigger.id, alert_id),
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
+        return self.alert_parser.parse_dict(data)
 
     def delete_all_alerts_for(self, trigger):
-        raise NotImplementedError()
+        """
+        Deletes all of the alert that were fired for the specified Trigger
+        :param trigger: the trigger whose alerts are to be cleared
+        :type trigger: `pyowm.alertapi30.trigger.Trigger`
+        :return: `None` if deletion is successful, an exception otherwise
+        """
+        assert trigger is not None
+        stringutils.assert_is_string_or_unicode(trigger.id)
+        status, _ = self.http_client.delete(
+            ALERTS_URI % trigger.id,
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
 
     def delete_alert(self, alert):
-        raise NotImplementedError()
-
+        """
+        Deletes the specified alert from the Alert API
+        :param alert: the alert to be deleted
+        :type alert: pyowm.alertapi30.alert.Alert`
+        :return: ``None`` if the deletion was successful, an error otherwise
+        """
+        assert alert is not None
+        stringutils.assert_is_string_or_unicode(alert.id)
+        stringutils.assert_is_string_or_unicode(alert.trigger_id)
+        status, _ = self.http_client.delete(
+            NAMED_ALERT_URI % (alert.trigger_id, alert.id),
+            params={'appid': self.API_key},
+            headers={'Content-Type': 'application/json'})
