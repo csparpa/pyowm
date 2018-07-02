@@ -1,6 +1,7 @@
 import unittest
-from pyowm.alertapi30.parsers import TriggerParser
+from pyowm.alertapi30.parsers import TriggerParser, AlertParser
 from pyowm.alertapi30.trigger import Trigger
+from pyowm.alertapi30.alert import Alert
 from pyowm.exceptions import parse_response_error
 
 
@@ -35,3 +36,20 @@ class TestStationsParser(unittest.TestCase):
         with self.assertRaises(parse_response_error.ParseResponseError):
             instance.parse_JSON(self.test_trigger_wrong_operator_json)
 
+
+class TestAlertParser(unittest.TestCase):
+
+    test_alert_json = '''{"_id": "5853dbe27416a400011b1b77","date": "2016-12-17T00:00:00.000Z","last_update": 
+    "2016-12-16T11:19:46.352Z","triggerId": "5852816a9aaacb00153134a3","__v": 0,"conditions": [{"current_value": 
+    {"max": 258.62,"min": 258.62},"_id": "5853dbe27416a400011b1b78","condition": {"amount": 273,"expression": 
+    "$lt","name": "temp"}}],"coordinates": {"lat": "53","lon": "37"}}'''
+
+    def test_parse_JSON_fails_with_none_input(self):
+        instance = AlertParser()
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            instance.parse_JSON(None)
+
+    def test_parse_JSON(self):
+        instance = AlertParser()
+        result = instance.parse_JSON(self.test_alert_json)
+        self.assertTrue(isinstance(result, Alert))

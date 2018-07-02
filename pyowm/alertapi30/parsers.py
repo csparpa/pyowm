@@ -10,6 +10,7 @@ from pyowm.alertapi30.trigger import Trigger
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.alert import Alert
 from pyowm.utils.geo import GeometryBuilder
+from pyowm.utils import timeformatutils
 
 
 class TriggerParser(jsonparser.JSONParser):
@@ -101,3 +102,56 @@ class TriggerParser(jsonparser.JSONParser):
             raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
 
         return Trigger(start, end, conditions, area=area, alerts=alerts, alert_channels=alert_channels, id=trigger_id)
+
+
+class AlertParser(jsonparser.JSONParser):
+
+    """
+    Concrete *JSONParser* implementation building a `pyowm.alertapi30.alert.Alert` instance out of raw JSON data
+
+    """
+
+    def __init__(self):
+        pass
+
+    def parse_dict(self, data_dict):
+        """
+        Parses a dictionary representing the attributes of a `pyowm.alertapi30.alert.Alert entity
+        :param data_dict: dict
+        :return: `pyowm.alertapi30.alert.Alert`
+        """
+        assert isinstance(data_dict, dict)
+        string_repr = json.dumps(data_dict)
+        return self.parse_JSON(string_repr)
+
+    def parse_JSON(self, JSON_string):
+        """
+        Parses a `pyowm.alertapi30.alert.Alert` instance out of raw JSON data.
+
+        :param JSON_string: a raw JSON string
+        :type JSON_string: str
+        :return: a `pyowm.alertapi30.alert.Alert` instance or ``None``
+            if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the
+            data needed to build the result
+
+        """
+        if JSON_string is None:
+            raise parse_response_error.ParseResponseError('JSON data is None')
+        d = json.loads(JSON_string)
+        try:
+            alert_id = d['_id']
+            t = d['last_update'].split('.')[0].replace('T', ' ') + '+00'
+            alert_last_update = timeformatutils._ISO8601_to_UNIXtime(t)
+            alert_trigger_id = d['triggerId']
+            alert_met_conds = [
+                dict(current_value=c['current_value']['min'], condition=Condition.from_dict(c['condition']))
+                    for c in d['conditions']
+            ]
+            alert_coords = d['coordinates']
+            return Alert(alert_id, alert_trigger_id, alert_met_conds, alert_coords, last_update=alert_last_update)
+
+        except ValueError as e:
+            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+        except KeyError as e:
+            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
