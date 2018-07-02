@@ -43,9 +43,11 @@ class Trigger:
         assert conditions is not None
         if len(conditions) == 0:
             raise ValueError('A trigger must contain at least one condition: you provided none')
+        self.conditions = conditions
         assert area is not None
         if len(area) == 0:
             raise ValueError('The area for a trigger must contain at least one geoJSON type: you provided none')
+        self.area = area
         if alerts is None or len(alerts) == 0:
             self.alerts = list()
         else:
