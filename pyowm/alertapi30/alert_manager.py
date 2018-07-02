@@ -40,7 +40,7 @@ class AlertManager:
         :param conditions: the `Condition` objects representing the set of checks to be done on weather variables
         :type conditions: list of `pyowm.utils.alertapi30.Condition` instances
         :param area: the geographic are over which conditions are checked: it can be composed by multiple geoJSON types
-        :type area: list of geoJSON types (str)
+        :type area: list of geoJSON types
         :param alert_channels: the alert channels through which alerts originating from this `Trigger` can be consumed.
         Defaults to OWM API polling
         :type alert_channels: list of `pyowm.utils.alertapi30.AlertChannel` instances
@@ -73,7 +73,7 @@ class AlertManager:
         assert area is not None
         if len(area) == 0:
             raise ValueError('The area for a trigger must contain at least one geoJSON type: you provided none')
-        the_area = [a.geojson() for a in area]
+        the_area = [a.as_dict() for a in area]
 
         # >>> for the moment, no specific handling for alert channels
 

@@ -20,7 +20,7 @@ class Trigger:
     :param conditions: the `Condition` objects representing the set of checks to be done on weather variables
     :type conditions: list of `pyowm.utils.alertapi30.Condition` instances
     :param area: the geographic are over which conditions are checked: it can be composed by multiple geoJSON types
-    :type area: list of geoJSON types (str)
+    :type area: list of geoJSON types
     :param alert_channels: the alert channels through which alerts originating from this `Trigger` can be consumed.
     Defaults to OWM API polling
     :type alert_channels: list of `pyowm.utils.alertapi30.AlertChannel` instances
