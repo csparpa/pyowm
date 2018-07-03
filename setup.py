@@ -14,7 +14,7 @@ setup(
               'pyowm.caches', 'pyowm.commons',
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25',
               'pyowm.webapi25.cityids', 'pyowm.webapi25.parsers', 'pyowm.webapi25.xsd',
-              'pyowm.docs', 'pyowm.stationsapi30', 'pyowm.stationsapi30.parsers', 'pyowm.stationsapi30.xsd'],
+              'pyowm.stationsapi30', 'pyowm.stationsapi30.parsers', 'pyowm.stationsapi30.xsd'],
     long_description="""PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy 
     consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
     include_package_data=True,
