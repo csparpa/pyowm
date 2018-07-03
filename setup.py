@@ -6,7 +6,7 @@ from pyowm import constants
 setup(
     name='pyowm',
     version=constants.PYOWM_VERSION,
-    description='A Python wrapper around the OpenWeatherMap web API',
+    description='A Python wrapper around OpenWeatherMap web APIs',
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
     url='http://github.com/csparpa/pyowm',
@@ -15,10 +15,8 @@ setup(
               'pyowm.exceptions', 'pyowm.utils', 'pyowm.webapi25',
               'pyowm.webapi25.cityids', 'pyowm.webapi25.parsers', 'pyowm.webapi25.xsd',
               'pyowm.docs', 'pyowm.stationsapi30', 'pyowm.stationsapi30.parsers', 'pyowm.stationsapi30.xsd'],
-    long_description="""PyOWM is a client Python wrapper library for the
-    OpenWeatherMap web API. It allows quick and easy consumption of OWM weather
-    data from Python applications via a simple object model and in a
-    human-friendly fashion.""",
+    long_description="""PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy 
+    consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
     include_package_data=True,
     install_requires=[
         'requests>=2.18.2,<3',

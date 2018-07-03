@@ -8,9 +8,9 @@ A Python wrapper around the OpenWeatherMap API
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
 
 ##  What is it?
-PyOWM is a client Python wrapper library for the OpenWeatherMap (OWM) web API.
+PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs.
 
-It allows quick and easy consumption of OWM weather data from Python applications via a simple object model and in a human-friendly fashion.
+It allows quick and easy consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
 
 PyOWM runs on Python 2.7 and Python 3.4+ (but watch out! Python 2.x will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
 
@@ -39,8 +39,8 @@ $ pip install git+https://github.com/csparpa/pyowm.git@develop
 
 ### API key
 
-As the OpenWeatherMap API needs a valid API key to allow responses,
-*PyOWM won't work if you don't provide one*. This stands for both the free and paid (pro) subscription plans.
+As OpenWeatherMap APIs need a valid API key to allow responses,
+*PyOWM won't work if you don't provide one*. This stands for both free and paid (pro) subscription plans.
 
 You can signup for a free API key [on the OWM website](https://home.openweathermap.org/users/sign_up)
 
@@ -48,7 +48,7 @@ Please notice that the free API subscription plan is subject to requests throttl
 
 ### Examples
 
-That's what you can do with PyOWM and a free OWM API Key:
+That's a simple example of what you can do with PyOWM and a free OWM API Key:
 
 ```python
 import pyowm
@@ -93,7 +93,7 @@ More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/
 ## Documentation
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 
-The library API documentation is available on [Read the Docs](https://pyowm.readthedocs.org/en/stable/).
+The library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.org/en/stable/).
 
 
 ## Contributing
