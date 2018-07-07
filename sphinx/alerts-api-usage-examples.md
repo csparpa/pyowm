@@ -27,6 +27,21 @@ can refer also to a specific geopoint or a set of them, besides - of course - po
 
 Any of the geometry subtypes found in `pyowm.utils.geo` module (point, multipoint, polygon, multipolygon) are fine to use.
 
+Example:
+
+```python
+from pyowm.utils import geo
+point = geo.Point(20.8, 30.9)  # available geometry types: Point, MultiPoint, Polygon, MultiPolygon
+point.geojson()
+'''
+{
+  "type": "Point",
+  "coordinates":[ 20.8, 30.9 ]
+}
+'''
+```
+
+
 Defining complex geometries is sometimes difficult, but in most cases you just need to set triggers upon cities: that's
 why we've added a method to the `pyowm.webapi25.cityidregistry.CityIDRegistry` registry that returns the geopoints 
 that correspond to one or more named cities:
@@ -45,8 +60,8 @@ squared areas and you would only need to specify the radius of the circle. Let's
 
 ```python
 geopoints = reg.geopoints_for('London', country='GB')
-centre = geopoints[0]                                     # the list has only 1 geopoint
-square_polygon = centre.square_circumscribed(radius=12)   # radius of the inscribed circle in kms (defaults to: 10)
+centre = geopoints[0] # the list has only 1 geopoint
+square_polygon = centre.bounding_square_polygon(inscribed_circle_radius_km=12) # radius of the inscribed circle in kms (defaults to: 10)
 ```
 
 Please, notice that if you specify big values for the radius you need to take care about the projection of geographic
@@ -113,6 +128,18 @@ enums.OperatorsEnum.NOT_EQUAL            # '$ne'
 
 ```
 
+Here is an example of conditions:
+
+```python
+from pyowm.alertapi30.condition import Condition
+from pyowm.alertapi30 import enums
+
+# this condition checks if the temperature is bigger than 313.15 Kelvin degrees
+condition = Condition(enums.WeatherParametersEnum.TEMPERATURE,
+                      enums.OperatorsEnum.GREATER_THAN,
+                      313.15)
+```
+
 Remember that each Condition is checked by the OWM Alert API on the geographic area that you need to specify!
 
 You can bind multiple `pyowm.alertapi30.condition.Condition` objects to a Trigger: each Alert will be fired when
@@ -121,22 +148,52 @@ a specific Condition is met on the area.
 
 ### Alert
 
-Attributes:
-  - id: str, unique alert identifier
-  - trigger_id: str, link back to parent Trigger
-  - met_conditions: list of dict, each one reports a link to a parent's Condition obj and the current values that made the Alert fire
-  - last_update: epoch, last time when the alert has been fired
-  - coordinates: dict representing the coordinates where the condition were met
+As said, whenever one or more conditions are met on a certain area, an alert is fired (this means that "the trigger triggers")
+
+If the condition then keeps on being met, more and more alerts will be spawned by the OWM Alert API. You can retrieve
+such alerts by polling the OWM API (see below about how to do it).
+
+Each alert is represented by PyOWM as a `pyowm.alertapi30.alert.Alert` instance, having:
+  - a unique identifier
+  - timestamp of firing
+  - a link back to the unique identifier of the parent `pyowm.alertapi30.trigger.Trigger` object instance
+  - the list of met conditions (each one being a dict containing the `Condition` object and the weather parameter
+    value that actually made the condition true)
+  - the geocoordinates where the condition has been met (they belong to the area that had been specified for the Trigger)
+
+Example:
+
+```python
+from pyowm.alertapi30.condition import Condition
+from pyowm.alertapi30 import enums
+from pyowm.alertapi30.alert import Alert
+
+condition = Condition(enums.WeatherParametersEnum.TEMPERATURE,
+                      enums.OperatorsEnum.GREATER_THAN,
+                      356.15)
+
+alert = Alert('alert-id',                   # alert id
+              'parent-trigger-id',          # parent trigger's id
+              [{                            # list of met conditions
+                    "current_value": 326.4,
+                    "condition": condition
+               }],
+               {"lon": 37, "lat": 53},      # coordinates
+               1481802100000                # fired on
+)
+```
+
+As you see, you're not meant to create alerts, but PyOWM is supposed to create them for you as they are fired by the
+OWM API.
 
 
 ### AlertChannel
 Something that OWM envisions, but still does not offer. Possibly, when you will setup a trigger you shall also specify 
 the channels you want to be notified on: that's why we've added a reference to a list of `AlertChannel` instances
- directly on the Trigger objects (the list now only points to the default channel)
+directly on the Trigger objects (the list now only points to the default channel)
  
 A useful enumerator is offered in module `pyowm.alertapi30.enums`: `AlertChannelsEnum` (says what channels should the alerts
 delivered to)
- 
  
 As of today, the default `AlertChannel` is: `AlertChannelsEnum.OWM_API_POLLING`, and is the only one available.
 
@@ -155,11 +212,31 @@ Attributes:
 
 
 ### AlertManager
-The OWM façade object allows to get an instance of a `AlertManager` object: use it to interact with the Alert API
-and create/read/update/delete triggers and alerts.
+The OWM main entry point object allows you to get an instance of an `pyowm.alertapi30.alert_manager.AlertManager` object:
+use it to interact with the Alert API and create/read/update/delete triggers and read/delete the related alerts.
 
+Here is how to instantiate an `AlertManager`:
 
-## Code samples
+```python
+from pyowm import OWM
+
+owm = OWM(API_Key='my-API-key')
+am = owm.alert_manager()
+```
+
+Then you can do some nice things with it:
+
+  - create a trigger
+  - read all of your triggers
+  - read a named trigger
+  - modify a named trigger
+  - delete a named trigger
+  - read all the alerts fired by a named trigger
+  - read a named alert
+  - delete a named alert
+  - delete all of the alerts for a named trigger
+
+Here comes a full example:
 
 ```python
 from pyowm import OWM
@@ -182,10 +259,6 @@ geom_1.geojson()
 '''
 geom_2 = geo.MultiPolygon([[lon1, lat1], [lon2, lat2], [lon3, lat3], [lon1, lat1]]
                           [[lon7, lat7], [lon8, lat8], [lon9, lat9], [lon7, lat7]])
-
-# a very nice feature: look for city ID and get its corresponding geopoint!
-reg = owm.city_id_registry()
-geoms = reg.geopoints_for('London', country='GB')
 
 
 # -- conditions --
