@@ -88,7 +88,12 @@ the locations' toponyms:
     reg.ids_for("london", matching='nocase') # case-insensitive
     reg.ids_for("london", matching='like')   # substring search
 
-Please refer to the SW API docs for details.
+Also remember that the registry can provide the geopoints (instances of `pyowm.utils.geo.Point`) corresponding to 
+the searched toponyms:
+
+    list_of_geopoints = reg.geopoints_for('London', country='GB')
+
+Please refer to the SW API docs for further detail.
 
 
 ### Currently observed weather extended search

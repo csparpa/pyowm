@@ -1,9 +1,10 @@
 # Weather Alert API
 
-You can use the OWM API to create triggers. Each trigger represents the check if a set of conditions on certain weather 
-parameter values are met over certain geographic areas.
+You can use the OWM API to create triggers.
 
-Whenevere a condition is met, an alert is fired and stored, and can be retrieved by polling the API.
+Each trigger represents the check if a set of conditions on certain weather parameter values are met over certain geographic areas.
+
+Whenever a condition is met, an alert is fired and stored, and can be retrieved by polling the API.
 
 ## OWM website technical reference
  - [https://openweathermap.org/triggers](https://openweathermap.org/triggers)
@@ -21,32 +22,102 @@ This is the descending object model:
 
 ### Area
 
-Attributes:
-  - coordinates: list of lists (each sublist representing a point)
+The area describes the geographic boundaries over which a trigger is evaluated. Don't be mislead by the term "area": this
+can refer also to a specific geopoint or a set of them, besides - of course - polygons and set of polygons.
 
 Any of the geometry subtypes found in `pyowm.utils.geo` module (point, multipoint, polygon, multipolygon) are fine to use.
 
+Defining complex geometries is sometimes difficult, but in most cases you just need to set triggers upon cities: that's
+why we've added a method to the `pyowm.webapi25.cityidregistry.CityIDRegistry` registry that returns the geopoints 
+that correspond to one or more named cities:
+
+```python
+import pyowm
+owm = pyowm.OWM('your-API-key')
+reg = owm.city_id_registry()
+geopoints = reg.geopoints_for('London', country='GB')
+``` 
+
+But still some very spread cities (think of London,GB or Los Angeles,CA) exist and therefore approximating a city to
+a single point is not accurate at all: that's why we've added a nice method to get a _squared polygon that is circumscribed
+to the circle having a specified geopoint as its centre_. This makes it possible to easily get polygons to cover large
+squared areas and you would only need to specify the radius of the circle. Let's do it for London,GB in example: 
+
+```python
+geopoints = reg.geopoints_for('London', country='GB')
+centre = geopoints[0]                                     # the list has only 1 geopoint
+square_polygon = centre.square_circumscribed(radius=12)   # radius of the inscribed circle in kms (defaults to: 10)
+```
+
+Please, notice that if you specify big values for the radius you need to take care about the projection of geographic
+coordinates on a proper geoid: this means that if you don't, the polygon will only _approximate_ a square.
+
+
 Topology is set out as stated by [GeoJSON](https://github.com/frewsxcv/python-geojson)
 
-There is a useful factory for Areas: `pyowm.utils.geo.GeometryBuilder.build()`
+Moreover, there is a useful factory for Areas: `pyowm.utils.geo.GeometryBuilder.build()`, that you can use to turn a geoJSON standard
+dictionary into the corresponding topology type:
+
+
+```python
+from pyowm.utils.geo import GeometryBuilder
+the_dict = {
+    "type": "Point",
+    "coordinates": [53, 37]
+}
+geom = GeometryBuilder.build(the_dict)
+type(geom)  # <pyowm.utils.geo.Point>
+```
+
+You can bind multiple `pyowm.utils.geo` geometry types to a Trigger: a list of such geometries is considered to be
+the area on which conditions of a Trigger are checked. 
 
 
 ### Condition
+A condition is a numeric rule to be checked on a named weather variable. Something like:
 
-Attributes:
-  - id: str, unique condition identifier
-  - target_param: weather parameters to be checked. Can be: `temp, pressure, humidity, wind_speed, wind_direction, clouds`.
+```
+  - VARIABLE X IS GREATER THAN AMOUNT_1
+  - VARIABLE Y IS EQUAL TO AMOUNT_2
+  - VARIABLE Z IS DIFFERENT FROM AMOUNT_3
+```
+
+`GREATER, EQUAL TO, DIFFERENT FROM` are called comparison expressions or operators; `VARIABLE X, Y, Z` are 
+called target parameters. 
+
+Each condition is then specified by:
+  - target_param: weather parameter to be checked. Can be: `temp, pressure, humidity, wind_speed, wind_direction, clouds`.
   - expression: str, operator for the comparison. Can be: `$gt`, $gte, $lt, $lte, $eq, $ne`
   - amount: number, the comparison value
 
 Conditions are bound to Triggers, as they are set on Trigger instantiation.
 
-As Conditions can be only set on a limited number of meteo variables and can be expressed only through a closed set of 
-value comparison operators, convenient **enumerators** are offered in module `pyowm.alertapi30.enums`:
+As Conditions can be only set on a limited number of weather variables and can be expressed only through a closed set of 
+comparison operators, convenient **enumerators** are offered in module `pyowm.alertapi30.enums`:
 
-  - `WeatherParametersEnum` --> what meteo variable to set triggers on
-  - `OperatorsEnum` --> what comparison operator to use on the meteo variable
-  - `AlertChannelsEnum` --> what channels should alerts of
+  - `WeatherParametersEnum` --> what weather variable to set this condition on
+  - `OperatorsEnum` --> what comparison operator to use on the weather parameter
+
+Use enums so that you don't have to remember the syntax of operators and weather params that is specific to the OWM Alert API.
+Here is how you use them:
+
+```python
+from pyowm.alertapi30 import enums
+enums.WeatherParametersEnum.items()      # [('TEMPERATURE', 'temp'), ('WIND_SPEED', 'wind_speed'), ... ]
+enums.WeatherParametersEnum.TEMPERATURE  # 'temp'
+enums.WeatherParametersEnum.WIND_SPEED   # 'wind_speed'
+
+enums.OperatorsEnum.items()              # [('GREATER_THAN', '$gt'), ('NOT_EQUAL', '$ne'), ... ]
+enums.OperatorsEnum.GREATER_THAN         # '$gt'
+enums.OperatorsEnum.NOT_EQUAL            # '$ne'
+
+```
+
+Remember that each Condition is checked by the OWM Alert API on the geographic area that you need to specify!
+
+You can bind multiple `pyowm.alertapi30.condition.Condition` objects to a Trigger: each Alert will be fired when
+a specific Condition is met on the area.
+
 
 ### Alert
 
