@@ -189,12 +189,18 @@ This class realizes a linked list that performs insertions only at the front of 
 # Utilities
 A few packages are provided, containing utility functions that support the base PyOWM entity classes and the user:
 
-+ **conversion utils**: conversions between temperature units and timeformats
-+ **time utils**: convenience time functions for library users
-+ **XML utls**: dump data to XML
++ **geo utils**: geographic areas representations
++ **string utils**: string manipulation
++ **temp utils**: temperature conversions
++ **time format utils**: formatting timestamp from/to any among: epoch, ISO8601 and Python's `datetime.datetime`
++ **time utils**: human friendly timestamp generation
++ **weather utils**: weather objets search and filtering based on status, etc.
++ **xml utils**: XML manipulation
 
 # Exceptions
-+ **APICallError** class: raises when failures in OWM web API invocation occur
-+ **APIResponseError** class: raised when HTTP error status codes occur in OWM web API responses
-+ **NotFoundError** class: raised when a search for an item in a collection has no result
-+ **ParseResponseError** class: raised when failures occur in parsing payload data coming from OWM web API responses
+
++ **APICallError** class (with many subclasses): raised when operational failures occur in OWM web APIs
++ **APIResponseError** class: raised when HTTP error status codes occur in OWM web APIs responses
++ **NotFoundError** class: raised when a search for an item on OWM web APIs fails because the item does not exist
++ **ParseResponseError** class: raised when failures occur in parsing payload data coming from OWM web APIs responses
++ **UnauthorizedError** class: raised when authorization issues occur in accessing the OWM web APIs

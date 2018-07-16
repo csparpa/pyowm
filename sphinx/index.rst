@@ -80,21 +80,36 @@ You can install the development trunk with _pip_:
 
 but be aware that it might not be stable!
 
-
 setuptools
 ~~~~~~~~~~
 
-Please see here_
+You can install from source using _setuptools_: either download a release from GitHub or just take the latest main branch), then:
 
-.. _here: https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools)
+.. code::
+
+   $ unzip <zip archive>   # or tar -xzf <tar.gz archive>
+   $ cd pyowm-x.y.z
+   $ python setup.py install
+
+The .egg will be installed into the system-dependent Python libraries folder:
+
+.. code::
+
+   C:\PythonXY\Lib\site-packages            # Windows
+   /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
+   /usr/local/lib/pythonX.Y/dist-packages   # MacOS 10.5.4
+
 
 Distribution packages
 ~~~~~~~~~~~~~~~~~~~~~
 
-  - On Windows you have installers_
-      .. _installers: https://github.com/csparpa/pyowm/wiki/Install#windows-exe
-  - On ArchLinux you can install PyOWM from Yaourt_
-      .. _Yaourt: https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt
+  - On Windows you have installers
+  - On ArchLinux you can install PyOWM with the Yaourt package manager, run:
+
+      .. code::
+
+         Yaourt -S python2-owm  # Python 2.7 (https://aur.archlinux.org/packages/python-owm)
+         Yaourt -S python-owm   # Python 3.x (https://aur.archlinux.org/packages/python2-owm)
 
 
 
