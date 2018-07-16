@@ -7,9 +7,6 @@ class Trigger:
     Object representing a the check if a set of weather conditions are met on a given geographical area: each condition
     is a rule on the value of a given weather parameter (eg. humidity, temperature, etc). Whenever a condition from a
     `Trigger` is met, the OWM API crates an alert and binds it to the the `Trigger`.
-    A `Trigger` is the local proxy for the corresponding entry on the OWM API, therefore it can get ouf of sync as
-    time goes by and conditions are met: it's up to you to "refresh" the local trigger by using a
-    `pyowm.utils.alertapi30.AlertManager` instance.
     :param start: time object representing the time when the trigger begins to be checked
     :type start: int, ``datetime.datetime`` or ISO8601-formatted string
     :param end: time object representing the time when the trigger ends to be checked

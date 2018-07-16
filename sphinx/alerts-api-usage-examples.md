@@ -10,15 +10,92 @@ Whenever a condition is met, an alert is fired and stored, and can be retrieved 
  - [https://openweathermap.org/triggers](https://openweathermap.org/triggers)
  - [http://openweathermap.org/triggers-struct](http://openweathermap.org/triggers-struct)
 
-## PyOWM Object model
+## A full example first
 
-This is the descending object model:
+Hands-on! This is a full example of how to use the Alert API. Check further for details about the involved object types.
+
+
+```python
+from pyowm import OWM
+from pyowm.utils import geo
+from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum, AlertChannelsEnum
+from pyowm.alertapi30.condition import Condition
+
+# obtain an AlertManager instance
+owm = OWM(API_Key='blablabla')
+am = owm.alert_manager()
+
+# -- areas --
+geom_1 = geo.Point(lon, lat)  # available types: Point, MultiPoint, Polygon, MultiPolygon
+geom_1.geojson()
+'''
+{
+  "type": "Point",
+  "coordinates":[ lon, lat ]
+}
+'''
+geom_2 = geo.MultiPolygon([[lon1, lat1], [lon2, lat2], [lon3, lat3], [lon1, lat1]]
+                          [[lon7, lat7], [lon8, lat8], [lon9, lat9], [lon7, lat7]])
+
+
+# -- conditions --
+condition_1 = Condition(WeatherParametersEnum.TEMPERATURE,
+                        OperatorsEnum.GREATER_THAN,
+                        313.15)  # kelvin
+condition_2 = Condition(WeatherParametersEnum.CLOUDS,
+                        OperatorsEnum.EQUAL,
+                        80) # clouds % coverage
+
+# -- triggers --
+
+# create a trigger
+trigger = am.create_trigger(start_ts=1234567890, end_ts=1278654300,
+                            conditions=[condition_1, condition_2],
+                            area=[geom_1, geom_2],
+                            alert_channel=AlertChannelsEnum.OWM_API)
+
+# read all triggers
+triggers_list = am.get_triggers()
+
+# read one named trigger
+trigger_2 = am.get_trigger('trigger_id')
+
+# update a trigger
+am.update_trigger(trigger_2)
+
+# delete a trigger
+am.delete_trigger(trigger_2)
+
+# -- alerts --
+
+# retrieved from the local parent Trigger obj...
+alerts_list = trigger.get_alerts()
+alerts_list = trigger.get_alerts_since('2018-01-09T23:07:24Z')  # useful for polling alerts
+alerts_list = trigger.get_alerts_on(WeatherParametersEnum.TEMPERATURE)
+alert = trigger.get_alert('alert_id')
+
+# ...or retrieved from the remote API
+alerts_list_alternate = am.get_alerts_for(trigger)
+alert_alternate = am.get_alert('alert_id')
+
+
+# delete all or one alert
+am.delete_all_alerts_for(trigger)
+am.delete_alert_for(trigger, alert)
+```
+
+## Alert API object model
+
+This is the Alert API object model:
 
   - *Trigger*: collection of alerts to be met over specified areas and within a specified time frame according to specified weather params conditions
   - *Condition*: rule for matching a weather measuerment with a specified threshold
   - *Alert*: whenever a condition is met, an alert is created (or updated) and can be polled to verify when it has been met and what the actual weather param value was.
   - *Area*: geographic area over which the trigger is checked
   - *AlertChannel*: as OWM plans to add push-oriented alert channels (eg. push notifications), we need to encapsulate this into a specific class
+
+and then you have an *AlertManager* class that you will need to instantiate to operatively interact with the Alert API 
+
 
 ### Area
 
@@ -199,17 +276,22 @@ As of today, the default `AlertChannel` is: `AlertChannelsEnum.OWM_API_POLLING`,
 
 
 ### Trigger
+As said, each trigger represents the check if a set of conditions on certain weather parameter values are met over 
+certain geographic areas.
 
-Attributes:
-  - start: epoch when the trigger starts
-  - end: epoch when the trigger ends
-  - alerts: list of Alert objects
-  - conditions: list of Condition objects
-  - area: list of dicts, each one representing a geoJSON data structure
-  - alertChannels: list of AlertChannel objects
+A Trigger is the local proxy for the corresponding entry on the OWM API: Triggers can be operated through 
+`pyowm.alertapi30.alertmanager.AlertManager` instances.
 
-**Notes on trigger's time period**: by design, PyOWM will only allow users to specify absolute datetimes for start/end and will send them to the API using `$exact`
+Each Trigger has these attributes:
+  - start: timestamp when conditions of the trigger start to be checked by the Alert API
+  - end: timestamp when conditions of the trigger start to be checked by the Alert API
+  - alerts: a list of `pyowm.alertapi30.alert.Alert` instances, which are the alerts that the trigger has fired so far
+  - conditions: a list of `pyowm.alertapi30.condition.Condition` instances
+  - area: a list of `pyowm.utils.geo.Geometry` instances, representing the geographic area on which the trigger's conditions need to be checked
+  - alertChannels: list of `pyowm.alertapi30.alert.AlertChannel` objects, representing which channels this trigger is notifying to
 
+**Notes on trigger's time period**: by design, PyOWM will only allow users to specify absolute datetimes for start/end 
+and will send them to the API using `$exact`
 
 ### AlertManager
 The OWM main entry point object allows you to get an instance of an `pyowm.alertapi30.alert_manager.AlertManager` object:
@@ -235,74 +317,3 @@ Then you can do some nice things with it:
   - read a named alert
   - delete a named alert
   - delete all of the alerts for a named trigger
-
-Here comes a full example:
-
-```python
-from pyowm import OWM
-from pyowm.utils import geo
-from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum, AlertChannelsEnum
-from pyowm.alertapi30.condition import Condition
-
-# obtain an AlertManager instance
-owm = OWM(API_Key='blablabla')
-am = owm.alert_manager()
-
-# -- areas --
-geom_1 = geo.Point(lon, lat)  # available types: Point, MultiPoint, Polygon, MultiPolygon
-geom_1.geojson()
-'''
-{
-  "type": "Point",
-  "coordinates":[ lon, lat ]
-}
-'''
-geom_2 = geo.MultiPolygon([[lon1, lat1], [lon2, lat2], [lon3, lat3], [lon1, lat1]]
-                          [[lon7, lat7], [lon8, lat8], [lon9, lat9], [lon7, lat7]])
-
-
-# -- conditions --
-condition_1 = Condition(WeatherParametersEnum.TEMPERATURE,
-                        OperatorsEnum.GREATER_THAN,
-                        313.15)  # kelvin
-condition_2 = Condition(WeatherParametersEnum.CLOUDS,
-                        OperatorsEnum.EQUAL,
-                        80) # clouds % coverage
-
-# -- triggers --
-
-# create a trigger
-trigger = am.create_trigger(start_ts=1234567890, end_ts=1278654300,
-                            conditions=[condition_1, condition_2],
-                            area=[geom_1, geom_2],
-                            alert_channel=AlertChannelsEnum.OWM_API)
-
-# read all triggers
-triggers_list = am.get_triggers()
-
-# read one named trigger
-trigger_2 = am.get_trigger('trigger_id')
-
-# update a trigger
-am.update_trigger(trigger_2)
-
-# delete a trigger
-am.delete_trigger(trigger_2)
-
-# -- alerts --
-
-# retrieved from the local parent Trigger obj...
-alerts_list = trigger.get_alerts()
-alerts_list = trigger.get_alerts_since('2018-01-09T23:07:24Z')  # useful for polling alerts
-alerts_list = trigger.get_alerts_on(WeatherParametersEnum.TEMPERATURE)
-alert = trigger.get_alert('alert_id')
-
-# ...or retrieved from the remote API
-alerts_list_alternate = am.get_alerts_for(trigger)
-alert_alternate = am.get_alert('alert_id')
-
-
-# delete all or one alert
-am.delete_all_alerts_for(trigger)
-am.delete_alert_for(trigger, alert)
-```
