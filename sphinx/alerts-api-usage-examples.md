@@ -290,8 +290,19 @@ Each Trigger has these attributes:
   - area: a list of `pyowm.utils.geo.Geometry` instances, representing the geographic area on which the trigger's conditions need to be checked
   - alertChannels: list of `pyowm.alertapi30.alert.AlertChannel` objects, representing which channels this trigger is notifying to
 
-**Notes on trigger's time period**: by design, PyOWM will only allow users to specify absolute datetimes for start/end 
-and will send them to the API using `$exact`
+**Notes on trigger's time period**
+ 
+
+By design, PyOWM will only allow users to _specify absolute datetimes/epochs_ for triggers start/end and 
+will send them to the API using the `$after` operator.
+
+Therefore whenever given the user passes in the absolute datetime/epochs `t_start` and `t_end` for the trigger,
+PyOWM checks the given the current timestamp `t_curr` and then:
+
+  1. checks that `t_curr` < `t_start` < `t_end`
+  2. calculate `start = t_start - t_curr` (in milliseconds)
+  3. calculate `end = t_end - t_curr` (in milliseconds)
+  4. send `start` and `end` values to the Alert API using the `$after` operator
 
 ### AlertManager
 The OWM main entry point object allows you to get an instance of an `pyowm.alertapi30.alert_manager.AlertManager` object:
