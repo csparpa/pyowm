@@ -34,12 +34,12 @@ class Trigger:
     def __init__(self, start, end, conditions, area, alerts=None, alert_channels=None, id=None):
         assert start is not None
         assert end is not None
-        unix_start = timeformatutils.to_UNIXtime(start)
-        unix_end = timeformatutils.to_UNIXtime(end)
-        if unix_start >= unix_end:
+        unix_absolute_start = timeformatutils.to_UNIXtime(start)
+        unix_absolute_end = timeformatutils.to_UNIXtime(end)
+        if unix_absolute_start >= unix_absolute_end:
             raise ValueError("Error: the start epoch must precede the end epoch")
-        self.start = unix_start
-        self.end = unix_end
+        self.start = unix_absolute_start
+        self.end = unix_absolute_end
         assert conditions is not None
         if len(conditions) == 0:
             raise ValueError('A trigger must contain at least one condition: you provided none')

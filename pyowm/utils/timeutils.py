@@ -246,3 +246,17 @@ def _timedelta_years(offset, date=None):
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
         return date + timedelta(days=offset * 365)
+
+
+def millis_offset_between_epochs(reference_epoch, target_epoch):
+    """
+    Calculates the signed milliseconds delta between the reference unix epoch and the provided target unix epoch
+    :param reference_epoch: the unix epoch that the millis offset has to be calculated with respect to
+    :type reference_epoch: int
+    :param target_epoch: the unix epoch for which the millis offset has to be calculated
+    :type target_epoch: int
+    :return: int
+    """
+    assert isinstance(reference_epoch, int)
+    assert isinstance(target_epoch, int)
+    return (target_epoch - reference_epoch)*1000
