@@ -16,7 +16,7 @@ class IntegrationTestsAlertAPI30(unittest.TestCase):
     cond1 = Condition(WeatherParametersEnum.HUMIDITY, OperatorsEnum.LESS_THAN, 10)
     cond2 = Condition(WeatherParametersEnum.CLOUDS, OperatorsEnum.LESS_THAN, 90)
     start = '2019-07-01 14:17:00+00'
-    end = '2019-08-01 14:17:00+00'
+    end = '2019-07-02 14:17:00+00'
     # a rectangle around the city of Moscow
     area1 = geo.Polygon.from_dict({
         "type": "Polygon",
@@ -67,23 +67,23 @@ class IntegrationTestsAlertAPI30(unittest.TestCase):
         trigger2 = mgr.create_trigger(self.start, self.end, conditions=[self.cond2], area=[self.area2])
 
         # Read all created triggers
-        triggers = mgr.get_trigger()
+        triggers = mgr.get_triggers()
         self.assertEqual(n_old_triggers + 2, len(triggers))
 
         # Read one by one
         result = mgr.get_trigger(trigger1.id)
         self.assertEqual(trigger1.id, result.id)
-        self.assertEqual(trigger1.start, result.start)
-        self.assertEqual(trigger1.end, result.end)
-        self.assertEqual(trigger1.conditions, result.conditions)
-        self.assertEqual(trigger1.area, result.area)
+        self.assertEqual(trigger1.start_after_millis, result.start_after_millis)
+        self.assertEqual(trigger1.end_after_millis, result.end_after_millis)
+        self.assertEqual(len(trigger1.conditions), len(result.conditions))
+        self.assertEqual(len(trigger1.area), len(result.area))
 
         result = mgr.get_trigger(trigger2.id)
         self.assertEqual(trigger2.id, result.id)
-        self.assertEqual(trigger2.start, result.start)
-        self.assertEqual(trigger2.end, result.end)
-        self.assertEqual(trigger2.conditions, result.conditions)
-        self.assertEqual(trigger2.area, result.area)
+        self.assertEqual(trigger2.start_after_millis, result.start_after_millis)
+        self.assertEqual(trigger2.end_after_millis, result.end_after_millis)
+        self.assertEqual(len(trigger2.conditions), len(result.conditions))
+        self.assertEqual(len(trigger2.area), len(result.area))
 
         # Update a trigger
         modified_trigger2 = copy.deepcopy(trigger2)
@@ -93,11 +93,12 @@ class IntegrationTestsAlertAPI30(unittest.TestCase):
         result = mgr.get_trigger(modified_trigger2.id)
 
         self.assertEqual(modified_trigger2.id, result.id)
-        self.assertEqual(modified_trigger2.start, result.start)
-        self.assertEqual(modified_trigger2.end, result.end)
-        self.assertEqual(modified_trigger2.area, result.area)
-        # of course, conditions have been modified
-        self.assertNotEqual(modified_trigger2.conditions, result.conditions)
+        self.assertEqual(modified_trigger2.start_after_millis, result.start_after_millis)
+        self.assertEqual(modified_trigger2.end_after_millis, result.end_after_millis)
+        self.assertEqual(len(modified_trigger2.area), len(result.area))
+        # of course, conditions have been modified with respect to former trigger 2
+        self.assertNotEqual(len(trigger2.conditions), len(result.conditions))
+        self.assertEqual(len(modified_trigger2.conditions), len(result.conditions))
 
         # Delete triggers one by one
         mgr.delete_trigger(trigger1)

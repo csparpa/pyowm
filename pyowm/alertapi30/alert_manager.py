@@ -2,7 +2,7 @@ from pyowm.constants import ALERT_API_VERSION
 from pyowm.commons.http_client import HttpClient
 from pyowm.alertapi30.parsers import TriggerParser, AlertParser
 from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
-from pyowm.utils import timeformatutils
+from pyowm.utils import timeformatutils, timeutils
 from pyowm.utils import stringutils
 
 
@@ -51,18 +51,23 @@ class AlertManager:
         """
         assert start is not None
         assert end is not None
+
+        # prepare time period
         unix_start = timeformatutils.to_UNIXtime(start)
         unix_end = timeformatutils.to_UNIXtime(end)
+        unix_current = timeutils.now(timeformat='unix')
         if unix_start >= unix_end:
-            raise ValueError("Error: the start epoch must precede the end epoch")
+            raise ValueError("The start timestamp must precede the end timestamp")
+        delta_millis_start = timeutils.millis_offset_between_epochs(unix_current, unix_start)
+        delta_millis_end = timeutils.millis_offset_between_epochs(unix_current, unix_end)
         the_time_period = {
             "start": {
-                "expression": "exact",
-                "amount": unix_start
+                "expression": "after",
+                "amount": delta_millis_start
             },
             "end": {
-                "expression": "exact",
-                "amount": unix_end
+                "expression": "after",
+                "amount": delta_millis_end
             }
         }
 
@@ -126,16 +131,16 @@ class AlertManager:
         stringutils.assert_is_string_or_unicode(trigger.id)
         the_time_period = {
             "start": {
-                "expression": "exact",
-                "amount": trigger.start
+                "expression": "after",
+                "amount": trigger.start_after_millis
             },
             "end": {
-                "expression": "exact",
-                "amount": trigger.end
+                "expression": "after",
+                "amount": trigger.end_after_millis
             }
         }
         the_conditions = [dict(name=c.weather_param, expression=c.operator, amount=c.amount) for c in trigger.conditions]
-        the_area = [a.geojson() for a in trigger.area]
+        the_area = [a.as_dict() for a in trigger.area]
 
         status, _ = self.http_client.put(
             NAMED_TRIGGER_URI % trigger.id,

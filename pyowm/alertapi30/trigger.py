@@ -7,10 +7,13 @@ class Trigger:
     Object representing a the check if a set of weather conditions are met on a given geographical area: each condition
     is a rule on the value of a given weather parameter (eg. humidity, temperature, etc). Whenever a condition from a
     `Trigger` is met, the OWM API crates an alert and binds it to the the `Trigger`.
-    :param start: time object representing the time when the trigger begins to be checked
-    :type start: int, ``datetime.datetime`` or ISO8601-formatted string
-    :param end: time object representing the time when the trigger ends to be checked
-    :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+    A `Trigger` is the local proxy for the corresponding entry on the OWM API, therefore it can get ouf of sync as
+    time goes by and conditions are met: it's up to you to "refresh" the local trigger by using a
+    `pyowm.utils.alertapi30.AlertManager` instance.
+    :param start_after_millis: how many milliseconds after the trigger creation the trigger begins to be checked
+    :type start_after_millis: int
+    :param end_after_millis: how many milliseconds after the trigger creation the trigger ends to be checked
+    :type end_after_millis: int
     :param alerts: the `Alert` objects representing the alerts that have been fired for this `Trigger` so far. Defaults
     to `None`
     :type alerts: list of `pyowm.utils.alertapi30.Alert` instances
@@ -28,15 +31,15 @@ class Trigger:
     are empty collections
 
     """
-    def __init__(self, start, end, conditions, area, alerts=None, alert_channels=None, id=None):
-        assert start is not None
-        assert end is not None
-        unix_start = timeformatutils.to_UNIXtime(start)
-        unix_end = timeformatutils.to_UNIXtime(end)
-        if unix_start >= unix_end:
-            raise ValueError("Error: the start epoch must precede the end epoch")
-        self.start = unix_start
-        self.end = unix_end
+    def __init__(self, start_after_millis, end_after_millis, conditions, area, alerts=None, alert_channels=None, id=None):
+        assert start_after_millis is not None
+        assert end_after_millis is not None
+        assert isinstance(start_after_millis, int)
+        assert isinstance(end_after_millis, int)
+        if start_after_millis > end_after_millis:
+            raise ValueError("Error: trigger start time must precede trigger end time")
+        self.start_after_millis = start_after_millis
+        self.end_after_millis = end_after_millis
         assert conditions is not None
         if len(conditions) == 0:
             raise ValueError('A trigger must contain at least one condition: you provided none')
@@ -104,10 +107,10 @@ class Trigger:
         return result
 
     def __repr__(self):
-        return "<%s.%s - id=%s, start=%s, end=%s, alerts=%s>" % (
+        return "<%s.%s - id=%s, start_after_mills=%s, end_after_mills=%s, alerts=%s>" % (
                     __name__,
                     self.__class__.__name__,
                     self.id if self.id is not None else 'None',
-                    timeformatutils.to_ISO8601(self.start),
-                    timeformatutils.to_ISO8601(self.end),
+                    self.start_after_millis,
+                    self.end_after_millis,
                     str(len(self.alerts)))

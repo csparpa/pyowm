@@ -58,6 +58,33 @@ class TestGeo(unittest.TestCase):
         self.assertEqual(expected.lat, result.lat)
         self.assertEqual(expected.lon, result.lon)
 
+    def test_bounding_square_polygon_fails_with_wrong_input(self):
+        the_dict = {
+            "type": "Point",
+            "coordinates": [-0.098040, 51.513844]  # St. Paul's Cathedral, London, GB
+        }
+        centre = geo.Point.from_dict(the_dict)
+        self.assertRaises(AssertionError, centre.bounding_square_polygon, 'not-a-number')
+        self.assertRaises(AssertionError, centre.bounding_square_polygon, -67.9)
+        self.assertRaises(AssertionError, centre.bounding_square_polygon, 0.)
+
+    def test_bounding_square_polygon(self):
+        the_dict = {
+            "type": "Point",
+            "coordinates": [-0.098040, 51.513844]  # St. Paul's Cathedral, London, GB
+        }
+        centre = geo.Point.from_dict(the_dict)
+        result = centre.bounding_square_polygon(inscribed_circle_radius_km=15.0)
+        self.assertIsInstance(result, geo.Polygon)
+
+        the_dict = {
+            "type": "Point",
+            "coordinates": [0.0, 89.8]  # Almost at the North Pole
+        }
+        centre = geo.Point.from_dict(the_dict)
+        result = centre.bounding_square_polygon(inscribed_circle_radius_km=1000.0)
+        self.assertIsInstance(result, geo.Polygon)
+
     # -- Multipoint --
 
     def test_multipoint_with_wrong_inputs(self):

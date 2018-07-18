@@ -1,10 +1,16 @@
 import json
+import math
 import geojson
 
 
+EARTH_RADIUS_KM = 6378.1
+
+
+# utilities
+
 def assert_is_lat(val):
     """
-    Checks it the given value is a feasible latitude
+    Checks it the given value is a feasible decimal latitude
 
     :param val: value to be checked
     :type val: int of float
@@ -19,7 +25,7 @@ def assert_is_lat(val):
 
 def assert_is_lon(val):
     """
-    Checks it the given value is a feasible longitude
+    Checks it the given value is a feasible decimal longitude
 
     :param val: value to be checked
     :type val: int of float
@@ -31,6 +37,8 @@ def assert_is_lon(val):
     if val < -180.0 or val > 180.0:
         raise ValueError("Longitude value must be between -180 and 180")
 
+
+# classes
 
 class Geometry:
     """
@@ -57,9 +65,9 @@ class Point(Geometry):
     """
     A Point geotype. Represents a single geographic point
 
-    :param lon: longitude for the geopoint
+    :param lon: decimal longitude for the geopoint
     :type lon: int of float
-    :param lat: latitude for the geopoint
+    :param lat: decimal latitude for the geopoint
     :type lat: int of float
     :returns:  a *Point* instance
     :raises: *ValueError* when negative values are provided
@@ -78,6 +86,61 @@ class Point(Geometry):
     def lat(self):
         return self._geom['coordinates'][1]
 
+    def bounding_square_polygon(self, inscribed_circle_radius_km=10.0):
+        """
+         Returns a square polygon (bounding box) that circumscribes the circle having this geopoint as centre and 
+         having the specified radius in kilometers.
+         The polygon's points calculation is based on theory exposed by: http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
+         by Jan Philip Matuschek, owner of the intellectual property of such material.
+         In short:
+           - locally to the geopoint, the Earth's surface is approximated to a sphere with radius = Earth's radius
+           - the calculation works fine also when the bounding box contains the Earth's poles and the 180 deg meridian
+
+         :param inscribed_circle_radius_km: the radius of the inscribed circle, defaults to 10 kms
+         :type inscribed_circle_radius_km: int or float
+         :return: a `pyowm.utils.geo.Polygon` instance
+         """
+        assert isinstance(inscribed_circle_radius_km, int) or isinstance(inscribed_circle_radius_km, float)
+        assert inscribed_circle_radius_km > 0., 'Radius must be greater than zero'
+
+        # turn metric distance to radians on the approximated local sphere
+        rad_distance = float(inscribed_circle_radius_km) / EARTH_RADIUS_KM
+
+        # calculating min/max lat for bounding box
+        bb_min_lat_deg = self.lat * math.pi/180. - rad_distance
+        bb_max_lat_deg = self.lat * math.pi/180. + rad_distance
+
+        # now checking for poles...
+        if bb_min_lat_deg > math.radians(-90) and bb_max_lat_deg < math.radians(90):  # no poles in the bounding box
+            delta_lon = math.asin(math.sin(rad_distance) / math.cos(math.radians(self.lat)))
+
+            bb_min_lon_deg = math.radians(self.lon) - delta_lon
+            if bb_min_lon_deg < math.radians(-180):
+                bb_min_lon_deg += 2 * math.pi
+
+            bb_max_lon_deg = math.radians(self.lon) + delta_lon
+            if bb_max_lon_deg > math.radians(180):
+                bb_max_lon_deg -= 2 * math.pi
+        else:   # a pole is contained in the bounding box
+            bb_min_lat_deg = max(bb_min_lat_deg, math.radians(-90))
+            bb_max_lat_deg = min(bb_max_lat_deg, math.radians(90))
+            bb_min_lon_deg = math.radians(-180)
+            bb_max_lon_deg = math.radians(180)
+
+        # turn back from radians to decimal
+        bb_min_lat = bb_min_lat_deg * 180./math.pi
+        bb_max_lat = bb_max_lat_deg * 180./math.pi
+        bb_min_lon = bb_min_lon_deg * 180./math.pi
+        bb_max_lon = bb_max_lon_deg * 180./math.pi
+
+        return Polygon([[
+            [bb_min_lon, bb_max_lat],
+            [bb_max_lon, bb_max_lat],
+            [bb_max_lon, bb_min_lat],
+            [bb_min_lon, bb_min_lat],
+            [bb_min_lon, bb_max_lat]
+        ]])
+
     def geojson(self):
         return geojson.dumps(self._geom)
 
@@ -86,6 +149,11 @@ class Point(Geometry):
 
     @classmethod
     def from_dict(self, the_dict):
+        """
+        Builds a Point instance out of a geoJSON compliant dict
+        :param the_dict: the geoJSON dict
+        :return: `pyowm.utils.geo.Point` instance
+        """
         geom = geojson.loads(json.dumps(the_dict))
         result = Point(0, 0)
         result._geom = geom
@@ -96,7 +164,7 @@ class MultiPoint(Geometry):
     """
     A MultiPoint geotype. Represents a set of geographic points
 
-    :param list_of_tuples: list of tuples, each one being the (lon, lat) coordinates of a geopoint
+    :param list_of_tuples: list of tuples, each one being the decimal (lon, lat) coordinates of a geopoint
     :type list_of_tuples: list
     :returns:  a *MultiPoint* instance
 
@@ -122,7 +190,7 @@ class MultiPoint(Geometry):
     @property
     def longitudes(self):
         """
-        List of longitudes of this MultiPoint instance
+        List of decimal longitudes of this MultiPoint instance
         :return: list of tuples
         """
         return [coords[0] for coords in self._geom['coordinates']]
@@ -130,7 +198,7 @@ class MultiPoint(Geometry):
     @property
     def latitudes(self):
         """
-        List of latitudes of this MultiPoint instance
+        List of decimal latitudes of this MultiPoint instance
         :return: list of tuples
         """
         return [coords[1] for coords in self._geom['coordinates']]
@@ -143,6 +211,11 @@ class MultiPoint(Geometry):
 
     @classmethod
     def from_dict(self, the_dict):
+        """
+        Builds a MultiPoint instance out of a geoJSON compliant dict
+        :param the_dict: the geoJSON dict
+        :return: `pyowm.utils.geo.MultiPoint` instance
+        """
         geom = geojson.loads(json.dumps(the_dict))
         result = MultiPoint([(0, 0), (0, 0)])
         result._geom = geom
@@ -155,7 +228,7 @@ class Polygon(Geometry):
     points and is conveyed by a list of points, the last one of which must coincide with the its very first one.
     As said, Polygons can be also made up by multiple lines (therefore, Polygons with "holes" are allowed)
     :param list_of_lists: list of lists, each sublist being a line and being composed by tuples - each one being the
-    (lon, lat) couple of a geopoint. The last point specified MUST coincide with the first one specified
+    decimal (lon, lat) couple of a geopoint. The last point specified MUST coincide with the first one specified
     :type list_of_tuples: list
     :returns:  a *MultiPoint* instance
     :raises: *ValueError* when last point and fist point do not coincide or when no points are specified at all
@@ -181,6 +254,11 @@ class Polygon(Geometry):
 
     @classmethod
     def from_dict(self, the_dict):
+        """
+        Builds a Polygon instance out of a geoJSON compliant dict
+        :param the_dict: the geoJSON dict
+        :return: `pyowm.utils.geo.Polygon` instance
+        """
         geom = geojson.loads(json.dumps(the_dict))
         result = Polygon([[[0, 0], [0, 0]]])
         result._geom = geom
@@ -207,7 +285,7 @@ class Polygon(Geometry):
 
 class MultiPolygon(Geometry):
     """
-    A MultiPolygon geotype. Each MultiPolygon represents a set of (also djsoint) Polygons. Each MultiPolygon is composed
+    A MultiPolygon geotype. Each MultiPolygon represents a set of (also djsjoint) Polygons. Each MultiPolygon is composed
     by an iterable whose elements are the list of lists defining a Polygon geotype. Please refer to the
     `pyowm.utils.geo.Point` documentation for details
 
@@ -232,6 +310,11 @@ class MultiPolygon(Geometry):
 
     @classmethod
     def from_dict(self, the_dict):
+        """
+        Builds a MultiPolygoninstance out of a geoJSON compliant dict
+        :param the_dict: the geoJSON dict
+        :return: `pyowm.utils.geo.MultiPolygon` instance
+        """
         geom = geojson.loads(json.dumps(the_dict))
         result = MultiPolygon([
             [[[0, 0], [0, 0]]],
@@ -256,6 +339,12 @@ class GeometryBuilder:
 
     @classmethod
     def build(cls, the_dict):
+        """
+        Builds a `pyowm.utils.geo.Geometry` subtype based on the geoJSON geometry type specified on the input dictionary
+        :param the_dict: a geoJSON compliant dict
+        :return: a `pyowm.utils.geo.Geometry` subtype instance
+        :raises `ValueError` if unable to the geometry type cannot be recognized
+        """
         geom_type = the_dict.get('type', None)
         if geom_type == 'Point':
             return Point.from_dict(the_dict)

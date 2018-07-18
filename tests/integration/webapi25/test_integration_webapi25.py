@@ -591,7 +591,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get ozone around geo-coordinates.
         """
-        u = self.__owm.ozone_around_coords(40.754865, -73.693519)
+        u = self.__owm.ozone_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00')
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_du_value())
         self.assertIsNotNone(u.get_reception_time())
@@ -603,7 +603,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get NO2 index around geo-coordinates.
         """
-        u = self.__owm.no2index_around_coords(40.754865, -73.693519)
+        u = self.__owm.no2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00')
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_no2_samples())
         self.assertIsNotNone(u.get_reception_time())
@@ -615,13 +615,14 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get SO2 index around geo-coordinates.
         """
-        u = self.__owm.so2index_around_coords(40.754865, -73.693519)
+        u = self.__owm.so2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00')
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_so2_samples())
         self.assertIsNotNone(u.get_reception_time())
         self.assertIsNotNone(u.get_reference_time())
         self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.get_location())
+
 
 if __name__ == "__main__":
     unittest.main()
