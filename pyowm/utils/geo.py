@@ -93,8 +93,8 @@ class Point(Geometry):
          The polygon's points calculation is based on theory exposed by: http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
          by Jan Philip Matuschek, owner of the intellectual property of such material.
          In short:
-           - locally to the geopoint, the Earth's surface is approximated to a sphere with radius = Earth's radius
-           - the calculation works fine also when the bounding box contains the Earth's poles and the 180 deg meridian
+         - locally to the geopoint, the Earth's surface is approximated to a sphere with radius = Earth's radius
+         - the calculation works fine also when the bounding box contains the Earth's poles and the 180 deg meridian
 
          :param inscribed_circle_radius_km: the radius of the inscribed circle, defaults to 10 kms
          :type inscribed_circle_radius_km: int or float
