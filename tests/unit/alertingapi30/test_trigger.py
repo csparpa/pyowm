@@ -9,29 +9,33 @@ from pyowm.alertapi30.alert import Alert
 class TestTrigger(unittest.TestCase):
 
     def test_trigger_fails_with_wrong_parameters(self):
-        start = 1526809375
-        end = 1527809375
+        start_after_millis = 450000
+        end_after_millis = 470000
         conditions = [Condition('humidity', 'LESS_THAN', 10)]
         area = [geo.Point(13.6, 46.9)]
 
         self.assertRaises(AssertionError, Trigger,
-                          None, end, conditions, area, alerts=None, alert_channels=None, id=None)
+                          None, end_after_millis, conditions, area, alerts=None, alert_channels=None, id=None)
         self.assertRaises(AssertionError, Trigger,
-                          start, None, conditions, area, alerts=None, alert_channels=None, id=None)
+                          start_after_millis, None, conditions, area, alerts=None, alert_channels=None, id=None)
+        self.assertRaises(AssertionError, Trigger,
+                          'test', end_after_millis, conditions, area, alerts=None, alert_channels=None, id=None)
+        self.assertRaises(AssertionError, Trigger,
+                          start_after_millis, 'test', conditions, area, alerts=None, alert_channels=None, id=None)
         self.assertRaises(ValueError, Trigger,
-                          end, start, conditions, area, alerts=None, alert_channels=None, id=None)
+                          end_after_millis, start_after_millis, conditions, area, alerts=None, alert_channels=None, id=None)
 
         self.assertRaises(AssertionError, Trigger,
-                          start, end, None, area, alerts=None, alert_channels=None, id=None)
+                          start_after_millis, end_after_millis, None, area, alerts=None, alert_channels=None, id=None)
         self.assertRaises(ValueError, Trigger,
-                          start, end, [], area, alerts=None, alert_channels=None, id=None)
+                          start_after_millis, end_after_millis, [], area, alerts=None, alert_channels=None, id=None)
 
         self.assertRaises(AssertionError, Trigger,
-                          start, end, conditions, None, alerts=None, alert_channels=None, id=None)
+                          start_after_millis, end_after_millis, conditions, None, alerts=None, alert_channels=None, id=None)
         self.assertRaises(ValueError, Trigger,
-                          start, end, conditions, [], alerts=None, alert_channels=None, id=None)
+                          start_after_millis, end_after_millis, conditions, [], alerts=None, alert_channels=None, id=None)
 
-        _ = Trigger(start, end, conditions, area, alerts=None, alert_channels=None)
+        _ = Trigger(start_after_millis, end_after_millis, conditions, area, alerts=None, alert_channels=None)
 
     def test_defaulted_parameters(self):
         instance = Trigger(1526809375, 1527809375, [Condition('humidity', 'LESS_THAN', 10)],

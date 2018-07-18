@@ -60,15 +60,15 @@ class TriggerParser(jsonparser.JSONParser):
             # start timestamp
             start_dict = d['time_period']['start']
             expr = start_dict['expression']
-            if expr != 'exact':
-                raise ValueError('Invalid time expression: "%s" on start timestamp. Only: "exact" is supported' % expr)
+            if expr != 'after':
+                raise ValueError('Invalid time expression: "%s" on start timestamp. Only: "after" is supported' % expr)
             start = start_dict['amount']
 
             # end timestamp
             end_dict = d['time_period']['end']
             expr = end_dict['expression']
-            if expr != 'exact':
-                raise ValueError('Invalid time expression: "%s" on end timestamp. Only: "exact" is supported' % expr)
+            if expr != 'after':
+                raise ValueError('Invalid time expression: "%s" on end timestamp. Only: "after" is supported' % expr)
             end = end_dict['amount']
 
             # conditions
