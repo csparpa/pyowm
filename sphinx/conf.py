@@ -14,6 +14,7 @@
 
 import sys
 import os
+import sphinx_readable_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -37,7 +38,7 @@ extensions = [
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -47,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyowm'
-copyright = u'2016, Claudio Sparpaglione'
+copyright = u'2018, Claudio Sparpaglione'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -101,7 +102,8 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme_path = [sphinx_readable_theme.get_html_theme_path()]
+html_theme = 'readable'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -267,7 +269,7 @@ texinfo_documents = [
 epub_title = u'pyowm'
 epub_author = u'Claudio Sparpaglione'
 epub_publisher = u'Claudio Sparpaglione'
-epub_copyright = u'2016, Claudio Sparpaglione'
+epub_copyright = u'2018, Claudio Sparpaglione'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'pyowm'
@@ -329,3 +331,8 @@ epub_exclude_files = ['search.html']
 
 # If false, no index is generated.
 #epub_use_index = True
+
+
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
