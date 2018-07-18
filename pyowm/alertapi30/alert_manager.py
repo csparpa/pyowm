@@ -131,16 +131,16 @@ class AlertManager:
         stringutils.assert_is_string_or_unicode(trigger.id)
         the_time_period = {
             "start": {
-                "expression": "exact",
-                "amount": trigger.start
+                "expression": "after",
+                "amount": trigger.start_after_millis
             },
             "end": {
-                "expression": "exact",
-                "amount": trigger.end
+                "expression": "after",
+                "amount": trigger.end_after_millis
             }
         }
         the_conditions = [dict(name=c.weather_param, expression=c.operator, amount=c.amount) for c in trigger.conditions]
-        the_area = [a.geojson() for a in trigger.area]
+        the_area = [a.as_dict() for a in trigger.area]
 
         status, _ = self.http_client.put(
             NAMED_TRIGGER_URI % trigger.id,

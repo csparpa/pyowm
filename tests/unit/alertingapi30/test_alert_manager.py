@@ -18,7 +18,7 @@ class MockHttpClient(HttpClient):
     {"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}}],"last_update":1481802090232,
     "date":1482181200000,"coordinates":{"lon":37,"lat":53}}},"area":[{"type":"Point","_id":"5852816a9aaacb00153134a4",
     "coordinates":[37,53]}],"conditions":[{"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}],
-    "time_period":{"end":{"amount":432000000,"expression":"exact"},"start":{"amount":132000000,"expression":"exact"}}}'''
+    "time_period":{"end":{"amount":432000000,"expression":"after"},"start":{"amount":132000000,"expression":"after"}}}'''
 
     def get_json(self, uri, params=None, headers=None):
         return 200, [json.loads(self.test_trigger_json)]
@@ -37,13 +37,13 @@ class MockHttpClientTwoTriggers(HttpClient):
     # 2 triggers
     test_triggers_json = '''[ {"_id":"585280edbe54110025ea52bb","__v":0,"alerts":{},"area":[{"type":"Point",
     "_id":"585280edbe54110025ea52bc","coordinates":[53,37]}],"conditions":[{"name":"temp","expression":"$lt",
-    "amount":273,"_id":"585280edbe54110025ea52bd"}],"time_period":{"end":{"amount":432000000,"expression":"exact"},
-    "start":{"amount":132000000,"expression":"exact"}}},{"_id":"5852816a9aaacb00153134a3","__v":0,"alerts":
+    "amount":273,"_id":"585280edbe54110025ea52bd"}],"time_period":{"end":{"amount":432000000,"expression":"after"},
+    "start":{"amount":132000000,"expression":"after"}}},{"_id":"5852816a9aaacb00153134a3","__v":0,"alerts":
     {"8b48b2cd21c23d2894466caccba1ed1f":{"conditions":[{"current_value":{"min":263.576,"max":263.576},"condition":
     {"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}}],"last_update":1481802090232,
     "date":1482181200000,"coordinates":{"lon":37,"lat":53}}},"area":[{"type":"Point","_id":"5852816a9aaacb00153134a4",
     "coordinates":[37,53]}],"conditions":[{"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}],
-    "time_period":{"end":{"amount":432000000,"expression":"exact"},"start":{"amount":132000000,"expression":"exact"}}}]'''
+    "time_period":{"end":{"amount":432000000,"expression":"after"},"start":{"amount":132000000,"expression":"after"}}}]'''
 
     def get_json(self, uri, params=None, headers=None):
         return 200, json.loads(self.test_triggers_json)
@@ -56,7 +56,7 @@ class MockHttpClientOneTrigger(HttpClient):
     {"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}}],"last_update":1481802090232,
     "date":1482181200000,"coordinates":{"lon":37,"lat":53}}},"area":[{"type":"Point","_id":"5852816a9aaacb00153134a4",
     "coordinates":[37,53]}],"conditions":[{"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}],
-    "time_period":{"end":{"amount":432000000,"expression":"exact"},"start":{"amount":132000000,"expression":"exact"}}}'''
+    "time_period":{"end":{"amount":432000000,"expression":"after"},"start":{"amount":132000000,"expression":"after"}}}'''
 
     def get_json(self, uri, params=None, headers=None):
         return 200, json.loads(self.test_trigger_json)
@@ -187,7 +187,7 @@ class TestAlertManager(unittest.TestCase):
         parser = TriggerParser()
         modified_trigger = parser.parse_JSON(MockHttpClient.test_trigger_json)
         modified_trigger.id = '5852816a9aaacb00153134a3'
-        modified_trigger.end = self._trigger.end + 10000
+        modified_trigger.end = self._trigger.end_after_millis + 10000
         result = instance.update_trigger(modified_trigger)
         self.assertIsNone(result)
 
