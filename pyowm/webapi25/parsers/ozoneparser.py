@@ -52,7 +52,11 @@ class OzoneParser(jsonparser.JSONParser):
             place = location.Location(None, lon, lat, None)
 
             # -- ozone Dobson Units value
-            du_value = float(d['data'])
+            du = d['data']
+            if du is not None:
+                du_value = float(du)
+            else:
+                raise ValueError('No information about Ozon Dobson Units')
 
         except KeyError:
             raise parse_response_error.ParseResponseError(

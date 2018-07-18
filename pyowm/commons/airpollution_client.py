@@ -64,7 +64,6 @@ class AirPollutionHttpClient(object):
         _, json_data = self._client.cacheable_get_json(uri)
         return json_data
 
-
     def get_o3(self, params_dict):
         """
         Invokes the O3 Index endpoint
