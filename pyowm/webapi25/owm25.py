@@ -354,6 +354,7 @@ class OWM25(owm.OWM):
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def weather_at_station(self, station_id):
         """
         Queries the OWM web API for the weather currently observed by a specific
@@ -378,6 +379,7 @@ class OWM25(owm.OWM):
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def weather_at_stations_in_bbox(self, lat_top_left, lon_top_left,
                                     lat_bottom_right, lon_bottom_right,
                                     cluster=False, limit=None):
