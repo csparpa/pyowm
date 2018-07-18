@@ -49,7 +49,7 @@ condition_2 = Condition(WeatherParametersEnum.CLOUDS,
 # -- triggers --
 
 # create a trigger
-trigger = am.create_trigger(start_ts=1234567890, end_ts=1278654300,
+trigger = am.create_trigger(start_after_millis_=355000, end_after_millis=487000,
                             conditions=[condition_1, condition_2],
                             area=[geom_1, geom_2],
                             alert_channel=AlertChannelsEnum.OWM_API)
@@ -283,26 +283,20 @@ A Trigger is the local proxy for the corresponding entry on the OWM API: Trigger
 `pyowm.alertapi30.alertmanager.AlertManager` instances.
 
 Each Trigger has these attributes:
-  - start: timestamp when conditions of the trigger start to be checked by the Alert API
-  - end: timestamp when conditions of the trigger start to be checked by the Alert API
+  - start_after_millis: _with resepect to the time when the trigger will be crated on the Alert API_, how many milliseconds after should it begin to be checked for conditions matching
+  - end_after_millis: _with resepect to the time when the trigger will be crated on the Alert API_, how many milliseconds after should it end to be checked for conditions matching
   - alerts: a list of `pyowm.alertapi30.alert.Alert` instances, which are the alerts that the trigger has fired so far
   - conditions: a list of `pyowm.alertapi30.condition.Condition` instances
   - area: a list of `pyowm.utils.geo.Geometry` instances, representing the geographic area on which the trigger's conditions need to be checked
   - alertChannels: list of `pyowm.alertapi30.alert.AlertChannel` objects, representing which channels this trigger is notifying to
 
 **Notes on trigger's time period**
- 
+By design, PyOWM will only use the `after` operator to communicate time periods for Triggers to the Alert API.
+will send them to the API using the `after` operator.
 
-By design, PyOWM will only allow users to _specify absolute datetimes/epochs_ for triggers start/end and 
-will send them to the API using the `$after` operator.
+The millisecond start/end deltas will be calculated with respect to the time when the Trigger record is created on the
+Alert API using `pyowm.alertapi30.alertmanager.AlertManager.create_trigger`
 
-Therefore whenever given the user passes in the absolute datetime/epochs `t_start` and `t_end` for the trigger,
-PyOWM checks the given the current timestamp `t_curr` and then:
-
-  1. checks that `t_curr` < `t_start` < `t_end`
-  2. calculate `start = t_start - t_curr` (in milliseconds)
-  3. calculate `end = t_end - t_curr` (in milliseconds)
-  4. send `start` and `end` values to the Alert API using the `$after` operator
 
 ### AlertManager
 The OWM main entry point object allows you to get an instance of an `pyowm.alertapi30.alert_manager.AlertManager` object:
