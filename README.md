@@ -1,5 +1,6 @@
-#  PyOWM [logo](logos/180x180.png)
+[![logo](logos/180x180.png)](https://github.com/csparpa)
 
+#  PyOWM  
 A Python wrapper around the OpenWeatherMap API
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
