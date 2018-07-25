@@ -113,7 +113,6 @@ Join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [h
 Here are [some cool projects](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM) that use PyOWM
 
 ## References
-* If you liked PyOWM, [consider giving me a tip](https://gratipay.com/csparpa)!
 * [OpenWeatherMap website](http://openweathermap.org/)
 * [OpenWeatherMap web API docs](http://openweathermap.org/api)
 
