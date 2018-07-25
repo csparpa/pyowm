@@ -6,9 +6,7 @@ import unittest
 from pyowm.webapi25.weather import Weather
 from pyowm.utils import weatherutils
 from pyowm.webapi25.weathercoderegistry import WeatherCodeRegistry
-from pyowm.exceptions.not_found_error import NotFoundError
-
-
+from pyowm.exceptions.api_response_error import NotFoundError
 
 class TestWeatherUtils(unittest.TestCase):
 

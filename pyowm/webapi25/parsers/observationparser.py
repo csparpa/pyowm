@@ -50,8 +50,7 @@ class ObservationParser(jsonparser.JSONParser):
                 return None
             else:
                 raise api_response_error.APIResponseError(
-                                      "OWM API: error - response payload: " + \
-                                       dumps(d))
+                                      "OWM API: error - response payload: " + dumps(d), d['cod'])
         try:
             place = location.location_from_dictionary(d)
         except KeyError:

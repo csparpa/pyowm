@@ -48,8 +48,7 @@ class WeatherHistoryParser(jsonparser.JSONParser):
                 return None
             elif d['cod'] != "200":
                 raise api_response_error.APIResponseError(
-                                      "OWM API: error - response payload: " + \
-                                       json.dumps(d))
+                                      "OWM API: error - response payload: " + json.dumps(d), d['cod'])
         # Handle the case when no results are found
         if 'cnt' in d and d['cnt'] == "0":
             return []

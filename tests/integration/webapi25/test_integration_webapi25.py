@@ -12,7 +12,7 @@ from datetime import datetime
 from pyowm.constants import DEFAULT_API_KEY
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
-from pyowm.exceptions import unauthorized_error, not_found_error
+from pyowm.exceptions import api_response_error
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
@@ -276,7 +276,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             fc3 = self.__owm.three_hours_forecast_at_id(99999999999999)
             self.fail()
-        except not_found_error.NotFoundError:
+        except api_response_error.NotFoundError:
             pass # ok
 
     def test_daily_forecast(self):
@@ -332,7 +332,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             fc3 = self.__owm.daily_forecast_at_id(99999999)
             raise AssertionError("APICallError was expected here")
-        except not_found_error.NotFoundError:
+        except api_response_error.NotFoundError:
             pass  # Ok!
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
@@ -382,7 +382,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                     self.assertTrue(weather is not None)
             l5 = self.__owm.weather_history_at_place('QmFoPIlbf')  # Shall be None
             self.assertTrue(l5 is None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_history_at_coords(self):
@@ -392,7 +392,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 for weather in l1:
                     self.assertTrue(weather is not None)
 
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_history_at_id(self):
@@ -422,7 +422,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             if l4 is not None:
                 for weather in l4:
                     self.assertTrue(weather is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_at_coords(self):
@@ -467,7 +467,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(len(data2) > 2)
                 h3 = self.__owm.station_tick_history(987654)  # Shall be None
                 self.assertFalse(h3 is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_hour_history(self):
@@ -485,7 +485,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(0, len(data1))
                 h2 = self.__owm.station_hour_history(987654)  # Shall be None
                 self.assertFalse(h2 is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_day_history(self):
@@ -509,7 +509,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertTrue(data2 is not None)
                 h3 = self.__owm.station_day_history(987654)  # Shall be None
                 self.assertFalse(h3 is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_at_station(self):

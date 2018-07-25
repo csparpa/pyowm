@@ -8,7 +8,7 @@ from pyowm.exceptions import OWMError
 
 class APICallError(OWMError):
     """
-    Error class that represents generic failures when invoking OWM web API, in
+    Error class that represents network/infrastructural failures when invoking OWM web API, in
     example due to network errors.
 
     :param message: the message of the error

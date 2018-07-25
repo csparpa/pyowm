@@ -20,13 +20,6 @@ pyowm.exceptions.api_response_error module
     :undoc-members:
     :show-inheritance:
 
-pyowm.exceptions.not_found_error module
----------------------------------------
-
-.. automodule:: pyowm.exceptions.not_found_error
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 pyowm.exceptions.parse_response_error module
 --------------------------------------------
@@ -36,14 +29,6 @@ pyowm.exceptions.parse_response_error module
     :undoc-members:
     :show-inheritance:
 
-
-pyowm.exceptions.unauthorized_error module
-------------------------------------------
-
-.. automodule:: pyowm.exceptions.unauthorized_error
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Module contents
 ---------------

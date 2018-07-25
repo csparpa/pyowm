@@ -1,8 +1,7 @@
 import requests
 import json
 from pyowm.caches import nullcache
-from pyowm.exceptions import api_call_error, unauthorized_error, not_found_error, \
-    parse_response_error
+from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
 from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
     API_SUBSCRIPTION_SUBDOMAINS, VERIFY_SSL_CERTS
 
@@ -100,9 +99,9 @@ class HttpClient(object):
         if status_code == 400:
             raise api_call_error.APICallError(payload)
         elif status_code == 401:
-            raise unauthorized_error.UnauthorizedError('Invalid API Key provided')
+            raise api_response_error.UnauthorizedError('Invalid API Key provided')
         elif status_code == 404:
-            raise not_found_error.NotFoundError('Unable to find the resource')
+            raise api_response_error.NotFoundError('Unable to find the resource')
         elif status_code == 502:
             raise api_call_error.BadGatewayError('Unable to contact the upstream server')
         else:

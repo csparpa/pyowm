@@ -46,8 +46,7 @@ class ObservationListParser(JSONParser):
                       json.dumps(d))
                 return None
             if d['cod'] != "200":
-                raise APIResponseError("OWM API: error - response payload: " + \
-                                       json.dumps(d))
+                raise APIResponseError("OWM API: error - response payload: " + json.dumps(d), d['cod'])
 
         # Handle the case when no results are found
         if 'count' in d and d['count'] == "0":

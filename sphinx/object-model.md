@@ -199,8 +199,10 @@ A few packages are provided, containing utility functions that support the base 
 
 # Exceptions
 
-+ **APICallError** class (with many subclasses): raised when operational failures occur in OWM web APIs
-+ **APIResponseError** class: raised when HTTP error status codes occur in OWM web APIs responses
-+ **NotFoundError** class: raised when a search for an item on OWM web APIs fails because the item does not exist
-+ **ParseResponseError** class: raised when failures occur in parsing payload data coming from OWM web APIs responses
-+ **UnauthorizedError** class: raised when authorization issues occur in accessing the OWM web APIs
+There is a tiny exception hierarchy: **pyowm.exceptions.OWMError** is the custom PyOWM exceptions base class.
+
+This class derives into:
+
++ **APICallError**, which bases all of the network/infrastructural issue-related errors
++ **APIResponseError**, which bases all of 4xx HTTP errors
++ **ParseResponseError**, which is raised upon impossibility to parse the JSON payload of API responses

@@ -2,7 +2,8 @@
 Module containing search and filter utilities for *Weather* objects lists
 management
 """
-from pyowm.exceptions import not_found_error
+from pyowm.exceptions import api_response_error
+
 
 def status_is(weather, status, weather_code_registry):
     """
@@ -65,6 +66,7 @@ def filter_by_status(weather_list, status, weather_code_registry):
             result.append(weather)
     return result
 
+
 def is_in_coverage(unixtime, weathers_list):
     """
     Checks if the supplied UNIX time is contained into the time range
@@ -106,7 +108,7 @@ def find_closest_weather(weathers_list, unixtime):
     if not weathers_list:
         return None
     if not is_in_coverage(unixtime, weathers_list):
-        raise not_found_error.NotFoundError('Error: the specified time is ' + \
+        raise api_response_error.NotFoundError('Error: the specified time is ' + \
                                 'not included in the weather coverage range')
     closest_weather = weathers_list[0]
     time_distance = abs(closest_weather.get_reference_time() - unixtime)

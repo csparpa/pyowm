@@ -45,12 +45,10 @@ class ForecastParser(jsonparser.JSONParser):
         # conveying errors to the clients
         if 'message' in d and 'cod' in d:
             if d['cod'] == "404":
-                print("OWM API: data not found - response payload: " + \
-                    json.dumps(d))
+                print("OWM API: data not found - response payload: " + json.dumps(d), d['cod'])
                 return None
             elif d['cod'] != "200":
-                raise api_response_error.APIResponseError("OWM API: error " \
-                                    " - response payload: " + json.dumps(d))
+                raise api_response_error.APIResponseError("OWM API: error - response payload: " + json.dumps(d), d['cod'])
         try:
             place = location.location_from_dictionary(d)
         except KeyError:

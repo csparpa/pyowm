@@ -49,8 +49,7 @@ class StationHistoryParser(jsonparser.JSONParser):
             if 'cod' in d:
                 if d['cod'] != "200":
                     raise api_response_error.APIResponseError(
-                                              "OWM API: error - response " + \
-                                              "payload: " + str(d))
+                                              "OWM API: error - response payload: " + str(d), d['cod'])
             if str(d['cnt']) == "0":
                 return None
             else:
