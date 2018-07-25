@@ -60,14 +60,6 @@ pyowm.webapi25.parsers.weatherhistoryparser module
     :undoc-members:
     :show-inheritance:
 
-pyowm.webapi25.parsers.uvindexparser module
--------------------------------------------
-
-.. automodule:: pyowm.webapi25.parsers.uvindexparser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.webapi25.parsers.coindexparser module
 -------------------------------------------
 

@@ -28,14 +28,6 @@ pyowm.commons.airpollution_client module
     :undoc-members:
     :show-inheritance:
 
-pyowm.commons.uv_client module
-------------------------------
-
-.. automodule:: pyowm.commons.uv_client
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

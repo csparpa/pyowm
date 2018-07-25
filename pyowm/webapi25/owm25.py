@@ -13,7 +13,8 @@ from pyowm.webapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
 from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
-from pyowm.commons import http_client, uv_client, airpollution_client
+from pyowm.commons import http_client, airpollution_client
+from pyowm.uvindexapi30 import uv_client
 from pyowm.exceptions import api_call_error
 from pyowm.utils import timeformatutils, stringutils, timeutils, geo
 from pyowm.webapi25 import forecaster

@@ -5,7 +5,7 @@ Test cases for uv_client.py
 """
 
 import unittest
-from pyowm.commons.uv_client import UltraVioletHttpClient
+from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient
 from pyowm.commons.http_client import HttpClient
 from pyowm.caches.nullcache import NullCache
 from pyowm.utils import timeformatutils

@@ -27,7 +27,7 @@ from tests.unit.webapi25.json_test_responses import (OBSERVATION_JSON,
 from pyowm.webapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION
 from pyowm.commons.http_client import HttpClient
-from pyowm.commons.uv_client import UltraVioletHttpClient
+from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient
 from pyowm.commons.airpollution_client import AirPollutionHttpClient
 from pyowm.exceptions.api_call_error import APICallTimeoutError
 from pyowm.webapi25.forecast import Forecast
@@ -38,7 +38,7 @@ from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.station import Station
 from pyowm.webapi25.stationhistory import StationHistory
 from pyowm.webapi25.historian import Historian
-from pyowm.webapi25.uvindex import UVIndex
+from pyowm.uvindexapi30.uvindex import UVIndex
 from pyowm.webapi25.coindex import COIndex
 from pyowm.webapi25.ozone import Ozone
 from pyowm.webapi25.no2index import NO2Index
@@ -50,8 +50,7 @@ from pyowm.webapi25.parsers.stationparser import StationParser
 from pyowm.webapi25.parsers.stationlistparser import StationListParser
 from pyowm.webapi25.parsers.stationhistoryparser import StationHistoryParser
 from pyowm.webapi25.parsers.weatherhistoryparser import WeatherHistoryParser
-from pyowm.webapi25.parsers.uvindexparser import UVIndexParser
-from pyowm.webapi25.parsers.uvindexlistparser import UVIndexListParser
+from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
 from pyowm.webapi25.parsers.coindexparser import COIndexParser
 from pyowm.webapi25.parsers.ozoneparser import OzoneParser
 from pyowm.webapi25.parsers.no2indexparser import NO2IndexParser

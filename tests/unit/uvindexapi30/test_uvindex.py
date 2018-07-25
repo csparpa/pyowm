@@ -1,10 +1,16 @@
 import unittest
 from datetime import datetime
 from pyowm.webapi25.location import Location
-from pyowm.webapi25.uvindex import UVIndex, uv_intensity_to_exposure_risk
+from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
 from pyowm.utils.timeformatutils import UTC
-from tests.unit.webapi25.json_test_dumps import UVINDEX_JSON_DUMP
-from tests.unit.webapi25.xml_test_dumps import UVINDEX_XML_DUMP
+
+UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
+                   '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
+                   '"ID": 987}, "value": 6.8, ' \
+                    '"reception_time": 1475283600}'
+
+UVINDEX_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
+<uvindex xmlns:u="http://github.com/csparpa/pyowm/tree/master/pyowm/uvindexapi30/xsd/uvindex.xsd"><u:reception_time>1234567</u:reception_time><u:reference_time>1475283600</u:reference_time><u:value>6.8</u:value><u:location><u:name>test</u:name><u:coordinates><u:lon>12.3</u:lon><u:lat>43.7</u:lat></u:coordinates><u:ID>987</u:ID><u:country>UK</u:country></u:location></uvindex>"""
 
 
 class TestUVIndex(unittest.TestCase):

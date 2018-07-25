@@ -13,6 +13,7 @@ Subpackages
     pyowm.exceptions
     pyowm.stationsapi30
     pyowm.utils
+    pyowm.uvindexapi30
     pyowm.webapi25
 
 Submodules

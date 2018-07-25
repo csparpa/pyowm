@@ -1,4 +1,4 @@
-from pyowm.webapi25.configuration25 import UV_INDEX_URL, UV_INDEX_FORECAST_URL, \
+from pyowm.uvindexapi30.uris import UV_INDEX_URL, UV_INDEX_FORECAST_URL, \
     UV_INDEX_HISTORY_URL
 from pyowm.commons import http_client
 

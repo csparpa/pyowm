@@ -1,8 +1,8 @@
 import json
 import xml.etree.ElementTree as ET
-from pyowm.webapi25.xsd.xmlnsconfig import (
+from pyowm.uvindexapi30.xsd.xmlnsconfig import (
     UVINDEX_XMLNS_URL, UVINDEX_XMLNS_PREFIX)
-from pyowm.utils import timeformatutils, timeutils, xmlutils
+from pyowm.utils import timeformatutils, xmlutils
 
 
 def uv_intensity_to_exposure_risk(uv_intensity):
