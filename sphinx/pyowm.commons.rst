@@ -20,15 +20,6 @@ pyowm.commons.http_client module
     :undoc-members:
     :show-inheritance:
 
-pyowm.commons.airpollution_client module
-----------------------------------------
-
-.. automodule:: pyowm.commons.airpollution_client
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Module contents
 ---------------
 

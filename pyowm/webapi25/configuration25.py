@@ -1,9 +1,10 @@
 from pyowm.caches import nullcache
 from pyowm.webapi25 import weathercoderegistry, cityidregistry
-from pyowm.webapi25.parsers import coindexparser, forecastparser, no2indexparser, observationlistparser, \
-    observationparser, ozoneparser, so2indexparser, stationhistoryparser, stationlistparser, stationparser, \
-    weatherhistoryparser
+from pyowm.webapi25.parsers import  forecastparser, observationlistparser, observationparser,  stationhistoryparser, \
+    stationlistparser, stationparser, weatherhistoryparser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
+from pyowm.pollutionapi30.parsers import COIndexParser, NO2IndexParser, SO2IndexParser, OzoneParser
+
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
@@ -34,13 +35,6 @@ DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_HISTORY_URL + '/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
-# OWM Air Pollution API URLs
-ROOT_POLLUTION_API_URL = 'http://api.openweathermap.org/pollution/v1'
-CO_INDEX_URL = ROOT_POLLUTION_API_URL + '/co'
-OZONE_URL = ROOT_POLLUTION_API_URL + '/o3'
-NO2_INDEX_URL = ROOT_POLLUTION_API_URL + '/no2'
-SO2_INDEX_URL = ROOT_POLLUTION_API_URL + '/so2'
-
 
 # Parser objects injection for OWM web API responses parsing
 parsers = {
@@ -53,10 +47,10 @@ parsers = {
   'station_list': stationlistparser.StationListParser(),
   'uvindex': UVIndexParser(),
   'uvindex_list': UVIndexListParser(),
-  'coindex': coindexparser.COIndexParser(),
-  'ozone': ozoneparser.OzoneParser(),
-  'no2index': no2indexparser.NO2IndexParser(),
-  'so2index': so2indexparser.SO2IndexParser()
+  'coindex': COIndexParser(),
+  'ozone': OzoneParser(),
+  'no2index': NO2IndexParser(),
+  'so2index': SO2IndexParser()
 }
 
 # City ID registry

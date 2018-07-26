@@ -1,5 +1,5 @@
 from pyowm.utils import timeformatutils
-from pyowm.webapi25.configuration25 import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
+from pyowm.pollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
 from pyowm.commons import http_client
 
 

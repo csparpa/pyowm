@@ -109,22 +109,6 @@ pyowm.webapi25.weathercoderegistry module
     :undoc-members:
     :show-inheritance:
 
-pyowm.webapi25.coindex module
------------------------------
-
-.. automodule:: pyowm.webapi25.coindex
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.webapi25.ozone module
----------------------------
-
-.. automodule:: pyowm.webapi25.ozone
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

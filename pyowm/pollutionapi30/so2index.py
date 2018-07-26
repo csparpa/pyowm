@@ -1,55 +1,53 @@
 """
-Carbon Monoxide classes and data structures.
+Sulphur Dioxide classes and data structures.
 """
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.webapi25.xsd.xmlnsconfig import (
-    COINDEX_XMLNS_URL, COINDEX_XMLNS_PREFIX)
+from pyowm.pollutionapi30.xsd.xmlnsconfig import SO2INDEX_XMLNS_URL, SO2INDEX_XMLNS_PREFIX
 from pyowm.utils import timeformatutils, timeutils, xmlutils
 
 
-class COIndex(object):
+class SO2Index(object):
     """
-    A class representing the Carbon monOxide Index observed in a certain location
+    A class representing the Sulphur Dioxide Index observed in a certain location
     in the world. The index is made up of several measurements, each one at a
     different atmospheric pressure. The location is represented by the
     encapsulated *Location* object.
 
-    :param reference_time: GMT UNIXtime telling when the CO data has been measured
+    :param reference_time: GMT UNIXtime telling when the SO2 data has been measured
     :type reference_time: int
-    :param location: the *Location* relative to this CO observation
+    :param location: the *Location* relative to this SO2 observation
     :type location: *Location*
-    :param interval: the time granularity of the CO observation
+    :param interval: the time granularity of the SO2 observation
     :type interval: str
-    :param co_samples: the CO samples
-    :type co_samples: list of dicts
-    :param reception_time: GMT UNIXtime telling when the CO observation has
+    :param so2_samples: the SO2 samples
+    :type so2_samples: list of dicts
+    :param reception_time: GMT UNIXtime telling when the SO2 observation has
         been received from the OWM web API
     :type reception_time: int
-    :returns: an *COIndex* instance
+    :returns: an *SOIndex* instance
     :raises: *ValueError* when negative values are provided as reception time,
-      CO samples are not provided in a list
+      SO2 samples are not provided in a list
 
     """
 
-    def __init__(self, reference_time, location, interval, co_samples,
-                 reception_time):
+    def __init__(self, reference_time, location, interval, so2_samples, reception_time):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self._reference_time = reference_time
         self._location = location
         self._interval = interval
-        if not isinstance(co_samples, list):
-            raise ValueError("'co_samples' must be a list")
-        self._co_samples = sorted(co_samples, key=lambda k: k['value'], reverse=True)
+        if not isinstance(so2_samples, list):
+            raise ValueError("'so2_samples' must be a list")
+        self._so2_samples = so2_samples
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self._reception_time = reception_time
 
     def get_reference_time(self, timeformat='unix'):
         """
-        Returns the GMT time telling when the CO samples have been measured
+        Returns the GMT time telling when the SO2 samples have been measured
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
@@ -64,7 +62,7 @@ class COIndex(object):
 
     def get_reception_time(self, timeformat='unix'):
         """
-        Returns the GMT time telling when the CO observation has been received
+        Returns the GMT time telling when the SO2 observation has been received
         from the OWM web API
 
         :param timeformat: the format for the time value. May be:
@@ -80,7 +78,7 @@ class COIndex(object):
 
     def get_location(self):
         """
-        Returns the *Location* object for this CO index measurement
+        Returns the *Location* object for this SO2 index measurement
 
         :returns: the *Location* object
 
@@ -89,38 +87,24 @@ class COIndex(object):
 
     def get_interval(self):
         """
-        Returns the time granularity interval for this CO index measurement
+        Returns the time granularity interval for this SO2 index measurement
 
         :return: str
         """
         return self._interval
 
-    def get_co_samples(self):
+    def get_so2_samples(self):
         """
-        Returns the CO samples for this index
+        Returns the SO2 samples for this index
 
         :returns: list of dicts
 
         """
-        return self._co_samples
-
-    def get_co_sample_with_highest_vmr(self):
-        """
-        Returns the CO sample with the highest Volume Mixing Ratio value
-        :return: dict
-        """
-        return max(self._co_samples, key=lambda x: x['value'])
-
-    def get_co_sample_with_lowest_vmr(self):
-        """
-        Returns the CO sample with the lowest Volume Mixing Ratio value
-        :return: dict
-        """
-        return min(self._co_samples, key=lambda x: x['value'])
+        return self._so2_samples
 
     def is_forecast(self):
         """
-        Tells if the current CO observation refers to the future with respect
+        Tells if the current SO2 observation refers to the future with respect
         to the current date
         :return: bool
         """
@@ -136,7 +120,7 @@ class COIndex(object):
         return json.dumps({"reference_time": self._reference_time,
                            "location": json.loads(self._location.to_JSON()),
                            "interval": self._interval,
-                           "co_samples": self._co_samples,
+                           "so2_samples": self._so2_samples,
                            "reception_time": self._reception_time,
                            })
 
@@ -158,8 +142,8 @@ class COIndex(object):
         root_node = self._to_DOM()
         if xmlns:
             xmlutils.annotate_with_XMLNS(root_node,
-                                         COINDEX_XMLNS_PREFIX,
-                                         COINDEX_XMLNS_URL)
+                                         SO2INDEX_XMLNS_PREFIX,
+                                         SO2INDEX_XMLNS_URL)
         return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
@@ -170,22 +154,22 @@ class COIndex(object):
         :returns: a ``xml.etree.Element`` object
 
         """
-        root_node = ET.Element("coindex")
+        root_node = ET.Element("so2index")
         reference_time_node = ET.SubElement(root_node, "reference_time")
         reference_time_node.text = str(self._reference_time)
         reception_time_node = ET.SubElement(root_node, "reception_time")
         reception_time_node.text = str(self._reception_time)
         interval_node = ET.SubElement(root_node, "interval")
         interval_node.text = str(self._interval)
-        co_samples_node = ET.SubElement(root_node, "co_samples")
-        for smpl in self._co_samples:
+        so2_samples_node = ET.SubElement(root_node, "so2_samples")
+        for smpl in self._so2_samples:
             s = smpl.copy()
             # turn values to 12 decimal digits-formatted strings
             s['pressure'] = '{:.12e}'.format(s['pressure'])
             s['value'] = '{:.12e}'.format(s['value'])
             s['precision'] = '{:.12e}'.format(s['precision'])
-            xmlutils.create_DOM_node_from_dict(s, "co_sample",
-                                               co_samples_node)
+            xmlutils.create_DOM_node_from_dict(s, "so2_sample",
+                                               so2_samples_node)
         root_node.append(self._location._to_DOM())
         return root_node
 

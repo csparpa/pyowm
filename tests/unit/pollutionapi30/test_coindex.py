@@ -1,10 +1,10 @@
 import unittest
 from datetime import datetime
 from pyowm.webapi25.location import Location
-from pyowm.webapi25.coindex import COIndex
+from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.utils.timeformatutils import UTC, _datetime_to_UNIXtime
-from tests.unit.webapi25.json_test_dumps import COINDEX_JSON_DUMP
-from tests.unit.webapi25.xml_test_dumps import COINDEX_XML_DUMP
+from tests.unit.pollutionapi30.json_test_dumps import COINDEX_JSON_DUMP
+from tests.unit.pollutionapi30.xml_test_dumps import COINDEX_XML_DUMP
 
 
 class TestCOIndex(unittest.TestCase):

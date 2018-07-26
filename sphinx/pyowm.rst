@@ -11,6 +11,7 @@ Subpackages
     pyowm.caches
     pyowm.commons
     pyowm.exceptions
+    pyowm.pollutionapi30
     pyowm.stationsapi30
     pyowm.utils
     pyowm.uvindexapi30

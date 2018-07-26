@@ -4,8 +4,12 @@ Test case for parsers.py module
 import unittest
 from pyowm.uvindexapi30.parsers import UVIndexParser
 from pyowm.exceptions.parse_response_error import ParseResponseError
-from tests.unit.webapi25.json_test_responses import (
-    UVINDEX_JSON, UVINDEX_MALFORMED_JSON)
+
+
+UVINDEX_JSON = '{"lat":43.75,"lon":8.25,"date_iso":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"value":4.58}'
+UVINDEX_MALFORMED_JSON = '{"lat":43.75,"lon":8.25,"zzz":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"test":4.58}'
 
 
 class TestUVIndexParser(unittest.TestCase):

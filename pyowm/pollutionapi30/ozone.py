@@ -1,7 +1,6 @@
 import json
 import xml.etree.ElementTree as ET
-from pyowm.webapi25.xsd.xmlnsconfig import (
-    OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX)
+from pyowm.pollutionapi30.xsd.xmlnsconfig import OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX
 from pyowm.utils import timeformatutils, timeutils, xmlutils
 
 
