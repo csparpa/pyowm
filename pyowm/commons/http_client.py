@@ -24,6 +24,8 @@ class HttpClient(object):
                                 timeout=self.timeout, verify=self.verify_ssl_certs)
         except requests.exceptions.SSLError as e:
             raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.ConnectionError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -50,6 +52,8 @@ class HttpClient(object):
                                  timeout=self.timeout, verify=self.verify_ssl_certs)
         except requests.exceptions.SSLError as e:
             raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.ConnectionError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -66,6 +70,8 @@ class HttpClient(object):
                                 timeout=self.timeout, verify=self.verify_ssl_certs)
         except requests.exceptions.SSLError as e:
             raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.ConnectionError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
@@ -81,6 +87,8 @@ class HttpClient(object):
             resp = requests.delete(uri, params=params, json=data, headers=headers,
                                    timeout=self.timeout, verify=self.verify_ssl_certs)
         except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.ConnectionError as e:
             raise api_call_error.APIInvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
             raise api_call_error.APICallTimeoutError('API call timeouted')
