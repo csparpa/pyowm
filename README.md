@@ -93,18 +93,16 @@ More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/
 
 
 ## Documentation
-Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
-
 The library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.org/en/stable/).
+
+Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 
 
 ## Contributing
 
 _Contributors (coding, testing, packaging, reporting issues) are welcome!_.
 
-See the [CONTRIBUTING.md](https://github.com/csparpa/pyowm/blob/master/CONTRIBUTING.md) file to get started.
-
-See the [notes on testing](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) wiki page to get started
+See the [the official documentation website](https://pyowm.readthedocs.io/) for details or the [CONTRIBUTING.md](https://github.com/csparpa/pyowm/blob/master/CONTRIBUTING.md) file for a quick primer.
 
 
 ## Community
