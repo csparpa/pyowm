@@ -1,7 +1,9 @@
 [![logo](logos/180x180.png)](https://github.com/csparpa)
 
-#  PyOWM  
+#  PyOWM - LongTerm Support for Python2.7
 A Python wrapper around the OpenWeatherMap API
+
+**This is a LongTerm Support branch that will be dropped on January 1st, 2020 as part of the EOL for Python 2.x**
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
 [![Latest Release Documentation](https://readthedocs.org/projects/pyowm/badge/?version=stable)](https://pyowm.readthedocs.org/en/stable/)
@@ -24,15 +26,7 @@ PyOWM also integrates with [Django 1.10+ models](https://github.com/csparpa/pyow
 Install with `pip` for your ease:
 
 ```shell
-$ pip install pyowm
-```
-
-There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), [Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
-
-Eager to fetch the very latest updates to PyOWM? Install the development trunk:
-
-```shell
-$ pip install git+https://github.com/csparpa/pyowm.git@develop
+$ pip install git+https://github.com/csparpa/pyowm.git@v2.9-LTS
 ```
 
 
