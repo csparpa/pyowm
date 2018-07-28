@@ -9,9 +9,6 @@ echo 'Generating source distribution...'
 python2.7 setup.py sdist
 
 echo 'Generating .egg distributions...'
-python2.7 setup.py bdist_egg
-python3.2 setup.py bdist_egg
-python3.3 setup.py bdist_egg
 python3.4 setup.py bdist_egg
 python3.5 setup.py bdist_egg
 python3.6 setup.py bdist_egg
