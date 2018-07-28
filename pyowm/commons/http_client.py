@@ -154,3 +154,4 @@ class HttpClient(object):
         return "<%s.%s - timeout=%s - cache=%s>" % \
                (__name__, self.__class__.__name__, repr(self.timeout),
                 str(self.cache) if self.cache is not None else 'None')
+

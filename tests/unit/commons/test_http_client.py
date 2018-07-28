@@ -110,6 +110,7 @@ class TestHTTPClient(unittest.TestCase):
         status, data = HttpClient().put('http://anyurl.com', data=dict(key=7))
         self.assertEqual(json.loads(expected_data), data)
 
+
         requests.put = self.requests_original_put
 
     def test_delete(self):
@@ -231,3 +232,4 @@ class TestHTTPClient(unittest.TestCase):
             self.fail()
         except api_call_error.APICallTimeoutError:
             requests.get = self.requests_original_get
+

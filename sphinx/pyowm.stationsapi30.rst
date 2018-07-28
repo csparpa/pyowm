@@ -44,7 +44,6 @@ pyowm.stationsapi30.station module
     :undoc-members:
     :show-inheritance:
 
-
 pyowm.stationsapi30.stations_manager module
 -------------------------------------------
 

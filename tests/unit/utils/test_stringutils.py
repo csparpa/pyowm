@@ -44,3 +44,4 @@ class TestStringUtils(unittest.TestCase):
             stringutils.assert_is_string_or_unicode(unicode_value)
         except:
             pass
+
