@@ -3,7 +3,9 @@ Test case for location.py module
 """
 
 import unittest
+import json
 from pyowm.webapi25.location import Location, location_from_dictionary
+from pyowm.utils.geo import Point
 from tests.unit.webapi25.json_test_dumps import LOCATION_JSON_DUMP
 from tests.unit.webapi25.xml_test_dumps import LOCATION_XML_DUMP
 
@@ -86,6 +88,24 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(instance.get_lat(), self.__test_lat)
         self.assertEqual(instance.get_ID(), self.__test_ID)
         self.assertEqual(instance.get_country(), self.__test_country)
+
+    def to_geopoint(self):
+        loc_1 = Location(self.__test_name, None, self.__test_lat,
+                         self.__test_ID, self.__test_country)
+        loc_2 = Location(self.__test_name, self.__test_lon, None,
+                         self.__test_ID, self.__test_country)
+        loc_3 = Location(self.__test_name, self.__test_lon, self.__test_lat,
+                         self.__test_ID, self.__test_country)
+        self.assertIsNone(loc_1.to_geopoint())
+        self.assertIsNone(loc_2.to_geopoint())
+        result = loc_3.to_geopoint()
+        self.assertTrue(isinstance(result, Point))
+        expected_geojson = json.dumps({
+            "coordinates": [12.3, 43.7],
+            "type": "Point"
+        })
+        self.assertEqual(sorted(expected_geojson),
+                         sorted(result.geojson()))
 
     # Test JSON and XML comparisons by ordering strings (this overcomes
     # interpeter-dependant serialization of XML/JSON objects

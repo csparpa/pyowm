@@ -4,6 +4,15 @@ pyowm.utils package
 Submodules
 ----------
 
+pyowm.utils.geo module
+----------------------
+
+.. automodule:: pyowm.utils.geo
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 pyowm.utils.temputils module
 ----------------------------
 
@@ -27,6 +36,16 @@ pyowm.utils.timeutils module
     :members:
     :undoc-members:
     :show-inheritance:
+
+
+pyowm.utils.weatherutils module
+-------------------------------
+
+.. automodule:: pyowm.utils.weatherutils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 pyowm.utils.xmlutils module
 ---------------------------

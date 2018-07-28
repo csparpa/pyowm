@@ -127,6 +127,28 @@ class CityIDRegistry:
         return [Location(item[0], float(item[3]), float(item[2]),
                          int(item[1]), item[4]) for item in splits]
 
+    def geopoints_for(self, city_name, country=None, matching='nocase'):
+        """
+        Returns a list of ``pyowm.utils.geo.Point`` objects corresponding to
+        the int IDs and relative toponyms and 2-chars country of the cities
+        matching the provided city name.
+        The rule for identifying matchings is according to the provided
+        `matching` parameter value.
+        If `country` is provided, the search is restricted to the cities of
+        the specified country.
+        :param country: two character str representing the country where to
+        search for the city. Defaults to `None`, which means: search in all
+        countries.
+        :param matching: str among `exact` (literal, case-sensitive matching),
+        `nocase` (literal, case-insensitive matching) and `like` (matches cities
+        whose name contains as a substring the string fed to the function, no
+        matter the case). Defaults to `nocase`.
+        :raises ValueError if the value for `matching` is unknown
+        :return: list of `pyowm.utils.geo.Point` objects
+        """
+        locations = self.locations_for(city_name, country, matching=matching)
+        return [loc.to_geopoint() for loc in locations]
+
     # helper functions
 
     def _filter_matching_lines(self, city_name, country, matching):

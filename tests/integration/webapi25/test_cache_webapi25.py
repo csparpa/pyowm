@@ -47,16 +47,16 @@ class CacheTestWebAPI25(unittest.TestCase):
     def test_caching_prevents_API_calls(self):
         cache = LRUCache(20, 1000 * 60 * 60)
         wrapped_cache = CacheWrapper(cache)
-        owm = OWM25(parsers, self.API_KEY, wrapped_cache)
+        owm = OWM25(parsers, API_key=self.API_KEY, cache=wrapped_cache)
         self.assertFalse(wrapped_cache.last_request_was_hit())
         self.assertEqual(0, wrapped_cache.api_calls())
-        owm.weather_at_place('London,uk')  # Comes from OWM web API
+        owm.weather_at_place('London,GB')  # Comes from OWM web API
         self.assertFalse(wrapped_cache.last_request_was_hit())
         self.assertEqual(1, wrapped_cache.api_calls())
-        owm.weather_at_place('London,uk')  # Comes from cache
+        owm.weather_at_place('London,GB')  # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
         self.assertEqual(1, wrapped_cache.api_calls())
-        owm.weather_at_place('London,uk')  # Comes from cache again
+        owm.weather_at_place('London,GB')  # Comes from cache again
         self.assertTrue(wrapped_cache.last_request_was_hit())
         self.assertEqual(1, wrapped_cache.api_calls())
         owm.weather_at_place('Kiev')       # Comes from OWM web API
@@ -65,7 +65,7 @@ class CacheTestWebAPI25(unittest.TestCase):
         owm.weather_at_place('Kiev')       # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
         self.assertEqual(2, wrapped_cache.api_calls())
-        owm.weather_at_place('London,uk')  # Comes from cache
+        owm.weather_at_place('London,GB')  # Comes from cache
         self.assertTrue(wrapped_cache.last_request_was_hit())
         self.assertEqual(2, wrapped_cache.api_calls())
 
@@ -76,12 +76,12 @@ class CacheTestWebAPI25(unittest.TestCase):
         """
         cache = LRUCache(3, 1000 * 60 * 60)  # Only three cacheable elements!
         wrapped_cache = CacheWrapper(cache)
-        owm = OWM25(parsers, self.API_KEY, wrapped_cache)
-        owm.weather_at_place('London,uk')  # Comes from OWM web API
+        owm = OWM25(parsers, API_key=self.API_KEY, cache=wrapped_cache)
+        owm.weather_at_place('London,GB')  # Comes from OWM web API
         owm.weather_at_place('Kiev')       # Comes from OWM web API
         owm.weather_at_place('Madrid')     # Comes from OWM web API
         self.assertEqual(3, wrapped_cache.api_calls())
-        owm.weather_at_place('London,uk')  # Comes from cache
+        owm.weather_at_place('London,GB')  # Comes from cache
         owm.weather_at_place('Kiev')  # Comes from cache
         self.assertEqual(3, wrapped_cache.api_calls())
         owm.weather_at_place('Tokyo')
@@ -96,24 +96,24 @@ class CacheTestWebAPI25(unittest.TestCase):
         non-null cache.
         """
         cache = LRUCache(20, 1000 * 60 * 60)
-        owm = OWM25(parsers, self.API_KEY, cache)
+        owm = OWM25(parsers, API_key=self.API_KEY, cache=cache)
         before_request = time()
-        o1 = owm.weather_at_place('London,uk')  # Comes from OWM web API
+        o1 = owm.weather_at_place('London,GB')  # Comes from OWM web API
         after_request = time()
-        o2 = owm.weather_at_place('London,uk')  # Comes from cache
+        o2 = owm.weather_at_place('London,GB')  # Comes from cache
         after_cache_hit_1 = time()
         owm.weather_at_place('Kiev')       # Comes from OWM web API
         owm.weather_at_coords(-33.936524, 18.503723)  # Comes from OWM web API
         owm.weather_at_coords(-33.936524, 18.503723)  # Cached, we don't care
         owm.weather_at_coords(-33.936524, 18.503723)  # Cached, we don't care
         before_cache_hit_2 = time()
-        o3 = owm.weather_at_place('London,uk')  # Comes from cache
+        o3 = owm.weather_at_place('London,GB')  # Comes from cache
         after_cache_hit_2 = time()
         #Check results: difference in reception time should not be less than 20 sec
-        self.assertAlmostEquals(o1.get_reception_time(),
+        self.assertAlmostEqual(o1.get_reception_time(),
                                 o2.get_reception_time(),
                                 places=None, msg=None, delta=20)
-        self.assertAlmostEquals(o1.get_reception_time(),
+        self.assertAlmostEqual(o1.get_reception_time(),
                                 o3.get_reception_time(),
                                 places=None, msg=None, delta=20)
         #Check times: all cache hit times must be less than the former OWM web

@@ -12,7 +12,7 @@ from datetime import datetime
 from pyowm.constants import DEFAULT_API_KEY
 from pyowm.webapi25.configuration25 import parsers
 from pyowm.webapi25.owm25 import OWM25
-from pyowm.exceptions import api_call_error, unauthorized_error
+from pyowm.exceptions import api_response_error
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
@@ -80,7 +80,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
     def test_weather_at_id(self):
         o1 = self.__owm.weather_at_id(5128581) # New York
         o2 = self.__owm.weather_at_id(703448) # Kiev'
-        o3 = self.__owm.weather_at_id(99999999) # Shall be None
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
         loc = o1.get_location()
@@ -95,7 +94,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         weat = o2.get_weather()
         self.assertTrue(weat is not None)
-        self.assertFalse(o3 is not None)
 
     def test_weather_at_ids(self):
         # New York, Kiev
@@ -256,8 +254,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         fc1 = self.__owm.three_hours_forecast_at_id(2643743)
         # Kiev
         fc2 = self.__owm.three_hours_forecast_at_id(703448)
-        # Shall be None
-        fc3 = self.__owm.three_hours_forecast_at_id(99999999)
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
@@ -276,7 +272,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f2:
             self.assertTrue(weather is not None)
-        self.assertEqual(fc3, None)
+        # Unexistent
+        try:
+            fc3 = self.__owm.three_hours_forecast_at_id(99999999999999)
+            self.fail()
+        except api_response_error.NotFoundError:
+            pass # ok
 
     def test_daily_forecast(self):
         """
@@ -331,7 +332,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             fc3 = self.__owm.daily_forecast_at_id(99999999)
             raise AssertionError("APICallError was expected here")
-        except api_call_error.APICallError:
+        except api_response_error.NotFoundError:
             pass  # Ok!
         self.assertTrue(fc1)
         f1 = fc1.get_forecast()
@@ -381,7 +382,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                     self.assertTrue(weather is not None)
             l5 = self.__owm.weather_history_at_place('QmFoPIlbf')  # Shall be None
             self.assertTrue(l5 is None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_history_at_coords(self):
@@ -391,7 +392,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 for weather in l1:
                     self.assertTrue(weather is not None)
 
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_history_at_id(self):
@@ -421,7 +422,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             if l4 is not None:
                 for weather in l4:
                     self.assertTrue(weather is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_at_coords(self):
@@ -466,7 +467,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(len(data2) > 2)
                 h3 = self.__owm.station_tick_history(987654)  # Shall be None
                 self.assertFalse(h3 is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_hour_history(self):
@@ -484,7 +485,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(0, len(data1))
                 h2 = self.__owm.station_hour_history(987654)  # Shall be None
                 self.assertFalse(h2 is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_day_history(self):
@@ -508,7 +509,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertTrue(data2 is not None)
                 h3 = self.__owm.station_day_history(987654)  # Shall be None
                 self.assertFalse(h3 is not None)
-        except unauthorized_error.UnauthorizedError:
+        except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_at_station(self):
@@ -527,7 +528,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         Test feature: get current weather observations from meteostations
         inside of a bounding box determined by geo-coordinates.
         """
-        o = self.__owm.weather_at_stations_in_bbox(49.07,8.87,61.26,65.21)
+        o = self.__owm.weather_at_stations_in_bbox(47.013855, -126.039644,
+                                                   33.772746, -115.187844)
         self.assertTrue(isinstance(o, list))
         for item in o:
             self.assertTrue(item is not None)
@@ -537,63 +539,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             weat = item.get_weather()
             self.assertTrue(weat is not None)
 
-    def test_uvindex_around_coords(self):
-        """
-        Test feature: get UV index around geo-coordinates.
-        """
-        u = self.__owm.uvindex_around_coords(45,9)
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_value())
-        self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_location())
-
-    def test_coindex_around_coords(self):
-        """
-        Test feature: get CO index around geo-coordinates.
-        """
-        u = self.__owm.coindex_around_coords(45, 9)
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_co_samples())
-        self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
-        self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
-
-    def test_ozone_around_coords(self):
-        """
-        Test feature: get ozone around geo-coordinates.
-        """
-        u = self.__owm.ozone_around_coords(45, 9)
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_du_value())
-        self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
-        self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
-
-    def test_no2index_around_coords(self):
-        """
-        Test feature: get NO2 index around geo-coordinates.
-        """
-        u = self.__owm.no2index_around_coords(45, 9)
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_no2_samples())
-        self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
-        self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
-
-    def test_so2index_around_coords(self):
-        """
-        Test feature: get SO2 index around geo-coordinates.
-        """
-        u = self.__owm.so2index_around_coords(45, 9)
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_so2_samples())
-        self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
-        self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
 
 if __name__ == "__main__":
     unittest.main()

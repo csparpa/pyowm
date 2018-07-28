@@ -4,8 +4,9 @@ measurements
 """
 
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.station_parser import StationParser
-from pyowm.stationsapi30.aggregated_measurement_parser import AggregatedMeasurementParser
+from pyowm.stationsapi30.parsers.station_parser import StationParser
+from pyowm.stationsapi30.parsers.aggregated_measurement_parser import AggregatedMeasurementParser
+from pyowm.stationsapi30.uris import STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 from pyowm.constants import STATIONS_API_VERSION
 
 
@@ -16,7 +17,7 @@ class StationsManager(object):
     it implements CRUD methods on Station entities and the corresponding
     measured datapoints.
 
-    :param API_key: the OWM web API key (defaults to ``None``)
+    :param API_key: the OWM web API key
     :type API_key: str
     :returns: a *StationsManager* instance
     :raises: *AssertionError* when no API Key is provided
@@ -44,7 +45,7 @@ class StationsManager(object):
         """
 
         status, data = self.http_client.get_json(
-            'http://api.openweathermap.org/data/3.0/stations',
+            STATIONS_URI,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
         return [self.stations_parser.parse_dict(item) for item in data]
@@ -59,7 +60,7 @@ class StationsManager(object):
 
         """
         status, data = self.http_client.get_json(
-            'http://api.openweathermap.org/data/3.0/stations/%s' % str(id),
+            NAMED_STATION_URI % str(id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
         return self.stations_parser.parse_dict(data)
@@ -92,7 +93,7 @@ class StationsManager(object):
             if alt < 0.0:
                 raise ValueError("'alt' value must not be negative")
         status, payload = self.http_client.post(
-            'http://api.openweathermap.org/data/3.0/stations',
+            STATIONS_URI,
             params={'appid': self.API_key},
             data=dict(external_id=external_id, name=name, lat=lat,
                       lon=lon, alt=alt),
@@ -110,7 +111,7 @@ class StationsManager(object):
         """
         assert station.id is not None
         status, _ = self.http_client.put(
-            'http://api.openweathermap.org/data/3.0/stations/%s' % str(station.id),
+            NAMED_STATION_URI % str(station.id),
             params={'appid': self.API_key},
             data=dict(external_id=station.external_id, name=station.name,
                       lat=station.lat, lon=station.lon, alt=station.alt),
@@ -128,7 +129,7 @@ class StationsManager(object):
         """
         assert station.id is not None
         status, _ = self.http_client.delete(
-            'http://api.openweathermap.org/data/3.0/stations/%s' % str(station.id),
+            NAMED_STATION_URI % str(station.id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
 
@@ -146,7 +147,7 @@ class StationsManager(object):
         assert measurement is not None
         assert measurement.station_id is not None
         status, _ = self.http_client.post(
-            'http://api.openweathermap.org/data/3.0/measurements',
+            MEASUREMENTS_URI,
             params={'appid': self.API_key},
             data=[measurement.to_dict()],
             headers={'Content-Type': 'application/json'})
@@ -166,7 +167,7 @@ class StationsManager(object):
         assert all([m.station_id is not None for m in list_of_measurements])
         msmts = [m.to_dict() for m in list_of_measurements]
         status, _ = self.http_client.post(
-            'http://api.openweathermap.org/data/3.0/measurements',
+            MEASUREMENTS_URI,
             params={'appid': self.API_key},
             data=msmts,
             headers={'Content-Type': 'application/json'})
@@ -210,7 +211,7 @@ class StationsManager(object):
                  'to': to_timestamp,
                  'limit': limit}
         status, data = self.http_client.get_json(
-            'http://api.openweathermap.org/data/3.0/measurements',
+            MEASUREMENTS_URI,
             params=query,
             headers={'Content-Type': 'application/json'})
         return [self.aggregated_measurements_parser.parse_dict(item) for item in data]
@@ -261,7 +262,7 @@ class StationsManager(object):
                 dict(other=m['weather_other'])]
             msmts.append(item)
         status, _ = self.http_client.post(
-            'http://api.openweathermap.org/data/3.0/measurements',
+            MEASUREMENTS_URI,
             params={'appid': self.API_key},
             data=msmts,
             headers={'Content-Type': 'application/json'})

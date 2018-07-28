@@ -9,43 +9,34 @@ and running
 import unittest
 import os
 from pyowm.constants import DEFAULT_API_KEY
-from pyowm import timeutils
-from pyowm.webapi25.configuration25 import parsers
-from pyowm.webapi25.owm25 import OWM25
-from pyowm.webapi25.weather import Weather
-from pyowm.webapi25.observation import Observation
-from pyowm.webapi25.forecaster import Forecaster
 
 
 class IntegrationTestsREADMESnippets(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __API_key = os.getenv('OWM_API_KEY', DEFAULT_API_KEY)
 
-    def test_snippets(self):
+    def test_free_subscription_snippets(self):
 
-        # Will it be clear tomorrow at this time in Milan (Italy) ?
-        f_milan = self.__owm.daily_forecast("Milan,it")
-        self.assertIsNotNone(f_milan)
-        self.assertTrue(isinstance(f_milan, Forecaster))
-        tomorrow = timeutils.tomorrow()
-        will_be_clear = f_milan.will_be_clear_at(tomorrow)
-        self.assertTrue(isinstance(will_be_clear, bool))
+        import pyowm
+        from pyowm.webapi25.weather import Weather
 
-        # Search for current weather in London (UK)
-        o_london = self.__owm.weather_at_place('London,uk')
-        self.assertTrue(isinstance(o_london, Observation))
-        w_london = o_london.get_weather()
-        self.assertTrue(isinstance(w_london, Weather))
+        owm = pyowm.OWM(self.__API_key)  # You MUST provide a valid API key
+
+        # Search for current weather in London (Great Britain)
+        observation = owm.weather_at_place('London,GB')
+        w = observation.get_weather()
+        self.assertIsInstance(w, Weather)
 
         # Weather details
-        self.assertIsNotNone(w_london.get_wind())
-        self.assertIsNotNone(w_london.get_humidity())
-        self.assertIsNotNone(w_london.get_temperature('celsius'))
+        w.get_wind()
+        w.get_humidity()
+        w.get_temperature('celsius')
 
         # Search current weather observations in the surroundings of
         # lat=22.57W, lon=43.12S (Rio de Janeiro, BR)
-        os_rio = self.__owm.weather_around_coords(-22.57, -43.12)
-        self.assertIsNotNone(os_rio)
-        self.assertTrue(len(os_rio) > 0)
-        for o in os_rio:
-            self.assertTrue(isinstance(o, Observation))
+        observation_list = owm.weather_around_coords(-22.57, -43.12)
+        self.assertIsInstance(observation_list, list)
+
+
+if __name__ == '__main__':
+    unittest.main()

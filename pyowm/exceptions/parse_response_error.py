@@ -14,8 +14,8 @@ class ParseResponseError(OWMError):
     :type cause: str
     :returns: a *ParseResponseError* instance
     """
-    def __init__(self, message):
-        self._message = message
+    def __init__(self, cause):
+        self._message = cause
 
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""

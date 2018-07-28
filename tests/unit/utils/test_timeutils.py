@@ -194,3 +194,22 @@ class TestTimeUtils(unittest.TestCase):
         expected = d + timedelta(days=365)
         result = timeutils.next_year(d)
         self.assertAlmostEqual(expected, result)
+
+    def test_millis_offset_between_epochs(self):
+        # test failures
+        with self.assertRaises(AssertionError):
+            timeutils.millis_offset_between_epochs('test', 123456)
+        with self.assertRaises(AssertionError):
+            timeutils.millis_offset_between_epochs(123456, 'test')
+
+        # test normal behaviour
+        reference_epoch = 1525176000
+        target_epoch_1 = 1525176060
+        target_epoch_2 = 1522584000
+
+        expected_1 = (target_epoch_1 - reference_epoch) * 1000
+        expected_2 = (target_epoch_2 - reference_epoch) * 1000
+
+        self.assertEqual(expected_1, timeutils.millis_offset_between_epochs(reference_epoch, target_epoch_1))
+        self.assertEqual(expected_2, timeutils.millis_offset_between_epochs(reference_epoch, target_epoch_2))
+        self.assertEqual(0, timeutils.millis_offset_between_epochs(reference_epoch, reference_epoch))

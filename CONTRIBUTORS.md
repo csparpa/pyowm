@@ -30,3 +30,7 @@ Wiki
   * [lardconcepts] (https://github.com/lardconcepts)
   * [richarddunks] (https://github.com/richarddunks)
   * [solumos] (https://github.com/solumos)
+
+Logo
+----
+  * [marlinmm] (https://github.com/marlinmm)

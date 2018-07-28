@@ -12,6 +12,9 @@ DAILY_FORECAST_URL = ROOT_API_URL + '/d/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_API_URL + '/e'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/f'
 
+USE_SSL = False
+VERIFY_SSL_CERTS = True
+
 # Parser objects injection for OWM web API responses parsing
 parsers = {
   'observation': None,

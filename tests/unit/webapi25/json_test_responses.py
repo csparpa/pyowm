@@ -166,25 +166,3 @@ OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"c
 FORECAST_MALFORMED_JSON = '{ "city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
     '"GB","population": 1000000}, "list": [{"test": "fake"}]}'
-
-UVINDEX_JSON = '{"lat":43.75,"lon":8.25,"date_iso":"2016-09-27T12:00:00Z",' \
-               '"date":1474977600,"value":4.58}'
-
-UVINDEX_MALFORMED_JSON = '{"lat":43.75,"lon":8.25,"zzz":"2016-09-27T12:00:00Z",' \
-               '"date":1474977600,"test":4.58}'
-
-COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
-
-COINDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
-
-OZONE_JSON = '{"time":"2016-10-06T13:32:53Z","location":{"latitude":1.3841,"longitude":9.8633},"data":276.8447570800781}'
-
-OZONE_MALFORMED_JSON = '{"time":"2016-10-06T13:32:53Z", "x": 1234}'
-
-NO2INDEX_JSON = '{"time":"2016-03-03T12:00:00Z","location":{"latitude":0.0,"longitude":10.0},"data":{"no2":{"precision":1.436401748934656e+15,"value":2.550915831693312e+15},"no2_strat":{"precision":2.00000000753664e+14,"value":1.780239650783232e+15},"no2_trop":{"precision":1.464945698930688e+15,"value":7.7067618091008e+14}}}'
-
-NO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","abc":[]}'
-
-SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
-
-SO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'

@@ -34,18 +34,18 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
         result = mgr.get_station(stat1.id)
         self.assertEqual(stat1.id, result.id)
         self.assertEqual(stat1.external_id, result.external_id)
-        self.assertEquals(stat1.name, result.name)
-        self.assertEquals(stat1.lat, result.lat)
-        self.assertEquals(stat1.lon, result.lon)
-        self.assertEquals(stat1.alt, result.alt)
+        self.assertEqual(stat1.name, result.name)
+        self.assertEqual(stat1.lat, result.lat)
+        self.assertEqual(stat1.lon, result.lon)
+        self.assertEqual(stat1.alt, result.alt)
 
         result = mgr.get_station(stat2.id)
-        self.assertEquals(stat2.id, result.id)
-        self.assertEquals(stat2.external_id, result.external_id)
-        self.assertEquals(stat2.name, result.name)
-        self.assertEquals(stat2.lat, result.lat)
-        self.assertEquals(stat2.lon, result.lon)
-        self.assertEquals(stat2.alt, result.alt)
+        self.assertEqual(stat2.id, result.id)
+        self.assertEqual(stat2.external_id, result.external_id)
+        self.assertEqual(stat2.name, result.name)
+        self.assertEqual(stat2.lat, result.lat)
+        self.assertEqual(stat2.lon, result.lon)
+        self.assertEqual(stat2.alt, result.alt)
 
         # create and bufferize some measurements for station n.1
         buf = Buffer(stat1.id)
@@ -72,12 +72,12 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
         modified_stat2.lat = 30.6
         mgr.update_station(modified_stat2)
         result = mgr.get_station(modified_stat2.id)
-        self.assertEquals(modified_stat2.id, result.id)
-        self.assertEquals(modified_stat2.external_id, result.external_id)
-        self.assertEquals(modified_stat2.name, result.name)
+        self.assertEqual(modified_stat2.id, result.id)
+        self.assertEqual(modified_stat2.external_id, result.external_id)
+        self.assertEqual(modified_stat2.name, result.name)
         # of course, lat had been modified
-        self.assertEquals(modified_stat2.lon, result.lon)
-        self.assertEquals(modified_stat2.alt, result.alt)
+        self.assertEqual(modified_stat2.lon, result.lon)
+        self.assertEqual(modified_stat2.alt, result.alt)
 
         # Delete stations one by one
         mgr.delete_station(stat1)
@@ -87,3 +87,8 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
         mgr.delete_station(modified_stat2)
         stations = mgr.get_stations()
         self.assertEqual(n_old_stations, len(stations))
+
+
+if __name__ == "__main__":
+    unittest.main()
+

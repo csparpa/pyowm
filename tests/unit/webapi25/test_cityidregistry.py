@@ -9,6 +9,7 @@ except ImportError:
     from io import StringIO
 from pyowm.webapi25.cityidregistry import CityIDRegistry
 from pyowm.webapi25.location import Location
+from pyowm.utils.geo import Point
 
 
 class TestCityIDRegistry(unittest.TestCase):
@@ -62,6 +63,11 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self.assertEquals(loc1.get_lat(), loc2.get_lat())
         self.assertEquals(loc1.get_lon(), loc2.get_lon())
         self.assertEquals(loc1.get_country(), loc2.get_country())
+
+    def _assertGeopointsEqual(self, point1, point2):
+        self.assertIsInstance(point1, Point)
+        self.assertIsInstance(point2, Point)
+        self.assertEqual(point1.as_dict(), point2.as_dict())
 
     # tests for helper functions
 
@@ -385,5 +391,29 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self._assertLocationsEqual(
             Location('Thale, Stadt', 11.058, 51.7528, 6550950, 'DE'),
             result[0])
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_geopoints_for(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
+
+        # No matches
+        result = self._instance.geopoints_for('aaaaaaaaaa')
+        self.assertEqual(0, len(result))
+
+        # One match
+        expected = Location('Bologna', -83.250488, 30.57184, 2829449, 'IT').to_geopoint()
+        result = self._instance.geopoints_for("Bologna")
+        self.assertEqual(1, len(result))
+        self._assertGeopointsEqual(expected, result[0])
+
+        # Multiple matches
+        expected1 = Location('Abbans-Dessus', 5.88188, 47.120548, 3038800, 'FR').to_geopoint()
+        expected2 = Location('Abbans-Dessus', 5.88333, 47.116669, 6452202, 'FR').to_geopoint()
+        result = self._instance.geopoints_for("Abbans-Dessus")
+        self.assertEqual(2, len(result))
+        self._assertGeopointsEqual(expected1, result[0])
+        self._assertGeopointsEqual(expected2, result[1])
 
         CityIDRegistry._get_lines = ref_to_original

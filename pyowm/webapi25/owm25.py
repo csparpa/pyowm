@@ -8,16 +8,20 @@ from pyowm.webapi25.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, API_AVAILABILITY_TIMEOUT)
+    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL)
 from pyowm.webapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
 from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
-from pyowm.commons import weather_client, uv_client, airpollution_client
-from pyowm.utils import timeformatutils, stringutils
+from pyowm.commons import http_client
+from pyowm.pollutionapi30 import airpollution_client
+from pyowm.uvindexapi30 import uv_client
+from pyowm.exceptions import api_call_error
+from pyowm.utils import timeformatutils, stringutils, timeutils, geo
 from pyowm.webapi25 import forecaster
 from pyowm.webapi25 import historian
 from pyowm.stationsapi30 import stations_manager
+from pyowm.alertapi30 import alert_manager
 
 
 class OWM25(owm.OWM):
@@ -44,66 +48,26 @@ class OWM25(owm.OWM):
            Can be 'free' (free subscription) or 'pro' (paid subscription),
            Defaults to: 'free'
     :type subscription_type: str
+    :param use_ssl: whether API calls should be made via SSL or not.
+           Defaults to: False
+    :type use_ssl: bool
     :returns: an *OWM25* instance
 
     """
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
-                 language="en", subscription_type='free'):
+                 language="en", subscription_type='free', use_ssl=False):
         self._parsers = parsers
         if API_key is not None:
-            OWM25._assert_is_string(API_key)
+            stringutils.assert_is_string(API_key)
         self._API_key = API_key
-        self._api = weather_client.WeatherHttpClient(API_key, cache, subscription_type)
-        self._uvapi = uv_client.UltraVioletHttpClient(API_key, cache)
-        self._pollapi = \
-            airpollution_client.AirPollutionHttpClient(API_key, cache)
+        self._wapi = http_client.HttpClient(cache=cache)
+        self._uvapi = uv_client.UltraVioletHttpClient(API_key, self._wapi)
+        self._pollapi = airpollution_client.AirPollutionHttpClient(API_key, self._wapi)
         self._language = language
         if API_key is None and subscription_type == 'pro':
             raise AssertionError('You must provide an API Key for paid subscriptions')
         self._subscription_type = subscription_type
-
-    @staticmethod
-    def _assert_is_string(value):
-        """
-        Checks if the provided value is a valid string instance
-
-        :param value: value to be checked
-        :return: None
-        """
-        try:  # Python 2.x
-            assert isinstance(value, basestring), "Value must be a string or unicode"
-        except NameError:  # Python 3.x
-            assert isinstance(value, str), "Value must be a string"
-
-
-    @staticmethod
-    def _assert_is_string_or_unicode(value):
-        """
-        Checks if the provided value is a valid string or unicode instance
-        On Python 3.x it just checks that the value is a string instance.
-        :param value: value to be checked
-        :return: None
-        """
-        try:
-            assert isinstance(value, basestring) or isinstance(value, unicode), \
-                "Value must be a string or unicode"
-        except NameError:
-            assert isinstance(value, str), "Value must be a string"
-
-    @staticmethod
-    def _encode_string(value):
-        """
-        Turns the provided value to UTF-8 encoding
-
-        :param value: input value
-        :return: UTF-8 encoded value
-        """
-        try:  # The OWM API expects UTF-8 encoding
-            if not isinstance(value, unicode):
-                return value.encode('utf8')
-            return value
-        except NameError:
-            return value
+        self._use_ssl = use_ssl
 
     def get_API_key(self):
         """
@@ -195,6 +159,13 @@ class OWM25(owm.OWM):
         """
         return stations_manager.StationsManager(self._API_key)
 
+    def alert_manager(self):
+        """
+        Gives an *AlertManager* instance that can be used to read/write weather triggers and alerts data.
+        :return: an *AlertManager* instance
+        """
+        return alert_manager.AlertManager(self._API_key)
+
     def is_API_online(self):
         """
         Returns True if the OWM web API is currently online. A short timeout
@@ -203,12 +174,17 @@ class OWM25(owm.OWM):
         :returns: bool
 
         """
-        data = self._api.call_API(OBSERVATION_URL,
-                                  {'q': 'London,UK'},
-                                  API_AVAILABILITY_TIMEOUT)
-        if data is not None:
+        params = {'q': 'London,UK'}
+        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+                                            self._API_key,
+                                            self._subscription_type)
+        try:
+            _1, _2 = self._wapi.cacheable_get_json(uri, params=params)
             return True
-        return False
+        except api_call_error.APICallTimeoutError:
+            return False
+
+    #  --- WEATHER API ENDPOINTS ---
 
     def weather_at_place(self, name):
         """
@@ -224,11 +200,14 @@ class OWM25(owm.OWM):
             reached
         """
 
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
-        json_data = self._api.call_API(OBSERVATION_URL,
-                                       {'q': encoded_name,
-                                        'lang': self._language})
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
+        params = {'q': encoded_name, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_coords(self, lat, lon):
@@ -246,15 +225,14 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-        json_data = self._api.call_API(OBSERVATION_URL,
-                                       {'lon': lon, 'lat': lat,
-                                        'lang': self._language})
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        params = {'lon': lon, 'lat': lat, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_zip_code(self, zipcode, country):
@@ -272,14 +250,17 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        OWM25._assert_is_string_or_unicode(zipcode)
-        OWM25._assert_is_string_or_unicode(country)
-        encoded_zip = OWM25._encode_string(zipcode)
-        encoded_country = OWM25._encode_string(country)
+        stringutils.assert_is_string_or_unicode(zipcode)
+        stringutils.assert_is_string_or_unicode(country)
+        encoded_zip = stringutils.encode_to_utf8(zipcode)
+        encoded_country = stringutils.encode_to_utf8(country)
         zip_param = encoded_zip + ',' + encoded_country
-        json_data = self._api.call_API(OBSERVATION_URL,
-                                       {'zip': zip_param,
-                                        'lang': self._language})
+        params = {'zip': zip_param, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_id(self, id):
@@ -298,9 +279,12 @@ class OWM25(owm.OWM):
         assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
-        json_data = self._api.call_API(OBSERVATION_URL,
-                                       {'id': id,
-                                        'lang': self._language})
+        params = {'id': id, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
     def weather_at_ids(self, ids_list):
@@ -322,9 +306,12 @@ class OWM25(owm.OWM):
             if id < 0:
                 raise ValueError("id values in 'ids_list' must be greater "
                                  "than 0")
-        json_data = self._api.call_API(GROUP_OBSERVATIONS_URL,
-                                       {'id': ','.join(list(map(str, ids_list))),
-                                       'lang': self._language})
+        params = {'id': ','.join(list(map(str, ids_list))), 'lang': self._language}
+        uri = http_client.HttpClient.to_url(GROUP_OBSERVATIONS_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_at_places(self, pattern, searchtype, limit=None):
@@ -362,9 +349,14 @@ class OWM25(owm.OWM):
         if limit is not None:
             # fix for OWM 2.5 API bug!
             params['cnt'] = limit - 1
-        json_data = self._api.call_API(FIND_OBSERVATIONS_URL, params)
+        uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def weather_at_station(self, station_id):
         """
         Queries the OWM web API for the weather currently observed by a specific
@@ -381,11 +373,15 @@ class OWM25(owm.OWM):
         assert type(station_id) is int, "'station_id' must be an int"
         if station_id < 0:
             raise ValueError("'station_id' value must be greater than 0")
-        json_data = self._api.call_API(STATION_URL,
-                                      {'id': station_id,
-                                       'lang': self._language})
+        params = {'id': station_id, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(STATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation'].parse_JSON(json_data)
 
+    @deprecated(will_be='removed', on_version=(3, 0, 0))
     def weather_at_stations_in_bbox(self, lat_top_left, lon_top_left,
                                     lat_bottom_right, lon_bottom_right,
                                     cluster=False, limit=None):
@@ -417,28 +413,13 @@ class OWM25(owm.OWM):
             reached, *ValueError* when coordinates values are out of bounds or
             negative values are provided for limit
         """
-        assert type(lat_top_left) in (float, int), \
-                "'lat_top_left' must be a float"
-        assert type(lon_top_left) in (float, int), \
-                "'lon_top_left' must be a float"
-        assert type(lat_bottom_right) in (float, int), \
-                "'lat_bottom_right' must be a float"
-        assert type(lon_bottom_right) in (float, int), \
-                "'lon_bottom_right' must be a float"
         assert type(cluster) is bool, "'cluster' must be a bool"
         assert type(limit) in (int, type(None)), \
                 "'limit' must be an int or None"
-        if lat_top_left < -90.0 or lat_top_left > 90.0:
-            raise ValueError("'lat_top_left' value must be between -90 and 90")
-        if lon_top_left < -180.0 or lon_top_left > 180.0:
-            raise ValueError("'lon_top_left' value must be between -180 and" \
-                             +" 180")
-        if lat_bottom_right < -90.0 or lat_bottom_right > 90.0:
-            raise ValueError("'lat_bottom_right' value must be between -90" \
-                             +" and 90")
-        if lon_bottom_right < -180.0 or lon_bottom_right > 180.0:
-            raise ValueError("'lon_bottom_right' value must be between -180 "\
-                             +"and 180")
+        geo.assert_is_lon(lon_top_left)
+        geo.assert_is_lon(lon_bottom_right)
+        geo.assert_is_lat(lat_top_left)
+        geo.assert_is_lat(lat_bottom_right)
         if limit is not None and limit < 1:
             raise ValueError("'limit' must be None or greater than zero")
         params = {'bbox': ','.join([str(lon_top_left),
@@ -448,8 +429,11 @@ class OWM25(owm.OWM):
                   'cluster': 'yes' if cluster else 'no',}
         if limit is not None:
             params['cnt'] = limit
-
-        json_data = self._api.call_API(BBOX_STATION_URL, params)
+        uri = http_client.HttpClient.to_url(BBOX_STATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def weather_around_coords(self, lat, lon, limit=None):
@@ -471,19 +455,19 @@ class OWM25(owm.OWM):
             reached, *ValueError* when coordinates values are out of bounds or
             negative values are provided for limit
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
             params['cnt'] = limit
-        json_data = self._api.call_API(FIND_OBSERVATIONS_URL, params)
+        uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
     def three_hours_forecast(self, name):
@@ -502,11 +486,14 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
-        json_data = self._api.call_API(THREE_HOURS_FORECAST_URL,
-                                       {'q': encoded_name,
-                                        'lang': self._language})
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
+        params = {'q': encoded_name, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -533,14 +520,14 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-        json_data = self._api.call_API(THREE_HOURS_FORECAST_URL, params)
+        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -567,9 +554,12 @@ class OWM25(owm.OWM):
         assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
-        json_data = self._api.call_API(THREE_HOURS_FORECAST_URL,
-                                       {'id': id,
-                                        'lang': self._language})
+        params = {'id': id, 'lang': self._language}
+        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("3h")
@@ -597,8 +587,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -606,7 +596,11 @@ class OWM25(owm.OWM):
         params = {'q': encoded_name, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._api.call_API(DAILY_FORECAST_URL, params)
+        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("daily")
@@ -637,12 +631,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -650,7 +640,11 @@ class OWM25(owm.OWM):
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._api.call_API(DAILY_FORECAST_URL, params)
+        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("daily")
@@ -689,7 +683,11 @@ class OWM25(owm.OWM):
         params = {'id': id, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._api.call_API(DAILY_FORECAST_URL, params)
+        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         forecast = self._parsers['forecast'].parse_JSON(json_data)
         if forecast is not None:
             forecast.set_interval("daily")
@@ -723,8 +721,8 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        OWM25._assert_is_string_or_unicode(name)
-        encoded_name = OWM25._encode_string(name)
+        stringutils.assert_is_string_or_unicode(name)
+        encoded_name = stringutils.encode_to_utf8(name)
         params = {'q': encoded_name, 'lang': self._language}
         if start is None and end is None:
             pass
@@ -743,8 +741,11 @@ class OWM25(owm.OWM):
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        json_data = self._api.call_API(CITY_WEATHER_HISTORY_URL,
-                                             params)
+        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def weather_history_at_coords(self, lat, lon, start=None, end=None):
@@ -770,16 +771,9 @@ class OWM25(owm.OWM):
             not available for the specified location
 
         """
-        pass
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-
         if start is not None:
             unix_start = timeformatutils.to_UNIXtime(start)
 
@@ -801,8 +795,11 @@ class OWM25(owm.OWM):
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must "
                                  "precede the end time!")
-
-        json_data = self._api.call_API(CITY_WEATHER_HISTORY_URL, params)
+        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     def weather_history_at_id(self, id, start=None, end=None):
@@ -852,8 +849,11 @@ class OWM25(owm.OWM):
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        json_data = self._api.call_API(CITY_WEATHER_HISTORY_URL,
-                                             params)
+        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
 
     @deprecated(will_be='removed', on_version=(3, 0, 0))
@@ -878,12 +878,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be int or None"
             if limit < 1:
@@ -891,7 +887,11 @@ class OWM25(owm.OWM):
         params = {'lat': lat, 'lon': lon}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._api.call_API(FIND_STATION_URL, params)
+        uri = http_client.HttpClient.to_url(FIND_STATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['station_list'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
@@ -1002,8 +1002,11 @@ class OWM25(owm.OWM):
         params = {'id': station_ID, 'type': interval, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        json_data = self._api.call_API(STATION_WEATHER_HISTORY_URL,
-                                             params)
+        uri = http_client.HttpClient.to_url(STATION_WEATHER_HISTORY_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         station_history = \
             self._parsers['station_history'].parse_JSON(json_data)
         if station_history is not None:
@@ -1011,16 +1014,14 @@ class OWM25(owm.OWM):
             station_history.set_interval(interval)
         return station_history
 
+    #  --- UV API ENDPOINTS ---
+
     def uvindex_around_coords(self, lat, lon):
         """
         Queries the OWM web API for Ultra Violet value sampled in the
         surroundings of the provided geocoordinates and in the specified time
         interval. A *UVIndex* object instance is returned, encapsulating a
         *Location* object and the UV intensity value.
-        If `start` is not provided, the latest available UVIndex value is
-        retrieved.
-        If `start` is provided but `interval` is not, then `interval` defaults
-        to the maximum extent, which is: `year`
 
         :param lat: the location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
@@ -1031,17 +1032,70 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self._uvapi.get_uvi(params)
         uvindex = self._parsers['uvindex'].parse_JSON(json_data)
         return uvindex
+
+    def uvindex_forecast_around_coords(self, lat, lon):
+        """
+        Queries the OWM web API for forecast Ultra Violet values in the next 8
+        days in the surroundings of the provided geocoordinates.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :return: a list of *UVIndex* instances or empty list if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        params = {'lon': lon, 'lat': lat}
+        json_data = self._uvapi.get_uvi_forecast(params)
+        uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)
+        return uvindex_list
+
+    def uvindex_history_around_coords(self, lat, lon, start, end=None):
+        """
+        Queries the OWM web API for UV index historical values in the
+        surroundings of the provided geocoordinates and in the specified
+        time frame. If the end of the time frame is not provided, that is
+        intended to be the current datetime.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the time value for the start query boundary
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted string
+        :param end: the object conveying the time value for the end query
+            boundary (defaults to ``None``, in which case the current datetime
+            will be used)
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+        :return: a list of *UVIndex* instances or empty list if data is not available
+        :raises: *ParseResponseException* when OWM web API responses' data
+            cannot be parsed, *APICallException* when OWM web API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        assert start is not None
+        start = timeformatutils.timeformat(start, 'unix')
+        if end is None:
+            end = timeutils.now(timeformat='unix')
+        else:
+            end = timeformatutils.timeformat(end, 'unix')
+        params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
+        json_data = self._uvapi.get_uvi_history(params)
+        uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)
+        return uvindex_list
+
+    #  --- POLLUTION API ENDPOINTS ---
 
     def coindex_around_coords(self, lat, lon, start=None, interval=None):
         """
@@ -1072,13 +1126,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_coi(params)
         coindex = self._parsers['coindex'].parse_JSON(json_data)
@@ -1115,13 +1164,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_o3(params)
         ozone = self._parsers['ozone'].parse_JSON(json_data)
@@ -1159,13 +1203,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_no2(params)
         no2index = self._parsers['no2index'].parse_JSON(json_data)
@@ -1203,13 +1242,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* for wrong input values
         """
-        assert type(lon) is float or type(lon) is int, "'lon' must be a float"
-        if lon < -180.0 or lon > 180.0:
-            raise ValueError("'lon' value must be between -180 and 180")
-        assert type(lat) is float or type(lat) is int, "'lat' must be a float"
-        if lat < -90.0 or lat > 90.0:
-            raise ValueError("'lat' value must be between -90 and 90")
-
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_so2(params)
         so2index = self._parsers['so2index'].parse_JSON(json_data)

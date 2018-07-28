@@ -12,30 +12,13 @@ pyowm.commons.frontlinkedlist module
     :undoc-members:
     :show-inheritance:
 
-pyowm.commons.weather_client module
+pyowm.commons.http_client module
 -----------------------------------
 
-.. automodule:: pyowm.commons.weather_client
+.. automodule:: pyowm.commons.http_client
     :members:
     :undoc-members:
     :show-inheritance:
-
-pyowm.commons.airpollution_client module
-----------------------------------------
-
-.. automodule:: pyowm.commons.airpollution_client
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.commons.uv_client module
-------------------------------
-
-.. automodule:: pyowm.commons.uv_client
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

@@ -376,9 +376,9 @@ class Weather(object):
         return root_node
 
     def __repr__(self):
-        return "<%s.%s - reference time=%s, status=%s>" % (__name__, \
+        return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (__name__, \
               self.__class__.__name__, self.get_reference_time('iso'),
-              self._status)
+              self._status.lower(), self._detailed_status.lower())
 
 
 def weather_from_dictionary(d):

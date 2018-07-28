@@ -1,12 +1,24 @@
 from pyowm.caches import nullcache
-from pyowm.webapi25 import observationparser, observationlistparser, \
-    forecastparser, weatherhistoryparser, stationparser, stationlistparser, \
-    stationhistoryparser, uvindexparser, coindexparser, weathercoderegistry,\
-    cityidregistry, ozone_parser, no2indexparser, so2indexparser
+from pyowm.webapi25 import weathercoderegistry, cityidregistry
+from pyowm.webapi25.parsers import  forecastparser, observationlistparser, observationparser,  stationhistoryparser, \
+    stationlistparser, stationparser, weatherhistoryparser
+from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
+from pyowm.pollutionapi30.parsers import COIndexParser, NO2IndexParser, SO2IndexParser, OzoneParser
+
 
 """
 Configuration for the PyOWM library specific to OWM web API version 2.5
 """
+
+# Subdomains mapping
+API_SUBSCRIPTION_SUBDOMAINS = {
+    'free': 'api',
+    'pro': 'pro'
+}
+
+# Default usage of SSL on OWM API calls
+USE_SSL = False
+VERIFY_SSL_CERTS = True
 
 # OWM web API URLs
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
@@ -23,17 +35,6 @@ DAILY_FORECAST_URL = ROOT_API_URL + '/forecast/daily'
 CITY_WEATHER_HISTORY_URL = ROOT_HISTORY_URL + '/history/city'
 STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
-# OWM UV web API URLs
-ROOT_UV_API_URL = 'http://api.openweathermap.org/data/2.5'
-UV_INDEX_URL = ROOT_UV_API_URL + '/uvi'
-
-# OWM Air Pollution API URLs
-ROOT_POLLUTION_API_URL = 'http://api.openweathermap.org/pollution/v1'
-CO_INDEX_URL = '/co'
-OZONE_URL = '/o3'
-NO2_INDEX_URL = '/no2'
-SO2_INDEX_URL = '/so2'
-
 
 # Parser objects injection for OWM web API responses parsing
 parsers = {
@@ -44,11 +45,12 @@ parsers = {
   'station_history': stationhistoryparser.StationHistoryParser(),
   'station': stationparser.StationParser(),
   'station_list': stationlistparser.StationListParser(),
-  'uvindex': uvindexparser.UVIndexParser(),
-  'coindex': coindexparser.COIndexParser(),
-  'ozone': ozone_parser.OzoneParser(),
-  'no2index': no2indexparser.NO2IndexParser(),
-  'so2index': so2indexparser.SO2IndexParser()
+  'uvindex': UVIndexParser(),
+  'uvindex_list': UVIndexListParser(),
+  'coindex': COIndexParser(),
+  'ozone': OzoneParser(),
+  'no2index': NO2IndexParser(),
+  'so2index': SO2IndexParser()
 }
 
 # City ID registry
@@ -63,7 +65,7 @@ language = 'en'
 # Default API subscription type ('free' or 'pro')
 API_SUBSCRIPTION_TYPE = 'free'
 
-# OWM web API availability test timeout in seconds
+# OWM web API availability timeout in seconds
 API_AVAILABILITY_TIMEOUT = 2
 
 # Weather status code registry
