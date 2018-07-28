@@ -47,3 +47,7 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
             self.assertIsNotNone(item.get_value())
             self.assertIsNotNone(item.get_reception_time())
             self.assertIsNotNone(item.get_location())
+
+
+if __name__ == "__main__":
+    unittest.main()

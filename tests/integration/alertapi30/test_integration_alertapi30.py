@@ -108,3 +108,7 @@ class IntegrationTestsAlertAPI30(unittest.TestCase):
         mgr.delete_trigger(modified_trigger2)
         triggers = mgr.get_triggers()
         self.assertEqual(n_old_triggers, len(triggers))
+
+
+if __name__ == "__main__":
+    unittest.main()

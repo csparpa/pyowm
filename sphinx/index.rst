@@ -171,6 +171,25 @@ This is the Python API documentation of PyOWM:
    pyowm
 
 
+
+How to contribute
+-----------------
+There are multiple ways to contribute to the PyOWM project! Find the one that suits you best
+
+.. toctree::
+   :maxdepth: 1
+
+   contributing
+
+
+PyOWM Community
+---------------
+Find us on Slack_ !
+
+.. _Slack: http://pyowm-slackin.herokuapp.com/
+
+
+
 Indices and tables
 ------------------
 

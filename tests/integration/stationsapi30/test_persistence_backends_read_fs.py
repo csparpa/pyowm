@@ -46,3 +46,7 @@ class TestJSONPersistenceBackendsReadFS(unittest.TestCase):
                 msmt = items[0]
                 self.assertTrue(all(item in msmt.items()
                                     for item in self.data_dict.items()))
+
+
+if __name__ == "__main__":
+    unittest.main()

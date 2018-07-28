@@ -87,3 +87,7 @@ class IntegrationTestsStationsAPI30(unittest.TestCase):
         mgr.delete_station(modified_stat2)
         stations = mgr.get_stations()
         self.assertEqual(n_old_stations, len(stations))
+
+
+if __name__ == "__main__":
+    unittest.main()
