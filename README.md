@@ -93,7 +93,7 @@ More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/
 
 
 ## Documentation
-The library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.org/en/stable/).
+The latest library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.io/en/latest/).
 
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 
