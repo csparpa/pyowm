@@ -22,11 +22,11 @@ class Condition:
     """
     def __init__(self, weather_param, operator, amount, id=None):
         assert weather_param is not None
-        stringutils.assert_is_string_or_unicode(weather_param)
+        assert isinstance(weather_param, str), "Value must be a string"
         self.weather_param = weather_param
 
         assert operator is not None
-        stringutils.assert_is_string_or_unicode(operator)
+        assert isinstance(operator, str), "Value must be a string"
         self.operator = operator
 
         assert amount is not None

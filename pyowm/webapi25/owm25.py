@@ -56,9 +56,12 @@ class OWM25(owm.OWM):
     """
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
                  language="en", subscription_type='free', use_ssl=False):
+
+        stringutils.check_if_running_with_python_2()  # Python 3 only
+
         self._parsers = parsers
         if API_key is not None:
-            stringutils.assert_is_string(API_key)
+            assert isinstance(API_key, str), "Value must be a string"
         self._API_key = API_key
         self._wapi = http_client.HttpClient(cache=cache)
         self._uvapi = uv_client.UltraVioletHttpClient(API_key, self._wapi)
@@ -200,8 +203,8 @@ class OWM25(owm.OWM):
             reached
         """
 
-        stringutils.assert_is_string_or_unicode(name)
-        encoded_name = stringutils.encode_to_utf8(name)
+        assert isinstance(name, str), "Value must be a string"
+        encoded_name = name
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
@@ -250,10 +253,10 @@ class OWM25(owm.OWM):
             cannot be parsed or *APICallException* when OWM web API can not be
             reached
         """
-        stringutils.assert_is_string_or_unicode(zipcode)
-        stringutils.assert_is_string_or_unicode(country)
-        encoded_zip = stringutils.encode_to_utf8(zipcode)
-        encoded_country = stringutils.encode_to_utf8(country)
+        assert isinstance(zipcode, str), "Value must be a string"
+        assert isinstance(country, str), "Value must be a string"
+        encoded_zip = zipcode
+        encoded_country = country
         zip_param = encoded_zip + ',' + encoded_country
         params = {'zip': zip_param, 'lang': self._language}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
@@ -486,8 +489,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached
         """
-        stringutils.assert_is_string_or_unicode(name)
-        encoded_name = stringutils.encode_to_utf8(name)
+        assert isinstance(name, str), "Value must be a string"
+        encoded_name = name
         params = {'q': encoded_name, 'lang': self._language}
         uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
                                             self._API_key,
@@ -587,8 +590,8 @@ class OWM25(owm.OWM):
             cannot be parsed, *APICallException* when OWM web API can not be
             reached, *ValueError* if negative values are supplied for limit
         """
-        stringutils.assert_is_string_or_unicode(name)
-        encoded_name = stringutils.encode_to_utf8(name)
+        assert isinstance(name, str), "Value must be a string"
+        encoded_name = name
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
@@ -721,8 +724,8 @@ class OWM25(owm.OWM):
             the current time
 
         """
-        stringutils.assert_is_string_or_unicode(name)
-        encoded_name = stringutils.encode_to_utf8(name)
+        assert isinstance(name, str), "Value must be a string"
+        encoded_name = name
         params = {'q': encoded_name, 'lang': self._language}
         if start is None and end is None:
             pass

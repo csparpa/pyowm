@@ -25,6 +25,7 @@ setup(
         'requests>=2.18.2,<3',
         'geojson>=2.3.0,<2.4'
     ],
+    python_requires='>=3.4',
     classifiers=[
       "License :: OSI Approved :: MIT License",
       "Programming Language :: Python",

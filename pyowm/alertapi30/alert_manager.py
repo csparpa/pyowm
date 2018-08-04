@@ -111,7 +111,7 @@ class AlertManager:
         :type trigger_id: str
         :return: a `pyowm.alertapi30.trigger.Trigger` instance
         """
-        stringutils.assert_is_string_or_unicode(trigger_id)
+        assert isinstance(trigger_id, str), "Value must be a string"
         status, data = self.http_client.get_json(
             NAMED_TRIGGER_URI % trigger_id,
             params={'appid': self.API_key},
@@ -128,7 +128,7 @@ class AlertManager:
         :return: ``None`` if update is successful, an error otherwise
         """
         assert trigger is not None
-        stringutils.assert_is_string_or_unicode(trigger.id)
+        assert isinstance(trigger.id, str), "Value must be a string"
         the_time_period = {
             "start": {
                 "expression": "after",
@@ -158,7 +158,7 @@ class AlertManager:
         :returns: `None` if deletion is successful, an exception otherwise
         """
         assert trigger is not None
-        stringutils.assert_is_string_or_unicode(trigger.id)
+        assert isinstance(trigger.id, str), "Value must be a string"
         status, _ = self.http_client.delete(
             NAMED_TRIGGER_URI % trigger.id,
             params={'appid': self.API_key},
@@ -174,7 +174,7 @@ class AlertManager:
         :return: list of `pyowm.alertapi30.alert.Alert` objects
         """
         assert trigger is not None
-        stringutils.assert_is_string_or_unicode(trigger.id)
+        assert isinstance(trigger.id, str), "Value must be a string"
         status, data = self.http_client.get_json(
             ALERTS_URI % trigger.id,
             params={'appid': self.API_key},
@@ -193,8 +193,8 @@ class AlertManager:
         """
         assert trigger is not None
         assert alert_id is not None
-        stringutils.assert_is_string_or_unicode(alert_id)
-        stringutils.assert_is_string_or_unicode(trigger.id)
+        assert isinstance(alert_id, str), "Value must be a string"
+        assert isinstance(trigger.id, str), "Value must be a string"
         status, data = self.http_client.get_json(
             NAMED_ALERT_URI % (trigger.id, alert_id),
             params={'appid': self.API_key},
@@ -209,7 +209,7 @@ class AlertManager:
         :return: `None` if deletion is successful, an exception otherwise
         """
         assert trigger is not None
-        stringutils.assert_is_string_or_unicode(trigger.id)
+        assert isinstance(trigger.id, str), "Value must be a string"
         status, _ = self.http_client.delete(
             ALERTS_URI % trigger.id,
             params={'appid': self.API_key},
@@ -223,8 +223,8 @@ class AlertManager:
         :return: ``None`` if the deletion was successful, an error otherwise
         """
         assert alert is not None
-        stringutils.assert_is_string_or_unicode(alert.id)
-        stringutils.assert_is_string_or_unicode(alert.trigger_id)
+        assert isinstance(alert.id, str), "Value must be a string"
+        assert isinstance(alert.trigger_id, str), "Value must be a string"
         status, _ = self.http_client.delete(
             NAMED_ALERT_URI % (alert.trigger_id, alert.id),
             params={'appid': self.API_key},
