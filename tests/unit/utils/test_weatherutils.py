@@ -3,9 +3,9 @@ Test case for weatherutils.py module
 """
 
 import unittest
-from pyowm.webapi25.weather import Weather
+from pyowm.weatherapi25.weather import Weather
 from pyowm.utils import weatherutils
-from pyowm.webapi25.weathercoderegistry import WeatherCodeRegistry
+from pyowm.weatherapi25.weathercoderegistry import WeatherCodeRegistry
 from pyowm.exceptions.api_response_error import NotFoundError
 
 class TestWeatherUtils(unittest.TestCase):

@@ -2,33 +2,33 @@ In the following sections you will find a brief explanation of PyOWM's object mo
 
 # Abstractions
 
-A few abstract classes are provided in order to allow code reuse for supporting new OWM web API versions and to eventually patch the currently supported ones.
+A few abstract classes are provided in order to allow code reuse for supporting new OWM Weather API versions and to eventually patch the currently supported ones.
 
 ### The OWM abstract class
-The _OWM_ class is an abstract entry-point to the library. Clients can obtain a concrete implementation of this class through a factory method that returns the _OWM_ subclass instance corresponding to the OWM web API version that is specified (or to the latest OWM web API version available).
+The _OWM_ class is an abstract entry-point to the library. Clients can obtain a concrete implementation of this class through a factory method that returns the _OWM_ subclass instance corresponding to the OWM Weather API version that is specified (or to the latest OWM Weather API version available).
 
 In order to leverage the library features, you need to import the OWM factory and then feed it with an API key, if you have one (read [here](http://openweathermap.org/appid) on how to obtain an API key). Of course you can change your API Key after object instantiation, if you need.
 
-Each kind of weather query you can issue against the OWM web API is done through a correspondent method invocation on your _OWM_ object instance.
+Each kind of weather query you can issue against the OWM Weather API is done through a correspondent method invocation on your _OWM_ object instance.
 
-Each OWM web API version may have different features, and therefore the mapping _OWM_ subclass may have different methods. The _OWM_ common parent class provides methods that tells you the PyOWM library version, the supported OWM web API version and the availability of the web API service: these methods are inherited by all the _OWM_ children classes.
+Each OWM Weather API version may have different features, and therefore the mapping _OWM_ subclass may have different methods. The _OWM_ common parent class provides methods that tells you the PyOWM library version, the supported OWM Weather API version and the availability of the web API service: these methods are inherited by all the _OWM_ children classes.
 
 ### The JSONParser abstract class
-This abstract class states the interface for OWM web API responses' JSON parsing: every API endpoint returns a different JSON message that has to be parsed to a specific object from the PyOWM object model.
+This abstract class states the interface for OWM Weather API responses' JSON parsing: every API endpoint returns a different JSON message that has to be parsed to a specific object from the PyOWM object model.
 Subclasses of _JSONParser_ shall implement this contract: instances of these classes shall be used by subclasses of the _OWM_ abstract class.
 
 ### The OWMCache abstract class
-This abstract class states the interface for OWM web API responses' cache. The target of subclasses is to implement the get/set methods so that the JSON payloads of OWM web API responses are cached and looked up using the correspondent HTTP full URL that originated them.
+This abstract class states the interface for OWM Weather API responses' cache. The target of subclasses is to implement the get/set methods so that the JSON payloads of OWM Weather API responses are cached and looked up using the correspondent HTTP full URL that originated them.
 
 ### The LinkedList abstract class
 This abstract class models a generic linked list data structure.
 
-# OWM web API 2.5 object model
+# OWM Weather API 2.5 object model
 
 ### The configuration25 module
-This module contains configuration data for the OWM web API 2.5 object model. Specifically:
+This module contains configuration data for the OWM Weather API 2.5 object model. Specifically:
 
-    * OWM web API endpoint URLs
+    * OWM Weather API endpoint URLs
     * parser objects for API JSON payloads parsing
     * registry object for City ID lookup
     * cache providers
@@ -42,7 +42,7 @@ As regards cache providers:
 You can write down your own configuration module and inject it into the PyOWM when you create the OWM global object, provided that you strictly follow the format of the `config25` module - which can be seen from the source code - and you put your own module in a location visible by the PYTHONPATH.
 
 ### The OWM25 class
-The _OWM25_ class extends the _OWM_ abstract base class and provides a method for each of the OWM web API 2.5 endpoint:
+The _OWM25_ class extends the _OWM_ abstract base class and provides a method for each of the OWM Weather API 2.5 endpoint:
 
     # CURRENT WEATHER QUERYING
     * find current weather at a specific location ---> eg: owm.weather_at_place('London,UK')
@@ -80,7 +80,7 @@ The _OWM25_ class is injected with _jsonparser_ subclasses instances: each one p
 In order to interact with the web API, this class leverages an _OWMHTTPClient_ instance.
 
 ### The Location class
-The _Location_ class represents a location in the world. Each instance stores the geographic name of the location, the longitude/latitude couple and the country name. These data are retrieved from the OWM web API 2.5 responses' payloads.
+The _Location_ class represents a location in the world. Each instance stores the geographic name of the location, the longitude/latitude couple and the country name. These data are retrieved from the OWM Weather API 2.5 responses' payloads.
 
 _Location_ instances can also be retrieved from City IDs using the _CityIDRegistry_ module.
 
@@ -100,7 +100,7 @@ a list of _Weather_ objects is returned.
 ### The Observation class
 An instance of this class is returned whenever a query about currently observed weather in a location is issued (hence, its name).
 
-The _Observation_ class binds information about weather features that are currently being observed in a specific location in the world and that are stored as a _Weather_ object instance and the details about the location, which is stored into the class as a _Location_ object instance. Both current weather and location info are obtained via OWM web API responses parsing, which done by other classes in the PyOWM library: usually this data parsing stage ends with their storage into a newly created _Observation_ instance.
+The _Observation_ class binds information about weather features that are currently being observed in a specific location in the world and that are stored as a _Weather_ object instance and the details about the location, which is stored into the class as a _Location_ object instance. Both current weather and location info are obtained via OWM Weather API responses parsing, which done by other classes in the PyOWM library: usually this data parsing stage ends with their storage into a newly created _Observation_ instance.
 
 When created, every _Observation_ instance is fed with a timestamp that tells when the weather observation data have been received.
 
@@ -114,9 +114,9 @@ a list of _Observation_ instances is returned to the clients.
 ### The Forecast class
 This class represents a weather forecast for a specific location in the world. A weather forecast is made out by location data - encapsulated by a _Location_ object - and a collection of weather conditions - a list of _Weather_ objects.
 
-The OWM web API 2.5 provides two types of forecast intervals: three hours and daily; each _Forecast_ instance has a specific fields that tells the interval of the forecast.
+The OWM Weather API 2.5 provides two types of forecast intervals: three hours and daily; each _Forecast_ instance has a specific fields that tells the interval of the forecast.
 
-_Forecast_ instances can also tell the reception timestamp for the weather forecast, that is to say the time when the forecast has been recevied from the OWM web API.
+_Forecast_ instances can also tell the reception timestamp for the weather forecast, that is to say the time when the forecast has been recevied from the OWM Weather API.
 
 This class also provides an iterator for easily iterating over the encapsulated _Weather_ list:
 
@@ -176,11 +176,11 @@ This is a null-object that does nothing and is used by default as the PyOWM libr
 This is a Least-Recently Used simple cache with configurable size and elements expiration time.
 
 # Commons
-A few common classes are provided to be used by all codes supporting different OWM web API versions.
+A few common classes are provided to be used by all codes supporting different OWM Weather API versions.
 
 ### The OWMHTTPClient class
 
-This class is used to issue HTTP requests to the OWM web API endpoints.
+This class is used to issue HTTP requests to the OWM Weather API endpoints.
 
 ### The FrontLinkedList class
 

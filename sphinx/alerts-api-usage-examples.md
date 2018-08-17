@@ -120,7 +120,7 @@ point.geojson()
 
 
 Defining complex geometries is sometimes difficult, but in most cases you just need to set triggers upon cities: that's
-why we've added a method to the `pyowm.webapi25.cityidregistry.CityIDRegistry` registry that returns the geopoints 
+why we've added a method to the `pyowm.weatherapi25.cityidregistry.CityIDRegistry` registry that returns the geopoints 
 that correspond to one or more named cities:
 
 ```python

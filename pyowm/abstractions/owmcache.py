@@ -9,8 +9,8 @@ class OWMCache(object):
     """
     A global abstract class representing a caching provider which can be used
     to lookup the JSON responses to the most recently or most frequently issued
-    OWM web API requests.
-    The purpose of the caching mechanism is to avoid OWM web API requests and
+    OWM Weather API requests.
+    The purpose of the caching mechanism is to avoid OWM Weather API requests and
     therefore network traffic: the implementations should be adapted to the
     time/memory requirements of the OWM data clients (i.e: a "slimmer" cache
     with lower lookup times but higher miss rates or a "fatter" cache with

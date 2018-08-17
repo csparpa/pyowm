@@ -1,5 +1,5 @@
 """
-Module containing an abstract base class for JSON OWM web API responses parsing
+Module containing an abstract base class for JSON OWM Weather API responses parsing
 """
 
 from abc import ABCMeta, abstractmethod

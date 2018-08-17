@@ -23,6 +23,7 @@ With PyOWM you can interact programmatically with the following OpenWeatherMap w
  - **Weather API v2.5**, offering
     + current weather data
     + weather forecasts
+    + weather history
  - **Air Pollution API v3.0**, offering data about CO, O3, NO2 and SO2
  - **UV Index API v3.0**, offering data about Ultraviolet exposition
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements

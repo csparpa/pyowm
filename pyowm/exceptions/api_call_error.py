@@ -8,7 +8,7 @@ from pyowm.exceptions import OWMError
 
 class APICallError(OWMError):
     """
-    Error class that represents network/infrastructural failures when invoking OWM web API, in
+    Error class that represents network/infrastructural failures when invoking OWM Weather API, in
     example due to network errors.
 
     :param message: the message of the error
@@ -23,7 +23,7 @@ class APICallError(OWMError):
 
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
-        return ''.join(['Exception in calling OWM web API.', os.linesep,
+        return ''.join(['Exception in calling OWM Weather API.', os.linesep,
                        'Reason: ', self._message, os.linesep,
                        'Caused by: ', str(self._triggering_error)])
 

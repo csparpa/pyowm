@@ -17,7 +17,7 @@ class StationsManager(object):
     it implements CRUD methods on Station entities and the corresponding
     measured datapoints.
 
-    :param API_key: the OWM web API key
+    :param API_key: the OWM Weather API key
     :type API_key: str
     :returns: a *StationsManager* instance
     :raises: *AssertionError* when no API Key is provided

@@ -12,7 +12,7 @@ class AlertManager:
     A manager objects that provides a full interface to OWM Alert API. It implements CRUD methods on Trigger entities
     and read/deletion of related Alert objects
 
-    :param API_key: the OWM web API key
+    :param API_key: the OWM Weather API key
     :type API_key: str
     :returns: an *AlertManager* instance
     :raises: *AssertionError* when no API Key is provided

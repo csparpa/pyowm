@@ -8,7 +8,7 @@ from pyowm.exceptions import OWMError
 class ParseResponseError(OWMError):
     """
     Error class that represents failures when parsing payload data in HTTP
-    responses sent by the OWM web API.
+    responses sent by the OWM Weather API.
 
     :param cause: the message of the error
     :type cause: str
@@ -19,5 +19,5 @@ class ParseResponseError(OWMError):
 
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
-        return ''.join(['Exception in parsing OWM web API response',
+        return ''.join(['Exception in parsing OWM Weather API response',
                         os.linesep, 'Reason: ', self._message])

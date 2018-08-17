@@ -15,7 +15,7 @@ Subpackages
     pyowm.stationsapi30
     pyowm.utils
     pyowm.uvindexapi30
-    pyowm.webapi25
+    pyowm.weatherapi25
 
 Submodules
 ----------

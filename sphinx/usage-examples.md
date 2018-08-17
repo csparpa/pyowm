@@ -16,18 +16,18 @@ Of course you can change your API key at a later time if you need:
     'G09_7IueS-9xN712E'
     >>> owm.set_API_key('6Lp$0UY220_HaSB45')
 
-The same happens with the language: you can speficy in which language the OWM web API will return textual data of weather queries. Language is specified by passing its corresponding two-characters string, eg: ``es``, ``sk``, etc. The default language is English (``en``):
+The same happens with the language: you can speficy in which language the OWM Weather API will return textual data of weather queries. Language is specified by passing its corresponding two-characters string, eg: ``es``, ``sk``, etc. The default language is English (``en``):
 
     >>> owm_en = OWM()              # default language is English
     >>> owm_ru = OWM(language='ru') # Russian
 
-You can obtain the OWM global object related to a specific OWM web API version,
+You can obtain the OWM global object related to a specific OWM Weather API version,
 just specify it after the API key parameter(check before that the version is supported!):
 
     >>> owm = OWM(API_key='abcdef', version='2.5')
 
 If you don't specify an API version number, you'll be provided with the OWM
-object that represents the latest available OWM web API version.
+object that represents the latest available OWM Weather API version.
 
 Advanced users might want to inject into the library a specific configuration: this can be done by injecting the Python path of your personal configuration module as a string into the library instantiation call like this:
 
@@ -36,16 +36,16 @@ Advanced users might want to inject into the library a specific configuration: t
 Be careful! You must provide a well-formatted configuration module for the library to work properly and your module must be in your PYTHONPATH. More on configuration modules formatting can be found [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md#wiki-the-configuration25-module).
 
 # Using a paid (pro) API key subscription
-If you purchased a pro subscription on the OWM web API, you can instantiate the global OWM like this:
+If you purchased a pro subscription on the OWM Weather API, you can instantiate the global OWM like this:
 
     >>> owm = pyowm.OWM('abcdef', subscription_type='pro')
 
 When instantiating paid subscription OWM objects, you must provide an API key.
 
-# OWM web API version 2.5 usage examples
+# OWM Weather API version 2.5 usage examples
 
 ### Setting a local cache provider
-The PyOWM library comes with a built-in support for local caches: OWM web API reponses can be cached in order to save time and bandwidth. The default configuration uses no cache, however the library contains a built-in simple LRU cache implementation that can be plugged in by changing the ``configuration25.py`` module and specifying a ``LRUCache`` class instance:
+The PyOWM library comes with a built-in support for local caches: OWM Weather API reponses can be cached in order to save time and bandwidth. The default configuration uses no cache, however the library contains a built-in simple LRU cache implementation that can be plugged in by changing the ``configuration25.py`` module and specifying a ``LRUCache`` class instance:
 
     ...
     # Cache provider to be used
@@ -205,7 +205,7 @@ The last call returns the OWM city ID of the location - refer to the
 for details.
 
 ### Getting weather forecasts
-The OWM web API currently provides weather forecasts that are sampled :
+The OWM Weather API currently provides weather forecasts that are sampled :
 
 + every 3 hours
 + every day (24 hours)
@@ -476,7 +476,7 @@ If you have no specific need to handle the raw data by yourself, you can leverag
     >>> his.wind_series()
     [(1381327200, 4.7), (1381327260, 4.7), (1381327320, 4.9), ...]
 
-Each of the ``*_series()`` methods returns a list of tuples, each tuple being a couple in the form: (timestamp, measured value). When in the series values are not provided by the OWM web API, the numeric value is ``None``. These convenience methods are especially useful if you need to chart the historic time series of the measured physical entities.
+Each of the ``*_series()`` methods returns a list of tuples, each tuple being a couple in the form: (timestamp, measured value). When in the series values are not provided by the OWM Weather API, the numeric value is ``None``. These convenience methods are especially useful if you need to chart the historic time series of the measured physical entities.
 
 You can also get minimum, maximum and average values of each series:
 
@@ -504,15 +504,15 @@ The PyOWM object instances can be dumped to JSON or XML strings:
     #... and to XML
     >>> w.to_XML()
     <?xml version='1.0' encoding='utf8'?>
-    <weather xmlns:w="http://github.com/csparpa/pyowm/tree/master/pyowm/webapi25/xsd/weather.xsd">
+    <weather xmlns:w="http://github.com/csparpa/pyowm/tree/master/pyowm/weatherapi25/xsd/weather.xsd">
     <w:status>Clouds</w:status>[...]</weather>
 
 When you dump to XML you can decide wether or not to print the standard XML encoding declaration line and XML Name Schema prefixes using the relative switches:
 
     >>> w.to_XML(xml_declaration=True, xmlns=False)
 
-### Checking if OWM web API is online
-You can check out the OWM web API service availability:
+### Checking if OWM Weather API is online
+You can check out the OWM Weather API service availability:
 
     >>> owm.is_API_online()
     True
@@ -521,6 +521,6 @@ You can check out the OWM web API service availability:
 Most of PyOWM objects can be pretty-printed for a quick introspection:
 
     >>> print w
-    <pyowm.webapi25.weather.Weather - reference time=2013-12-18 16:41:00, status=Drizzle>
+    <pyowm.weatherapi25.weather.Weather - reference time=2013-12-18 16:41:00, status=Drizzle>
     >>> print w.get_location()
-    <pyowm.webapi25.location.Location - ID=1234, name=Barcelona, lon=2.9, lat=41.23>d
+    <pyowm.weatherapi25.location.Location - ID=1234, name=Barcelona, lon=2.9, lat=41.23>d

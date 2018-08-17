@@ -2,7 +2,7 @@ import requests
 import json
 from pyowm.caches import nullcache
 from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
-from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
+from pyowm.weatherapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
     API_SUBSCRIPTION_SUBDOMAINS, VERIFY_SSL_CERTS
 
 

@@ -31,7 +31,7 @@ class UVIndex(object):
     :param value: the observed UV intensity value
     :type value: float
     :param reception_time: GMT UNIXtime telling when the observation has
-        been received from the OWM web API
+        been received from the OWM Weather API
     :type reception_time: int
     :returns: an *UVIndex* instance
     :raises: *ValueError* when negative values are provided as reception time or
@@ -54,7 +54,7 @@ class UVIndex(object):
     def get_reference_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the UV has been observed
-          from the OWM web API
+          from the OWM Weather API
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time

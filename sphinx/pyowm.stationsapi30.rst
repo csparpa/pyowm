@@ -55,7 +55,7 @@ pyowm.stationsapi30.stations_manager module
 Module contents
 ---------------
 
-.. automodule:: pyowm.webapi25
+.. automodule:: pyowm.stationsapi30
     :members:
     :undoc-members:
     :show-inheritance:

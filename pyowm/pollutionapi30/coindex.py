@@ -24,7 +24,7 @@ class COIndex(object):
     :param co_samples: the CO samples
     :type co_samples: list of dicts
     :param reception_time: GMT UNIXtime telling when the CO observation has
-        been received from the OWM web API
+        been received from the OWM Weather API
     :type reception_time: int
     :returns: an *COIndex* instance
     :raises: *ValueError* when negative values are provided as reception time,
@@ -64,7 +64,7 @@ class COIndex(object):
     def get_reception_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the CO observation has been received
-        from the OWM web API
+        from the OWM Weather API
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
