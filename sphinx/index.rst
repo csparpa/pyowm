@@ -113,11 +113,11 @@ Distribution packages
          Yaourt -S python-owm   # Python 3.x (https://aur.archlinux.org/packages/python2-owm)
 
 
+PyOWM v2 usage documentation
+----------------------------
 
-Examples and Guides
--------------------
-
-Here are some usage examples for the different OWM APIs
+Here are some usage examples for the different OWM APIs: these examples and guides refer to PyOWM library
+versions belonging to the 2.x stream
 
 
 Weather API examples
@@ -125,8 +125,8 @@ Weather API examples
 .. toctree::
    :maxdepth: 1
 
-   object-model
-   usage-examples
+   usage-examples-v2/weather-api-usage-examples
+   usage-examples-v2/weather-api-object-model
 
 
 UV API examples
@@ -134,7 +134,7 @@ UV API examples
 .. toctree::
    :maxdepth: 1
 
-   uv-api-usage-examples
+   usage-examples-v2/uv-api-usage-examples
 
 
 Air Pollution API examples
@@ -143,22 +143,26 @@ Air Pollution API examples
 .. toctree::
    :maxdepth: 1
 
-   air-pollution-api-usage-examples
+   usage-examples-v2/air-pollution-api-usage-examples
 
 Stations API examples
 ~~~~~~~~~~~~~~~~~~~~~
 .. toctree::
    :maxdepth: 1
 
-   stations-api-usage-examples
+   usage-examples-v2/stations-api-usage-examples
 
 Alerts API examples
 ~~~~~~~~~~~~~~~~~~~
 .. toctree::
    :maxdepth: 1
 
-   alerts-api-usage-examples
+   usage-examples-v2/alerts-api-usage-examples
 
+
+PyOWM v3 usage documentation
+----------------------------
+Coming soon!
 
 
 PyOWM software API documentation
