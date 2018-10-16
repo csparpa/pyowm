@@ -8,6 +8,14 @@ PyOWM
 
 Welcome to PyOWM's documentation!
 
+.. image:: ../logos/180x180.png
+   :width: 180px
+   :height: 180px
+   :scale: 100 %
+   :alt: PyOWM
+   :align: center
+
+
 What is PyOWM?
 --------------
 
