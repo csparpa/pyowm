@@ -22,7 +22,7 @@ from tests.unit.weatherapi25.json_test_responses import (OBSERVATION_JSON,
                                                          STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
                                                          DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
                                                          STATION_OBSERVATION_JSON, STATION_AT_COORDS_JSON,
-                                                         WEATHER_AT_STATION_IN_BBOX_JSON)
+                                                         WEATHER_AT_STATION_IN_BBOX_JSON, WEATHER_AT_PLACES_IN_BBOX_JSON)
 from tests.unit.uvindexapi30.test_uvindexparser import UVINDEX_JSON
 from tests.unit.uvindexapi30.test_uvindexlistparser import UVINDEX_LIST_JSON
 from tests.unit.pollutionapi30.test_parsers import COINDEX_JSON, OZONE_JSON, NO2INDEX_JSON, SO2INDEX_JSON
@@ -134,6 +134,9 @@ class TestOWM25(unittest.TestCase):
 
     def mock_api_call_returning_weather_at_stations_in_bbox(self, uri, params=None, headers=None):
         return 200, WEATHER_AT_STATION_IN_BBOX_JSON
+
+    def mock_api_call_returning_weather_at_places_in_bbox(self, uri, params=None, headers=None):
+        return 200, WEATHER_AT_PLACES_IN_BBOX_JSON
 
     def mock_api_call_returning_station_at_coords(self, uri, params=None, headers=None):
         return 200, STATION_AT_COORDS_JSON
@@ -741,6 +744,29 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_weather(), Weather))
             self.assertTrue(isinstance(result.get_location(), Location))
             self.assertTrue(result.get_reception_time() is not None)
+
+    def test_weather_at_places_in_bbox_fails_with_wrong_params(self):
+        self.assertRaises(AssertionError, OWM25.weather_at_places_in_bbox,
+                          self.__test_instance, 12, 32, 15, 37, 'zoom')
+        self.assertRaises(ValueError, OWM25.weather_at_places_in_bbox,
+                          self.__test_instance, 12, 32, 15, 37, -30)
+        self.assertRaises(AssertionError, OWM25.weather_at_places_in_bbox,
+                          self.__test_instance, 12, 32, 15, 37, 10, 'cluster')
+
+    def test_weather_at_places_in_bbox(self):
+        original_func = HttpClient.cacheable_get_json
+        HttpClient.cacheable_get_json = \
+            self.mock_api_call_returning_weather_at_places_in_bbox
+        results = self.__test_instance\
+                .weather_at_places_in_bbox(12,32,15,37,10)
+        HttpClient.cacheable_get_json = original_func
+        self.assertTrue(isinstance(results, list))
+        for result in results:
+            self.assertTrue(isinstance(result, Observation))
+            self.assertTrue(isinstance(result.get_weather(), Weather))
+            self.assertTrue(isinstance(result.get_location(), Location))
+            self.assertTrue(result.get_reception_time() is not None)
+
 
     def test_station_tick_history(self):
         original_func = HttpClient.cacheable_get_json

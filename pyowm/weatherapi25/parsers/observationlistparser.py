@@ -41,15 +41,19 @@ class ObservationListParser(JSONParser):
             # of HTTP error status codes by the OWM API 2.5. This mechanism is
             # supposed to be deprecated as soon as the API fully adopts HTTP for
             # conveying errors to the clients
-            if d['cod'] == "404":
-                print("OWM API: data not found - response payload: " + \
-                      json.dumps(d))
-                return None
-            if d['cod'] != "200":
-                raise APIResponseError("OWM API: error - response payload: " + json.dumps(d), d['cod'])
+            if d['cod'] == "200" or d['cod'] == 200:
+                pass
+            else:
+                if d['cod'] == "404" or d['cod'] == 404:
+                    print("OWM API: data not found - response payload: " + json.dumps(d))
+                    return None
+                else:
+                    raise APIResponseError("OWM API: error - response payload: " + json.dumps(d), str(d['cod']))
 
         # Handle the case when no results are found
         if 'count' in d and d['count'] == "0":
+            return []
+        if 'cnt' in d and d['cnt'] == 0:
             return []
         if 'list' in d:
             return [observation_parser.parse_JSON(json.dumps(item)) \

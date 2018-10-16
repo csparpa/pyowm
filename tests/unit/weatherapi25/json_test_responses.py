@@ -26,6 +26,16 @@ WEATHER_AT_STATION_IN_BBOX_JSON = '{"cnt":29,"cod":"200","list":[{"clouds":'\
     ',"dt":1419210000,"id":7343,"main":{"pressure":1007,"temp":0},"name":'\
     '"UWSS","rang":50,"type":1,"wind":{"deg":180,"speed":3}}]}' 
 
+WEATHER_AT_PLACES_IN_BBOX_JSON = '{"cod":"200","calctime":0.3107,"cnt":2,' \
+    '"list":[{"id":2208791,"name":"Yafran","coord":{"lon":12.52859,"lat":32.06329},"main":{"temp":9.68,"temp_min":9.681,' \
+    '"temp_max":9.681,"pressure":961.02,"sea_level":1036.82,"grnd_level":961.02,"humidity":85},"dt":1485784982,' \
+    '"wind":{"speed":3.96,"deg":356.5},"rain":{"3h":0.255},"clouds":{"all":88},"weather":[{"id":500,"main":"Rain",' \
+    '"description":"lightrain","icon":"10d"}]},{"id":2208425,"name":"Zuwarah","coord":{"lon":12.08199,"lat":32.931198},' \
+    '"main":{"temp":15.36,"temp_min":15.356,"temp_max":15.356,"pressure":1036.81,"sea_level":1037.79,' \
+    '"grnd_level":1036.81,"humidity":89},"dt":1485784982,"wind":{"speed":5.46,"deg":30.0002},"clouds":{"all":56},' \
+    '"weather":[{"id":803,"main":"Clouds","description":"brokenclouds","icon":"04d"}]}]}'
+
+
 SEARCH_RESULTS_JSON = '{"cod": "200", "count": 2, "list": [{"clouds": {"all": ' \
     '20}, "coord": {"lat": 51.50853, "lon": -0.12573999999999999}, "dt": 1378237178,' \
     ' "id": 2643743, "main": {"humidity": 56, "pressure": 1025, "temp": ' \

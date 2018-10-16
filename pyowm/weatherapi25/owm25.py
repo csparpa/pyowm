@@ -8,7 +8,7 @@ from pyowm.weatherapi25.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL)
+    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, BBOX_CITY_URL)
 from pyowm.weatherapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
 from pyowm.abstractions.decorators import deprecated
@@ -433,6 +433,56 @@ class OWM25(owm.OWM):
         if limit is not None:
             params['cnt'] = limit
         uri = http_client.HttpClient.to_url(BBOX_STATION_URL,
+                                            self._API_key,
+                                            self._subscription_type,
+                                            self._use_ssl)
+        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
+        return self._parsers['observation_list'].parse_JSON(json_data)
+
+    def weather_at_places_in_bbox(self, lon_left, lat_bottom, lon_right, lat_top,
+                                  zoom=10, cluster=False):
+        """
+        Queries the OWM Weather API for the weather currently observed by
+        meteostations inside the bounding box of latitude/longitude coords.
+
+        :param lat_top: latitude for top margin of bounding box, must be
+            between -90.0 and 90.0
+        :type lat_top: int/float
+        :param lon_left: longitude for left margin of bounding box
+            must be between -180.0 and 180.0
+        :type lon_left: int/float
+        :param lat_bottom: latitude for the bottom margin of bounding box, must
+            be between -90.0 and 90.0
+        :type lat_bottom: int/float
+        :param lon_right: longitude for the right margin of bounding box,
+            must be between -180.0 and 180.0
+        :type lon_right: int/float
+        :param zoom: zoom level (defaults to: 10)
+        :type zoom: int
+        :param cluster: use server clustering of points
+        :type cluster: bool
+        :returns: a list of *Observation* objects or ``None`` if no weather
+            data is available
+        :raises: *ParseResponseException* when OWM Weather API responses' data
+            cannot be parsed, *APICallException* when OWM Weather API can not be
+            reached, *ValueError* when coordinates values are out of bounds or
+            negative values are provided for limit
+        """
+        geo.assert_is_lon(lon_left)
+        geo.assert_is_lon(lon_right)
+        geo.assert_is_lat(lat_bottom)
+        geo.assert_is_lat(lat_top)
+        assert type(zoom) is int, "'zoom' must be an int"
+        if zoom <= 0:
+            raise ValueError("'zoom' must greater than zero")
+        assert type(cluster) is bool, "'cluster' must be a bool"
+        params = {'bbox': ','.join([str(lon_left),
+                                    str(lat_bottom),
+                                    str(lon_right),
+                                    str(lat_top),
+                                    str(zoom)]),
+                  'cluster': 'yes' if cluster else 'no'}
+        uri = http_client.HttpClient.to_url(BBOX_CITY_URL,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
