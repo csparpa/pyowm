@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'requests>=2.18.2,<3',
-        'geojson>=2.3.0,<2.4'
+        'geojson>=2.3.0,<3'
     ],
     python_requires='>=3.4',
     classifiers=[
@@ -41,6 +41,6 @@ setup(
     package_data={
         '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
     },
-    keywords='openweathermap web api client wrapper weather forecast data owm pollution sdk meteostation',
+    keywords='openweathermap web api client weather forecast uv alerting owm pollution meteostation agro agriculture',
     license='MIT'
 )
