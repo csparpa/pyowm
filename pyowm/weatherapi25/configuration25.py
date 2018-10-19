@@ -23,7 +23,6 @@ VERIFY_SSL_CERTS = True
 # OWM Weather API URLs
 ROOT_API_URL = 'http://%s.openweathermap.org/data/2.5'
 ROOT_HISTORY_URL = 'http://history.openweathermap.org/data/2.5'
-ICONS_BASE_URL = 'http://openweathermap.org/img/w/%s.png'
 OBSERVATION_URL = ROOT_API_URL + '/weather'
 GROUP_OBSERVATIONS_URL = ROOT_API_URL + '/group'
 STATION_URL = ROOT_API_URL + '/station'
