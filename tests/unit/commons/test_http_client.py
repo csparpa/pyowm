@@ -11,6 +11,7 @@ class MockResponse:
     def __init__(self, status, payload):
         self.status_code = status
         self.text = payload
+        self.content = payload
 
     def json(self):
         return json.loads(self.text)
@@ -233,3 +234,15 @@ class TestHTTPClient(unittest.TestCase):
         except api_call_error.APICallTimeoutError:
             requests.get = self.requests_original_get
 
+    def test_get_png(self):
+        expected_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x01\x03\x00\x00\x00%\xdbV\xca\x00\x00\x00\x03PLTE\x00p\xff\xa5G\xab\xa1\x00\x00\x00\x01tRNS\xcc\xd24V\xfd\x00\x00\x00\nIDATx\x9ccb\x00\x00\x00\x06\x00\x0367|\xa8\x00\x00\x00\x00IEND\xaeB`\x82'
+
+        def monkey_patched_get(uri, stream=True, params=None, headers=None, timeout=None,
+                               verify=False):
+            return MockResponse(200, expected_data)
+
+        requests.get = monkey_patched_get
+        status, data = HttpClient().get_png('http://anyurl.com')
+        self.assertIsInstance(data, bytes)
+        self.assertEqual(expected_data, data)
+        requests.get = self.requests_original_get
