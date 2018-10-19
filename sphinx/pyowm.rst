@@ -13,6 +13,7 @@ Subpackages
     pyowm.exceptions
     pyowm.pollutionapi30
     pyowm.stationsapi30
+    pyowm.tiles
     pyowm.utils
     pyowm.uvindexapi30
     pyowm.weatherapi25
