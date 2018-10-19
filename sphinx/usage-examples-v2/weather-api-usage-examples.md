@@ -180,6 +180,9 @@ and then access weather data using the following methods:
 
     >>> w.get_weather_icon_name()                          # Get weather-related icon name
     '02d'
+    
+    >>> w.get_weather_icon_url()                          # Get weather-related icon URL
+    'http://openweathermap.org/img/w/02d.png'
 
     >>> w.get_sunrise_time()                               # Sunrise time (GMT UNIXtime or ISO 8601)
     1377862896L

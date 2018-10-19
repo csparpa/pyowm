@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
 from pyowm.utils import timeformatutils, temputils, xmlutils
+from pyowm.weatherapi25.configuration25 import ICONS_BASE_URL
 
 
 class Weather(object):
@@ -250,6 +251,14 @@ class Weather(object):
 
         """
         return self._weather_icon_name
+
+    def get_weather_icon_url(self):
+        """Returns weather-related icon URL as a Unicode string.
+
+        :returns: the icon URL.
+
+        """
+        return ICONS_BASE_URL % self._weather_icon_name
 
     def get_visibility_distance(self):
         """Returns the visibility distance as a float
