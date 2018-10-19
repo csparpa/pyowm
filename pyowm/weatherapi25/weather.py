@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
 from pyowm.utils import timeformatutils, temputils, xmlutils
-from pyowm.weatherapi25.configuration25 import ICONS_BASE_URL
+from pyowm.weatherapi25.uris import ICONS_BASE_URL
 
 
 class Weather(object):
