@@ -5,7 +5,7 @@ class MapLayerEnum:
     """
     PRECIPITATION = 'precipitation_new'
     WIND = 'wind_new'
-    TEMPERATURE = 'temperature_new'
+    TEMPERATURE = 'temp_new'
     PRESSURE = 'pressure_new'
 
     def items(self):
