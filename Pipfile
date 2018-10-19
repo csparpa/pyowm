@@ -13,4 +13,4 @@ twine = "==1.11.0"
 
 [packages]
 requests = "<3,==2.18.2"
-geojson = "<2.4,==2.3.0"
+geojson = "<3,==2.3.0"
