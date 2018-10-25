@@ -1,7 +1,7 @@
 [![logo](logos/180x180.png)](https://github.com/csparpa)
 
 #  PyOWM  
-A Python wrapper around the OpenWeatherMap API
+**A Python wrapper around OpenWeatherMap web APIs**
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
 [![Latest Release Documentation](https://readthedocs.org/projects/pyowm/badge/?version=stable)](https://pyowm.readthedocs.org/en/stable/)
@@ -15,6 +15,18 @@ A Python wrapper around the OpenWeatherMap API
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs.
 
 It allows quick and easy consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
+
+With PyOWM you can integrate into your code any of the following OpenWeatherMap web APIs:
+
+ - *Weather API v2.5*, offering
+    - current weather data
+    - weather forecasts
+    -+ weather history
+ - *Air Pollution API v3.0*, offering data about CO, O3, NO2 and SO2
+ - *UV Index API v3.0*, offering data about Ultraviolet exposition
+ - *Stations API v3.0*, allowing to create and manage meteostation and publish local weather measurements
+ - *Weather Alerts API v3.0*, allowing to set triggers on weather conditions and areas and poll for spawned alerts
+ - *Image tiles* for several map layers provided by OWM
 
 PyOWM runs on Python 2.7 and Python 3.4+ (but watch out! Python 2.x will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
 

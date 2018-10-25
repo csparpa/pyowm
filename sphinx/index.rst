@@ -37,8 +37,8 @@ With PyOWM you can interact programmatically with the following OpenWeatherMap w
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements
  - **Weather Alerts API v3.0**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
 
+And You can also get **image tiles** for several map layers provided by OWM
 
-and more will be supported in the future. Stay tuned!
 
 The documentation of OWM APIs can be found on the OWM Website_
 
