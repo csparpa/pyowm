@@ -39,7 +39,7 @@ class Tile:
 
         :return: `pywom.utils.geo.Polygon` instance
         """
-        lon_left, lat_bottom, lon_right, lat_top = Tile.tile_numbers_to_bbox(self.x, self.y, self.zoom)
+        lon_left, lat_bottom, lon_right, lat_top = Tile.tile_coords_to_bbox(self.x, self.y, self.zoom)
         print(lon_left, lat_bottom, lon_right, lat_top)
         return Polygon([[[lon_left, lat_top],
                        [lon_right, lat_top],
@@ -80,7 +80,7 @@ class Tile:
         return x, y
 
     @classmethod
-    def tile_numbers_to_bbox(cls, x, y, zoom):
+    def tile_coords_to_bbox(cls, x, y, zoom):
         """
         Calculates the lon/lat estrema of the bounding box corresponding to specific tile coordinates. Output coodinates
         are in degrees and in the Mercator Projection (http://en.wikipedia.org/wiki/Mercator_projection)

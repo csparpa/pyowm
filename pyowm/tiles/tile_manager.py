@@ -15,8 +15,7 @@ class TileManager(object):
 
     :param API_key: the OWM Weather API key
     :type API_key: str
-    :param map_layer: the layer for which you want tiles fetced. Allowed map layers are specified by the
-    `pyowm.tiles.enum.MapLayerEnum` enumerator class.
+    :param map_layer: the layer for which you want tiles fetched. Allowed map layers are specified by the `pyowm.tiles.enum.MapLayerEnum` enumerator class.
     :type map_layer: str
     :returns: a *TileManager* instance
     :raises: *AssertionError* when no API Key or no map layer is provided, or map layer name is not a string
