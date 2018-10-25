@@ -167,6 +167,13 @@ Alerts API examples
 
    usage-examples-v2/alerts-api-usage-examples
 
+Map tiles client examples
+~~~~~~~~~~~~~~~~~~~~~~~~~
+.. toctree::
+   :maxdepth: 1
+
+   usage-examples-v2/map-tiles-client-examples.md
+
 
 PyOWM v3 usage documentation
 ----------------------------
