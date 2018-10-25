@@ -22,6 +22,7 @@ from pyowm.weatherapi25 import forecaster
 from pyowm.weatherapi25 import historian
 from pyowm.stationsapi30 import stations_manager
 from pyowm.alertapi30 import alert_manager
+from pyowm.tiles import tile_manager
 
 
 class OWM25(owm.OWM):
@@ -168,6 +169,14 @@ class OWM25(owm.OWM):
         :return: an *AlertManager* instance
         """
         return alert_manager.AlertManager(self._API_key)
+
+    def tile_manager(self, layer_name):
+        """
+        Gives a `pyowm.tiles.tile_manager.TileManager` instance that can be used to fetch tile images.
+        :param layer_name: the layer name for the tiles (values can be looked up on `pyowm.tiles.enums.MapLayerEnum`)
+        :return: a `pyowm.tiles.tile_manager.TileManager` instance
+        """
+        return tile_manager.TileManager(self._API_key, map_layer=layer_name)
 
     def is_API_online(self):
         """

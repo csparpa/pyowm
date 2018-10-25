@@ -3,6 +3,8 @@ Object that can download tile images at various zoom levels
 """
 
 from pyowm.commons.http_client import HttpClient
+from pyowm.commons.image import Image
+from pyowm.tiles.tile import Tile
 from pyowm.tiles.uris import ROOT_TILE_URL
 
 
@@ -30,4 +32,23 @@ class TileManager(object):
         self.http_client = HttpClient()
 
     def get_tile(self, x, y, zoom):
-        raise NotImplementedError()
+        """
+        Retrieves the tile having the specified coordinates and zoom level
+
+        :param x: horizontal tile number in OWM tile reference system
+        :type x: int
+        :param y: vertical tile number in OWM tile reference system
+        :type y: int
+        :param zoom: zoom level for the tile
+        :type zoom: int
+        :returns: a `pyowm.tiles.Tile` instance
+
+        """
+        status, data = self.http_client.get_png(
+            ROOT_TILE_URL % self.map_layer + '/%s/%s/%s.png' % (zoom, x, y),
+            params={'appid': self.API_key})
+        img = Image(data, 'image/png')
+        return Tile(x, y, zoom, self.map_layer, img)
+
+    def __repr__(self):
+        return "<%s.%s - layer name=%s>" % (__name__, self.__class__.__name__, self.map_layer)

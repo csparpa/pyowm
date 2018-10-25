@@ -42,6 +42,7 @@ class HttpClient(object):
         else:
             headers.update({'Accept': 'image/png'})
         try:
+            print(uri)
             resp = requests.get(uri, stream=True, params=params, headers=headers,
                                 timeout=self.timeout, verify=self.verify_ssl_certs)
         except requests.exceptions.SSLError as e:
