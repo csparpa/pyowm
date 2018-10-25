@@ -159,6 +159,9 @@ class Point(Geometry):
         result._geom = geom
         return result
 
+    def __repr__(self):
+        return "<%s.%s - lon=%s, lat=%s>" % (__name__, self.__class__.__name__, self.lon, self.lat)
+
 
 class MultiPoint(Geometry):
     """
@@ -251,6 +254,16 @@ class Polygon(Geometry):
 
     def as_dict(self):
         return json.loads(self.geojson())
+
+    @property
+    def points(self):
+        """
+        Returns the list of *Point* instances representing the points of the polygon
+        :return: list of *Point* objects
+        """
+        feature = geojson.Feature(geometry=self._geom)
+        points_coords = list(geojson.utils.coords(feature))
+        return [Point(p[0], p[1]) for p in points_coords]
 
     @classmethod
     def from_dict(self, the_dict):
