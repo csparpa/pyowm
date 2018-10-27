@@ -1,37 +1,16 @@
+language: python
 python:
   - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
-language: python
-jobs:
-  include:
-    - stage: unittesting
-      name: "run unit tests, coverage and local installation test"
-      install:
-        - pip install --upgrade pip
-        - pip install coverage tox-travis virtualenv coveralls
-      script:
-        - tox
-        - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
-        - bash tests/local_installation_test.sh
-    - stage: deploy
-      name: "deploy to testpypi"
-      script:
-        - echo "Deploying to TestPyPI"
-      deploy:
-        provider: pypi
-        distributions: "sdist bdist_egg bdist_wheel"
-        user: csparpa
-        server: https://test.pypi.org/legacy # Remove to deploy to real PyPI
-        password:
-          secure: "iedpYQh2nQVy9qGg0Qx/l1eSjhoWgFc5g6GQX7rERPcco8ylAFdnyaGylWA9LsrDk4rjwkuKb7JLn3LjuBQ8KY8c4dZ3dBpsXGwTbPQ20MSBU9wWVBSk+U9/b8mQBFPoSJJh2Y6GaNwPOJjO9AhfrNdFOd1pJjO+ohwPs3ZTNy0="
-        on:
-          branch: develop
-          repo: csparpa/pyowm
-stages:
-  - unittesting
-  - deploy
+install:
+  - pip install --upgrade pip
+  - pip install coverage tox-travis virtualenv coveralls
+script:
+  - tox
+  - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+  - bash tests/local_installation_test.sh
 after_success:
   coveralls
 notifications:
@@ -39,6 +18,16 @@ notifications:
     on_failure: change
 dist: xenial
 sudo: false
+deploy:
+  on:
+    branch: develop
+    repo: csparpa/pyowm
+  provider: pypi
+  distributions: "sdist bdist_egg bdist_wheel"
+  user: csparpa
+  server: https://test.pypi.org/legacy/ # Remove to deploy to real PyPI
+  password:
+    secure: "iedpYQh2nQVy9qGg0Qx/l1eSjhoWgFc5g6GQX7rERPcco8ylAFdnyaGylWA9LsrDk4rjwkuKb7JLn3LjuBQ8KY8c4dZ3dBpsXGwTbPQ20MSBU9wWVBSk+U9/b8mQBFPoSJJh2Y6GaNwPOJjO9AhfrNdFOd1pJjO+ohwPs3ZTNy0="
 
 
 
