@@ -3,7 +3,7 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7"
+  - "3.7-dev"
 install:
   - pip install --upgrade pip
   - pip install coverage tox-travis virtualenv coveralls
@@ -24,6 +24,7 @@ deploy:
     repo: csparpa/pyowm
   provider: pypi
   distributions: "sdist bdist_egg bdist_wheel"
+  skip_existing: true
   user: csparpa
   server: https://test.pypi.org/legacy/ # Remove to deploy to real PyPI
   password:
