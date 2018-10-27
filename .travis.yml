@@ -2,19 +2,19 @@ language: python
 python:
   - "3.4"
   - "3.5"
-  - "3.6"
+  - "3.6".
   - "3.7-dev"
 install:
   - pip install --upgrade pip
   - pip install coverage tox-travis virtualenv coveralls
+script:
+  - tox
+  - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+  - bash tests/local_installation_test.sh
 jobs:
   include:
-    - stage: unit tests
-      script:
-        - tox
-        - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
-        - bash tests/local_installation_test.sh
-    - stage: deploy to testpypi
+    - stage: deploy
+      name: "deploy to testpypi"
       deploy:
         provider: pypi
         distributions: "sdist bdist_egg bdist_wheel"
