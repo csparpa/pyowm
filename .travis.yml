@@ -1,4 +1,11 @@
 language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7-dev"
+  - "3.8-dev"
+script: bash tests/run_unit_tests.sh
 
 notifications:
   email:
@@ -7,34 +14,11 @@ env:
     global:
       - TEST_PYPI_URL=https://test.pypi.org/legacy/
       - PYPI_URL=https://pypi.python.org/pypi
-matrix:
-  include:
-  - os: linux
-    dist: xenial
-    sudo: false
-    python: '3.4'
-  - os: linux
-    dist: xenial
-    sudo: false
-    python: '3.5'
-  - os: linux
-    dist: xenial
-    sudo: false
-    python: '3.6'
-  - os: linux
-    dist: xenial
-    sudo: false
-    python: '3.7-dev'
-  - os: linux
-    dist: xenial
-    sudo: false
-    python: '3.8-dev'
-
 install:
   - pip install --upgrade pip && pip install coverage tox-travis virtualenv coveralls twine
 
 stages:
-  - unit_tests
+  - test
   - local_installation_test
   - coverage
   - deploy_to_pypi
@@ -42,8 +26,6 @@ stages:
 
 jobs:
   include:
-    - stage: unit_tests
-      script: bash tests/run_unit_tests.sh
     - stage: local_installation_test
       script: bash tests/local_installation_test.sh
     - stage: coverage
