@@ -19,14 +19,15 @@ stages:
   - deploy_to_pypi
   - pypi_installation_test
 jobs:
-  python:
-    - "3.4"
-    - "3.5"
-    - "3.6"
-    - "3.7-dev"
+
   include:
     - stage: unit_tests
       script: bash tests/run_unit_tests.sh
+      python:
+        - "3.4"
+        - "3.5"
+        - "3.6"
+        - "3.7-dev"
     - stage: local_installation_test
       script: bash tests/local_installation_test.sh
     - stage: coverage
