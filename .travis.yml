@@ -20,6 +20,7 @@ stages:
   - test
   - local_installation_test
   - coverage
+  - build_docs
   - deploy_to_pypi
   - pypi_installation_test
 
@@ -29,6 +30,8 @@ jobs:
       script: bash tests/local_installation_test.sh
     - stage: coverage
       script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+    - stage: build_docs
+      script: bash scripts/generate_sphinx_docs.sh
     - stage: deploy_to_pypi
       script: bash deploy/deploy_to_pypi.sh
     - stage: pypi_installation_test

@@ -4,7 +4,7 @@
 #  - deploy to Test PyPI upon every push
 
 if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
-    echo '*** Will build the DEVELOP branch and publish to Test PyPI ( $TEST_PYPI_URL )'
+    echo '*** Will build the DEVELOP branch and publish to Test PyPI at $TEST_PYPI_URL'
 
     # Get env variables
     export INDEX_URL="$TEST_PYPI_URL"
@@ -12,9 +12,11 @@ if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
     export PYPI_PASSWORD="$TEST_PYPI_PASSWORD"
 
     # Get commit SHA and patch development release number
-    sed -i -e "s/constants.PYOWM_VERSION/constants.PYOWM_VERSION+\"-r${TRAVIS_COMMIT}\"/g" setup.py
+    TS="$(date "+%Y%m%d%H%M%S")"
+    echo '*** Development release number is: $TS'
+    sed -i -e "s/constants.PYOWM_VERSION/constants.PYOWM_VERSION+\"-r${TS}\"/g" setup.py
 else
-    echo 'Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE'
+    echo '*** Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE'
     exit 5
 fi
 
@@ -33,4 +35,8 @@ twine upload --repository-url "$INDEX_URL" \
              --password "$PYPI_PASSWORD" \
              --skip-existing \
              dist/*
+if [ "$?" -ne 0 ]; then
+    exit 7
+fi
+
 echo '*** Done'
