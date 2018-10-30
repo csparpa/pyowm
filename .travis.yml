@@ -16,6 +16,7 @@ env:
 install:
   - pip install --upgrade pip
   - pip install coverage tox-travis virtualenv coveralls
+script: tox
 stages:
   - test
   - local_installation_test
@@ -24,8 +25,6 @@ stages:
   - pypi_installation_test
 jobs:
   include:
-    - stage: test
-      script: tox
     - stage: local_installation_test
       script: bash tests/local_installation_test.sh
     - stage: coverage
