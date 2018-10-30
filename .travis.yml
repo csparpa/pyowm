@@ -5,7 +5,7 @@ python:
   - "3.6"
   - "3.7-dev"
   - "3.8-dev"
-script: bash tests/run_unit_tests.sh
+script: bash tests/unit/run_unit_tests.sh
 
 notifications:
   email:
