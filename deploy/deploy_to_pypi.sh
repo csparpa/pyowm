@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # Rules:
-#  - deploy to Test PyPI upon every push
+#  - deploy to Test PyPI upon every push on the develop branch
+#  - only deploy to the real PyPI upon merged pull requests on the master branch
 
 if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
-    echo '*** Will build the DEVELOP branch and publish to Test PyPI at $TEST_PYPI_URL'
+    echo "*** Will build the DEVELOP branch and publish to Test PyPI at $TEST_PYPI_URL"
 
     # Get env variables
     export INDEX_URL="$TEST_PYPI_URL"
@@ -13,10 +14,19 @@ if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
 
     # Get commit SHA and patch development release number
     TS="$(date "+%Y%m%d%H%M%S")"
-    echo '*** Development release number is: $TS'
-    sed -i -e "s/constants.PYOWM_VERSION/constants.PYOWM_VERSION+\"-r${TS}\"/g" setup.py
+    echo "*** Development release number is: post$TS"
+    sed -i -e "s/constants.PYOWM_VERSION/constants.PYOWM_VERSION+\".post${TS}\"/g" setup.py
+
+elif [ $TRAVIS_BRANCH = "master" ] && [[ $TRAVIS_EVENT_TYPE == "pull_request" ]]; then
+    echo "*** Will build the MASTER branch and publish to PyPI at $PYPI_URL"
+
+    # Get env variables
+    export INDEX_URL="$PYPI_URL"
+    export PYPI_USERNAME="$PYPI_USERNAME"
+    export PYPI_PASSWORD="$PYPI_PASSWORD"
+
 else
-    echo '*** Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE'
+    echo "*** Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE"
     exit 5
 fi
 

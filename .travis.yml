@@ -27,12 +27,14 @@ stages:
 jobs:
   include:
     - stage: local_installation_test
+      if: branch = master
       script: bash tests/local_installation_test.sh
     - stage: coverage
       script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
     - stage: build_docs
-      script: bash scripts/generate_sphinx_docs.sh
+      script: cd sphinx && make clean && make html
     - stage: deploy_to_pypi
       script: bash deploy/deploy_to_pypi.sh
     - stage: pypi_installation_test
+      if: branch = master
       script: bash tests/pypi_installation_test.sh
