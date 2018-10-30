@@ -5,9 +5,14 @@
 
 if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
     echo '*** Will build the DEVELOP branch and publish to Test PyPI ( $TEST_PYPI_URL )'
+
+    # Get env variables
     export INDEX_URL="$TEST_PYPI_URL"
     export PYPI_USERNAME="$TEST_PYPI_USERNAME"
     export PYPI_PASSWORD="$TEST_PYPI_PASSWORD"
+
+    # Get commit SHA and patch development release number
+    sed -i -e "s/constants.PYOWM_VERSION/constants.PYOWM_VERSION+\"-r${TRAVIS_COMMIT}\"/g" setup.py
 else
     echo 'Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE'
     exit 5
