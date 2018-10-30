@@ -1,35 +1,54 @@
 language: python
-python:
-  - "3.4"
-  - "3.5"
-  - "3.6"
-  - "3.7-dev"
-install:
-  - pip install --upgrade pip
-  - pip install coverage tox-travis virtualenv coveralls
-script:
-  - tox
-  - coverage run --rcfile=.coveragerc setup.py test -s tests.unit
-  - bash tests/local_installation_test.sh
-after_success:
-  coveralls
 notifications:
   email:
     on_failure: change
-dist: xenial
-sudo: false
+install:
+  - pip install --upgrade pip
+  - pip install coverage tox-travis virtualenv coveralls
+stages:
+  - unit_tests
+  - local_installation_test
+  - coverage
+jobs:
+  include:
+    - stage: unit_tests
+      dist: xenial
+      sudo: false
+      python:
+        - "3.4"
+        - "3.5"
+        - "3.6"
+        - "3.7-dev"
+      script: tox
+    - stage: local_installation_test
+      dist: xenial
+      sudo: false
+      python:
+        - "3.4"
+        - "3.5"
+        - "3.6"
+        - "3.7-dev"
+      script: bash tests/local_installation_test.sh
+    - stage: coverage
+      dist: xenial
+      sudo: false
+      python:
+        - "3.4"
+        - "3.5"
+        - "3.6"
+        - "3.7-dev"
+      script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
 deploy:
-  on:
-    branch: develop
-    repo: csparpa/pyowm
-  provider: pypi
-  distributions: "sdist bdist_egg bdist_wheel"
-  skip_existing: true
-  user: csparpa
-  server: https://test.pypi.org/legacy/ # Remove to deploy to real PyPI
-  password:
-    secure: "iedpYQh2nQVy9qGg0Qx/l1eSjhoWgFc5g6GQX7rERPcco8ylAFdnyaGylWA9LsrDk4rjwkuKb7JLn3LjuBQ8KY8c4dZ3dBpsXGwTbPQ20MSBU9wWVBSk+U9/b8mQBFPoSJJh2Y6GaNwPOJjO9AhfrNdFOd1pJjO+ohwPs3ZTNy0="
-
+  - provider: pypi   # test PyPI
+    distributions: "sdist bdist_egg bdist_wheel"
+    skip_existing: true
+    user: csparpa
+    server: https://test.pypi.org/legacy/ # Remove to deploy to real PyPI
+    password:
+      secure: "DhttNLUg1XLIu+qHCoiat9DN5VGgC3fH5/FQpXnW2cw32eIcwng4DTUA4pQYcnlDO1fBXSG/ysgSsz7QnxqML5UZKwPobAUis4TkKPFRQbJumKEpFOSkRjQYi2uF2pEtJwflr+BUAYd9lo7L9uhV9CyYb99DZq5R++K+slHmxeM="
+    on:
+      branch: develop
+      repo: csparpa/pyowm
 
 
 
