@@ -22,7 +22,7 @@ setup(
     consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
     include_package_data=True,
     install_requires=[
-        'requests>=2.18.2,<3',
+        'requests>=2.20.0,<3',
         'geojson>=2.3.0,<3'
     ],
     python_requires='>=3.4',
