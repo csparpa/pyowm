@@ -1,9 +1,11 @@
-coverage==3.7.1
+coverage
+coveralls
 pip>=18.0
-pytest==3.0.3
+pytest
 recommonmark
 Sphinx
 sphinx-readable-theme==1.3.0
 tox
-virtualenv==12.0.7
-twine==1.11.0
+tox-travis
+virtualenv
+twine
