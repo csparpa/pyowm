@@ -13,7 +13,7 @@ if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
     export PYPI_PASSWORD="$TEST_PYPI_PASSWORD"
 
     # Get commit SHA and patch development release number
-    TS="$(date "+%Y%m%d%H%M%S")"
+    TS="$(date "+%Y%m%d%H0000")"
     echo "*** Development release number is: post$TS"
     sed -i -e "s/constants.PYOWM_VERSION/constants.PYOWM_VERSION+\".post${TS}\"/g" setup.py
 
