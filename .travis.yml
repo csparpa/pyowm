@@ -18,26 +18,54 @@ install:
 cache: pip
 stages:
   - test
-  - local_installation_test
-  - coverage
-  - build_docs
-  - deploy_to_pypi
-  - pypi_installation_test
+  - "Local Installation Test"
+  - "Coverage"
+  - "Build docs"
+  - "Deploy to PyPI"
+  - "PyPI Installation Test"
 jobs:
   include:
-    - stage: local_installation_test
+    - &local_installation_test
+      stage: "Local Installation Test"
+      python: 3.4
       if: branch = master
       script: bash tests/local_installation_test.sh
+    - <<: *local_installation_test
+      python: 3.5
+    - <<: *local_installation_test
+      python: 3.6
+    - <<: *local_installation_test
+      python: "3.7-dev"
     - &coverage
-      stage: coverage_34
+      stage: "Coverage"
       python: 3.4
       script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
     - <<: *coverage
+      python: 3.5
+    - <<: *coverage
       python: 3.6
-    - stage: build_docs
+    - <<: *coverage
+      python: "3.7-dev"
+    - stage: "Build docs"
       script: cd sphinx && make clean && make html
-    - stage: deploy_to_pypi
+    - &deploy_to_pypi
+      stage: "Deploy to PyPI"
+      python: 3.4
       script: bash deploy/deploy_to_pypi.sh
-    - stage: pypi_installation_test
+    - <<: *deploy_to_pypi
+      python: 3.5
+    - <<: *deploy_to_pypi
+      python: 3.6
+    - <<: *deploy_to_pypi
+      python: "3.7-dev"
+    - &pypi_installation_test
+      stage: "PyPI Installation Test"
+      python: 3.4
       if: branch = master
       script: bash tests/pypi_installation_test.sh
+    - <<: *pypi_installation_test
+      python: 3.5
+    - <<: *pypi_installation_test
+      python: 3.6
+    - <<: *pypi_installation_test
+      python: "3.7-dev"
