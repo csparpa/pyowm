@@ -14,8 +14,8 @@ env:
       - TEST_PYPI_URL=https://test.pypi.org/legacy/
       - PYPI_URL=https://pypi.python.org/pypi
 install:
-  - pip install --upgrade pip && pip install -r dev-requirements.txt
-
+  - pip install --upgrade pip && pip install -r dev-requirements.txt && pip install -r requirements.txt
+cache: pip
 stages:
   - test
   - local_installation_test
@@ -26,6 +26,10 @@ stages:
 
 jobs:
   include:
+    - python: "3.4"
+    - python: "3.5"
+    - python: "3.6"
+    - python: "3.7-dev"
     - stage: local_installation_test
       if: branch = master
       script: bash tests/local_installation_test.sh
@@ -35,12 +39,6 @@ jobs:
       script: cd sphinx && make clean && make html
     - stage: deploy_to_pypi
       script: bash deploy/deploy_to_pypi.sh
-      on:
-        python:
-          - "3.4"
-          - "3.5"
-          - "3.6"
-          - "3.7-dev"
     - stage: pypi_installation_test
       if: branch = master
       script: bash tests/pypi_installation_test.sh
