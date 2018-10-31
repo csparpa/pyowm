@@ -21,7 +21,6 @@ stages:
   - local_installation_test
   - coverage
   - build_docs
-  - integration_tests
   - deploy_to_pypi
   - pypi_installation_test
 jobs:
@@ -29,15 +28,14 @@ jobs:
     - stage: local_installation_test
       if: branch = master
       script: bash tests/local_installation_test.sh
-    - stage: coverage
-      python:
-        - "3.4"
-        - "3.5"
+    - &coverage
+      stage: coverage_34
+      python: 3.4
       script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+    - <<: *coverage
+      python: 3.6
     - stage: build_docs
       script: cd sphinx && make clean && make html
-    - stage: integration_tests
-      script: cd tests/integration && tox
     - stage: deploy_to_pypi
       script: bash deploy/deploy_to_pypi.sh
     - stage: pypi_installation_test
