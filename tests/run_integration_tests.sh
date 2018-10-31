@@ -8,7 +8,7 @@ if [ -z "$OWM_API_KEY" ]; then
 fi
 
 export OWM_API_KEY
-cd ../tests/integration
+cd integration
 tox
 
 echo "*** End of integration tests"
