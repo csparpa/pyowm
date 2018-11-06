@@ -19,6 +19,7 @@ Code
 Testing
 -------
   * [Samuel Yap] (https://github.com/samuelyap)
+  * [Patrick Casbon] (https://github.com/patcas)
 
 Packaging and Distribution
 --------------------------
