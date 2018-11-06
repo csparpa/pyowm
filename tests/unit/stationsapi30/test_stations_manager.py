@@ -268,3 +268,39 @@ class TestStationManager(unittest.TestCase):
 
         with self.assertRaises(AssertionError):
             instance.send_buffer(None)
+
+    def test__structure_dict(self):
+        temp = dict(min=0, max=100)
+        msmt = Measurement('test_station', 1378459200,
+                            temperature=temp, wind_speed=2.1, wind_gust=67,
+                            humidex=77, weather_other=dict(key='val'))
+        expected =  {
+            'station_id': 'test_station',
+            'dt': 1378459200,
+            'temperature': temp,
+            'wind_speed': 2.1,
+            'wind_gust': 67,
+            'humidex': 77,
+            'weather': [
+                {
+                    'other': {
+                        'key': 'val'
+                    }
+                }
+            ]
+        }
+        instance = StationsManager('API-Key')
+        result = instance._structure_dict(msmt)
+        self.assertEqual(expected['station_id'], result['station_id'])
+        self.assertEqual(expected['dt'], result['dt'])
+        self.assertEqual(expected['wind_speed'], result['wind_speed'])
+        self.assertEqual(expected['wind_gust'], result['wind_gust'])
+        self.assertEqual(expected['humidex'], result['humidex'])
+        self.assertEqual(expected['temperature'], result['temperature'])
+        for item in result['weather']:
+            content = item.get('other')
+            if content:
+                self.assertEqual(expected['weather'][0]['other'], content)
+                return
+        self.fail()
+
