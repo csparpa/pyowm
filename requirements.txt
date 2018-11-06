@@ -1,2 +1,2 @@
 geojson>=2.3.0,<3
-requests>=2.18.2,<3
+requests>=2.20.0,<3
