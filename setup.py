@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 
-import os
 from setuptools import setup
 from pyowm import constants
-
-requirements_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'requirements.txt')
-with open(requirements_file_path) as f:
-    requirements = [line for line in f.read().splitlines() if line]
 
 setup(
     name='pyowm',
@@ -26,7 +21,10 @@ setup(
     long_description="""PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy 
     consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=[
+        'requests>=2.20.0,<3',
+        'geojson>=2.3.0,<3'
+    ],
     python_requires='>=3.4',
     classifiers=[
       "License :: OSI Approved :: MIT License",
