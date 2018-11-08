@@ -32,7 +32,6 @@ jobs:
     - &local_installation_test
       stage: "Local Installation Test"
       python: 3.4
-      if: branch = master
       script: bash tests/local_installation_test.sh
     - <<: *local_installation_test
       python: 3.5
