@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import os
 from setuptools import setup
 from pyowm import constants
 
-with open('requirements.txt') as f:
+requirements_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'requirements.txt')
+with open(requirements_file_path) as f:
     requirements = [line for line in f.read().splitlines() if line]
 
 setup(
