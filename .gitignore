@@ -13,3 +13,6 @@ sphinx/_build/*
 .coverage
 tests/integration/.tox/*
 .cache
+.eggs/
+htmlcov/*
+
