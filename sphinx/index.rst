@@ -32,6 +32,7 @@ With PyOWM you can interact programmatically with the following OpenWeatherMap w
     + current weather data
     + weather forecasts
     + weather history
+ - **Agro API v1.0**, offering polygon editing, soil data
  - **Air Pollution API v3.0**, offering data about CO, O3, NO2 and SO2
  - **UV Index API v3.0**, offering data about Ultraviolet exposition
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements
@@ -100,13 +101,7 @@ You can install from source using _setuptools_: either download a release from G
    $ cd pyowm-x.y.z
    $ python setup.py install
 
-The .egg will be installed into the system-dependent Python libraries folder:
-
-.. code::
-
-   C:\PythonXY\Lib\site-packages            # Windows
-   /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
-   /usr/local/lib/pythonX.Y/dist-packages   # MacOS 10.5.4
+The .egg will be installed into the system-dependent Python libraries folder
 
 
 Distribution packages
@@ -135,6 +130,14 @@ Weather API examples
 
    usage-examples-v2/weather-api-usage-examples
    usage-examples-v2/weather-api-object-model
+
+Agro API examples
+~~~~~~~~~~~~~~~~~
+
+.. toctree::
+   :maxdepth: 1
+
+   usage-examples-v2/agro-api-usage-examples
 
 
 UV API examples

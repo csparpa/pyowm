@@ -23,6 +23,7 @@ from pyowm.weatherapi25 import historian
 from pyowm.stationsapi30 import stations_manager
 from pyowm.alertapi30 import alert_manager
 from pyowm.tiles import tile_manager
+from pyowm.agroapi10 import agro_manager
 
 
 class OWM25(owm.OWM):
@@ -178,6 +179,14 @@ class OWM25(owm.OWM):
         """
         return tile_manager.TileManager(self._API_key, map_layer=layer_name)
 
+    def agro_manager(self):
+        """
+        Gives a `pyowm.agro10.agro_manager.AgroManager` instance that can be used to read/write data from the
+        Agricultural API.
+        :return: a `pyowm.agro10.agro_manager.AgroManager` instance
+        """
+        return agro_manager.AgroManager(self._API_key)
+
     def is_API_online(self):
         """
         Returns True if the OWM Weather API is currently online. A short timeout
@@ -186,7 +195,7 @@ class OWM25(owm.OWM):
         :returns: bool
 
         """
-        params = {'q': 'London,UK'}
+        params = {'q': 'London,GB'}
         uri = http_client.HttpClient.to_url(OBSERVATION_URL,
                                             self._API_key,
                                             self._subscription_type)

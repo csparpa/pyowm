@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     pyowm.abstractions
+    pyowm.agroapi10
     pyowm.alertapi30
     pyowm.caches
     pyowm.commons
