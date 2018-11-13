@@ -1,3 +1,4 @@
+
 import json
 import math
 import geojson
@@ -358,6 +359,7 @@ class GeometryBuilder:
         :return: a `pyowm.utils.geo.Geometry` subtype instance
         :raises `ValueError` if unable to the geometry type cannot be recognized
         """
+        assert isinstance(the_dict, dict), 'Geometry must be a dict'
         geom_type = the_dict.get('type', None)
         if geom_type == 'Point':
             return Point.from_dict(the_dict)

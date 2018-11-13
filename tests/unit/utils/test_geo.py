@@ -251,6 +251,7 @@ class TestGeo(unittest.TestCase):
 class TestGeometryBuilder(unittest.TestCase):
 
     def test_unrecognized_geom_type(self):
+        self.assertRaises(AssertionError, geo.GeometryBuilder.build, None)
         self.assertRaises(ValueError, geo.GeometryBuilder.build, {"type": "Unknown"})
         self.assertRaises(ValueError, geo.GeometryBuilder.build, {})
 
