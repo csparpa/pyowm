@@ -22,7 +22,7 @@ instance from the main OWM. You'll need your API Key for that:
 ```python
 import pyowm
 owm = pyowm.OWM('your-API-key')
-am = owm.agro_manager()
+mgr = owm.agro_manager()
 ```
 
 Read on to discover what you can do with it.
@@ -50,20 +50,58 @@ geopol = pol.geopolygon   # pyowm.utils.geo.Polygon object
 point = pol.center        # pyowm.utils.geo.Point object
 ```
 
-### Creating Polygons
-TBD
-
-
-
-roughly
+### Reading Polygons
+You can either get all of the Polygons you've created on the Agro API or easily get single polygons by specifying
+their IDs:
 
 ```python
-from pyowm.agro10.agro_manager import AgroManager
-agro = AgroManager(API_key)
-agro.agro_api_version
-polygon = agro.create_polygon(...)
-polygons_list = agro.get_polygons()
-retrieved_polygon = agro.get_polygon(id)
-agro.update_polygon(polygon)
-agro.delete_polygon(polygon)
+list_of_polygons = mgr.get_polygons()
+a_polygon = mgr.get_polygon('5abb9fb82c8897000bde3e87')
 ```
+
+
+### Creating Polygons
+Creating polygons is easy: you just need to create a `pyowm.utils.geo.Polygon` instance that describes the coordinates
+of the polygon you want to create on the Agro API. Then you just need to pass it (along with an optional name) to the
+Agro Manager object:
+
+```python
+
+# first create the pyowm.utils.geo.Polygon instance that represents the area (here, a triangle)
+from pyowm.utils.geo import Polygon as GeoPolygon
+gp = GeoPolygon([[
+        [-121.1958, 37.6683],
+        [-121.1779, 37.6687],
+        [-121.1773, 37.6792],
+        [-121.1958, 37.6683]]])
+
+# use the Agro Manager to create your polygon on the Agro API 
+the_new_polygon = mgr.create_polygon(gp, 'my new shiny polygon')
+
+# the new polygon has an ID and a user_id
+the_new_polygon.id
+the_new_polygon.user_id
+
+```
+
+You get back a `pyowm.agro10.polygon.Polygon` instance and you can use its ID to operate this new polygon on all the
+other Agro API methods! 
+
+### Updating a Polygon
+Once you've created a polygon, you can only change its mnemonic name, as the rest of its parameters cannot
+be changed by the user. In order to do it:
+
+```python
+my_polygon.name  # "my new shiny polygon"
+my_polygon.name = "changed name"
+mgr.update_polygon(my_polygon)
+```
+
+### Deleting a Polygon
+Delete a polygon with
+
+```python
+mgr.delete_polygon(my_polygon)
+```
+
+Remember that when you delete a polygon, there is no going back!
