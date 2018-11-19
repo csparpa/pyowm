@@ -4,7 +4,9 @@ from pyowm.utils.geo import GeometryBuilder
 
 
 class Polygon:
+
     """
+    A Polygon feature, foundational element for all Agro API operations
 
     :param id: the polygon's ID
     :type id: str

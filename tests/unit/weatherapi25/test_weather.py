@@ -6,7 +6,6 @@ import unittest
 from pyowm.weatherapi25.weather import Weather, weather_from_dictionary
 from pyowm.utils.timeformatutils import UTC
 from tests.unit.weatherapi25.json_test_dumps import WEATHER_JSON_DUMP
-from tests.unit.weatherapi25.xml_test_dumps import WEATHER_XML_DUMP
 from datetime import datetime
 
 
