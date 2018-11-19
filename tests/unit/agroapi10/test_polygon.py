@@ -82,3 +82,10 @@ class TestPolygon(unittest.TestCase):
 
         del the_dict['id']
         self.assertRaises(AssertionError, Polygon.from_dict, the_dict)
+
+    def test_repr(self):
+        instance = Polygon('id', 'polygon', self.geopolygon, self.geopoint, 1.2, 'user')
+        repr(instance)
+        instance = Polygon('id')
+        repr(instance)
+

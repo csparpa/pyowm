@@ -7,11 +7,17 @@ class Polygon:
     """
 
     :param id: the polygon's ID
+    :type id: str
     :param name: the polygon's name
+    :type namr: str
     :param geopolygon: the `pyowm.utils.geo.Polygon` instance that represents this polygon
+    :type geopolygon: `pyowm.utils.geo.Polygon`
     :param center: the `pyowm.utils.geo.Point` instance that represents the central point of the polygon
+    :type center: `pyowm.utils.geo.Point`
     :param area: the area of the polygon in hectares
+    :type area: float or int
     :param user_id: the ID of the user owning this polygon
+    :type user_id: str
     :returns: a `Polygon` instance
     :raises: `AssertionError` when either id is `None` or geopolygon, center or area have wrong type
     """
@@ -54,3 +60,7 @@ class Polygon:
         except:
             raise ValueError('Wrong format for polygon center coordinates')
         return Polygon(the_id, name, geopolygon, center, area, user_id)
+
+    def __repr__(self):
+        return "<%s.%s - id=%s, name=%s, area=%s>" % (__name__, \
+              self.__class__.__name__, self.id, self.name, str(self.area))
