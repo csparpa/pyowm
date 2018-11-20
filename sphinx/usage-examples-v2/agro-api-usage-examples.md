@@ -14,7 +14,7 @@ Read further on to get more details.
  - [https://agromonitoring.com/api](hhttps://agromonitoring.com/api)
 
 
-### AgroAPI Manager object
+## AgroAPI Manager object
 
 In order to do any kind of operations against the OWM Agro API, you need to obtain a `pyowm.agro10.agro_manager.AgroManager`
 instance from the main OWM. You'll need your API Key for that:
@@ -105,3 +105,26 @@ mgr.delete_polygon(my_polygon)
 ```
 
 Remember that when you delete a polygon, there is no going back!
+
+
+## Soil data API Operations
+
+Once you've defined a polygon, you can easily get soil data upon it. Just go with:
+
+```python
+soil = mgr.soil_data(polygon)
+```
+
+`Soil` is an entity of type `pyowm.agro10.soil.Soil` and is basically a wrapper around a Python dict reporting
+the basic soil information on that polygon:
+```python
+soil.polygon_id                         # str           
+soil.reference_time(timeformat='unix')  # can be: int for UTC Unix time ('unix'), 
+                                        # ISO8601-formatted str for 'iso' or 
+                                        # datetime.datetime for 'date'
+soil.surface_temp(unit='kelvin')        # float (unit can be: 'kelvin', 'celsius' or 'fahrenheit')
+soil.ten_cm_temp(unit='kelvin')         # float (Kelvins, measured at 10 cm depth) - unit same as for above
+soil.moisture                           # float (m^3/m^3)
+```
+
+Soil data is updated twice a day.

@@ -8,3 +8,6 @@ ROOT_AGRO_API = 'http://api.agromonitoring.com/agro/1.0'
 POLYGONS_URI = ROOT_AGRO_API + '/polygons'
 NAMED_POLYGON_URI = ROOT_AGRO_API + '/polygons/%s'
 
+# Soil API subset
+SOIL_URI = ROOT_AGRO_API + '/soil'
+

@@ -4,8 +4,9 @@ Programmatic interface to OWM Agro API endpoints
 
 from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
-from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI
+from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
+from pyowm.agroapi10.soil import Soil
 
 
 class AgroManager(object):
@@ -116,3 +117,29 @@ class AgroManager(object):
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
 
+    # SOIL API subset methods
+
+    def soil_data(self, polygon):
+        """
+        Retrieves the latest soil data on the specified polygon
+
+        :param polygon: the reference polygon you want soil data for
+        :type polygon: `pyowm.agro10.polygon.Polygon` instance
+        :returns: a `pyowm.agro10.soil.Soil` instance
+
+        """
+        assert polygon is not None
+        assert isinstance(polygon, Polygon)
+        polyd = polygon.id
+        status, data = self.http_client.get_json(
+            SOIL_URI,
+            params={'appid': self.API_key,
+                    'polyid': polyd},
+            headers={'Content-Type': 'application/json'})
+        the_dict = dict()
+        the_dict['reference_time'] = data['dt']
+        the_dict['surface_temp'] = data['t0']
+        the_dict['ten_cm_temp'] = data['t10']
+        the_dict['moisture'] = data['moisture']
+        the_dict['polygon_id'] = polyd
+        return Soil.from_dict(the_dict)

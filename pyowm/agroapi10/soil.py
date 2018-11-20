@@ -101,5 +101,5 @@ class Soil:
         return Soil(reference_time, surface_temp, ten_cm_temp, moisture, polygon_id)
 
     def __repr__(self):
-        return "<%s.%s - polygon_id=%s,reference time=%s,>" % (__name__, \
-              self.__class__.__name__, self.polygon_id, self.reference_time('iso'))
+        return "<%s.%s - polygon_id=%s,reference time=%s,>" % (__name__, self.__class__.__name__,
+                                                               self.polygon_id, self.reference_time('iso'))

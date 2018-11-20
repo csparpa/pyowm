@@ -5,6 +5,7 @@ from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
 from pyowm.agroapi10.agro_manager import AgroManager
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon, GeoPoint
+from pyowm.agroapi10.soil import Soil
 
 
 class MockHttpClientPolygons(HttpClient):
@@ -63,6 +64,17 @@ class MockHttpClientOnePolygon(HttpClient):
 
     def delete(self, uri, params=None, data=None, headers=None):
         return 204, None
+
+
+class MockHttpClientSoil(HttpClient):
+    test_soil_json = '''{
+       "dt":1522108800,
+       "t10":281.96,
+       "moisture":0.175,
+       "t0":279.02}'''
+
+    def get_json(self, uri, params=None, headers=None):
+        return 200, json.loads(self.test_soil_json)
 
 
 class TestAgroManager(unittest.TestCase):
@@ -136,3 +148,19 @@ class TestAgroManager(unittest.TestCase):
         p.id = None
         with self.assertRaises(AssertionError):
             instance.delete_polygon(p)
+
+    # Test Soil API subset
+
+    def test_soil_data(self):
+        instance = self.factory(MockHttpClientSoil)
+
+        # failures
+        with self.assertRaises(AssertionError):
+            instance.soil_data(None)
+        with self.assertRaises(AssertionError):
+            instance.soil_data('not-a-polygon')
+
+        # normal operativity
+        result = instance.soil_data(self.polygon)
+        self.assertIsInstance(result, Soil)
+        self.assertEqual(self.polygon.id, result.polygon_id)
