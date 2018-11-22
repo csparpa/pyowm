@@ -47,7 +47,7 @@ class TileManager(object):
         status, data = self.http_client.get_png(
             ROOT_TILE_URL % self.map_layer + '/%s/%s/%s.png' % (zoom, x, y),
             params={'appid': self.API_key})
-        img = Image(data, ImageTypeEnum.PNG.mime_type)
+        img = Image(data, ImageTypeEnum.PNG)
         return Tile(x, y, zoom, self.map_layer, img)
 
     def __repr__(self):

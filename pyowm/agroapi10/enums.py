@@ -9,17 +9,18 @@ class MetaImagePresetEnum:
     NDVI = 'ndvi'
     EVI = 'evi'
 
-    def items(self):
+    @classmethod
+    def items(cls):
         """
         All values for this enum
-        :return: list of tuples
+        :return: list of str
 
         """
         return [
-            ('truecolor', self.TRUE_COLOR),
-            ('falsecolor', self.FALSE_COLOR),
-            ('ndvi', self.NDVI),
-            ('evi', self.EVI)
+            cls.TRUE_COLOR,
+            cls.FALSE_COLOR,
+            cls.NDVI,
+            cls.EVI
         ]
 
 
@@ -31,13 +32,14 @@ class SatelliteNameEnum:
     LANDSAT_8 = 'Landsat 8'
     SENTINEL_2 = 'Sentinel 2'
 
-    def items(self):
+    @classmethod
+    def items(cls):
         """
         All values for this enum
-        :return: list of tuples
+        :return: list of str
 
         """
         return [
-            ('Landsat 8', self.LANDSAT_8),
-            ('Sentinel 2', self.SENTINEL_2)
+            cls.LANDSAT_8,
+            cls.SENTINEL_2
         ]
