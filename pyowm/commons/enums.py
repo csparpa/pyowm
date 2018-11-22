@@ -13,6 +13,10 @@ class ImageType:
         self.name = name
         self.mime_type = mime_type
 
+    def __repr__(self):
+        return "<%s.%s - name=%s mime=%s>" % (
+            __name__, self.__class__.__name__, self.name, self.mime_type)
+
 
 class ImageTypeEnum:
     """
@@ -21,3 +25,6 @@ class ImageTypeEnum:
     """
     PNG = ImageType('PNG', 'image/png')
     GEOTIFF = ImageType('GEOTIFF', 'image/tiff')
+
+    def __repr__(self):
+        return "<%s.%s>" % (__name__, self.__class__.__name__)
