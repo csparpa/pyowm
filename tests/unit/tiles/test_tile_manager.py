@@ -1,7 +1,7 @@
 import unittest
 from pyowm.commons.http_client import HttpClient
 from pyowm.tiles.tile_manager import TileManager
-from pyowm.tiles.tile import Tile
+from pyowm.commons.tile import Tile
 from pyowm.tiles.enums import MapLayerEnum
 
 

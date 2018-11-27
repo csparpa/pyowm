@@ -36,6 +36,15 @@ pyowm.commons.enums module
     :undoc-members:
     :show-inheritance:
 
+pyowm.commons.tile module
+-------------------------
+
+.. automodule:: pyowm.commons.tile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 

@@ -4,7 +4,7 @@ from pyowm.constants import DEFAULT_API_KEY
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.tiles.enums import MapLayerEnum
-from pyowm.tiles.tile import Tile
+from pyowm.commons.tile import Tile
 
 
 class TesIntegrationTileManager(unittest.TestCase):

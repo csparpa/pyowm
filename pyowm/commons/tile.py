@@ -31,6 +31,13 @@ class Tile:
         self.image = image
 
     def persist(self, path_to_file):
+        """
+        Saves the tile to disk on a file
+
+        :param path_to_file: path to the target file
+        :type path_to_file: str
+        :return: `None`
+        """
         self.image.persist(path_to_file)
 
     def bounding_polygon(self):

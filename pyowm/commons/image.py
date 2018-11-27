@@ -19,11 +19,25 @@ class Image:
         self.image_type = image_type
 
     def persist(self, path_to_file):
+        """
+        Saves the image to disk on a file
+
+        :param path_to_file: path to the target file
+        :type path_to_file: str
+        :return: `None`
+        """
         with open(path_to_file, 'wb') as f:
             f.write(self.data)
 
     @classmethod
-    def load(kls, path_to_file):
+    def load(cls, path_to_file):
+        """
+        Loads the image data from a file on disk and tries to guess the image MIME type
+
+        :param path_to_file: path to the source file
+        :type path_to_file: str
+        :return: a `pyowm.image.Image` instance
+        """
         import mimetypes
         mimetypes.init()
         mime = mimetypes.guess_type('file://%s' % path_to_file)[0]

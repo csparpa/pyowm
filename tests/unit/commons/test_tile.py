@@ -1,5 +1,5 @@
 import unittest
-from pyowm.tiles.tile import Tile
+from pyowm.commons.tile import Tile
 from pyowm.utils.geo import Polygon
 from pyowm.commons.image import Image
 

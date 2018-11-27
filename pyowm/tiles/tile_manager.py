@@ -5,7 +5,7 @@ Object that can download tile images at various zoom levels
 from pyowm.commons.http_client import HttpClient
 from pyowm.commons.image import Image
 from pyowm.commons.enums import ImageTypeEnum
-from pyowm.tiles.tile import Tile
+from pyowm.commons.tile import Tile
 from pyowm.tiles.uris import ROOT_TILE_URL
 
 

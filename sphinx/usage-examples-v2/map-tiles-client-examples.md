@@ -46,7 +46,7 @@ tile = tm.get_tile(5, 2, 6)
 
 ## Tile object
 
-A `pyowm.tiles.tile.Tile` object is a wrapper for the tile coordinates and the image data, which is a
+A `pyowm.commons.tile.Tile` object is a wrapper for the tile coordinates and the image data, which is a
 `pyowm.commons.image.Image` object instance.
 
 You can save a tile to disk by specifying a target file:
@@ -63,7 +63,7 @@ Turn the lon/lat couple to a `pyowm.utils.geo.Point` object and pass it
 
 ```python
 from pyowm.utils.geo import Point
-from pyowm.tiles.tile import Tile
+from pyowm.commons.tile import Tile
 
 geopoint = Point(lon, lat)
 x_tile, y_tile = Tile.tile_coords_for_point(geopoint, zoom_level):
@@ -74,8 +74,6 @@ x_tile, y_tile = Tile.tile_coords_for_point(geopoint, zoom_level):
 Easy! You'll get back a `pyowm.utils.geo.Polygon` object, from which you can extract lon/lat coordinates this way
 
 ```python
-from pyowm.tiles.tile import Tile
-
 polygon = tile.bounding_polygon()
 geopoints = polygon.points
 geocoordinates = [(p.lon, p.lat) for p in geopoints]  # this gives you tuples with lon/lat

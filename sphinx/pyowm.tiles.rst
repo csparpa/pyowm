@@ -12,16 +12,6 @@ pyowm.tiles.enums module
     :undoc-members:
     :show-inheritance:
 
-
-pyowm.tiles.tile module
------------------------
-
-.. automodule:: pyowm.tiles.tile
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 pyowm.tiles.tile_manager module
 -------------------------------
 

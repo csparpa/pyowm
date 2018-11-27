@@ -1,5 +1,5 @@
 from pyowm.utils import timeformatutils
-from pyowm.commons.enums import ImageType
+from pyowm.commons.enums import ImageTypeEnum
 
 
 class MetaImage:
@@ -8,8 +8,6 @@ class MetaImage:
 
     :param url: the public URL of the image
     :type url: str
-    :param img_type: the type of the image (supported values are listed by `pyowm.commons.enums.ImageTypeEnum`)
-    :type img_type: a `pyowm.commons.enums.ImageType` instance
     :param preset: the preset of the image (supported values are listed by `pyowm.agroapi10.enums.MetaImagePresetEnum`)
     :type preset: str
     :param satellite_name: the name of the satellite that acquired the image (supported values are listed
@@ -30,14 +28,13 @@ class MetaImage:
     :returns: an `MetaImage` object
     """
 
-    def __init__(self, url, img_type, preset, satellite_name, acquisition_time,
+    image_type = None
+
+    def __init__(self, url, preset, satellite_name, acquisition_time,
                  valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                  http_client=None):
-
         assert isinstance(url, str)
         self.url = url
-        assert isinstance(img_type, ImageType)
-        self.img_type = img_type
         self.preset = preset
         self.satellite_name = satellite_name
         assert isinstance(acquisition_time, int)
@@ -73,12 +70,33 @@ class MetaImage:
     def __repr__(self):
         return "<%s.%s - %s %s image acquired at %s by %s>" % (
             __name__, self.__class__.__name__,
-            self.img_type, self.preset, self.acquisition_time('iso'), self.satellite_name)
+            self.image_type if self.image_type is not None else '',
+            self.preset, self.acquisition_time('iso'), self.satellite_name)
 
 
-class MetaSatelliteImage:
-    pass
+class MetaPNGImage(MetaImage):
+    """
+    Class representing metadata for a satellite image of a polygon in PNG format
+    """
+    image_type = ImageTypeEnum.PNG
 
 
-class MetaTile:
+class MetaTile(MetaImage):
+    """
+    Class representing metadata for a tile in PNG format
+    """
+    image_type = ImageTypeEnum.PNG
+
+
+class MetaGeoTiffImage(MetaImage):
+    """
+    Class representing metadata for a satellite image of a polygon in GeoTiff format
+    """
+    image_type = ImageTypeEnum.GEOTIFF
+
+
+class MetaZonalStatistics(MetaImage):
+    """
+    Class representing metadata for NDVI & EVI indices of a polygon
+    """
     pass
