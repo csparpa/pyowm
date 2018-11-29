@@ -4,9 +4,12 @@ Programmatic interface to OWM Agro API endpoints
 
 from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
+from pyowm.commons.image import Image
+from pyowm.commons.tile import Tile
 from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.soil import Soil
+from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
 
 
 class AgroManager(object):
@@ -143,3 +146,61 @@ class AgroManager(object):
         the_dict['moisture'] = data['moisture']
         the_dict['polygon_id'] = polyd
         return Soil.from_dict(the_dict)
+
+    # Satellite Imagery subset methods
+
+    def search_satellite_imagery(self, polygon_id, img_type, preset):
+        raise NotImplementedError()
+
+    def download_satellite_image(self, metaimage, x=None, y=None, zoom=None):
+        """
+        Downloads the satellite image described by the provided metadata. In case the satellite image is a tile, then
+        tile coordinates and zoom must be provided
+
+        :param metaimage: the satellite image's metadata, in the form of a `MetaImage` subtype instance
+        :type metaimage: a `pyowm.agroapi10.imagery.MetaImage` subtype
+        :param x: x tile coordinate (only needed in case you are downloading a tile image)
+        :type x: int or `None`
+        :param y: y tile coordinate (only needed in case you are downloading a tile image)
+        :type y: int or `None`
+        :param zoom: zoom level (only needed in case you are downloading a tile image)
+        :type zoom: int or `None`
+        :return: a `pyowm.agroapi10.imagery.SatelliteImage` instance containing both image's metadata and data
+        """
+        # polygon PNG
+        if isinstance(metaimage, MetaPNGImage):
+            prepared_url = metaimage.url
+            status, data = self.http_client.get_png(
+                prepared_url,
+                params={'appid': self.API_key})
+            img = Image(data, metaimage.image_type)
+            return SatelliteImage(metaimage, img)
+        # GeoTIF
+        elif isinstance(metaimage, MetaGeoTiffImage):
+            prepared_url = metaimage.url
+            status, data = self.http_client.get_geotiff(
+                prepared_url,
+                params={'appid': self.API_key})
+            img = Image(data, metaimage.image_type)
+            return SatelliteImage(metaimage, img)
+        # tile PNG
+        elif isinstance(metaimage, MetaTile):
+            assert x is not None
+            assert y is not None
+            assert zoom is not None
+            prepared_url = self._fill_url(metaimage.url, x, y, zoom)
+            status, data = self.http_client.get_png(
+                prepared_url,
+                params={'appid': self.API_key})
+            img = Image(data, metaimage.image_type)
+            tile = Tile(x, y, zoom, None, img)
+            return SatelliteImage(metaimage, tile)
+        else:
+            raise ValueError("Cannot download: unsupported MetaImage subtype")
+
+    def stats_for_satellite_image(self, metaimage):
+        raise NotImplementedError()
+
+    # Utilities
+    def _fill_url(self, url_template, x, y, zoom):
+        return url_template.replace('{x}', str(x)).replace('{y}', str(y)).replace('{z}', str(zoom))

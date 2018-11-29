@@ -3,9 +3,14 @@ import json
 import copy
 from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
+from pyowm.commons.enums import ImageTypeEnum
+from pyowm.commons.image import Image
+from pyowm.commons.tile import Tile
 from pyowm.agroapi10.agro_manager import AgroManager
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon, GeoPoint
 from pyowm.agroapi10.soil import Soil
+from pyowm.agroapi10.imagery import SatelliteImage, MetaPNGImage, MetaGeoTiffImage, MetaTile
+from pyowm.agroapi10.enums import MetaImagePresetEnum, SatelliteNameEnum
 
 
 class MockHttpClientPolygons(HttpClient):
@@ -75,6 +80,17 @@ class MockHttpClientSoil(HttpClient):
 
     def get_json(self, uri, params=None, headers=None):
         return 200, json.loads(self.test_soil_json)
+
+
+class MockHttpClientReturningImage(HttpClient):
+
+    d = b'1234567890'
+
+    def get_png(self, uri, params=None, headers=None):
+        return 200, self.d
+
+    def get_geotiff(self, uri, params=None, headers=None):
+        return 200, self.d
 
 
 class TestAgroManager(unittest.TestCase):
@@ -164,3 +180,59 @@ class TestAgroManager(unittest.TestCase):
         result = instance.soil_data(self.polygon)
         self.assertIsInstance(result, Soil)
         self.assertEqual(self.polygon.id, result.polygon_id)
+
+    # Test utilities
+    def test_fill_url(self):
+        instance = self.factory(MockHttpClientReturningImage)
+        url_template = 'http://abc.com/{x}/{y}/{z}/json'
+        expected = 'http://abc.com/1/2/3/json'
+        result = instance._fill_url(url_template, 1, '2', 3)
+        self.assertEqual(expected, result)
+
+    # Test Satellite Imagery API subset
+
+    def test_download_satellite_image_fails_with_wrong_metaimage_type(self):
+        instance = self.factory(MockHttpClientReturningImage)
+        with self.assertRaises(ValueError):
+            instance.download_satellite_image("not-a-metaimage")
+
+    def test_download_satellite_image_with_polygon_png(self):
+        instance = self.factory(MockHttpClientReturningImage)
+        metaimg = MetaPNGImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+        result = instance.download_satellite_image(metaimg)
+        self.assertTrue(isinstance(result,SatelliteImage))
+        self.assertTrue(isinstance(result.metadata, MetaPNGImage))
+        self.assertTrue(isinstance(result.data, Image))
+        self.assertTrue(result.data.image_type, ImageTypeEnum.PNG)
+
+    def test_download_satellite_image_with_geotiff(self):
+        instance = self.factory(MockHttpClientReturningImage)
+        metaimg = MetaGeoTiffImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+                                   SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+        result = instance.download_satellite_image(metaimg)
+        self.assertTrue(isinstance(result,SatelliteImage))
+        self.assertTrue(isinstance(result.metadata, MetaGeoTiffImage))
+        self.assertTrue(isinstance(result.data, Image))
+        self.assertTrue(result.data.image_type, ImageTypeEnum.GEOTIFF)
+
+    def test_download_satellite_image_with_tile_png_fails_without_tile_coords(self):
+        instance = self.factory(MockHttpClientReturningImage)
+        metaimg = MetaTile('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+                           SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+        with self.assertRaises(AssertionError):
+            instance.download_satellite_image(metaimg)
+        with self.assertRaises(AssertionError):
+            instance.download_satellite_image(metaimg, x=1)
+        with self.assertRaises(AssertionError):
+            instance.download_satellite_image(metaimg, x=1, y=2)
+
+    def test_download_satellite_image_with_tile_png(self):
+        instance = self.factory(MockHttpClientReturningImage)
+        metaimg = MetaTile('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+                           SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+        result = instance.download_satellite_image(metaimg, x=1, y=2, zoom=4)
+        self.assertTrue(isinstance(result,SatelliteImage))
+        self.assertTrue(isinstance(result.metadata, MetaTile))
+        self.assertTrue(isinstance(result.data, Tile))
+        self.assertTrue(result.data.image.image_type, ImageTypeEnum.PNG)
