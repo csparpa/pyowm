@@ -7,6 +7,7 @@ from pyowm.commons.http_client import HttpClient
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
 from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI
+from pyowm.agroapi10.enums import MetaImagePresetEnum
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
@@ -199,7 +200,22 @@ class AgroManager(object):
             raise ValueError("Cannot download: unsupported MetaImage subtype")
 
     def stats_for_satellite_image(self, metaimage):
-        raise NotImplementedError()
+        """
+        Retrieves statistics for the satellite image described by the provided metadata.
+        This is currently only supported 'EVI' and 'NDVI' presets
+
+        :param metaimage: the satellite image's metadata, in the form of a `MetaImage` subtype instance
+        :type metaimage: a `pyowm.agroapi10.imagery.MetaImage` subtype
+        :return: dict
+        """
+        if metaimage.preset != MetaImagePresetEnum.EVI and metaimage.preset != MetaImagePresetEnum.NDVI:
+            raise ValueError("Unsupported image preset: should be EVI or NDVI")
+        if metaimage.stats_url is None:
+            raise ValueError("URL for image statistics is not defined")
+        status, data = self.http_client.get_json(
+            metaimage.stats_url,
+            params={'appid': self.API_key})
+        return data
 
     # Utilities
     def _fill_url(self, url_template, x, y, zoom):

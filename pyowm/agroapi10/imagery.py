@@ -27,13 +27,16 @@ class MetaImage:
     :type sun_elevation: float
     :param polygon_id: optional id of the polygon the image refers to
     :type polygon_id: str
+    :param stats_url: the public URL of the image statistics, if available
+    :type stats_url: str or `None`
     :returns: an `MetaImage` object
     """
 
     image_type = None
 
     def __init__(self, url, preset, satellite_name, acquisition_time,
-                 valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation, polygon_id=None):
+                 valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation, polygon_id=None,
+                 stats_url=None):
         assert isinstance(url, str)
         self.url = url
         self.preset = preset
@@ -54,6 +57,7 @@ class MetaImage:
         assert sun_elevation >= 0. and sun_elevation <= 90., 'sun_elevation must be between 0 and 90 degrees'
         self.sun_elevation = sun_elevation
         self.polygon_id = polygon_id
+        self.stats_url = stats_url
 
     def acquisition_time(self, timeformat='unix'):
         """Returns the UTC time telling when the image data was acquired by the satellite
@@ -95,13 +99,6 @@ class MetaGeoTiffImage(MetaImage):
     Class representing metadata for a satellite image of a polygon in GeoTiff format
     """
     image_type = ImageTypeEnum.GEOTIFF
-
-
-class MetaZonalStatistics(MetaImage):
-    """
-    Class representing metadata for NDVI & EVI indices of a polygon
-    """
-    pass
 
 
 class SatelliteImage:

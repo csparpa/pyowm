@@ -93,6 +93,16 @@ class MockHttpClientReturningImage(HttpClient):
         return 200, self.d
 
 
+class MockHttpClientStats(HttpClient):
+
+    test_stats_json = '''{"std": 0.19696951630010479, "p25": 0.3090659340659341, "num": 57162, 
+    "min": -0.2849250197316496, "max": 0.8658669574700109, "median": 0.45692992317131553, 
+    "p75": 0.6432460461498574, "mean": 0.47631485576814037}'''
+
+    def get_json(self, uri, params=None, headers=None):
+        return 200, json.loads(self.test_stats_json)
+
+
 class TestAgroManager(unittest.TestCase):
 
     geopolygon = GeoPolygon([[
@@ -236,3 +246,37 @@ class TestAgroManager(unittest.TestCase):
         self.assertTrue(isinstance(result.metadata, MetaTile))
         self.assertTrue(isinstance(result.data, Tile))
         self.assertTrue(result.data.image.image_type, ImageTypeEnum.PNG)
+
+    def test_stats_for_satellite_image_fails_with_wrong_arguments(self):
+        instance = self.factory(MockHttpClientStats)
+        with self.assertRaises(ValueError):
+            metaimg = MetaTile('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               'http://b.com')
+            instance.stats_for_satellite_image(metaimg)
+
+        with self.assertRaises(ValueError):
+            metaimg = MetaTile('http://a.com', MetaImagePresetEnum.EVI,
+                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               None)
+            instance.stats_for_satellite_image(metaimg)
+
+    def test_stats_for_satellite_image(self):
+        instance = self.factory(MockHttpClientStats)
+        # stats retrieval currently only works for NDVI and EVI presets
+        try:
+            metaimg = MetaTile('http://a.com', MetaImagePresetEnum.EVI,
+                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               'http://b.com')
+            result = instance.stats_for_satellite_image(metaimg)
+            self.assertIsInstance(result, dict)
+        except:
+            self.fail()
+        try:
+            metaimg = MetaTile('http://a.com', MetaImagePresetEnum.NDVI,
+                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               'http://b.com')
+            instance.stats_for_satellite_image(metaimg)
+            self.assertIsInstance(result, dict)
+        except:
+            self.fail()

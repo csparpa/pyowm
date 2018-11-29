@@ -14,7 +14,8 @@ class TestMetaImage(unittest.TestCase):
         tzinfo=UTC())
 
     test_instance = MetaImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
-                              SatelliteNameEnum.SENTINEL_2, test_acquisition_time, 98.2, 0.3, 11.7, 7.89, 'my_polygon')
+                              SatelliteNameEnum.SENTINEL_2, test_acquisition_time, 98.2, 0.3, 11.7, 7.89,
+                              polygon_id='my_polygon', stats_url='http://stats.com')
 
     def test_init_fails_with_wrong_parameters(self):
         self.assertRaises(AssertionError, MetaImage, None, MetaImagePresetEnum.FALSE_COLOR,
