@@ -246,3 +246,16 @@ class TestHTTPClient(unittest.TestCase):
         self.assertIsInstance(data, bytes)
         self.assertEqual(expected_data, data)
         requests.get = self.requests_original_get
+
+    def test_get_geotiff(self):
+        expected_data = b'II*\x00\x08\x00\x04\x00k{\x84s\x84\x84\x8c\x84\x84\x84k\x84k\x84\x84k{s\x9c\x94k\x84'
+
+        def monkey_patched_get(uri, stream=True, params=None, headers=None, timeout=None,
+                               verify=False):
+            return MockResponse(200, expected_data)
+
+        requests.get = monkey_patched_get
+        status, data = HttpClient().get_geotiff('http://anyurl.com')
+        self.assertIsInstance(data, bytes)
+        self.assertEqual(expected_data, data)
+        requests.get = self.requests_original_get

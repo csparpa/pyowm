@@ -10,10 +10,10 @@ from pyowm.commons.enums import ImageTypeEnum
 class TestImage(unittest.TestCase):
 
     def test_load(self):
-        path = '1x1.png'
+        path = '256x256.png'
         i = Image.load(path)
         self.assertIsNotNone(i)
-        self.assertEqual(i.image_type.mime_type, 'image/png')
+        self.assertEqual(i.image_type.mime_type, ImageTypeEnum.PNG.mime_type)
         self.assertIsInstance(i.data, bytes)
 
     def test_persist(self):
