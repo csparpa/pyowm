@@ -13,7 +13,7 @@ class MetaImage:
     :param preset: the preset of the image (supported values are listed by `pyowm.agroapi10.enums.MetaImagePresetEnum`)
     :type preset: str
     :param satellite_name: the name of the satellite that acquired the image (supported values are listed
-        by `pyowm.agroapi10.enums.SatelliteNameEnum`)
+        by `pyowm.agroapi10.enums.SatelliteEnum`)
     :type satellite_name: str
     :param acquisition_time: the UTC Unix epoch when the image was acquired
     :type acquisition_time: int

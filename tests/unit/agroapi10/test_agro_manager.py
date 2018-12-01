@@ -10,7 +10,7 @@ from pyowm.agroapi10.agro_manager import AgroManager
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon, GeoPoint
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import SatelliteImage, MetaPNGImage, MetaGeoTiffImage, MetaTile
-from pyowm.agroapi10.enums import MetaImagePresetEnum, SatelliteNameEnum
+from pyowm.agroapi10.enums import MetaImagePresetEnum, SatelliteEnum
 
 
 class MockHttpClientPolygons(HttpClient):
@@ -209,7 +209,7 @@ class TestAgroManager(unittest.TestCase):
     def test_download_satellite_image_with_polygon_png(self):
         instance = self.factory(MockHttpClientReturningImage)
         metaimg = MetaPNGImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
-                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+                               SatelliteEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
         result = instance.download_satellite_image(metaimg)
         self.assertTrue(isinstance(result,SatelliteImage))
         self.assertTrue(isinstance(result.metadata, MetaPNGImage))
@@ -219,7 +219,7 @@ class TestAgroManager(unittest.TestCase):
     def test_download_satellite_image_with_geotiff(self):
         instance = self.factory(MockHttpClientReturningImage)
         metaimg = MetaGeoTiffImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
-                                   SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+                                   SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
         result = instance.download_satellite_image(metaimg)
         self.assertTrue(isinstance(result,SatelliteImage))
         self.assertTrue(isinstance(result.metadata, MetaGeoTiffImage))
@@ -229,7 +229,7 @@ class TestAgroManager(unittest.TestCase):
     def test_download_satellite_image_with_tile_png_fails_without_tile_coords(self):
         instance = self.factory(MockHttpClientReturningImage)
         metaimg = MetaTile('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
-                           SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+                           SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
         with self.assertRaises(AssertionError):
             instance.download_satellite_image(metaimg)
         with self.assertRaises(AssertionError):
@@ -240,7 +240,7 @@ class TestAgroManager(unittest.TestCase):
     def test_download_satellite_image_with_tile_png(self):
         instance = self.factory(MockHttpClientReturningImage)
         metaimg = MetaTile('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
-                           SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
+                           SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
         result = instance.download_satellite_image(metaimg, x=1, y=2, zoom=4)
         self.assertTrue(isinstance(result,SatelliteImage))
         self.assertTrue(isinstance(result.metadata, MetaTile))
@@ -251,13 +251,13 @@ class TestAgroManager(unittest.TestCase):
         instance = self.factory(MockHttpClientStats)
         with self.assertRaises(ValueError):
             metaimg = MetaTile('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
-                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
                                'http://b.com')
             instance.stats_for_satellite_image(metaimg)
 
         with self.assertRaises(ValueError):
             metaimg = MetaTile('http://a.com', MetaImagePresetEnum.EVI,
-                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
                                None)
             instance.stats_for_satellite_image(metaimg)
 
@@ -266,7 +266,7 @@ class TestAgroManager(unittest.TestCase):
         # stats retrieval currently only works for NDVI and EVI presets
         try:
             metaimg = MetaTile('http://a.com', MetaImagePresetEnum.EVI,
-                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
                                'http://b.com')
             result = instance.stats_for_satellite_image(metaimg)
             self.assertIsInstance(result, dict)
@@ -274,7 +274,7 @@ class TestAgroManager(unittest.TestCase):
             self.fail()
         try:
             metaimg = MetaTile('http://a.com', MetaImagePresetEnum.NDVI,
-                               SatelliteNameEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
+                               SatelliteEnum.SENTINEL_2.name, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4',
                                'http://b.com')
             instance.stats_for_satellite_image(metaimg)
             self.assertIsInstance(result, dict)
