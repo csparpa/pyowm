@@ -1,5 +1,6 @@
 import unittest
-from pyowm.commons.enums import ImageTypeEnum, ImageType
+from pyowm.commons.enums import ImageTypeEnum
+from pyowm.commons.databoxes import ImageType
 
 
 class TestImageTypeEnum(unittest.TestCase):

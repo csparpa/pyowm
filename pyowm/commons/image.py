@@ -1,4 +1,5 @@
-from pyowm.commons.enums import ImageType, ImageTypeEnum
+from pyowm.commons.enums import ImageTypeEnum
+from pyowm.commons.databoxes import ImageType
 
 
 class Image:
@@ -9,7 +10,7 @@ class Image:
     :param data: raw image data
     :type data: bytes
     :param image_type: the type of the image, if known
-    :type image_type: `pyowm.commons.enums.ImageType` or `None`
+    :type image_type: `pyowm.commons.databoxes.ImageType` or `None`
     """
 
     def __init__(self, data, image_type=None):
