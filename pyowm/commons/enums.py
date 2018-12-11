@@ -17,6 +17,13 @@ class ImageTypeEnum:
         return None
 
     @classmethod
+    def lookup_by_name(cls, name):
+        for i in ImageTypeEnum.items():
+            if i.name == name:
+                return i
+        return None
+
+    @classmethod
     def items(cls):
         """
         All values for this enum

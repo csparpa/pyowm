@@ -103,6 +103,39 @@ class MockHttpClientStats(HttpClient):
         return 200, json.loads(self.test_stats_json)
 
 
+class MockHttpClientImagerySearch(HttpClient):
+
+    test_search_results_json = '''[{
+    "dt":1500940800,
+    "type":"Landsat 8",
+    "dc":100,
+    "cl":1.56,
+    "sun":{  
+       "azimuth":126.742,
+       "elevation":63.572},
+    "image":{  
+       "truecolor":"http://api.agromonitoring.com/image/1.0/00059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "falsecolor":"http://api.agromonitoring.com/image/1.0/01059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "ndvi":"http://api.agromonitoring.com/image/1.0/02059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "evi":"http://api.agromonitoring.com/image/1.0/03059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7"},
+    "tile":{  
+       "truecolor":"http://api.agromonitoring.com/tile/1.0/{z}/{x}/{y}/00059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "falsecolor":"http://api.agromonitoring.com/tile/1.0/{z}/{x}/{y}/01059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "ndvi":"http://api.agromonitoring.com/tile/1.0/{z}/{x}/{y}/02059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "evi":"http://api.agromonitoring.com/tile/1.0/{z}/{x}/{y}/03059768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7"},
+    "stats":{  
+       "ndvi":"http://api.agromonitoring.com/stats/1.0/02359768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "evi":"http://api.agromonitoring.com/stats/1.0/03359768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7"},
+    "data":{  
+       "truecolor":"http://api.agromonitoring.com/data/1.0/00159768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "falsecolor":"http://api.agromonitoring.com/data/1.0/01159768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "ndvi":"http://api.agromonitoring.com/data/1.0/02259768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
+       "evi":"http://api.agromonitoring.com/data/1.0/03259768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7"}}]'''
+
+    def get_json(self, uri, params=None, headers=None):
+        return 200, json.loads(self.test_search_results_json)
+
+
 class TestAgroManager(unittest.TestCase):
 
     geopolygon = GeoPolygon([[
@@ -280,3 +313,53 @@ class TestAgroManager(unittest.TestCase):
             self.assertIsInstance(result, dict)
         except:
             self.fail()
+
+    def test_search_satellite_imagery_fails_with_wrong_arguments(self):
+        instance = self.factory(MockHttpClientImagerySearch)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          None, 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', None, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, None, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 9999999, 1234, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, -10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, -20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 80, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, -10, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, -10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 90, 10, 90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, -90, 100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, -100)
+        self.assertRaises(AssertionError, instance.search_satellite_imagery,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          SatelliteEnum.SENTINEL_2.symbol, 0, 10, 100, 20)
+
+        try:
+            instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name,
+                                              MetaImagePresetEnum.EVI, 10, 20, SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
+            instance.search_satellite_imagery('test_pol', 1480699083, 1480782083)
+        except:
+            self.fail()
+

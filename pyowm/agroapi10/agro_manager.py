@@ -4,13 +4,16 @@ Programmatic interface to OWM Agro API endpoints
 
 from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
+from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
-from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI
+from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
 from pyowm.agroapi10.enums import MetaImagePresetEnum
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
+from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
+from pyowm.utils import timeutils
 
 
 class AgroManager(object):
@@ -150,8 +153,99 @@ class AgroManager(object):
 
     # Satellite Imagery subset methods
 
-    def search_satellite_imagery(self, polygon_id, img_type, preset):
-        raise NotImplementedError()
+    def search_satellite_imagery(self, polygon_id, acquired_from, acquired_to, img_type=None, preset=None,
+                                 min_resolution=None, max_resolution=None, acquired_by=None, min_cloud_coverage=None,
+                                 max_cloud_coverage=None, min_valid_data_coverage=None, max_valid_data_coverage=None):
+        """
+        Searches on the Agro API the metadata for all available satellite images that contain the specified polygon and
+        acquired during the specified time interval; and optionally matching the specified set of filters:
+        - image type (eg. GeoTIF)
+        - image preset (eg. false color, NDVI, ...)
+        - min/max acquisition resolution
+        - acquiring satellite
+        - min/max cloud coverage on acquired scene
+        - min/max valid data coverage on acquired scene
+
+        :param polygon_id: the ID of the reference polygon
+        :type polygon_id: str
+        :param acquired_from: lower edge of acquisition interval, UNIX timestamp
+        :type acquired_from: int
+        :param acquired_to: upper edge of acquisition interval, UNIX timestamp
+        :type acquired_to: int
+        :param img_type: the desired file format type of the images. Allowed values are given by `pyowm.commons.enums.ImageTypeEnum`
+        :type img_type: str
+        :param preset: the desired preset of the images. Allowed values are given by `pyowm.agroapi10.enums.MetaImagePresetEnum`
+        :type preset: str
+        :param min_resolution: minimum resolution for images, px/meters
+        :type min_resolution: int
+        :param max_resolution: maximum resolution for images, px/meters
+        :type max_resolution: int
+        :param acquired_by: short symbol of the satellite that acquired the image (eg. "l8")
+        :type acquired_by: str
+        :param min_cloud_coverage: minimum cloud coverage percentage on acquired images
+        :type min_cloud_coverage: int
+        :param max_cloud_coverage: maximum cloud coverage percentage on acquired images
+        :type max_cloud_coverage: int
+        :param min_valid_data_coverage: minimum valid data coverage percentage on acquired images
+        :type min_valid_data_coverage: int
+        :param max_valid_data_coverage: maximum valid data coverage percentage on acquired images
+        :type max_valid_data_coverage: int
+        :return: a list of `pyowm.agro10.imagery.MetaImage` subtypes instances
+        """
+        assert polygon_id is not None
+        assert acquired_from is not None
+        assert acquired_to is not None
+        assert acquired_from <= acquired_to, 'Start timestamp of acquisition window must come before its end'
+        if min_resolution is not None:
+            assert min_resolution > 0, 'Minimum resolution must be positive'
+        if max_resolution is not None:
+            assert max_resolution > 0, 'Maximum resolution must be positive'
+        if min_resolution is not None and max_resolution is not None:
+            assert min_resolution <= max_resolution, 'Mininum resolution must be lower than maximum resolution'
+        if min_cloud_coverage is not None:
+            assert min_cloud_coverage >= 0, 'Minimum cloud coverage must be non negative'
+        if max_cloud_coverage is not None:
+            assert max_cloud_coverage >= 0, 'Maximum cloud coverage must be non negative'
+        if min_cloud_coverage is not None and max_cloud_coverage is not None:
+            assert min_cloud_coverage <= max_cloud_coverage, 'Minimum cloud coverage must be lower than maximum cloud coverage'
+        if min_valid_data_coverage is not None:
+            assert min_valid_data_coverage >= 0, 'Minimum valid data coverage must be non negative'
+        if max_valid_data_coverage is not None:
+            assert max_valid_data_coverage >= 0, 'Maximum valid data coverage must be non negative'
+        if min_valid_data_coverage is not None and max_valid_data_coverage is not None:
+            assert min_valid_data_coverage <= max_valid_data_coverage, 'Minimum valid data coverage must be lower than maximum valid data coverage'
+
+        # prepare params
+        params = dict(appid=self.API_key, polyid=polygon_id, start=acquired_from, end=acquired_to)
+        if min_resolution is not None:
+            params['resolution_min'] = min_resolution
+        if max_resolution is not None:
+            params['resolution_max'] = max_resolution
+        if acquired_by is not None:
+            params['type'] = acquired_by
+        if min_cloud_coverage is not None:
+            params['clouds_min'] = min_cloud_coverage
+        if max_cloud_coverage is not None:
+            params['clouds_max'] = max_cloud_coverage
+        if min_valid_data_coverage is not None:
+            params['coverage_min'] = min_valid_data_coverage
+        if max_valid_data_coverage is not None:
+            params['coverage_max'] = max_valid_data_coverage
+
+        # call API
+        status, data = self.http_client.get_json(SATELLITE_IMAGERY_SEARCH_URI, params=params)
+
+        result_set = SatelliteImagerySearchResultSet(polygon_id, data, timeutils.now(timeformat='unix'))
+
+        # further filter by img_type and/or preset (if specified)
+        if img_type is not None and preset is not None:
+            return result_set.with_img_type_and_preset(img_type, preset)
+        elif img_type is not None:
+            return result_set.with_img_type(img_type)
+        elif preset is not None:
+            return result_set.with_preset(preset)
+        else:
+            return result_set.all()
 
     def download_satellite_image(self, metaimage, x=None, y=None, zoom=None):
         """
@@ -172,17 +266,15 @@ class AgroManager(object):
         if isinstance(metaimage, MetaPNGImage):
             prepared_url = metaimage.url
             status, data = self.http_client.get_png(
-                prepared_url,
-                params={'appid': self.API_key})
-            img = Image(data, metaimage.image_type)
+                prepared_url, params={})
+            img = Image(data, ImageTypeEnum.lookup_by_name(metaimage.image_type))
             return SatelliteImage(metaimage, img)
         # GeoTIF
         elif isinstance(metaimage, MetaGeoTiffImage):
             prepared_url = metaimage.url
             status, data = self.http_client.get_geotiff(
-                prepared_url,
-                params={'appid': self.API_key})
-            img = Image(data, metaimage.image_type)
+                prepared_url, params={})
+            img = Image(data, ImageTypeEnum.lookup_by_name(metaimage.image_type))
             return SatelliteImage(metaimage, img)
         # tile PNG
         elif isinstance(metaimage, MetaTile):
@@ -191,9 +283,8 @@ class AgroManager(object):
             assert zoom is not None
             prepared_url = self._fill_url(metaimage.url, x, y, zoom)
             status, data = self.http_client.get_png(
-                prepared_url,
-                params={'appid': self.API_key})
-            img = Image(data, metaimage.image_type)
+                prepared_url, params={})
+            img = Image(data, ImageTypeEnum.lookup_by_name(metaimage.image_type))
             tile = Tile(x, y, zoom, None, img)
             return SatelliteImage(metaimage, tile)
         else:
@@ -212,9 +303,7 @@ class AgroManager(object):
             raise ValueError("Unsupported image preset: should be EVI or NDVI")
         if metaimage.stats_url is None:
             raise ValueError("URL for image statistics is not defined")
-        status, data = self.http_client.get_json(
-            metaimage.stats_url,
-            params={'appid': self.API_key})
+        status, data = self.http_client.get_json(metaimage.stats_url, params={})
         return data
 
     # Utilities

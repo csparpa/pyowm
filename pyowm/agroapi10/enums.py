@@ -32,7 +32,7 @@ class SatelliteEnum:
 
     """
     LANDSAT_8 = Satellite('Landsat 8', 'l8')
-    SENTINEL_2 = Satellite('Sentinel 2', 's2')
+    SENTINEL_2 = Satellite('Sentinel-2', 's2')
 
     @classmethod
     def items(cls):

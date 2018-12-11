@@ -36,6 +36,14 @@ pyowm.agroapi10.polygon module
     :undoc-members:
     :show-inheritance:
 
+pyowm.agroapi10.search module
+-----------------------------
+
+.. automodule:: pyowm.agroapi10.search
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.agroapi10.soil module
 ---------------------------
 
