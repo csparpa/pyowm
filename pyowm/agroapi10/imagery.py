@@ -140,4 +140,4 @@ class SatelliteImage:
         return "<%s.%s - %s %s satellite image downloaded on: %s>" % (
             __name__, self.__class__.__name__,
             self.metadata.preset, self.metadata.satellite_name,
-            self.downloaded_on('iso') if self.downloaded_on is not None else 'None')
+            self.downloaded_on('iso') if self._downloaded_on is not None else 'None')
