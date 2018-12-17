@@ -45,3 +45,28 @@ class SatelliteEnum:
             cls.LANDSAT_8,
             cls.SENTINEL_2
         ]
+
+
+class PaletteEnum:
+    """
+    Allowed color palettes for satellite images on Agro API 1.0
+
+    """
+    GREEN = '1'   # default Agro API 1.0 palette
+    BLACK_AND_WHITE = '2'
+    CONTRAST_SHIFTED = '3'
+    CONTRAST_CONTINUOUS = '4'
+
+    @classmethod
+    def items(cls):
+        """
+        All values for this enum
+        :return: list of str
+
+        """
+        return [
+            cls.GREEN,
+            cls.BLACK_AND_WHITE,
+            cls.CONTRAST_SHIFTED,
+            cls.CONTRAST_CONTINUOUS
+        ]

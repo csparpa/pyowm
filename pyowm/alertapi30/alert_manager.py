@@ -3,7 +3,6 @@ from pyowm.commons.http_client import HttpClient
 from pyowm.alertapi30.parsers import TriggerParser, AlertParser
 from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
 from pyowm.utils import timeformatutils, timeutils
-from pyowm.utils import stringutils
 
 
 class AlertManager:

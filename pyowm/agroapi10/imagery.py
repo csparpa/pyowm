@@ -84,21 +84,21 @@ class MetaPNGImage(MetaImage):
     """
     Class representing metadata for a satellite image of a polygon in PNG format
     """
-    image_type = ImageTypeEnum.PNG.name
+    image_type = ImageTypeEnum.PNG
 
 
 class MetaTile(MetaImage):
     """
     Class representing metadata for a tile in PNG format
     """
-    image_type = ImageTypeEnum.PNG.name
+    image_type = ImageTypeEnum.PNG
 
 
 class MetaGeoTiffImage(MetaImage):
     """
     Class representing metadata for a satellite image of a polygon in GeoTiff format
     """
-    image_type = ImageTypeEnum.GEOTIFF.name
+    image_type = ImageTypeEnum.GEOTIFF
 
 
 class SatelliteImage:
@@ -111,10 +111,12 @@ class SatelliteImage:
     :type data: either `pyowm.commons.image.Image` or `pyowm.commons.tile.Tile` object
     :param downloaded_on: the UNIX epoch this satellite image was downloaded at
     :type downloaded_on: int or `None`
+    :param palette: ID of the color palette of the downloaded images. Values are provided by `pyowm.agroapi10.enums.PaletteEnum`
+    :type palette: str or `None`
     :returns: a `pyowm.agroapi10.imagery.SatelliteImage` instance
     """
 
-    def __init__(self, metadata, data, downloaded_on=None):
+    def __init__(self, metadata, data, downloaded_on=None, palette=None):
         assert isinstance(metadata, MetaImage)
         self.metadata = metadata
         assert isinstance(data, Image) or isinstance(data, Tile)
@@ -122,6 +124,9 @@ class SatelliteImage:
         if downloaded_on is not None:
             assert isinstance(downloaded_on, int)
             self._downloaded_on = downloaded_on
+        if palette is not None:
+            assert isinstance(palette, str)
+            self.palette = palette
 
     def downloaded_on(self, timeformat='unix'):
         """Returns the UTC time telling when the satellite image was downloaded from the OWM Agro API

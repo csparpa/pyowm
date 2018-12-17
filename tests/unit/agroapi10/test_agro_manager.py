@@ -10,7 +10,7 @@ from pyowm.agroapi10.agro_manager import AgroManager
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon, GeoPoint
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import SatelliteImage, MetaPNGImage, MetaGeoTiffImage, MetaTile
-from pyowm.agroapi10.enums import MetaImagePresetEnum, SatelliteEnum
+from pyowm.agroapi10.enums import MetaImagePresetEnum, SatelliteEnum, PaletteEnum
 
 
 class MockHttpClientPolygons(HttpClient):
@@ -243,11 +243,12 @@ class TestAgroManager(unittest.TestCase):
         instance = self.factory(MockHttpClientReturningImage)
         metaimg = MetaPNGImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
                                SatelliteEnum.SENTINEL_2, 1378459200, 98.2, 0.3, 11.7, 7.89, 'a1b2c3d4')
-        result = instance.download_satellite_image(metaimg)
+        result = instance.download_satellite_image(metaimg, palette=PaletteEnum.BLACK_AND_WHITE)
         self.assertTrue(isinstance(result,SatelliteImage))
         self.assertTrue(isinstance(result.metadata, MetaPNGImage))
         self.assertTrue(isinstance(result.data, Image))
-        self.assertTrue(result.data.image_type, ImageTypeEnum.PNG)
+        self.assertEqual(result.data.image_type, ImageTypeEnum.PNG)
+        self.assertEqual(result.palette, PaletteEnum.BLACK_AND_WHITE)
 
     def test_download_satellite_image_with_geotiff(self):
         instance = self.factory(MockHttpClientReturningImage)
@@ -257,7 +258,8 @@ class TestAgroManager(unittest.TestCase):
         self.assertTrue(isinstance(result,SatelliteImage))
         self.assertTrue(isinstance(result.metadata, MetaGeoTiffImage))
         self.assertTrue(isinstance(result.data, Image))
-        self.assertTrue(result.data.image_type, ImageTypeEnum.GEOTIFF)
+        self.assertEqual(result.data.image_type, ImageTypeEnum.GEOTIFF)
+        self.assertEqual(result.palette, PaletteEnum.GREEN)
 
     def test_download_satellite_image_with_tile_png_fails_without_tile_coords(self):
         instance = self.factory(MockHttpClientReturningImage)
@@ -278,7 +280,8 @@ class TestAgroManager(unittest.TestCase):
         self.assertTrue(isinstance(result,SatelliteImage))
         self.assertTrue(isinstance(result.metadata, MetaTile))
         self.assertTrue(isinstance(result.data, Tile))
-        self.assertTrue(result.data.image.image_type, ImageTypeEnum.PNG)
+        self.assertEqual(result.data.image.image_type, ImageTypeEnum.PNG)
+        self.assertEqual(result.palette, PaletteEnum.GREEN)
 
     def test_stats_for_satellite_image_fails_with_wrong_arguments(self):
         instance = self.factory(MockHttpClientStats)
@@ -317,49 +320,78 @@ class TestAgroManager(unittest.TestCase):
     def test_search_satellite_imagery_fails_with_wrong_arguments(self):
         instance = self.factory(MockHttpClientImagerySearch)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          None, 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          None, 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', None, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', None, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, None, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, None, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 9999999, 1234, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 9999999, 1234, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, -10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, -10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, -20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, -20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 80, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 80, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, -10, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, -10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 90, 10, 90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, -90, 100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, -100)
         self.assertRaises(AssertionError, instance.search_satellite_imagery,
-                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name, MetaImagePresetEnum.EVI, 10, 20,
+                          'test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG, MetaImagePresetEnum.EVI, 10, 20,
                           SatelliteEnum.SENTINEL_2.symbol, 0, 10, 100, 20)
 
         try:
-            instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG.name,
+            instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG,
                                               MetaImagePresetEnum.EVI, 10, 20, SatelliteEnum.SENTINEL_2.symbol, 0, 10, 90, 100)
             instance.search_satellite_imagery('test_pol', 1480699083, 1480782083)
         except:
             self.fail()
 
+    def test_search_satellite_imagery(self):
+        instance = self.factory(MockHttpClientImagerySearch)
+
+        # all images available for the polygon
+        results = instance.search_satellite_imagery('test_pol', 1480699083, 1480782083)
+        self.assertEqual(12, len(results))
+
+        # all Landsat 8 images available for the polygon
+        results = instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, None, None, None, None,
+                                                    SatelliteEnum.LANDSAT_8.symbol)
+        self.assertEqual(12, len(results))
+
+        # all Sentinel2 EVI PNG images available for the polygon, 10 < px/m < 20, cloud coverage < 10%, data doverage > 90 %
+        results = instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG,
+                                                    MetaImagePresetEnum.EVI, 10, 20, SatelliteEnum.SENTINEL_2.symbol, 0,
+                                                    10, 90, 100)
+        self.assertEqual(2, len(results))
+        self.assertTrue(all([i.image_type == ImageTypeEnum.PNG and i.preset == MetaImagePresetEnum.EVI for i in results]))
+
+        # all Sentinel2 EVI images available for the polygon, 10 < px/m < 20, cloud coverage < 10%, data doverage > 90 %
+        results = instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, None,
+                                                    MetaImagePresetEnum.EVI, 10, 20, SatelliteEnum.SENTINEL_2.symbol, 0,
+                                                    10, 90, 100)
+        self.assertEqual(3, len(results))
+        self.assertTrue(all([i.preset == MetaImagePresetEnum.EVI for i in results]))
+
+    def test_repr(self):
+        instance = AgroManager('APIKey')
+        repr(instance)

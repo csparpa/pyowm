@@ -77,6 +77,8 @@ class TestSatelliteImage(unittest.TestCase):
                 SatelliteImage(TestMetaImage.test_instance, None)
             with self.assertRaises(AssertionError):
                 SatelliteImage(TestMetaImage.test_instance, self.test_image, downloaded_on='not_an_int')
+            with self.assertRaises(AssertionError):
+                SatelliteImage(TestMetaImage.test_instance, self.test_image, downloaded_on=1234567, palette=888)
 
         def test_downloaded_on_returning_different_formats(self):
             self.assertEqual(self.test_instance.downloaded_on(timeformat='unix'),

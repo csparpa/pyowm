@@ -61,10 +61,10 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
 
         # search all geotiff images in the specified time frame
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
-                                                  ImageTypeEnum.GEOTIFF.name, None, None, None, None, None, None, None, None)
+                                                  ImageTypeEnum.GEOTIFF, None, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 44)
-        self.assertTrue(all([isinstance(i, MetaImage) and i.image_type == ImageTypeEnum.GEOTIFF.name for i in result_set]))
+        self.assertTrue(all([isinstance(i, MetaImage) and i.image_type == ImageTypeEnum.GEOTIFF for i in result_set]))
 
     def test_search_for_ndvi_preset_only(self):
         mgr = self.__owm.agro_manager()
@@ -80,26 +80,26 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         mgr = self.__owm.agro_manager()
 
         # search all PNG images in falsecolor in the specified time frame
-        result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG.name,
+        result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG,
                                                   MetaImagePresetEnum.FALSE_COLOR, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 22)
         self.assertTrue(all([isinstance(i, MetaImage) and i.preset == MetaImagePresetEnum.FALSE_COLOR and
-                             i.image_type == ImageTypeEnum.PNG.name for i in result_set]))
+                             i.image_type == ImageTypeEnum.PNG for i in result_set]))
 
     def test_detailed_search(self):
         mgr = self.__owm.agro_manager()
 
         # in the specified time frame, search all PNG images in truecolor acquired by Sentinel 2
         # and with a max cloud coverage of 5% and at least 90% of valid data coverage
-        result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG.name,
+        result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG,
                                                   MetaImagePresetEnum.TRUE_COLOR, None, None, SatelliteEnum.SENTINEL_2.symbol,
                                                   None, 5, 90, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 8)
         self.assertTrue(all([isinstance(i, MetaImage) and
                              i.preset == MetaImagePresetEnum.TRUE_COLOR and
-                             i.image_type == ImageTypeEnum.PNG.name and
+                             i.image_type == ImageTypeEnum.PNG and
                              i.satellite_name == SatelliteEnum.SENTINEL_2.name and
                              i.cloud_coverage_percentage <= 5 and
                              i.valid_data_percentage >= 90 for i in result_set]))

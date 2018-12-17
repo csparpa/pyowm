@@ -4,11 +4,11 @@ Programmatic interface to OWM Agro API endpoints
 
 from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
-from pyowm.commons.enums import ImageTypeEnum
+from pyowm.commons.databoxes import ImageType
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
 from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
-from pyowm.agroapi10.enums import MetaImagePresetEnum
+from pyowm.agroapi10.enums import MetaImagePresetEnum, PaletteEnum
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
@@ -173,7 +173,7 @@ class AgroManager(object):
         :param acquired_to: upper edge of acquisition interval, UNIX timestamp
         :type acquired_to: int
         :param img_type: the desired file format type of the images. Allowed values are given by `pyowm.commons.enums.ImageTypeEnum`
-        :type img_type: str
+        :type img_type: `pyowm.commons.databoxes.ImageType`
         :param preset: the desired preset of the images. Allowed values are given by `pyowm.agroapi10.enums.MetaImagePresetEnum`
         :type preset: str
         :param min_resolution: minimum resolution for images, px/meters
@@ -247,10 +247,11 @@ class AgroManager(object):
         else:
             return result_set.all()
 
-    def download_satellite_image(self, metaimage, x=None, y=None, zoom=None):
+    def download_satellite_image(self, metaimage, x=None, y=None, zoom=None, palette=None):
         """
         Downloads the satellite image described by the provided metadata. In case the satellite image is a tile, then
-        tile coordinates and zoom must be provided
+        tile coordinates and zoom must be provided. An optional palette ID can be provided, if supported by the
+        downloaded preset (currently only NDVI is supported)
 
         :param metaimage: the satellite image's metadata, in the form of a `MetaImage` subtype instance
         :type metaimage: a `pyowm.agroapi10.imagery.MetaImage` subtype
@@ -260,22 +261,30 @@ class AgroManager(object):
         :type y: int or `None`
         :param zoom: zoom level (only needed in case you are downloading a tile image)
         :type zoom: int or `None`
+        :param palette: ID of the color palette of the downloaded images. Values are provided by `pyowm.agroapi10.enums.PaletteEnum`
+        :type palette: str or `None`
         :return: a `pyowm.agroapi10.imagery.SatelliteImage` instance containing both image's metadata and data
         """
+        if palette is not None:
+            assert isinstance(palette, str)
+            params = dict(paletteid=palette)
+        else:
+            palette = PaletteEnum.GREEN
+            params = dict()
         # polygon PNG
         if isinstance(metaimage, MetaPNGImage):
             prepared_url = metaimage.url
             status, data = self.http_client.get_png(
-                prepared_url, params={})
-            img = Image(data, ImageTypeEnum.lookup_by_name(metaimage.image_type))
-            return SatelliteImage(metaimage, img)
+                prepared_url, params=params)
+            img = Image(data, metaimage.image_type)
+            return SatelliteImage(metaimage, img, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
         # GeoTIF
         elif isinstance(metaimage, MetaGeoTiffImage):
             prepared_url = metaimage.url
             status, data = self.http_client.get_geotiff(
-                prepared_url, params={})
-            img = Image(data, ImageTypeEnum.lookup_by_name(metaimage.image_type))
-            return SatelliteImage(metaimage, img)
+                prepared_url, params=params)
+            img = Image(data, metaimage.image_type)
+            return SatelliteImage(metaimage, img, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
         # tile PNG
         elif isinstance(metaimage, MetaTile):
             assert x is not None
@@ -283,10 +292,10 @@ class AgroManager(object):
             assert zoom is not None
             prepared_url = self._fill_url(metaimage.url, x, y, zoom)
             status, data = self.http_client.get_png(
-                prepared_url, params={})
-            img = Image(data, ImageTypeEnum.lookup_by_name(metaimage.image_type))
+                prepared_url, params=params)
+            img = Image(data, metaimage.image_type)
             tile = Tile(x, y, zoom, None, img)
-            return SatelliteImage(metaimage, tile)
+            return SatelliteImage(metaimage, tile, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
         else:
             raise ValueError("Cannot download: unsupported MetaImage subtype")
 
@@ -309,3 +318,6 @@ class AgroManager(object):
     # Utilities
     def _fill_url(self, url_template, x, y, zoom):
         return url_template.replace('{x}', str(x)).replace('{y}', str(y)).replace('{z}', str(zoom))
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)

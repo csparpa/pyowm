@@ -1,6 +1,7 @@
 from pyowm.utils import timeformatutils
 from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage
 from pyowm.agroapi10.enums import MetaImagePresetEnum
+from pyowm.commons.databoxes import ImageType
 
 
 class SatelliteImagerySearchResultSet:
@@ -24,10 +25,13 @@ class SatelliteImagerySearchResultSet:
         :returns: a `pyowm.agroapi10.imagery.SatelliteImagerySearchResultSet` instance or an exception is parsing fails
 
         """
+        assert isinstance(polygon_id, str)
+        self.polygon_id = polygon_id
+
+        assert isinstance(list_of_dict, list)
+
         assert isinstance(query_timestamp, int)
         self.query_timestamp = query_timestamp
-
-        self.polygon_id = polygon_id
 
         # parse raw data
         result = list()
@@ -163,11 +167,12 @@ class SatelliteImagerySearchResultSet:
         Returns the search results having the specified image type
 
         :param image_type: the desired image type (valid values are provided by the
-            `pyowm.commons.enums.ImageTypeEnum` enum
-        :type image_type: str
+            `pyowm.commons.enums.ImageTypeEnum` enum)
+        :type image_type: `pyowm.commons.databoxes.ImageType` instance
         :returns: a list of `pyowm.agroapi10.imagery.MetaImage` instances
 
         """
+        assert isinstance(image_type, ImageType)
         return list(filter(lambda x: x.image_type == image_type, self.metaimages))
 
     def with_preset(self, preset):
@@ -175,11 +180,12 @@ class SatelliteImagerySearchResultSet:
         Returns the seach results having the specified preset
 
         :param preset: the desired image preset (valid values are provided by the
-            `pyowm.agroapi10.enums.MetaImagePresetEnum` enum
+            `pyowm.agroapi10.enums.MetaImagePresetEnum` enum)
         :type preset: str
         :returns: a list of `pyowm.agroapi10.imagery.MetaImage` instances
 
         """
+        assert isinstance(preset, str)
         return list(filter(lambda x: x.preset == preset, self.metaimages))
 
     def with_img_type_and_preset(self, image_type, preset):
@@ -187,12 +193,14 @@ class SatelliteImagerySearchResultSet:
         Returns the search results having both the specified image type and preset
 
         :param image_type: the desired image type (valid values are provided by the
-            `pyowm.commons.enums.ImageTypeEnum` enum
-        :type image_type: str
+            `pyowm.commons.enums.ImageTypeEnum` enum)
+        :type image_type: `pyowm.commons.databoxes.ImageType` instance
         :param preset: the desired image preset (valid values are provided by the
-            `pyowm.agroapi10.enums.MetaImagePresetEnum` enum
+            `pyowm.agroapi10.enums.MetaImagePresetEnum` enum)
         :type preset: str
         :returns: a list of `pyowm.agroapi10.imagery.MetaImage` instances
 
         """
+        assert isinstance(image_type, ImageType)
+        assert isinstance(preset, str)
         return list(filter(lambda x: x.image_type == image_type and x.preset == preset, self.metaimages))
