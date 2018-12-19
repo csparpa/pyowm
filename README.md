@@ -26,6 +26,7 @@ With PyOWM you can integrate into your code any of the following OpenWeatherMap 
     - current weather data
     - weather forecasts
     -+ weather history
+ - *Agro API v1.0**, offering soil data and satellite imagery search and download
  - *Air Pollution API v3.0*, offering data about CO, O3, NO2 and SO2
  - *UV Index API v3.0*, offering data about Ultraviolet exposition
  - *Stations API v3.0*, allowing to create and manage meteostation and publish local weather measurements

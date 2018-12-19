@@ -23,8 +23,8 @@ PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows 
 consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
 
 
-What APIs does PyOWM allow me to use?
--------------------------------------
+What APIs can I access with PyOWM?
+----------------------------------
 
 With PyOWM you can interact programmatically with the following OpenWeatherMap web APIs:
 
@@ -32,7 +32,7 @@ With PyOWM you can interact programmatically with the following OpenWeatherMap w
     + current weather data
     + weather forecasts
     + weather history
- - **Agro API v1.0**, offering polygon editing, soil data
+ - **Agro API v1.0**, offering polygon editing, soil data, satellite imagery search and download
  - **Air Pollution API v3.0**, offering data about CO, O3, NO2 and SO2
  - **UV Index API v3.0**, offering data about Ultraviolet exposition
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements
