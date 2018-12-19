@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 from pyowm.commons.image import Image, ImageTypeEnum
-from pyowm.agroapi10.enums import MetaImagePresetEnum, SatelliteEnum
+from pyowm.agroapi10.enums import PresetEnum, SatelliteEnum
 from pyowm.agroapi10.imagery import MetaImage, SatelliteImage
 from pyowm.utils.timeformatutils import UTC
 
@@ -13,39 +13,39 @@ class TestMetaImage(unittest.TestCase):
     test_date_acquisition_time = datetime.strptime(test_iso_acquisition_time, '%Y-%m-%d %H:%M:%S+00').replace(
         tzinfo=UTC())
 
-    test_instance = MetaImage('http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+    test_instance = MetaImage('http://a.com', PresetEnum.FALSE_COLOR,
                               SatelliteEnum.SENTINEL_2.name, test_acquisition_time, 98.2, 0.3, 11.7, 7.89,
                               polygon_id='my_polygon', stats_url='http://stats.com')
 
     def test_init_fails_with_wrong_parameters(self):
-        self.assertRaises(AssertionError, MetaImage, None, MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, None, PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 0.3, 11.7, 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, 'a_string', 98.2, 0.3, 11.7, 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, -567, 98.2, 0.3, 11.7, 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 'a_string', 0.3, 11.7, 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, -32.1, 0.3, 11.7, 7.89)
 
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 'a_string', 11.7, 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, -21.1, 11.7, 7.89)
         # sun azimuth
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 21.1, 'a_string', 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2, self.test_acquisition_time, 98.2, 21.1, -54.4, 7.89)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 21.1, 368.4, 7.89)
         # sun elevation
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 21.1, 54.4, 'a_string')
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 21.1, 54.4, -32.2)
-        self.assertRaises(AssertionError, MetaImage, 'http://a.com', MetaImagePresetEnum.FALSE_COLOR,
+        self.assertRaises(AssertionError, MetaImage, 'http://a.com', PresetEnum.FALSE_COLOR,
                           SatelliteEnum.SENTINEL_2.name, self.test_acquisition_time, 98.2, 21.1, 54.4, 100.3)
 
     def test_acquisition_time_returning_different_formats(self):

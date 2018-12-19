@@ -4,7 +4,7 @@ from pyowm.constants import DEFAULT_API_KEY
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.agroapi10.polygon import GeoPolygon
-from pyowm.agroapi10.enums import SatelliteEnum, MetaImagePresetEnum
+from pyowm.agroapi10.enums import SatelliteEnum, PresetEnum
 from pyowm.agroapi10.imagery import MetaImage
 
 
@@ -44,8 +44,8 @@ class IntegrationTestsSatelliteImageryStats(unittest.TestCase):
         self.assertTrue(all([isinstance(i, MetaImage) and i.satellite_name == SatelliteEnum.LANDSAT_8.name for i in result_set]))
 
         # only keep EVI and NDVI ones
-        ndvi_only = [mimg for mimg in result_set if mimg.preset  == MetaImagePresetEnum.NDVI]
-        evi_only = [mimg for mimg in result_set if mimg.preset == MetaImagePresetEnum.EVI]
+        ndvi_only = [mimg for mimg in result_set if mimg.preset == PresetEnum.NDVI]
+        evi_only = [mimg for mimg in result_set if mimg.preset == PresetEnum.EVI]
 
         self.assertTrue(len(ndvi_only) > 1)
         self.assertTrue(len(evi_only) > 1)
@@ -57,7 +57,7 @@ class IntegrationTestsSatelliteImageryStats(unittest.TestCase):
         self.assertIsInstance(stats_evi, dict)
 
         # try to search for stats of a non NDVI or EVI image
-        falsecolor_only = [mimg for mimg in result_set if mimg.preset  == MetaImagePresetEnum.FALSE_COLOR]
+        falsecolor_only = [mimg for mimg in result_set if mimg.preset == PresetEnum.FALSE_COLOR]
         with self.assertRaises(ValueError):
             mgr.stats_for_satellite_image(falsecolor_only[0])
 

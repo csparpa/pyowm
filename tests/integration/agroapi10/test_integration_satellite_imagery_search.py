@@ -5,7 +5,7 @@ from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.agroapi10.polygon import GeoPolygon
 from pyowm.commons.enums import ImageTypeEnum
-from pyowm.agroapi10.enums import SatelliteEnum, MetaImagePresetEnum
+from pyowm.agroapi10.enums import SatelliteEnum, PresetEnum
 from pyowm.agroapi10.imagery import MetaImage
 
 
@@ -71,20 +71,20 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
 
         # search all NDVI images in the specified time frame
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
-                                                  None, MetaImagePresetEnum.NDVI, None, None, None, None, None, None, None)
+                                                  None, PresetEnum.NDVI, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 33)
-        self.assertTrue(all([isinstance(i, MetaImage) and i.preset == MetaImagePresetEnum.NDVI for i in result_set]))
+        self.assertTrue(all([isinstance(i, MetaImage) and i.preset == PresetEnum.NDVI for i in result_set]))
 
     def test_search_for_falsecolor_png_only(self):
         mgr = self.__owm.agro_manager()
 
         # search all PNG images in falsecolor in the specified time frame
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG,
-                                                  MetaImagePresetEnum.FALSE_COLOR, None, None, None, None, None, None, None)
+                                                  PresetEnum.FALSE_COLOR, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 22)
-        self.assertTrue(all([isinstance(i, MetaImage) and i.preset == MetaImagePresetEnum.FALSE_COLOR and
+        self.assertTrue(all([isinstance(i, MetaImage) and i.preset == PresetEnum.FALSE_COLOR and
                              i.image_type == ImageTypeEnum.PNG for i in result_set]))
 
     def test_detailed_search(self):
@@ -93,12 +93,12 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         # in the specified time frame, search all PNG images in truecolor acquired by Sentinel 2
         # and with a max cloud coverage of 5% and at least 90% of valid data coverage
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG,
-                                                  MetaImagePresetEnum.TRUE_COLOR, None, None, SatelliteEnum.SENTINEL_2.symbol,
+                                                  PresetEnum.TRUE_COLOR, None, None, SatelliteEnum.SENTINEL_2.symbol,
                                                   None, 5, 90, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 8)
         self.assertTrue(all([isinstance(i, MetaImage) and
-                             i.preset == MetaImagePresetEnum.TRUE_COLOR and
+                             i.preset == PresetEnum.TRUE_COLOR and
                              i.image_type == ImageTypeEnum.PNG and
                              i.satellite_name == SatelliteEnum.SENTINEL_2.name and
                              i.cloud_coverage_percentage <= 5 and

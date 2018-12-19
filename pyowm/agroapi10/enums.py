@@ -1,9 +1,9 @@
 from pyowm.commons.databoxes import Satellite
 
 
-class MetaImagePresetEnum:
+class PresetEnum:
     """
-    Allowed presets for MetaImages on Agro API 1.0
+    Allowed presets for satellite images on Agro API 1.0
 
     """
     TRUE_COLOR = 'truecolor'

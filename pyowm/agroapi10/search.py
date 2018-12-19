@@ -1,6 +1,6 @@
 from pyowm.utils import timeformatutils
 from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage
-from pyowm.agroapi10.enums import MetaImagePresetEnum
+from pyowm.agroapi10.enums import PresetEnum
 from pyowm.commons.databoxes import ImageType
 
 
@@ -58,22 +58,22 @@ class SatelliteImagerySearchResultSet:
             evi_png_url = png_dict.get('evi', None)
             if true_color_png_url is not None:
                 result.append(
-                    MetaPNGImage(true_color_png_url, MetaImagePresetEnum.TRUE_COLOR, satellite_name, acquisition_time,
+                    MetaPNGImage(true_color_png_url, PresetEnum.TRUE_COLOR, satellite_name, acquisition_time,
                                  valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                                  polygon_id=polygon_id))
             if false_color_png_url is not None:
                 result.append(
-                    MetaPNGImage(false_color_png_url, MetaImagePresetEnum.FALSE_COLOR, satellite_name, acquisition_time,
+                    MetaPNGImage(false_color_png_url, PresetEnum.FALSE_COLOR, satellite_name, acquisition_time,
                                  valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                                  polygon_id=polygon_id))
             if ndvi_png_url is not None:
                 result.append(
-                    MetaPNGImage(ndvi_png_url, MetaImagePresetEnum.NDVI, satellite_name, acquisition_time,
+                    MetaPNGImage(ndvi_png_url, PresetEnum.NDVI, satellite_name, acquisition_time,
                                  valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                                  polygon_id=polygon_id, stats_url=stats_url_for_ndvi))
             if evi_png_url is not None:
                 result.append(
-                    MetaPNGImage(evi_png_url, MetaImagePresetEnum.EVI, satellite_name, acquisition_time,
+                    MetaPNGImage(evi_png_url, PresetEnum.EVI, satellite_name, acquisition_time,
                                  valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                                  polygon_id=polygon_id, stats_url=stats_url_for_evi))
 
@@ -85,22 +85,22 @@ class SatelliteImagerySearchResultSet:
             evi_tile_url = tiles_dict.get('evi', None)
             if true_color_tile_url is not None:
                 result.append(
-                    MetaTile(true_color_tile_url, MetaImagePresetEnum.TRUE_COLOR, satellite_name, acquisition_time,
+                    MetaTile(true_color_tile_url, PresetEnum.TRUE_COLOR, satellite_name, acquisition_time,
                              valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                              polygon_id=polygon_id))
             if false_color_tile_url is not None:
                 result.append(
-                    MetaTile(false_color_tile_url, MetaImagePresetEnum.FALSE_COLOR, satellite_name, acquisition_time,
+                    MetaTile(false_color_tile_url, PresetEnum.FALSE_COLOR, satellite_name, acquisition_time,
                              valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                              polygon_id=polygon_id))
             if ndvi_tile_url is not None:
                 result.append(
-                    MetaTile(ndvi_tile_url, MetaImagePresetEnum.NDVI, satellite_name, acquisition_time,
+                    MetaTile(ndvi_tile_url, PresetEnum.NDVI, satellite_name, acquisition_time,
                              valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                              polygon_id=polygon_id, stats_url=stats_url_for_ndvi))
             if evi_tile_url is not None:
                 result.append(
-                    MetaTile(evi_tile_url, MetaImagePresetEnum.EVI, satellite_name, acquisition_time,
+                    MetaTile(evi_tile_url, PresetEnum.EVI, satellite_name, acquisition_time,
                              valid_data_percentage, cloud_coverage_percentage, sun_azimuth, sun_elevation,
                              polygon_id=polygon_id, stats_url=stats_url_for_evi))
 
@@ -112,22 +112,22 @@ class SatelliteImagerySearchResultSet:
             evi_geotiff_url = geotiff_dict.get('evi', None)
             if true_color_geotiff_url is not None:
                 result.append(
-                    MetaGeoTiffImage(true_color_geotiff_url, MetaImagePresetEnum.TRUE_COLOR, satellite_name,
+                    MetaGeoTiffImage(true_color_geotiff_url, PresetEnum.TRUE_COLOR, satellite_name,
                                      acquisition_time, valid_data_percentage, cloud_coverage_percentage,
                                      sun_azimuth, sun_elevation, polygon_id=polygon_id))
             if false_color_geotiff_url is not None:
                 result.append(
-                    MetaGeoTiffImage(false_color_geotiff_url, MetaImagePresetEnum.FALSE_COLOR, satellite_name,
+                    MetaGeoTiffImage(false_color_geotiff_url, PresetEnum.FALSE_COLOR, satellite_name,
                                      acquisition_time, valid_data_percentage, cloud_coverage_percentage,
                                      sun_azimuth, sun_elevation, polygon_id=polygon_id))
             if ndvi_geotiff_url is not None:
                 result.append(
-                    MetaGeoTiffImage(ndvi_geotiff_url, MetaImagePresetEnum.NDVI, satellite_name,
+                    MetaGeoTiffImage(ndvi_geotiff_url, PresetEnum.NDVI, satellite_name,
                                      acquisition_time, valid_data_percentage, cloud_coverage_percentage,
                                      sun_azimuth, sun_elevation, polygon_id=polygon_id, stats_url=stats_url_for_ndvi))
             if evi_geotiff_url is not None:
                 result.append(
-                    MetaGeoTiffImage(evi_geotiff_url, MetaImagePresetEnum.EVI, satellite_name,
+                    MetaGeoTiffImage(evi_geotiff_url, PresetEnum.EVI, satellite_name,
                                      acquisition_time, valid_data_percentage, cloud_coverage_percentage,
                                      sun_azimuth, sun_elevation, polygon_id=polygon_id, stats_url=stats_url_for_evi))
         self.metaimages = result
@@ -180,7 +180,7 @@ class SatelliteImagerySearchResultSet:
         Returns the seach results having the specified preset
 
         :param preset: the desired image preset (valid values are provided by the
-            `pyowm.agroapi10.enums.MetaImagePresetEnum` enum)
+            `pyowm.agroapi10.enums.PresetEnum` enum)
         :type preset: str
         :returns: a list of `pyowm.agroapi10.imagery.MetaImage` instances
 
@@ -196,7 +196,7 @@ class SatelliteImagerySearchResultSet:
             `pyowm.commons.enums.ImageTypeEnum` enum)
         :type image_type: `pyowm.commons.databoxes.ImageType` instance
         :param preset: the desired image preset (valid values are provided by the
-            `pyowm.agroapi10.enums.MetaImagePresetEnum` enum)
+            `pyowm.agroapi10.enums.PresetEnum` enum)
         :type preset: str
         :returns: a list of `pyowm.agroapi10.imagery.MetaImage` instances
 

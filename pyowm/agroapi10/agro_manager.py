@@ -8,7 +8,7 @@ from pyowm.commons.databoxes import ImageType
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
 from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
-from pyowm.agroapi10.enums import MetaImagePresetEnum, PaletteEnum
+from pyowm.agroapi10.enums import PresetEnum, PaletteEnum
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
@@ -174,7 +174,7 @@ class AgroManager(object):
         :type acquired_to: int
         :param img_type: the desired file format type of the images. Allowed values are given by `pyowm.commons.enums.ImageTypeEnum`
         :type img_type: `pyowm.commons.databoxes.ImageType`
-        :param preset: the desired preset of the images. Allowed values are given by `pyowm.agroapi10.enums.MetaImagePresetEnum`
+        :param preset: the desired preset of the images. Allowed values are given by `pyowm.agroapi10.enums.PresetEnum`
         :type preset: str
         :param min_resolution: minimum resolution for images, px/meters
         :type min_resolution: int
@@ -308,7 +308,7 @@ class AgroManager(object):
         :type metaimage: a `pyowm.agroapi10.imagery.MetaImage` subtype
         :return: dict
         """
-        if metaimage.preset != MetaImagePresetEnum.EVI and metaimage.preset != MetaImagePresetEnum.NDVI:
+        if metaimage.preset != PresetEnum.EVI and metaimage.preset != PresetEnum.NDVI:
             raise ValueError("Unsupported image preset: should be EVI or NDVI")
         if metaimage.stats_url is None:
             raise ValueError("URL for image statistics is not defined")

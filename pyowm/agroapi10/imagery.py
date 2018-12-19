@@ -10,7 +10,7 @@ class MetaImage:
 
     :param url: the public URL of the image
     :type url: str
-    :param preset: the preset of the image (supported values are listed by `pyowm.agroapi10.enums.MetaImagePresetEnum`)
+    :param preset: the preset of the image (supported values are listed by `pyowm.agroapi10.enums.PresetEnum`)
     :type preset: str
     :param satellite_name: the name of the satellite that acquired the image (supported values are listed
         by `pyowm.agroapi10.enums.SatelliteEnum`)

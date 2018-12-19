@@ -6,7 +6,7 @@ from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.agroapi10.polygon import GeoPolygon
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.image import Image
-from pyowm.agroapi10.enums import SatelliteEnum, MetaImagePresetEnum, PaletteEnum
+from pyowm.agroapi10.enums import SatelliteEnum, PresetEnum, PaletteEnum
 from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage, SatelliteImage
 
 
@@ -43,7 +43,7 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
 
         # search PNG, truecolor, non-tile images acquired by Landsat 8
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
-                                                  ImageTypeEnum.PNG, MetaImagePresetEnum.TRUE_COLOR, None, None,
+                                                  ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 14)
@@ -67,7 +67,7 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
 
         # search GeoTiff, EVIimages acquired by Landsat 8
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
-                                                  ImageTypeEnum.GEOTIFF, MetaImagePresetEnum.EVI, None, None,
+                                                  ImageTypeEnum.GEOTIFF, PresetEnum.EVI, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 7)
@@ -87,7 +87,7 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
 
         # search PNG, truecolor, tile images acquired by Landsat 8
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
-                                                  ImageTypeEnum.PNG, MetaImagePresetEnum.TRUE_COLOR, None, None,
+                                                  ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
         self.assertEqual(len(result_set), 14)

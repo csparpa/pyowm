@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
-from pyowm.agroapi10.enums import MetaImagePresetEnum
+from pyowm.agroapi10.enums import PresetEnum
 from pyowm.utils.timeformatutils import UTC
 
 
@@ -49,7 +49,7 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
     def test_instantiation(self):
         self.assertEqual(12, len(self.test_instance.metaimages))
         self.assertTrue(all([mi.stats_url is not None for mi in self.test_instance.metaimages if mi.preset in
-                             [MetaImagePresetEnum.EVI, MetaImagePresetEnum.NDVI]]))
+                             [PresetEnum.EVI, PresetEnum.NDVI]]))
 
     def test_issued_on_returning_different_formats(self):
         self.assertEqual(self.test_instance.issued_on(timeformat='unix'),
@@ -83,13 +83,13 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
             self.test_instance.with_preset(1234)
 
         # success
-        result = self.test_instance.with_preset(MetaImagePresetEnum.TRUE_COLOR)
+        result = self.test_instance.with_preset(PresetEnum.TRUE_COLOR)
         self.assertEqual(3, len(result))
-        result = self.test_instance.with_preset(MetaImagePresetEnum.FALSE_COLOR)
+        result = self.test_instance.with_preset(PresetEnum.FALSE_COLOR)
         self.assertEqual(3, len(result))
-        result = self.test_instance.with_preset(MetaImagePresetEnum.NDVI)
+        result = self.test_instance.with_preset(PresetEnum.NDVI)
         self.assertEqual(3, len(result))
-        result = self.test_instance.with_preset(MetaImagePresetEnum.EVI)
+        result = self.test_instance.with_preset(PresetEnum.EVI)
         self.assertEqual(3, len(result))
 
     def test_with_img_type_and_preset(self):
@@ -97,14 +97,14 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.test_instance.with_img_type_and_preset(1234, 1234)
         with self.assertRaises(AssertionError):
-            self.test_instance.with_img_type_and_preset(1234, MetaImagePresetEnum.TRUE_COLOR)
+            self.test_instance.with_img_type_and_preset(1234, PresetEnum.TRUE_COLOR)
         with self.assertRaises(AssertionError):
             self.test_instance.with_img_type_and_preset(ImageTypeEnum.PNG, 1234)
 
         # success
-        result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.PNG, MetaImagePresetEnum.TRUE_COLOR)
+        result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR)
         self.assertEqual(2, len(result))
-        result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, MetaImagePresetEnum.EVI)
+        result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, PresetEnum.EVI)
         self.assertEqual(1, len(result))
-        result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, MetaImagePresetEnum.FALSE_COLOR)
+        result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, PresetEnum.FALSE_COLOR)
         self.assertEqual(1, len(result))
