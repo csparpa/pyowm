@@ -1,5 +1,6 @@
 import unittest
 import os
+import uuid
 from pyowm.constants import DEFAULT_API_KEY
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.weatherapi25.configuration25 import parsers
@@ -113,6 +114,26 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
         self.assertIsInstance(img, Image)
         self.assertEqual(img.image_type, ImageTypeEnum.PNG)
         self.assertNotEqual(len(img.data), 0)
+
+    def test_persisting_to_disk(self):
+        path = '%s.tif' % uuid.uuid4()
+        mgr = self.__owm.agro_manager()
+
+        # search GeoTiff, EVIimages acquired by Landsat 8
+        result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
+                                                  ImageTypeEnum.GEOTIFF, PresetEnum.EVI, None, None,
+                                                  SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
+        self.assertTrue(len(result_set) > 1)
+        metaimg = result_set[0]
+        sat_img = mgr.download_satellite_image(metaimg)
+        try:
+            self.assertFalse(os.path.isfile(path))
+            sat_img.persist(path)
+            self.assertTrue(os.path.isfile(path))
+        except:
+            self.fail()
+        finally:
+            os.remove(path)
 
 
 if __name__ == "__main__":

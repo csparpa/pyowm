@@ -141,6 +141,17 @@ class SatelliteImage:
         """
         return timeformatutils.timeformat(self._downloaded_on, timeformat)
 
+    def persist(self, path_to_file):
+        """
+        Saves the satellite image to disk on a file
+
+        :param path_to_file: path to the target file
+        :type path_to_file: str
+        :return: `None`
+        """
+        self.data.persist(path_to_file)
+
+
     def __repr__(self):
         return "<%s.%s - %s %s satellite image downloaded on: %s>" % (
             __name__, self.__class__.__name__,
