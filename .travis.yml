@@ -14,8 +14,7 @@ notifications:
 env:
     global:
       - TEST_PYPI_URL=https://test.pypi.org/legacy/
-      - PYPI_URL=https://pypi.python.org/pypi
-      -
+      - PYPI_URL=https://upload.pypi.org/legacy/
 install:
   - pip install --upgrade pip && pip install -r dev-requirements.txt && pip install .
 cache: pip
