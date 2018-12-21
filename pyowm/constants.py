@@ -2,7 +2,7 @@
 Constants for the PyOWM library
 """
 
-PYOWM_VERSION = '2.9.0'
+PYOWM_VERSION = '2.10.0'
 LATEST_OWM_API_VERSION = '2.5'
 STATIONS_API_VERSION = (3, 0, 0)
 ALERT_API_VERSION = (3, 0, 0)
