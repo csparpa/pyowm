@@ -1,3 +1,6 @@
+import sys
+
+
 def obfuscate_API_key(API_key):
     """
     Return a mostly obfuscated version of the API Key
@@ -9,44 +12,24 @@ def obfuscate_API_key(API_key):
         return (len(API_key)-8)*'*'+API_key[-8:]
 
 
-def assert_is_string(value):
+def check_if_running_with_python_2():
     """
-    Checks if the provided value is a valid string instance
-
-    :param value: value to be checked
-    :return: None
+    Catch Python 2.x usage attempts. If Python2
+    :return: `None`
+    :raise: `ImportError` if running on Python 2
     """
-    try:  # Python 2.x
-        assert isinstance(value, basestring), "Value must be a string or unicode"
-    except NameError:  # Python 3.x
-        assert isinstance(value, str), "Value must be a string"
+    if sys.version_info < (3,):
+        raise ImportError(
+            """You are running PyOWM on Python 2 - how unfortunate! Since version 2.10, 
+PyOWM does not support Python 2 any more. PyOWM 2.9 has however a Long-Term Support
+branch for bug fixing on Python 2 - install it with:
 
+ $ pip install git+https://github.com/csparpa/pyowm.git@v2.9-LTS
 
-def assert_is_string_or_unicode(value):
-    """
-    Checks if the provided value is a valid string or unicode instance
-    On Python 3.x it just checks that the value is a string instance.
-    :param value: value to be checked
-    :return: None
-    """
-    try:
-        assert isinstance(value, basestring) or isinstance(value, unicode), \
-            "Value must be a string or unicode"
-    except NameError:
-        assert isinstance(value, str), "Value must be a string"
+This LTS branch will be maintained until January, 1 2020
 
+See details at:
 
-def encode_to_utf8(value):
-    """
-    Turns the provided value to UTF-8 encoding
+https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support
 
-    :param value: input value
-    :return: UTF-8 encoded value
-    """
-    try:  # The OWM API expects UTF-8 encoding
-        if not isinstance(value, unicode):
-            return value.encode('utf8')
-        return value
-    except NameError:
-        return value
-
+""")

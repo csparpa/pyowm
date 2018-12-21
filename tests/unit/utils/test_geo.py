@@ -166,6 +166,12 @@ class TestGeo(unittest.TestCase):
         p = geo.Polygon([[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]])
         self.assertEqual(expected, p.as_dict())
 
+    def test_polygon_points(self):
+        p = geo.Polygon([[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]])
+        result = p.points
+        self.assertTrue(result)
+        self.assertTrue(all([isinstance(p, geo.Point) for p in result]))
+
     def test_polygon_from_points(self):
         expected = geo.Polygon([[[2.3, 57.32], [23.19, -20.2], [2.3, 57.32]]])
         list_of_lists = [
@@ -245,6 +251,7 @@ class TestGeo(unittest.TestCase):
 class TestGeometryBuilder(unittest.TestCase):
 
     def test_unrecognized_geom_type(self):
+        self.assertRaises(AssertionError, geo.GeometryBuilder.build, None)
         self.assertRaises(ValueError, geo.GeometryBuilder.build, {"type": "Unknown"})
         self.assertRaises(ValueError, geo.GeometryBuilder.build, {})
 

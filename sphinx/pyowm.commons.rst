@@ -4,6 +4,22 @@ pyowm.commons package
 Submodules
 ----------
 
+pyowm.commons.databoxes module
+------------------------------
+
+.. automodule:: pyowm.commons.databoxes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.commons.enums module
+--------------------------
+
+.. automodule:: pyowm.commons.enums
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.commons.frontlinkedlist module
 ------------------------------------
 
@@ -19,6 +35,23 @@ pyowm.commons.http_client module
     :members:
     :undoc-members:
     :show-inheritance:
+
+pyowm.commons.image module
+--------------------------
+
+.. automodule:: pyowm.commons.image
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.commons.tile module
+-------------------------
+
+.. automodule:: pyowm.commons.tile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

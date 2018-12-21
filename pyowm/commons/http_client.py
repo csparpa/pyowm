@@ -1,8 +1,9 @@
 import requests
 import json
 from pyowm.caches import nullcache
+from pyowm.commons.enums import ImageTypeEnum
 from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
-from pyowm.webapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
+from pyowm.weatherapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
     API_SUBSCRIPTION_SUBDOMAINS, VERIFY_SSL_CERTS
 
 
@@ -31,6 +32,48 @@ class HttpClient(object):
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.json()
+        except:
+            raise parse_response_error.ParseResponseError('Impossible to parse'
+                                                          'API response data')
+
+    def get_png(self, uri, params=None, headers=None):
+        if headers is None:
+            headers = {'Accept': ImageTypeEnum.PNG.mime_type}
+        else:
+            headers.update({'Accept': ImageTypeEnum.PNG.mime_type})
+        try:
+            resp = requests.get(uri, stream=True, params=params, headers=headers,
+                                timeout=self.timeout, verify=self.verify_ssl_certs)
+        except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.ConnectionError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.Timeout:
+            raise api_call_error.APICallTimeoutError('API call timeouted')
+        HttpClient.check_status_code(resp.status_code, resp.text)
+        try:
+            return resp.status_code, resp.content
+        except:
+            raise parse_response_error.ParseResponseError('Impossible to parse'
+                                                          'API response data')
+
+    def get_geotiff(self, uri, params=None, headers=None):
+        if headers is None:
+            headers = {'Accept': ImageTypeEnum.GEOTIFF.mime_type}
+        else:
+            headers.update({'Accept': ImageTypeEnum.GEOTIFF.mime_type})
+        try:
+            resp = requests.get(uri, stream=True, params=params, headers=headers,
+                                timeout=self.timeout, verify=self.verify_ssl_certs)
+        except requests.exceptions.SSLError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.ConnectionError as e:
+            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+        except requests.exceptions.Timeout:
+            raise api_call_error.APICallTimeoutError('API call timeouted')
+        HttpClient.check_status_code(resp.status_code, resp.text)
+        try:
+            return resp.status_code, resp.content
         except:
             raise parse_response_error.ParseResponseError('Impossible to parse'
                                                           'API response data')

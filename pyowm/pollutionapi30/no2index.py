@@ -24,7 +24,7 @@ class NO2Index(object):
     :param no2_samples: the NO2 samples
     :type no2_samples: list of dicts
     :param reception_time: GMT UNIXtime telling when the NO2 observation has
-        been received from the OWM web API
+        been received from the OWM Weather API
     :type reception_time: int
     :returns: a *NO2Index* instance
     :raises: *ValueError* when negative values are provided as reception time,
@@ -64,7 +64,7 @@ class NO2Index(object):
     def get_reception_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the NO2 observation has been received
-        from the OWM web API
+        from the OWM Weather API
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time

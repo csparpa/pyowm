@@ -4,8 +4,8 @@ import unittest
 import os
 from datetime import datetime
 from pyowm.constants import DEFAULT_API_KEY
-from pyowm.webapi25.configuration25 import parsers
-from pyowm.webapi25.owm25 import OWM25
+from pyowm.weatherapi25.configuration25 import parsers
+from pyowm.weatherapi25.owm25 import OWM25
 
 
 class IntegrationTestsUVIndexAPI30(unittest.TestCase):

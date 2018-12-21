@@ -13,19 +13,20 @@ class WeatherParametersEnum:
     WIND_DIRECTION = 'wind_direction'
     CLOUDS = 'clouds'  # Coverage %
 
-    def items(self):
+    @classmethod
+    def items(cls):
         """
         All values for this enum
-        :return: list of tuples
+        :return: list of str
 
         """
         return [
-            ('TEMPERATURE', self.TEMPERATURE),
-            ('PRESSURE', self.PRESSURE),
-            ('HUMIDITY', self.HUMIDITY),
-            ('WIND_SPEED', self.WIND_SPEED),
-            ('WIND_DIRECTION', self.WIND_DIRECTION),
-            ('CLOUDS', self.CLOUDS)
+            cls.TEMPERATURE,
+            cls.PRESSURE,
+            cls.HUMIDITY,
+            cls.WIND_SPEED,
+            cls.WIND_DIRECTION,
+            cls.CLOUDS
         ]
 
 
@@ -41,19 +42,20 @@ class OperatorsEnum:
     EQUAL = '$eq'
     NOT_EQUAL = '$ne'
 
-    def items(self):
+    @classmethod
+    def items(cls):
         """
         All values for this enum
-        :return: list of tuples
+        :return: list of str
 
         """
         return [
-            ('GREATER_THAN', self.GREATER_THAN),
-            ('GREATER_THAN_EQUAL', self.GREATER_THAN_EQUAL),
-            ('LESS_THAN', self.LESS_THAN),
-            ('LESS_THAN_EQUAL', self.LESS_THAN_EQUAL),
-            ('EQUAL', self.EQUAL),
-            ('NOT_EQUAL', self.NOT_EQUAL)
+            cls.GREATER_THAN,
+            cls.GREATER_THAN_EQUAL,
+            cls.LESS_THAN,
+            cls.LESS_THAN_EQUAL,
+            cls.EQUAL,
+            cls.NOT_EQUAL
         ]
 
 
@@ -64,12 +66,13 @@ class AlertChannelsEnum:
     """
     OWM_API_POLLING = AlertChannel('OWM API POLLING')
 
-    def items(self):
+    @classmethod
+    def items(cls):
         """
         All values for this enum
-        :return: list of tuples
+        :return: list of str
 
         """
         return [
-            ('OWM_API_POLLING', self.OWM_API_POLLING)
+            cls.OWM_API_POLLING
         ]

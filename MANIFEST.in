@@ -1,3 +1,6 @@
-include pyowm/webapi25/cityids/*.gz
-include pyowm/webapi25/xsd/*.xsd
+include pyowm/pollutionapi30/xsd/*.xsd
+include pyowm/stationsapi30/xsd/*.xsd
+include pyowm/uvindexapi30/xsd/*.xsd
+include pyowm/weatherapi25/cityids/*.gz
+include pyowm/weatherapi25/xsd/*.xsd
 include pyowm/docs/*.md

@@ -11,19 +11,22 @@ The PyOWM init file
 """
 
 from pyowm import constants
-from pyowm.utils import timeutils  # Convenience import
+from pyowm.utils import timeutils, stringutils
+
+
+stringutils.check_if_running_with_python_2()
 
 
 def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERSION,
         config_module=None, language=None, subscription_type=None, use_ssl=None):
     """
     A parametrized factory method returning a global OWM instance that
-    represents the desired OWM web API version (or the currently supported one
+    represents the desired OWM Weather API version (or the currently supported one
     if no version number is specified)
 
-    :param API_key: the OWM web API key (defaults to a test value)
+    :param API_key: the OWM Weather API key (defaults to a test value)
     :type API_key: str
-    :param version: the OWM web API version. Defaults to ``None``, which means
+    :param version: the OWM Weather API version. Defaults to ``None``, which means
         use the latest web API version
     :type version: str
     :param config_module: the Python path of the configuration module you want
@@ -36,7 +39,7 @@ def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERS
           It's a two-characters string, eg: "en", "ru", "it". Defaults to:
           ``None``, which means use the default language.
     :type language: str
-    :param subscription_type: the type of OWM web API subscription to be wrapped.
+    :param subscription_type: the type of OWM Weather API subscription to be wrapped.
            Can be 'free' (free subscription) or 'pro' (paid subscription),
            Defaults to: 'free'
     :type subscription_type: str
@@ -48,9 +51,9 @@ def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERS
     """
     if version == '2.5':
         if config_module is None:
-            config_module = "pyowm.webapi25.configuration25"
+            config_module = "pyowm.weatherapi25.configuration25"
         cfg_module = __import__(config_module,  fromlist=[''])
-        from pyowm.webapi25.owm25 import OWM25
+        from pyowm.weatherapi25.owm25 import OWM25
         if language is None:
             language = cfg_module.language
         if subscription_type is None:
@@ -61,4 +64,4 @@ def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERS
             use_ssl = cfg_module.USE_SSL
         return OWM25(cfg_module.parsers, API_key, cfg_module.cache,
                      language, subscription_type, use_ssl)
-    raise ValueError("Unsupported OWM web API version")
+    raise ValueError("Unsupported OWM Weather API version")

@@ -17,7 +17,7 @@ class StationsManager(object):
     it implements CRUD methods on Station entities and the corresponding
     measured datapoints.
 
-    :param API_key: the OWM web API key
+    :param API_key: the OWM Weather API key
     :type API_key: str
     :returns: a *StationsManager* instance
     :raises: *AssertionError* when no API Key is provided
@@ -149,7 +149,7 @@ class StationsManager(object):
         status, _ = self.http_client.post(
             MEASUREMENTS_URI,
             params={'appid': self.API_key},
-            data=[measurement.to_dict()],
+            data=[self._structure_dict(measurement)],
             headers={'Content-Type': 'application/json'})
 
     def send_measurements(self, list_of_measurements):
@@ -165,7 +165,7 @@ class StationsManager(object):
         """
         assert list_of_measurements is not None
         assert all([m.station_id is not None for m in list_of_measurements])
-        msmts = [m.to_dict() for m in list_of_measurements]
+        msmts = [self._structure_dict(m) for m in list_of_measurements]
         status, _ = self.http_client.post(
             MEASUREMENTS_URI,
             params={'appid': self.API_key},
@@ -227,42 +227,43 @@ class StationsManager(object):
         :returns: `None` if creation is successful, an exception otherwise
         """
         assert buffer is not None
-        msmts = []
-        for x in buffer.measurements:
-            m = x.to_dict()
-            item = dict()
-            item['station_id'] = m['station_id']
-            item['dt'] = m['timestamp']
-            item['temperature'] = m['temperature']
-            item['wind_speed'] = m['wind_speed']
-            item['wind_gust'] = m['wind_gust']
-            item['wind_deg'] = m['wind_deg']
-            item['pressure'] = m['pressure']
-            item['humidity'] = m['humidity']
-            item['rain_1h'] = m['rain_1h']
-            item['rain_6h'] = m['rain_6h']
-            item['rain_24h'] = m['rain_24h']
-            item['snow_1h'] = m['snow_1h']
-            item['snow_6h'] = m['snow_6h']
-            item['snow_24h'] = m['snow_24h']
-            item['dew_point'] = m['dew_point']
-            item['humidex'] = m['humidex']
-            item['heat_index'] = m['heat_index']
-            item['visibility_distance'] = m['visibility_distance']
-            item['visibility_prefix'] = m['visibility_prefix']
-            item['clouds'] = [dict(distance=m['clouds_distance']),
-                              dict(condition=m['clouds_condition']),
-                              dict(cumulus=m['clouds_cumulus'])]
-            item['weather'] = [
-                dict(precipitation=m['weather_precipitation']),
-                dict(descriptor=m['weather_descriptor']),
-                dict(intensity=m['weather_intensity']),
-                dict(proximity=m['weather_proximity']),
-                dict(obscuration=m['weather_obscuration']),
-                dict(other=m['weather_other'])]
-            msmts.append(item)
+        msmts = [self._structure_dict(m) for m in buffer.measurements]
         status, _ = self.http_client.post(
             MEASUREMENTS_URI,
             params={'appid': self.API_key},
             data=msmts,
             headers={'Content-Type': 'application/json'})
+
+    def _structure_dict(self, measurement):
+        d = measurement.to_dict()
+        item = dict()
+        item['station_id'] = d['station_id']
+        item['dt'] = d['timestamp']
+        item['temperature'] = d['temperature']
+        item['wind_speed'] = d['wind_speed']
+        item['wind_gust'] = d['wind_gust']
+        item['wind_deg'] = d['wind_deg']
+        item['pressure'] = d['pressure']
+        item['humidity'] = d['humidity']
+        item['rain_1h'] = d['rain_1h']
+        item['rain_6h'] = d['rain_6h']
+        item['rain_24h'] = d['rain_24h']
+        item['snow_1h'] = d['snow_1h']
+        item['snow_6h'] = d['snow_6h']
+        item['snow_24h'] = d['snow_24h']
+        item['dew_point'] = d['dew_point']
+        item['humidex'] = d['humidex']
+        item['heat_index'] = d['heat_index']
+        item['visibility_distance'] = d['visibility_distance']
+        item['visibility_prefix'] = d['visibility_prefix']
+        item['clouds'] = [dict(distance=d['clouds_distance']),
+                          dict(condition=d['clouds_condition']),
+                          dict(cumulus=d['clouds_cumulus'])]
+        item['weather'] = [
+            dict(precipitation=d['weather_precipitation']),
+            dict(descriptor=d['weather_descriptor']),
+            dict(intensity=d['weather_intensity']),
+            dict(proximity=d['weather_proximity']),
+            dict(obscuration=d['weather_obscuration']),
+            dict(other=d['weather_other'])]
+        return item

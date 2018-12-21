@@ -11,7 +11,7 @@ class LRUCache(owmcache.OWMCache):
     """
     This cache is made out of a 'table' dict and the 'usage_recency' linked
     list.'table' maps uses requests' URLs as keys and stores JSON raw responses
-    as values. 'usage_recency' tracks down the "recency" of the OWM web API
+    as values. 'usage_recency' tracks down the "recency" of the OWM Weather API
     requests: the more recent a request, the more the element will be far from
     the "death" point of the recency list. Items in 'usage_recency' are the
     requests' URLs themselves.
@@ -22,7 +22,7 @@ class LRUCache(owmcache.OWMCache):
       timestamp is compared to the current one: if the difference is higher
       than a prefixed value, then the lookup is considered a MISS: the
       element is removed either from 'table' and from 'usage_recency' and must
-      be requested again to the OWM web API. If the time difference is ok,
+      be requested again to the OWM Weather API. If the time difference is ok,
       then the lookup is considered a HIT.
     - when a GET results in a HIT, promote the element to the front of the
       recency list updating its cache insertion timestamp and return the
@@ -34,7 +34,7 @@ class LRUCache(owmcache.OWMCache):
       timestamp and finally add it at the front of the recency list.
 
     :param cache_max_size: the maximum size of the cache in terms of cached
-        OWM web API responses. A reasonable default value is provided.
+        OWM Weather API responses. A reasonable default value is provided.
     :type cache_max_size: int
     :param item_lifetime_millis: the maximum lifetime allowed for a cache item
         in milliseconds. A reasonable default value is provided.

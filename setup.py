@@ -10,27 +10,30 @@ setup(
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',
     url='http://github.com/csparpa/pyowm',
-    packages=['pyowm', 'pyowm.abstractions', 'pyowm.alertapi30',
-              'pyowm.caches', 'pyowm.commons',
+    packages=['pyowm',
+              'pyowm.abstractions',
+              'pyowm.agroapi10',
+              'pyowm.alertapi30',
+              'pyowm.caches',
+              'pyowm.commons',
               'pyowm.exceptions',
               'pyowm.pollutionapi30', 'pyowm.pollutionapi30.xsd',
               'pyowm.uvindexapi30', 'pyowm.uvindexapi30.xsd',
+              'pyowm.tiles',
               'pyowm.utils',
-              'pyowm.webapi25', 'pyowm.webapi25.cityids', 'pyowm.webapi25.parsers', 'pyowm.webapi25.xsd',
+              'pyowm.weatherapi25', 'pyowm.weatherapi25.cityids', 'pyowm.weatherapi25.parsers', 'pyowm.weatherapi25.xsd',
               'pyowm.stationsapi30', 'pyowm.stationsapi30.parsers', 'pyowm.stationsapi30.xsd'],
     long_description="""PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy 
     consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
     include_package_data=True,
     install_requires=[
-        'requests>=2.18.2,<3',
-        'geojson>=2.3.0,<2.4'
+        'requests>=2.20.0,<3',
+        'geojson>=2.3.0,<3'
     ],
+    python_requires='>=3.4',
     classifiers=[
       "License :: OSI Approved :: MIT License",
       "Programming Language :: Python",
-      "Programming Language :: Python :: 2.7",
-      "Programming Language :: Python :: 3.2",
-      "Programming Language :: Python :: 3.3",
       "Programming Language :: Python :: 3.4",
       "Programming Language :: Python :: 3.5",
       "Programming Language :: Python :: 3.6",
@@ -43,6 +46,6 @@ setup(
     package_data={
         '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
     },
-    keywords='openweathermap web api client wrapper weather forecast data owm pollution sdk meteostation',
+    keywords='openweathermap web api client weather forecast uv alerting owm pollution meteostation agro agriculture',
     license='MIT'
 )

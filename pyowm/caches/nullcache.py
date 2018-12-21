@@ -1,5 +1,5 @@
 """
-Module containing a null-object cache for OWM web API responses
+Module containing a null-object cache for OWM Weather API responses
 """
 
 from pyowm.abstractions import owmcache

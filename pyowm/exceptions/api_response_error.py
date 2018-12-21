@@ -8,7 +8,7 @@ from pyowm.exceptions import OWMError
 
 class APIResponseError(OWMError):
     """
-    Error class that represents HTTP error status codes in OWM web API
+    Error class that represents HTTP error status codes in OWM Weather API
     responses.
 
     :param cause: the message of the error

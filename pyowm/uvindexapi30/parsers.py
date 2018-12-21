@@ -5,7 +5,7 @@ returning UVIndex objects
 
 import json
 from pyowm.uvindexapi30 import uvindex
-from pyowm.webapi25 import location
+from pyowm.weatherapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
 from pyowm.utils import timeutils
@@ -14,7 +14,7 @@ from pyowm.utils import timeutils
 class UVIndexParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building an *UVIndex* instance out
-    of raw JSON data coming from OWM web API responses.
+    of raw JSON data coming from OWM Weather API responses.
 
     """
 
@@ -32,7 +32,7 @@ class UVIndexParser(jsonparser.JSONParser):
         :returns: an *UVIndex* instance or ``None`` if no data is available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON
-            string embeds an HTTP status error (this is an OWM web API 2.5 bug)
+            string embeds an HTTP status error
 
         """
         if JSON_string is None:
@@ -67,7 +67,7 @@ class UVIndexParser(jsonparser.JSONParser):
 class UVIndexListParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building a list of *UVIndex* instances
-    out of raw JSON data coming from OWM web API responses.
+    out of raw JSON data coming from OWM Weather API responses.
 
     """
 
@@ -86,7 +86,7 @@ class UVIndexListParser(jsonparser.JSONParser):
             available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON
-            string embeds an HTTP status error (this is an OWM web API 2.5 bug)
+            string embeds an HTTP status error
 
         """
         if JSON_string is None:

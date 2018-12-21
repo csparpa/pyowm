@@ -7,9 +7,9 @@ from abc import ABCMeta, abstractmethod
 
 class OWM(object):
     """
-    A global abstract class representing the OWM web API. Every query to the
+    A global abstract class representing the OWM Weather API. Every query to the
     API is done programmatically via a concrete instance of this class.
-    Subclasses should provide a method for every OWM web API endpoint.
+    Subclasses should provide a method for every OWM Weather API endpoint.
     """
 
     __metaclass__ = ABCMeta
@@ -38,9 +38,9 @@ class OWM(object):
     @abstractmethod
     def get_API_version(self):
         """
-        Returns the currently supported OWM web API version
+        Returns the currently supported OWM Weather API version
 
-        :returns: the OWM web API version string
+        :returns: the OWM Weather API version string
 
         """
         raise NotImplementedError
@@ -58,7 +58,7 @@ class OWM(object):
     @abstractmethod
     def is_API_online(self):
         """
-        Returns ``True`` if the OWM web API is currently online. A short
+        Returns ``True`` if the OWM Weather API is currently online. A short
         timeout is used to determine API service availability.
 
         :returns: bool

@@ -8,6 +8,14 @@ PyOWM
 
 Welcome to PyOWM's documentation!
 
+.. image:: ../logos/180x180.png
+   :width: 180px
+   :height: 180px
+   :scale: 100 %
+   :alt: PyOWM
+   :align: center
+
+
 What is PyOWM?
 --------------
 
@@ -15,21 +23,23 @@ PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows 
 consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
 
 
-What APIs does PyOWM allow me to use?
--------------------------------------
+What APIs can I access with PyOWM?
+----------------------------------
 
 With PyOWM you can interact programmatically with the following OpenWeatherMap web APIs:
 
  - **Weather API v2.5**, offering
     + current weather data
     + weather forecasts
+    + weather history
+ - **Agro API v1.0**, offering polygon editing, soil data, satellite imagery search and download
  - **Air Pollution API v3.0**, offering data about CO, O3, NO2 and SO2
  - **UV Index API v3.0**, offering data about Ultraviolet exposition
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements
  - **Weather Alerts API v3.0**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
 
+And You can also get **image tiles** for several map layers provided by OWM
 
-and more will be supported in the future. Stay tuned!
 
 The documentation of OWM APIs can be found on the OWM Website_
 
@@ -91,13 +101,7 @@ You can install from source using _setuptools_: either download a release from G
    $ cd pyowm-x.y.z
    $ python setup.py install
 
-The .egg will be installed into the system-dependent Python libraries folder:
-
-.. code::
-
-   C:\PythonXY\Lib\site-packages            # Windows
-   /usr/local/lib/pythonX.Y/dist-packages   # Ubuntu
-   /usr/local/lib/pythonX.Y/dist-packages   # MacOS 10.5.4
+The .egg will be installed into the system-dependent Python libraries folder
 
 
 Distribution packages
@@ -112,11 +116,11 @@ Distribution packages
          Yaourt -S python-owm   # Python 3.x (https://aur.archlinux.org/packages/python2-owm)
 
 
+PyOWM v2 usage documentation
+----------------------------
 
-Examples and Guides
--------------------
-
-Here are some usage examples for the different OWM APIs
+Here are some usage examples for the different OWM APIs: these examples and guides refer to PyOWM library
+versions belonging to the 2.x stream
 
 
 Weather API examples
@@ -124,8 +128,16 @@ Weather API examples
 .. toctree::
    :maxdepth: 1
 
-   object-model
-   usage-examples
+   usage-examples-v2/weather-api-usage-examples
+   usage-examples-v2/weather-api-object-model
+
+Agro API examples
+~~~~~~~~~~~~~~~~~
+
+.. toctree::
+   :maxdepth: 1
+
+   usage-examples-v2/agro-api-usage-examples
 
 
 UV API examples
@@ -133,7 +145,7 @@ UV API examples
 .. toctree::
    :maxdepth: 1
 
-   uv-api-usage-examples
+   usage-examples-v2/uv-api-usage-examples
 
 
 Air Pollution API examples
@@ -142,22 +154,33 @@ Air Pollution API examples
 .. toctree::
    :maxdepth: 1
 
-   air-pollution-api-usage-examples
+   usage-examples-v2/air-pollution-api-usage-examples
 
 Stations API examples
 ~~~~~~~~~~~~~~~~~~~~~
 .. toctree::
    :maxdepth: 1
 
-   stations-api-usage-examples
+   usage-examples-v2/stations-api-usage-examples
 
 Alerts API examples
 ~~~~~~~~~~~~~~~~~~~
 .. toctree::
    :maxdepth: 1
 
-   alerts-api-usage-examples
+   usage-examples-v2/alerts-api-usage-examples
 
+Map tiles client examples
+~~~~~~~~~~~~~~~~~~~~~~~~~
+.. toctree::
+   :maxdepth: 1
+
+   usage-examples-v2/map-tiles-client-examples.md
+
+
+PyOWM v3 usage documentation
+----------------------------
+Coming soon!
 
 
 PyOWM software API documentation

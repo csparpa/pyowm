@@ -19,7 +19,7 @@ class Ozone(object):
     :param interval: the time granularity of the O3 observation
     :type interval: str
     :param reception_time: GMT UNIXtime telling when the observation has
-        been received from the OWM web API
+        been received from the OWM Weather API
     :type reception_time: int
     :returns: an *Ozone* instance
     :raises: *ValueError* when negative values are provided as reception time or
@@ -58,7 +58,7 @@ class Ozone(object):
     def get_reception_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the O3 observation
-        has been received from the OWM web API
+        has been received from the OWM Weather API
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time

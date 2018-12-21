@@ -1,6 +1,6 @@
 import json
 from pyowm.pollutionapi30 import coindex, no2index, ozone, so2index
-from pyowm.webapi25 import location
+from pyowm.weatherapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
 from pyowm.utils import timeformatutils, timeutils
@@ -9,7 +9,7 @@ from pyowm.utils import timeformatutils, timeutils
 class COIndexParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building an *COIndex* instance out
-    of raw JSON data coming from OWM web API responses.
+    of raw JSON data coming from OWM Weather API responses.
 
     """
 
@@ -27,7 +27,7 @@ class COIndexParser(jsonparser.JSONParser):
         :returns: an *COIndex* instance or ``None`` if no data is available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON
-            string embeds an HTTP status error (this is an OWM web API 2.5 bug)
+            string embeds an HTTP status error
 
         """
         if JSON_string is None:
@@ -63,7 +63,7 @@ class COIndexParser(jsonparser.JSONParser):
 class NO2IndexParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building an *NO2Index* instance out
-    of raw JSON data coming from OWM web API responses.
+    of raw JSON data coming from OWM Weather API responses.
 
     """
 
@@ -81,7 +81,7 @@ class NO2IndexParser(jsonparser.JSONParser):
         :returns: an *NO2Index* instance or ``None`` if no data is available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON
-            string embeds an HTTP status error (this is an OWM web API 2.5 bug)
+            string embeds an HTTP status error
 
         """
         if JSON_string is None:
@@ -119,7 +119,7 @@ class NO2IndexParser(jsonparser.JSONParser):
 class OzoneParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building an *Ozone* instance out
-    of raw JSON data coming from OWM web API responses.
+    of raw JSON data coming from OWM Weather API responses.
 
     """
 
@@ -137,7 +137,7 @@ class OzoneParser(jsonparser.JSONParser):
         :returns: an *Ozone* instance or ``None`` if no data is available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON
-            string embeds an HTTP status error (this is an OWM web API 2.5 bug)
+            string embeds an HTTP status error
 
         """
         if JSON_string is None:
@@ -176,7 +176,7 @@ class OzoneParser(jsonparser.JSONParser):
 class SO2IndexParser(jsonparser.JSONParser):
     """
     Concrete *JSONParser* implementation building an *SO2Index* instance out
-    of raw JSON data coming from OWM web API responses.
+    of raw JSON data coming from OWM Weather API responses.
 
     """
 
@@ -194,7 +194,7 @@ class SO2IndexParser(jsonparser.JSONParser):
         :returns: a *SO2Index* instance or ``None`` if no data is available
         :raises: *ParseResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the JSON
-            string embeds an HTTP status error (this is an OWM web API 2.5 bug)
+            string embeds an HTTP status error
 
         """
         if JSON_string is None:

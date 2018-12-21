@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime
-from pyowm.webapi25.location import Location
+from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.utils.timeformatutils import UTC, _datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import COINDEX_JSON_DUMP

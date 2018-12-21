@@ -4,12 +4,16 @@
 **A Python wrapper around OpenWeatherMap web APIs**
 
 [![PyPI version](https://badge.fury.io/py/pyowm.svg)](https://badge.fury.io/py/pyowm)
-[![Latest Release Documentation](https://readthedocs.org/projects/pyowm/badge/?version=latest)](https://pyowm.readthedocs.org/en/latest/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/pyowm.svg)](https://img.shields.io/pypi/dm/pyowm.svg)
+<br>
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyowm.svg)](https://img.shields.io/pypi/pyversions/pyowm.svg)
+<br>
+[![Latest Release Documentation](https://readthedocs.org/projects/pyowm/badge/?version=latest)](https://pyowm.readthedocs.io/en/latest/)
 [![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
 [![Coverage Status](https://coveralls.io/repos/github/csparpa/pyowm/badge.svg?branch=master)](https://coveralls.io/github/csparpa/pyowm?branch=master)
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
 <br>
 <a href="https://www.buymeacoffee.com/LmAl1n9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
 
 ##  What is it?
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs.
@@ -18,15 +22,16 @@ It allows quick and easy consumption of OWM data from Python applications via a 
 
 With PyOWM you can integrate into your code any of the following OpenWeatherMap web APIs:
 
- - *Weather API v2.5*, offering
+ - **[Weather API v2.5](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/weather-api-usage-examples.html)**, providing
     - current weather data
     - weather forecasts
-    -+ weather history
- - *Air Pollution API v3.0*, offering data about CO, O3, NO2 and SO2
- - *UV Index API v3.0*, offering data about Ultraviolet exposition
- - *Stations API v3.0*, allowing to create and manage meteostation and publish local weather measurements
- - *Weather Alerts API v3.0*, allowing to set triggers on weather conditions and areas and poll for spawned alerts
- - *Image tiles* for several map layers provided by OWM
+    - weather history
+ - **[Agro API v1.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/agro-api-usage-examples.html)**, providing soil data and satellite imagery search and download
+ - **[Air Pollution API v3.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/air-pollution-api-usage-examples.html)**, providing data about CO, O3, NO2 and SO2
+ - **[UV Index API v3.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/uv-api-usage-examples.html)**, providing data about Ultraviolet exposition
+ - **[Stations API v3.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/stations-api-usage-examples.html)**, allowing to create and manage meteostation and publish local weather measurements
+ - **[Weather Alerts API v3.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/alerts-api-usage-examples.html)**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
+ - **[Image tiles](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/map-tiles-client-examples.html)** for several map layers provided by OWM
 
 PyOWM runs on Python 2.7 and Python 3.4+ (but watch out! Python 2.x will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
 
@@ -64,7 +69,7 @@ Please notice that the free API subscription plan is subject to requests throttl
 
 ### Examples
 
-That's a simple example of what you can do with PyOWM and a free OWM API Key:
+That's a simple example of what you can do with PyOWM Weather API and a free OWM API Key:
 
 ```python
 import pyowm
@@ -90,7 +95,7 @@ w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 observation_list = owm.weather_around_coords(-22.57, -43.12)
 ```
 
-And this is a usage example with a paid OWM API key:
+And this is an example using a paid OWM API key:
 
 ```python
 import pyowm
@@ -100,14 +105,11 @@ paid_owm = pyowm.OWM(API_key='your-pro-API-key', subscription_type='pro')
 # Will it be clear tomorrow at this time in Milan (Italy) ?
 forecast = paid_owm.daily_forecast("Milan,IT")
 tomorrow = pyowm.timeutils.tomorrow()
-forecast.will_be_clear_at(tomorrow)  # The sun always shines on Italy, right? ;-)
+forecast.will_be_clear_at(tomorrow)  # The sun always shines on Italy, right? ;)
 ```
 
-More PyOWM usage examples are available [here](https://github.com/csparpa/pyowm/blob/master/pyowm/docs/usage-examples.md).
-
-
 ## Documentation
-The library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.org/en/stable/).
+The library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.io/en/latest/).
 
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 

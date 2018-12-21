@@ -35,11 +35,11 @@ class Alert:
     """
     def __init__(self, id, trigger_id, met_conditions, coordinates, last_update=None):
         assert id is not None
-        stringutils.assert_is_string_or_unicode(id)
+        assert isinstance(id, str), "Value must be a string"
         self.id = id
 
         assert trigger_id is not None
-        stringutils.assert_is_string_or_unicode(trigger_id)
+        assert isinstance(trigger_id, str), "Value must be a string"
         self.trigger_id = trigger_id
 
         assert met_conditions is not None

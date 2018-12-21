@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime
-from pyowm.webapi25.location import Location
+from pyowm.weatherapi25.location import Location
 from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
 from pyowm.utils.timeformatutils import UTC
 
