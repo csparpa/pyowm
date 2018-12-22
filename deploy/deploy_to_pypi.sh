@@ -3,6 +3,7 @@
 # Rules:
 #  - deploy to Test PyPI upon every push on the develop branch
 #  - only deploy to the real PyPI upon merged pull requests on the master branch
+#  - under any circumstance, only deply if the corresponding release does not yet exist (otherwise, gracefully fail)
 
 if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
     echo "*** Will build the DEVELOP branch and publish to Test PyPI at $TEST_PYPI_URL"
@@ -24,6 +25,19 @@ elif [ $TRAVIS_BRANCH = "master" ] && [[ $TRAVIS_EVENT_TYPE == "pull_request" ]]
     export INDEX_URL="$PYPI_URL"
     export PYPI_USERNAME="$PYPI_USERNAME"
     export PYPI_PASSWORD="$PYPI_PASSWORD"
+
+    REL_VERSION="$(cd .. && python3.5 -c "from pyowm.constants import PYOWM_VERSION; from pyowm.utils.stringutils import version_tuple_to_str; print(version_tuple_to_str(PYOWM_VERSION))")"
+
+    echo "*** Checking if target release already exists on the repository..."
+    wget "https://pypi.org/pypi/pyowm/${REL_VERSION}/json"
+    OUTCOME="$(echo $?)"
+    if [ $OUTCOME = "0" ]; then
+        echo "*** OK: release is brand new"
+    else
+        echo "*** WARNING: release is already on the repository!"
+        echo "*** SKIPPING deployment"
+        exit 0
+    fi
 
 else
     echo "*** Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE"
