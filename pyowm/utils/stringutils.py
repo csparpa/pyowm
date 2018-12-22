@@ -33,3 +33,14 @@ See details at:
 https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support
 
 """)
+
+
+def version_tuple_to_str(version_tuple, separator='.'):
+    """
+    Turns something like (X, Y, Z) into "X.Y.Z"
+    :param version_tuple: the tuple identifying a software Semantic version
+    :type version_tuple: tuple
+    :return: str
+    """
+    str_version_tuple = [str(v) for v in version_tuple]
+    return separator.join(str_version_tuple)
