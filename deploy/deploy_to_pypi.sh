@@ -3,6 +3,7 @@
 # Rules:
 #  - deploy to Test PyPI upon every push on the develop branch
 #  - only deploy to the real PyPI upon merged pull requests on the master branch
+#  - gracefully fail if integrated branch is neither develop nor master
 #  - under any circumstance, only deply if the corresponding release does not yet exist (otherwise, gracefully fail)
 
 if [ $TRAVIS_BRANCH = "develop" ] && [[ $TRAVIS_EVENT_TYPE == "push" ]]; then
@@ -40,8 +41,9 @@ elif [ $TRAVIS_BRANCH = "master" ] && [[ $TRAVIS_EVENT_TYPE == "pull_request" ]]
     fi
 
 else
-    echo "*** Wrong deployment conditions: branch=$TRAVIS_BRANCH event=$TRAVIS_EVENT_TYPE"
-    exit 5
+    echo "*** Will not build branch $TRAVIS_BRANCH as this is neither DEVELOP nor MASTER"
+    echo "*** SKIPPING deployment"
+    exit 0
 fi
 
 echo '*** Generating source distribution...'
