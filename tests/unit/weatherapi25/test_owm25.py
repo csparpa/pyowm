@@ -27,7 +27,7 @@ from tests.unit.uvindexapi30.test_uvindexparser import UVINDEX_JSON
 from tests.unit.uvindexapi30.test_uvindexlistparser import UVINDEX_LIST_JSON
 from tests.unit.pollutionapi30.test_parsers import COINDEX_JSON, OZONE_JSON, NO2INDEX_JSON, SO2INDEX_JSON
 from pyowm.weatherapi25.owm25 import OWM25
-from pyowm.constants import PYOWM_VERSION
+from pyowm.constants import PYOWM_VERSION, WEATHER_API_VERSION
 from pyowm.commons.http_client import HttpClient
 from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient
 from pyowm.pollutionapi30.airpollution_client import AirPollutionHttpClient
@@ -226,7 +226,7 @@ class TestOWM25(unittest.TestCase):
         self.assertIsInstance(result, AlertManager)
 
     def test_get_API_version(self):
-        self.assertEqual(self.__test_instance.OWM_API_VERSION,
+        self.assertEqual(WEATHER_API_VERSION,
                          self.__test_instance.get_API_version())
 
     def test_get_version(self):

@@ -2,10 +2,11 @@
 
 from setuptools import setup
 from pyowm import constants
+from pyowm.utils.stringutils import version_tuple_to_str
 
 setup(
     name='pyowm',
-    version=constants.PYOWM_VERSION,
+    version=version_tuple_to_str(constants.PYOWM_VERSION),
     description='A Python wrapper around OpenWeatherMap web APIs',
     author='Claudio Sparpaglione (@csparpa)',
     author_email='csparpa@gmail.com',

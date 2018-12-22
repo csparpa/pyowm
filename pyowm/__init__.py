@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-The PyOWM init file
-
-**Author**: Claudio Sparpaglione, @csparpa <csparpa@gmail.com>
-
-**Platform**: platform independent
-
-"""
-
 from pyowm import constants
 from pyowm.utils import timeutils, stringutils
 
@@ -17,7 +8,7 @@ from pyowm.utils import timeutils, stringutils
 stringutils.check_if_running_with_python_2()
 
 
-def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERSION,
+def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.WEATHER_API_VERSION,
         config_module=None, language=None, subscription_type=None, use_ssl=None):
     """
     A parametrized factory method returning a global OWM instance that
@@ -28,7 +19,7 @@ def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERS
     :type API_key: str
     :param version: the OWM Weather API version. Defaults to ``None``, which means
         use the latest web API version
-    :type version: str
+    :type version: tuple
     :param config_module: the Python path of the configuration module you want
         to provide for instantiating the library. Defaults to ``None``, which
         means use the default configuration values for the web API version
@@ -49,7 +40,7 @@ def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.LATEST_OWM_API_VERS
     :returns: an instance of a proper *OWM* subclass
     :raises: *ValueError* when unsupported OWM API versions are provided
     """
-    if version == '2.5':
+    if version == (2, 5, 0):
         if config_module is None:
             config_module = "pyowm.weatherapi25.configuration25"
         cfg_module = __import__(config_module,  fromlist=[''])

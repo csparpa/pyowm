@@ -1,6 +1,5 @@
-"""
-Module containing the PyOWM library main entry point
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from time import time
 from pyowm import constants
@@ -28,7 +27,6 @@ from pyowm.agroapi10 import agro_manager
 
 class OWM25(owm.OWM):
 
-    OWM_API_VERSION = '2.5'
 
     """
     OWM subclass providing methods for each OWM Weather API 2.5 endpoint and ad-hoc API clients for the other
@@ -104,7 +102,7 @@ class OWM25(owm.OWM):
         :returns: str
 
         """
-        return self.OWM_API_VERSION
+        return constants.WEATHER_API_VERSION
 
     @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_version(self):
