@@ -107,14 +107,20 @@ The .egg will be installed into the system-dependent Python libraries folder
 Distribution packages
 ~~~~~~~~~~~~~~~~~~~~~
 
-  - On Windows you have installers
-  - On ArchLinux you can install PyOWM with the Yaourt package manager, run:
+On Windows you have EXE installers
 
-      .. code::
+On ArchLinux you can use the Yaourt package manager, run:
 
-         Yaourt -S python2-owm  # Python 2.7 (https://aur.archlinux.org/packages/python-owm)
-         Yaourt -S python-owm   # Python 3.x (https://aur.archlinux.org/packages/python2-owm)
+.. code::
 
+   Yaourt -S python2-owm  # Python 2.7 (https://aur.archlinux.org/packages/python-owm)
+   Yaourt -S python-owm   # Python 3.x (https://aur.archlinux.org/packages/python2-owm)
+
+On OpenSuse you can use with YaST/Zypper package manager, run:
+
+.. code::
+
+   zypper install python-pyowm
 
 PyOWM v2 usage documentation
 ----------------------------
