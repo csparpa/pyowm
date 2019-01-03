@@ -46,7 +46,9 @@ Install with `pip` for your ease:
 $ pip install pyowm
 ```
 
-There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), [Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as [Yaourt](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt)
+There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), 
+[Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as
+[Yaourt (Arch Linux)](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt) and [YaST/Zypper (OpenSuse)](https://github.com/csparpa/pyowm/wiki/Install#on-opensuse-with-yastzypper)
 
 Eager to fetch the very latest updates to PyOWM? Install the development trunk:
 
