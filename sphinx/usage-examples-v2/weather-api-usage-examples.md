@@ -56,11 +56,11 @@ The PyOWM library comes with a built-in support for local caches: OWM Weather AP
 By using the ``configuration25.py`` module, it is also possible to leverage external cache providers  module, provided that they implement the interface that is expected by the library code.
 
 ### Getting currently observed weather for a specific location.
-Querying for current weather is simple: provide an ``OWM`` object with the location you want the current weather be looked up for and the job is done. You can specify the location either by passing its toponym (eg: "London"), the city ID (eg: 2643741) or its geographic coordinates (lon/lat):
+Querying for current weather is simple: provide an ``OWM`` object with the location you want the current weather be looked up for and the job is done. You can specify the location either by passing its toponym (eg: "London"), the city ID (eg: 2643741) or its geographic coordinates (lat/lon):
 
     obs = owm.weather_at_place('London,GB')                    # Toponym
     obs = owm.weather_at_id(2643741)                           # City ID
-    obs = owm.weather_at_coords(-0.107331,51.503614)           # lat/lon
+    obs = owm.weather_at_coords(51.503614,-0.107331)           # lat/lon
 
 An ``Observation`` object will be returned, containing weather info about the location matching the toponym/ID/coordinates you provided. Be precise when specifying locations!
 
@@ -117,10 +117,10 @@ Examples:
     # As above but limit result items to 5
     obs_list = owm.weather_at_places('London',searchtype='like', 5)
 
-    # Find observed weather for all the places in the surroundings of lon=-2.15,lat=57
-    obs_list = owm.weather_around_coords(-2.15, 57)
+    # Find observed weather for all the places in the surroundings of lat=57,lon=-2.15
+    obs_list = owm.weather_around_coords(57, -2.15)
     # As above but limit result items to 8
-    obs_list = owm.weather_around_coords(-2.15, 57, limit=8)
+    obs_list = owm.weather_around_coords(57, -2.15, limit=8)
 
 ### Getting data from Observation objects
 ``Observation`` objects store two useful objects: a ``Weather`` object that contains the weather-related data and a ``Location`` object that describes the location the weather data is provided for.
