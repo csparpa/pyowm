@@ -16,6 +16,10 @@ Code
   * [titilambert] (https://github.com/titilambert)
   * [txemi] (https://github.com/txemi)
 
+Docs
+----
+  * [EJEP](https://github.com/EJEP)
+
 Testing
 -------
   * [Samuel Yap] (https://github.com/samuelyap)
