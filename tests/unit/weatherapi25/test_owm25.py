@@ -36,7 +36,6 @@ from pyowm.weatherapi25.observation import Observation
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.forecaster import Forecaster
-from pyowm.weatherapi25.station import Station
 from pyowm.weatherapi25.stationhistory import StationHistory
 from pyowm.weatherapi25.historian import Historian
 from pyowm.uvindexapi30.uvindex import UVIndex
@@ -47,8 +46,6 @@ from pyowm.pollutionapi30.so2index import SO2Index
 from pyowm.weatherapi25.parsers.forecastparser import ForecastParser
 from pyowm.weatherapi25.parsers.observationparser import ObservationParser
 from pyowm.weatherapi25.parsers.observationlistparser import ObservationListParser
-from pyowm.weatherapi25.parsers.stationparser import StationParser
-from pyowm.weatherapi25.parsers.stationlistparser import StationListParser
 from pyowm.weatherapi25.parsers.stationhistoryparser import StationHistoryParser
 from pyowm.weatherapi25.parsers.weatherhistoryparser import WeatherHistoryParser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
@@ -65,8 +62,6 @@ class TestOWM25(unittest.TestCase):
       'forecast': ForecastParser(),
       'weather_history': WeatherHistoryParser(),
       'station_history': StationHistoryParser(),
-      'station': StationParser(),
-      'station_list': StationListParser(),
       'uvindex': UVIndexParser(),
       'uvindex_list': UVIndexListParser(),
       'coindex': COIndexParser(),

@@ -36,22 +36,6 @@ pyowm.weatherapi25.parsers.stationhistoryparser module
     :undoc-members:
     :show-inheritance:
 
-pyowm.weatherapi25.parsers.stationlistparser module
----------------------------------------------------
-
-.. automodule:: pyowm.weatherapi25.parsers.stationlistparser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.weatherapi25.parsers.stationparser module
------------------------------------------------
-
-.. automodule:: pyowm.weatherapi25.parsers.stationparser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.weatherapi25.parsers.weatherhistoryparser module
 ------------------------------------------------------
 
