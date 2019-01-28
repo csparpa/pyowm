@@ -29,23 +29,6 @@ class CityIDRegistry:
         """
         self._filepath_regex = filepath_regex
 
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def id_for(self, city_name):
-        """
-        Returns the long ID corresponding to the first city found that matches
-        the provided city name. The lookup is case insensitive.
-
-        .. deprecated:: 3.0.0
-           Use :func:`ids_for` instead.
-
-        :param city_name: the city name whose ID is looked up
-        :type city_name: str
-        :returns: a long or ``None`` if the lookup fails
-
-        """
-        line = self._lookup_line_by_city_name(city_name)
-        return int(line.split(",")[1]) if line is not None else None
-
     def ids_for(self, city_name, country=None, matching='nocase'):
         """
         Returns a list of tuples in the form (long, str, str) corresponding to
@@ -74,28 +57,6 @@ class CityIDRegistry:
             raise ValueError("Country must be a 2-char string")
         splits = self._filter_matching_lines(city_name, country, matching)
         return [(int(item[1]), item[0], item[4]) for item in splits]
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def location_for(self, city_name):
-        """
-        Returns the *Location* object corresponding to the first city found
-        that matches the provided city name. The lookup is case insensitive.
-
-        :param city_name: the city name you want a *Location* for
-        :type city_name: str
-        :returns: a *Location* instance or ``None`` if the lookup fails
-
-        .. deprecated:: 3.0.0
-           Use :func:`locations_for` instead.
-
-
-        """
-        line = self._lookup_line_by_city_name(city_name)
-        if line is None:
-            return None
-        tokens = line.split(",")
-        return Location(tokens[0], float(tokens[3]), float(tokens[2]),
-                        int(tokens[1]), tokens[4])
 
     def locations_for(self, city_name, country=None, matching='nocase'):
         """

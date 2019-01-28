@@ -113,45 +113,6 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
 
     # tests for IDs retrieval
 
-    def test_id_for(self):
-        ref_to_original = CityIDRegistry._get_lines
-        CityIDRegistry._get_lines = self._mock_get_lines
-        result_1 = self._instance.id_for('dongen')
-        result_2 = self._instance.id_for('aaaaaaaaaa')
-        CityIDRegistry._get_lines = ref_to_original
-        self.assertEqual(result_1, 2756723)
-        self.assertTrue(result_2 is None)
-
-    def test_id_for_when_multiple_matches(self):
-        ref_to_original = CityIDRegistry._get_lines
-        CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
-        result = self._instance.id_for('Abbeville')
-        CityIDRegistry._get_lines = ref_to_original
-        # only the ID of the first matching location name is returned
-        self.assertEqual(result, 3038789)
-
-    def test_id_for_fails_with_malformed_inputs(self):
-        self.assertRaises(ValueError, CityIDRegistry.id_for, self._instance,
-                          '123abc')
-
-    def test_location_for(self):
-        ref_to_original = CityIDRegistry._get_lines
-        CityIDRegistry._get_lines = self._mock_get_lines
-        expected = Location('dongdu', 117.699997, 35.849998, 1812597, 'CN')
-        result_1 = self._instance.location_for('dongdu')
-        result_2 = self._instance.location_for('aaaaaaaaaa')
-        CityIDRegistry._get_lines = ref_to_original        
-        self.assertEqual(result_1.get_name(), expected.get_name())
-        self.assertEqual(result_1.get_country(), expected.get_country())
-        self.assertEqual(result_1.get_ID(), expected.get_ID())
-        self.assertEqual(result_1.get_lat(), expected.get_lat())
-        self.assertEqual(result_1.get_lon(), expected.get_lon())
-        self.assertTrue(result_2 is None)
-
-    def test_location_for_fails_with_malformed_inputs(self):
-        self.assertRaises(ValueError, CityIDRegistry.location_for,
-                          self._instance, '123abc')
-
     def test_match_line(self):
         instance = CityIDRegistry('test')
 
