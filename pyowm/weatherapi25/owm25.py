@@ -375,86 +375,6 @@ class OWM25(owm.OWM):
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['observation_list'].parse_JSON(json_data)
 
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def weather_at_station(self, station_id):
-        """
-        Queries the OWM Weather API for the weather currently observed by a specific
-        meteostation (eg: 29584)
-
-        :param station_id: the meteostation ID
-        :type station_id: int
-        :returns: an *Observation* instance or ``None`` if no weather data is
-            available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed or *APICallException* when OWM Weather API can not be
-            reached
-        """
-        assert type(station_id) is int, "'station_id' must be an int"
-        if station_id < 0:
-            raise ValueError("'station_id' value must be greater than 0")
-        params = {'id': station_id, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(STATION_URL,
-                                            self._API_key,
-                                            self._subscription_type,
-                                            self._use_ssl)
-        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation'].parse_JSON(json_data)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def weather_at_stations_in_bbox(self, lat_top_left, lon_top_left,
-                                    lat_bottom_right, lon_bottom_right,
-                                    cluster=False, limit=None):
-        """
-        Queries the OWM Weather API for the weather currently observed by
-        meteostations inside the bounding box of latitude/longitude coords.
-
-        :param lat_top_left: latitude for top-left of bounding box, must be
-            between -90.0 and 90.0
-        :type lat_top_left: int/float
-        :param lon_top_left: longitude for top-left of bounding box
-            must be between -180.0 and 180.0
-        :type lon_top_left: int/float
-        :param lat_bottom_right: latitude for bottom-right of bounding box, must
-            be between -90.0 and 90.0
-        :type lat_bottom_right: int/float
-        :param lon_bottom_right: longitude for bottom-right of bounding box,
-            must be between -180.0 and 180.0
-        :type lon_bottom_right: int/float
-        :param cluster: use server clustering of points
-        :type cluster: bool
-        :param limit: the maximum number of *Observation* items in the returned
-            list (default is ``None``, which stands for any number of items)
-        :param limit: int or ``None``
-        :returns: a list of *Observation* objects or ``None`` if no weather
-            data is available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached, *ValueError* when coordinates values are out of bounds or
-            negative values are provided for limit
-        """
-        assert type(cluster) is bool, "'cluster' must be a bool"
-        assert type(limit) in (int, type(None)), \
-                "'limit' must be an int or None"
-        geo.assert_is_lon(lon_top_left)
-        geo.assert_is_lon(lon_bottom_right)
-        geo.assert_is_lat(lat_top_left)
-        geo.assert_is_lat(lat_bottom_right)
-        if limit is not None and limit < 1:
-            raise ValueError("'limit' must be None or greater than zero")
-        params = {'bbox': ','.join([str(lon_top_left),
-                                    str(lat_top_left),
-                                    str(lon_bottom_right),
-                                    str(lat_bottom_right)]),
-                  'cluster': 'yes' if cluster else 'no',}
-        if limit is not None:
-            params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(BBOX_STATION_URL,
-                                            self._API_key,
-                                            self._subscription_type,
-                                            self._use_ssl)
-        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation_list'].parse_JSON(json_data)
-
     def weather_at_places_in_bbox(self, lon_left, lat_bottom, lon_right, lat_top,
                                   zoom=10, cluster=False):
         """
@@ -924,44 +844,6 @@ class OWM25(owm.OWM):
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
         return self._parsers['weather_history'].parse_JSON(json_data)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def station_at_coords(self, lat, lon, limit=None):
-        """
-        Queries the OWM Weather API for weather stations nearest to the
-        specified geographic coordinates (eg: latitude: 51.5073509,
-        longitude: -0.1277583). A list of *Station* objects is returned,
-        this instance encapsulates a last reported *Weather* object.
-
-        :param lat: location's latitude, must be between -90.0 and 90.0
-        :type lat: int/float
-        :param lon: location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
-        :param cnt: the maximum number of *Station* items to be retrieved
-            (default is ``None``, which stands for any number of items)
-        :type cnt: int or ``None``
-
-        :returns: a list of *Station* objects or ``None`` if station data is
-            not available for the specified location
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached
-        """
-        geo.assert_is_lon(lon)
-        geo.assert_is_lat(lat)
-        if limit is not None:
-            assert isinstance(limit, int), "'limit' must be int or None"
-            if limit < 1:
-                raise ValueError("'limit' must be None or greater than zero")
-        params = {'lat': lat, 'lon': lon}
-        if limit is not None:
-            params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(FIND_STATION_URL,
-                                            self._API_key,
-                                            self._subscription_type,
-                                            self._use_ssl)
-        _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['station_list'].parse_JSON(json_data)
 
     def station_tick_history(self, station_ID, limit=None):
         """

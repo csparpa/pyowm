@@ -425,26 +425,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
 
-    def test_station_at_coords(self):
-        """
-        Test feature: get a list of meteostations nearest to a geographical
-        point
-        """
-        s1 = self.__owm.station_at_coords(51.5073509, -0.1277583, 2)
-        self.assertEqual(2, len(s1))
-        for station in s1:
-            self.assertTrue(station is not None)
-            self.assertTrue(
-                    all(v is not None for v in station.__dict__.values()))
-        with self.assertRaises(ValueError):
-            self.__owm.station_at_coords(51.5073509, 220)
-        with self.assertRaises(ValueError):
-            self.__owm.station_at_coords(220, -0.1277583)
-        with self.assertRaises(ValueError):
-            self.__owm.station_at_coords(51.5073509, -0.1277583, -3)
-        with self.assertRaises(AssertionError):
-            self.__owm.station_at_coords(51.5073509, -0.1277582, 'foo')
-
     def test_station_tick_history(self):
         """
         Test feature: get station tick weather history for a specific
@@ -511,33 +491,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(h3 is not None)
         except api_response_error.UnauthorizedError:
             pass  # it's a paid-level API feature
-
-    def test_weather_at_station(self):
-        """
-        Test feature: get current weather measurement for a specific
-        meteostation
-        """
-        o = self.__owm.weather_at_station(1000)
-        self.assertTrue(o is not None)
-        self.assertTrue(o.get_reception_time() is not None)
-        weat = o.get_weather()
-        self.assertTrue(weat is not None)
-
-    def test_weather_at_stations_in_bbox(self):
-        """
-        Test feature: get current weather observations from meteostations
-        inside of a bounding box determined by geo-coordinates.
-        """
-        o = self.__owm.weather_at_stations_in_bbox(47.013855, -126.039644,
-                                                   33.772746, -115.187844)
-        self.assertTrue(isinstance(o, list))
-        for item in o:
-            self.assertTrue(item is not None)
-            self.assertTrue(item.get_reception_time() is not None)
-            loc = item.get_location()
-            self.assertTrue(loc is not None)
-            weat = item.get_weather()
-            self.assertTrue(weat is not None)
 
     def test_weather_at_places_in_bbox(self):
         o = self.__owm.weather_at_places_in_bbox(0.734720, 38.422663, 1.964651, 39.397204, 10, False)  # Ibiza
