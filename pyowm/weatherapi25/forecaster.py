@@ -64,7 +64,7 @@ class Forecaster(object):
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        end_coverage = max([item.get_reference_time() \
+        end_coverage = max([item.get_reference_time()
                             for item in self._forecast])
         return timeformatutils.timeformat(end_coverage, timeformat)
 
@@ -77,18 +77,6 @@ class Forecaster(object):
 
         """        
         return weatherutils.any_status_is(self._forecast.get_weathers(), "rain",
-                                          weather_code_registry)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def will_have_sun(self):
-        """
-        Tells if into the forecast coverage exist one or more *Weather* items
-        related to sun conditions
-
-        :returns: boolean
-
-        """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "sun",
                                           weather_code_registry)
 
     def will_have_clear(self):
@@ -178,18 +166,6 @@ class Forecaster(object):
         """
         return weatherutils.filter_by_status(self._forecast.get_weathers(),
                                              "rain",
-                                             weather_code_registry)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def when_sun(self):
-        """
-        Returns a sublist of the *Weather* list in the forecast, containing
-        only items having sun as weather condition.
-
-        :returns: a list of *Weather* objects
-        """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "sun",
                                              weather_code_registry)
 
     def when_clear(self):
@@ -305,22 +281,6 @@ class Forecaster(object):
 
         """
         return self._will_be(timeobject, "rain")
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def will_be_sunny_at(self, timeobject):
-        """
-        Tells if at the specified time the condition is sun. The check is
-        performed on the *Weather* item of the forecast which is closest to the
-        time value conveyed by the parameter
-
-        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
-            or an ISO8601-formatted string in the format
-            ``YYYY-MM-DD HH:MM:SS+00``
-        :type timeobject: long/int, ``datetime.datetime`` or str)
-        :returns: boolean
-
-        """
-        return self._will_be(timeobject, "sun")
 
     def will_be_clear_at(self, timeobject):
         """

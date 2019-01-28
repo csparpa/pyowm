@@ -117,9 +117,6 @@ class TestForecaster(unittest.TestCase):
     def test_will_have_rain(self):
         self.assertTrue(self.__test_instance.will_have_rain())
 
-    def test_will_have_sun(self):
-        self.assertTrue(self.__test_instance.will_have_sun())
-
     def test_will_have_clear(self):
         self.assertTrue(self.__test_instance.will_have_clear())
 
@@ -144,11 +141,6 @@ class TestForecaster(unittest.TestCase):
     def test_when_rain(self):
         self.assertEqual([self.__test_weather_rainsnow],
                          self.__test_instance.when_rain())
-
-    def test_when_sun(self):
-        self.assertEqual([self.__test_weather_sun_1,
-                          self.__test_weather_sun_2],
-                         self.__test_instance.when_sun())
 
     def test_when_clear(self):
         self.assertEqual([self.__test_weather_sun_1,
@@ -184,18 +176,6 @@ class TestForecaster(unittest.TestCase):
 
     def test_will_be_rainy_at_fails_with_bad_parameters(self):
         self.assertRaises(TypeError, Forecaster.will_be_rainy_at,
-                          self.__test_instance, 45.7)
-
-    def test_will_be_sunny_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
-        time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
-        self.assertFalse(self.__test_instance.will_be_sunny_at(time_1))
-        self.assertFalse(self.__test_instance.will_be_sunny_at(time_2))
-        self.assertTrue(self.__test_instance.will_be_sunny_at(time_3))
-
-    def test_will_be_sunny_at_fails_with_bad_parameters(self):
-        self.assertRaises(TypeError, Forecaster.will_be_sunny_at,
                           self.__test_instance, 45.7)
 
     def test_will_be_clear_at(self):
