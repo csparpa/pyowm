@@ -6,7 +6,7 @@
 PyOWM
 =====
 
-Welcome to PyOWM's documentation!
+Welcome to PyOWM v3 documentation!
 
 .. image:: ../logos/180x180.png
    :width: 180px
@@ -46,20 +46,20 @@ The documentation of OWM APIs can be found on the OWM Website_
 .. _Website: https://openweathermap.org/api
 
 
+Important note about PyOWM v2 to v3 transition
+----------------------------------------------
+
+PyOWM v3 is a brand new branch of the library and therefore differs from PyOWM v2 branch.
+This means that v3 offers no retrocompatibility with v2: **this might result in your code breaking** if
+it uses PyOWM v2 and you uncarefully update!
+
+
 Supported environments and Python versions
 ------------------------------------------
 
 PyOWM runs on Windows, Linux and MacOS.
 
-PyOWM runs on:
-
-  - Python 2.7
-  - Python 3.4+
-
-Please notice that **support for Python 2.x will eventually be dropped** - check details_
-
-.. _details: https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support
-
+PyOWM runs on Python 3.5+
 
 PyOWM also integrates with Django_ 1.10+ models, but that integration might have issues (contributions are welcome)
 
@@ -77,6 +77,13 @@ The easiest method of all:
 .. code::
 
     $ pip install pyowm
+
+If you already have PyOWM 2.x installed and want to upgrade to safely update it to the latest 2.x release just run:
+
+.. code::
+
+    $ pip install --upgrade pyowm>=2.0,<3.0
+
 
 Get the lastest development version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,11 +129,11 @@ On OpenSuse you can use with YaST/Zypper package manager, run:
 
    zypper install python-pyowm
 
-PyOWM v2 usage documentation
-----------------------------
+Legacy PyOWM v2 usage documentation
+-----------------------------------
 
 Here are some usage examples for the different OWM APIs: these examples and guides refer to PyOWM library
-versions belonging to the 2.x stream
+versions belonging to the old 2.x stream
 
 
 Weather API examples

@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7-dev"
@@ -30,10 +29,8 @@ jobs:
   include:
     - &local_installation_test
       stage: "Local Installation Test"
-      python: 3.4
-      script: bash tests/local_installation_test.sh
-    - <<: *local_installation_test
       python: 3.5
+      script: bash tests/local_installation_test.sh
     - <<: *local_installation_test
       python: 3.6
     - <<: *local_installation_test
@@ -44,10 +41,8 @@ jobs:
 
     - &deploy_to_pypi
       stage: "Deploy to PyPI"
-      python: 3.4
-      script: bash deploy/deploy_to_pypi.sh
-    - <<: *deploy_to_pypi
       python: 3.5
+      script: bash deploy/deploy_to_pypi.sh
     - <<: *deploy_to_pypi
       python: 3.6
     - <<: *deploy_to_pypi
@@ -55,11 +50,9 @@ jobs:
 
     - &pypi_installation_test
       stage: "PyPI Installation Test"
-      python: 3.4
+      python: 3.5
       if: branch = master
       script: bash tests/pypi_installation_test.sh
-    - <<: *pypi_installation_test
-      python: 3.5
     - <<: *pypi_installation_test
       python: 3.6
     - <<: *pypi_installation_test

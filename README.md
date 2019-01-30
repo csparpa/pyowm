@@ -33,7 +33,7 @@ With PyOWM you can integrate into your code any of the following OpenWeatherMap 
  - **[Weather Alerts API v3.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/alerts-api-usage-examples.html)**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
  - **[Image tiles](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/map-tiles-client-examples.html)** for several map layers provided by OWM
 
-PyOWM runs on Python 2.7 and Python 3.4+ (but watch out! Python 2.x will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
+PyOWM runs on Python 3.5+
 
 PyOWM also integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
 
