@@ -15,6 +15,7 @@ Code
   * [Noid] (https://github.com/n0id)
   * [titilambert] (https://github.com/titilambert)
   * [txemi] (https://github.com/txemi)
+  * [camponez] (https://github.com/camponez)
 
 Docs
 ----
