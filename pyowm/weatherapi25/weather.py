@@ -168,7 +168,7 @@ class Weather(object):
         """Returns a dict containing wind info
         
         :param unit: the unit of measure for the wind values. May be:
-            '*meters_sec*' (default) or '*miles_hour*'
+            '*meters_sec*' (default), '*miles_hour*' or '*kilometers_hour*'
         :type unit: str
         :returns: a dict containing wind info
 
@@ -178,6 +178,9 @@ class Weather(object):
         elif unit == 'miles_hour':
             wind_dict = {k: self._wind[k] for k in self._wind if self._wind[k] is not None}
             return temputils.metric_wind_dict_to_imperial(wind_dict)
+        elif unit == 'km_hour':
+            wind_dict = {k: self._wind[k] for k in self._wind if self._wind[k] is not None}
+            return temputils.metric_wind_dict_to_km_h(wind_dict)
         else:
             raise ValueError("Invalid value for target wind conversion unit")
 

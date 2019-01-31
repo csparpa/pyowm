@@ -9,6 +9,7 @@ FAHRENHEIT_DEGREE_SCALE = 1.8
 
 # Wind speed conversion constants
 MILES_PER_HOUR_FOR_ONE_METER_PER_SEC = 2.23694
+KM_PER_HOUR_FOR_ONE_METER_PER_SEC = 3.6
 
 
 def kelvin_dict_to(d, target_temperature_unit):
@@ -88,6 +89,25 @@ def metric_wind_dict_to_imperial(d):
     for key, value in d.items():
         if key != 'deg': # do not convert wind degree
             result[key] = value * MILES_PER_HOUR_FOR_ONE_METER_PER_SEC
+        else:
+            result[key] = value
+    return result
+
+def metric_wind_dict_to_km_h(d):
+    """
+    Converts all the wind values in a dict from meters/sec
+    to km/hour.
+
+    :param d: the dictionary containing metric values
+    :type d: dict
+    :returns: a dict with the same keys as the input dict and values converted
+        to km/hour
+
+    """
+    result = dict()
+    for key, value in d.items():
+        if key != 'deg': # do not convert wind degree
+            result[key] = value * KM_PER_HOUR_FOR_ONE_METER_PER_SEC
         else:
             result[key] = value
     return result

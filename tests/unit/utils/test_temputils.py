@@ -62,3 +62,17 @@ class TestTempUtils(unittest.TestCase):
         }
         result = temputils.metric_wind_dict_to_imperial(input)
         self.assertEqual(expected, result)
+
+    def test_metric_wind_dict_to_km_h(self):
+        input = {
+            'speed': 2,
+            'gust': 3,
+            'deg': 7.89
+        }
+        expected = {
+            'speed': 7.2,
+            'gust': 10.8,
+            'deg': 7.89
+        }
+        result = temputils.metric_wind_dict_to_km_h(input)
+        self.assertEqual(expected, result)
