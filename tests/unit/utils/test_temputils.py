@@ -14,18 +14,18 @@ class TestTempUtils(unittest.TestCase):
         fahrenheit_dict = {'a': 82.13, 'b': 44.33}
         self.assertEqual(celsius_dict,
                          temputils.kelvin_dict_to(
-                                                  kelvin_dict,
-                                                  "celsius")
+                             kelvin_dict,
+                             "celsius")
                          )
         self.assertEqual(fahrenheit_dict,
                          temputils.kelvin_dict_to(
-                                                  kelvin_dict,
-                                                  "fahrenheit")
+                             kelvin_dict,
+                             "fahrenheit")
                          )
         self.assertEqual(kelvin_dict,
                          temputils.kelvin_dict_to(
-                                                  kelvin_dict,
-                                                  "kelvin")
+                             kelvin_dict,
+                             "kelvin")
                          )
 
     def test_kelvin_dict_to_fails_with_unknown_temperature_units(self):
@@ -61,4 +61,18 @@ class TestTempUtils(unittest.TestCase):
             'deg': 7.89
         }
         result = temputils.metric_wind_dict_to_imperial(input)
+        self.assertEqual(expected, result)
+
+    def test_metric_wind_dict_to_km_h(self):
+        input = {
+            'speed': 2,
+            'gust': 3,
+            'deg': 7.89
+        }
+        expected = {
+            'speed': 7.2,
+            'gust': 10.8,
+            'deg': 7.89
+        }
+        result = temputils.metric_wind_dict_to_km_h(input)
         self.assertEqual(expected, result)

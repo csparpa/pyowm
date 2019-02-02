@@ -166,9 +166,9 @@ class Weather(object):
 
     def get_wind(self, unit='meters_sec'):
         """Returns a dict containing wind info
-        
+
         :param unit: the unit of measure for the wind values. May be:
-            '*meters_sec*' (default) or '*miles_hour*'
+            '*meters_sec*' (default), '*miles_hour*  or '*kilometers_hour*'
         :type unit: str
         :returns: a dict containing wind info
 
@@ -176,8 +176,13 @@ class Weather(object):
         if unit == 'meters_sec':
             return self._wind
         elif unit == 'miles_hour':
-            wind_dict = {k: self._wind[k] for k in self._wind if self._wind[k] is not None}
+            wind_dict = {k: self._wind[k]
+                         for k in self._wind if self._wind[k] is not None}
             return temputils.metric_wind_dict_to_imperial(wind_dict)
+        elif unit == 'km_hour':
+            wind_dict = {k: self._wind[k]
+                         for k in self._wind if self._wind[k] is not None}
+            return temputils.metric_wind_dict_to_km_h(wind_dict)
         else:
             raise ValueError("Invalid value for target wind conversion unit")
 
@@ -217,7 +222,7 @@ class Weather(object):
             else:
                 to_be_converted[label] = temp
         converted = temputils.kelvin_dict_to(to_be_converted, unit)
-        return dict(list(converted.items()) + \
+        return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
 
     def get_status(self):
@@ -356,25 +361,28 @@ class Weather(object):
         xmlutils.create_DOM_node_from_dict(self._rain, "rain", root_node)
         xmlutils.create_DOM_node_from_dict(self._snow, "snow", root_node)
         xmlutils.create_DOM_node_from_dict(self._pressure, "pressure",
-                                             root_node)
+                                           root_node)
         node_sunrise_time = ET.SubElement(root_node, "sunrise_time")
-        node_sunrise_time.text = str(self._sunrise_time) if self._sunrise_time is not None else 'null'
+        node_sunrise_time.text = str(
+            self._sunrise_time) if self._sunrise_time is not None else 'null'
         weather_icon_name_node = ET.SubElement(root_node, "weather_icon_name")
         weather_icon_name_node.text = self._weather_icon_name
         clouds_node = ET.SubElement(root_node, "clouds")
         clouds_node.text = str(self._clouds)
         xmlutils.create_DOM_node_from_dict(self._temperature,
-                                                "temperature", root_node)
+                                           "temperature", root_node)
         detailed_status_node = ET.SubElement(root_node, "detailed_status")
         detailed_status_node.text = self._detailed_status
         reference_time_node = ET.SubElement(root_node, "reference_time")
         reference_time_node.text = str(self._reference_time)
         sunset_time_node = ET.SubElement(root_node, "sunset_time")
-        sunset_time_node.text = str(self._sunset_time) if self._sunset_time is not None else 'null'
+        sunset_time_node.text = str(
+            self._sunset_time) if self._sunset_time is not None else 'null'
         humidity_node = ET.SubElement(root_node, "humidity")
         humidity_node.text = str(self._humidity)
         xmlutils.create_DOM_node_from_dict(self._wind, "wind", root_node)
-        visibility_distance_node = ET.SubElement(root_node, "visibility_distance")
+        visibility_distance_node = ET.SubElement(
+            root_node, "visibility_distance")
         visibility_distance_node.text = str(self._visibility_distance)
         dewpoint_node = ET.SubElement(root_node, "dewpoint")
         dewpoint_node.text = str(self._dewpoint)
@@ -385,9 +393,8 @@ class Weather(object):
         return root_node
 
     def __repr__(self):
-        return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (__name__, \
-              self.__class__.__name__, self.get_reference_time('iso'),
-              self._status.lower(), self._detailed_status.lower())
+        return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (
+            __name__, self.__class__.__name__, self.get_reference_time('iso'), self._status.lower(), self._detailed_status.lower())
 
 
 def weather_from_dictionary(d):
@@ -578,6 +585,6 @@ def weather_from_dictionary(d):
         weather_icon_name = ''
 
     return Weather(reference_time, sunset_time, sunrise_time, clouds,
-                rain, snow, wind, humidity, pressure, temperature,
-                status, detailed_status, weather_code, weather_icon_name,
-                visibility_distance, dewpoint, humidex, heat_index)
+                   rain, snow, wind, humidity, pressure, temperature,
+                   status, detailed_status, weather_code, weather_icon_name,
+                   visibility_distance, dewpoint, humidex, heat_index)
