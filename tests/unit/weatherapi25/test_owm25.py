@@ -44,8 +44,6 @@ from pyowm.pollutionapi30.ozone import Ozone
 from pyowm.pollutionapi30.no2index import NO2Index
 from pyowm.pollutionapi30.so2index import SO2Index
 from pyowm.weatherapi25.parsers.forecastparser import ForecastParser
-from pyowm.weatherapi25.parsers.observationparser import ObservationParser
-from pyowm.weatherapi25.parsers.observationlistparser import ObservationListParser
 from pyowm.weatherapi25.parsers.stationhistoryparser import StationHistoryParser
 from pyowm.weatherapi25.parsers.weatherhistoryparser import WeatherHistoryParser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
@@ -57,8 +55,6 @@ from pyowm.alertapi30.alert_manager import AlertManager
 class TestOWM25(unittest.TestCase):
 
     __test_parsers = {
-      'observation': ObservationParser(),
-      'observation_list': ObservationListParser(),
       'forecast': ForecastParser(),
       'weather_history': WeatherHistoryParser(),
       'station_history': StationHistoryParser(),

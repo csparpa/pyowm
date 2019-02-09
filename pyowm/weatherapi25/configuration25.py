@@ -1,6 +1,6 @@
 from pyowm.caches import nullcache
 from pyowm.weatherapi25 import weathercoderegistry, cityidregistry
-from pyowm.weatherapi25.parsers import  forecastparser, observationlistparser, observationparser,  stationhistoryparser, \
+from pyowm.weatherapi25.parsers import  forecastparser, stationhistoryparser, \
     weatherhistoryparser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
 from pyowm.pollutionapi30.parsers import COIndexParser, NO2IndexParser, SO2IndexParser, OzoneParser
@@ -38,8 +38,6 @@ STATION_WEATHER_HISTORY_URL = ROOT_API_URL + '/history/station'
 
 # Parser objects injection for OWM Weather API responses parsing
 parsers = {
-  'observation': observationparser.ObservationParser(),
-  'observation_list': observationlistparser.ObservationListParser(),
   'forecast': forecastparser.ForecastParser(),
   'weather_history': weatherhistoryparser.WeatherHistoryParser(),
   'station_history': stationhistoryparser.StationHistoryParser(),

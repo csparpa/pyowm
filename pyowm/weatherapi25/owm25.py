@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 from time import time
 from pyowm import constants
 from pyowm.weatherapi25.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
-    DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL,
-    FIND_STATION_URL, STATION_URL, BBOX_STATION_URL, BBOX_CITY_URL)
+    DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, BBOX_CITY_URL)
 from pyowm.weatherapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
-from pyowm.abstractions.decorators import deprecated
 from pyowm.caches import nullcache
 from pyowm.commons import http_client
 from pyowm.pollutionapi30 import airpollution_client
@@ -19,6 +18,7 @@ from pyowm.exceptions import api_call_error
 from pyowm.utils import timeformatutils, stringutils, timeutils, geo
 from pyowm.weatherapi25 import forecaster
 from pyowm.weatherapi25 import historian
+from pyowm.weatherapi25 import observation
 from pyowm.stationsapi30 import stations_manager
 from pyowm.alertapi30 import alert_manager
 from pyowm.tiles import tile_manager
@@ -91,28 +91,20 @@ class OWM25(owm.OWM):
         """
         self._API_key = API_key
 
-    @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_API_version(self):
         """
         Returns the currently supported OWM Weather API version
-
-        .. deprecated:: 3.0.0
-           Will return a dict of tuples instead of a str
 
         :returns: str
 
         """
         return constants.WEATHER_API_VERSION
 
-    @deprecated(will_be='modified', on_version=(3, 0, 0))
     def get_version(self):
         """
         Returns the current version of the PyOWM library
 
-        .. deprecated:: 3.0.0
-           Will return a tuple instead of a str
-
-        :returns: str
+        :returns: `tuple`
 
         """
         return constants.PYOWM_VERSION
@@ -227,7 +219,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation'].parse_JSON(json_data)
+        return observation.Observation.from_dict(json.loads(json_data))
 
     def weather_at_coords(self, lat, lon):
         """
@@ -252,7 +244,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation'].parse_JSON(json_data)
+        return observation.Observation.from_dict(json.loads(json_data))
 
     def weather_at_zip_code(self, zipcode, country):
         """
@@ -280,7 +272,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation'].parse_JSON(json_data)
+        return observation.Observation.from_dict(json.loads(json_data))
 
     def weather_at_id(self, id):
         """
@@ -304,7 +296,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation'].parse_JSON(json_data)
+        return observation.Observation.from_dict(json.loads(json_data))
 
     def weather_at_ids(self, ids_list):
         """
@@ -331,7 +323,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation_list'].parse_JSON(json_data)
+        return observation.Observation.from_dict_of_lists(json.loads(json_data))
 
     def weather_at_places(self, pattern, searchtype, limit=None):
         """
@@ -373,7 +365,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation_list'].parse_JSON(json_data)
+        return observation.Observation.from_dict_of_lists(json.loads(json_data))
 
     def weather_at_places_in_bbox(self, lon_left, lat_bottom, lon_right, lat_top,
                                   zoom=10, cluster=False):
@@ -423,7 +415,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation_list'].parse_JSON(json_data)
+        return observation.Observation.from_dict_of_lists(json.loads(json_data))
 
     def weather_around_coords(self, lat, lon, limit=None):
         """
@@ -457,7 +449,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['observation_list'].parse_JSON(json_data)
+        return observation.Observation.from_dict_of_lists(json.loads(json_data))
 
     def three_hours_forecast(self, name):
         """
