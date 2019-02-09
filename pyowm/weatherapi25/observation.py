@@ -1,7 +1,3 @@
-"""
-Weather observation classes and data structures.
-"""
-
 import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
@@ -203,7 +199,7 @@ class Observation(object):
                     print("OWM API: data not found")
                     return None
                 else:
-                    raise api_response_error.APIResponseError("OWM API: error - response payload", int(the_dict['cod']))
+                    raise api_response_error.APIResponseError("OWM API: error - response payload", the_dict['cod'])
 
         # Handle the case when no results are found
         if 'count' in the_dict and the_dict['count'] == "0":

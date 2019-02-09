@@ -1,7 +1,3 @@
-"""
-Test case for observation.py module
-"""
-
 import unittest
 import json
 from datetime import datetime

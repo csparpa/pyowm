@@ -17,6 +17,7 @@ from pyowm.uvindexapi30 import uv_client
 from pyowm.exceptions import api_call_error
 from pyowm.utils import timeformatutils, stringutils, timeutils, geo
 from pyowm.weatherapi25 import forecaster
+from pyowm.weatherapi25.forecast import Forecast
 from pyowm.weatherapi25 import historian
 from pyowm.weatherapi25 import observation
 from pyowm.stationsapi30 import stations_manager
@@ -475,7 +476,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        forecast = Forecast.from_dict(json.loads(json_data))
         if forecast is not None:
             forecast.set_interval("3h")
             return forecaster.Forecaster(forecast)
@@ -509,7 +510,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        forecast = Forecast.from_dict(json.loads(json_data))
         if forecast is not None:
             forecast.set_interval("3h")
             return forecaster.Forecaster(forecast)
@@ -541,7 +542,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        forecast = Forecast.from_dict(json.loads(json_data))
         if forecast is not None:
             forecast.set_interval("3h")
             return forecaster.Forecaster(forecast)
@@ -582,7 +583,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        forecast = Forecast.from_dict(json.loads(json_data))
         if forecast is not None:
             forecast.set_interval("daily")
             return forecaster.Forecaster(forecast)
@@ -626,7 +627,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        forecast = Forecast.from_dict(json.loads(json_data))
         if forecast is not None:
             forecast.set_interval("daily")
             return forecaster.Forecaster(forecast)
@@ -669,7 +670,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = self._parsers['forecast'].parse_JSON(json_data)
+        forecast = Forecast.from_dict(json.loads(json_data))
         if forecast is not None:
             forecast.set_interval("daily")
             return forecaster.Forecaster(forecast)

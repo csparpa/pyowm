@@ -1,15 +1,17 @@
-"""
-Test case for forecast.py module
-"""
-
 import unittest
+import json
 from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.forecast import Forecast
+from pyowm.exceptions.parse_response_error import ParseResponseError
+from pyowm.exceptions.api_response_error import APIResponseError
 from pyowm.utils.timeformatutils import UTC
 from tests.unit.weatherapi25.json_test_dumps import FORECAST_JSON_DUMP
 from tests.unit.weatherapi25.xml_test_dumps import FORECAST_XML_DUMP
+from tests.unit.weatherapi25.json_test_responses import (
+     THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
+     INTERNAL_SERVER_ERROR_JSON, FORECAST_MALFORMED_JSON)
 
 
 class TestForecast(unittest.TestCase):
@@ -37,6 +39,13 @@ class TestForecast(unittest.TestCase):
     __test_n_weathers = len(__test_weathers)
     __test_instance = Forecast("daily", __test_reception_time, __test_location,
                                __test_weathers)
+    __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
+    __bad_json_2 = '{ "city": {"id": 2643743,' \
+        '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
+        '"GB","population": 1000000} }'
+    __no_items_found_json = '{"count": "0", "city": {"id": 2643743,' \
+        '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
+        '"GB","population": 1000000} }'
 
     def test_actualize(self):
         weathers = [Weather(1378459200, 1378496400, 1378449600, 67,
@@ -60,9 +69,6 @@ class TestForecast(unittest.TestCase):
         self.assertEqual(2, len(f))
         f.actualize()
         self.assertEqual(1, len(f))
-
-
-
 
     def test_init_fails_when_reception_time_is_negative(self):
         self.assertRaises(ValueError, Forecast, "3h", -1234567,
@@ -137,3 +143,43 @@ class TestForecast(unittest.TestCase):
         ordered_base_xml = ''.join(sorted(FORECAST_XML_DUMP))
         ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
         self.assertEqual(ordered_base_xml, ordered_actual_xml)
+
+    def test_from_dict(self):
+        result = self.__test_instance.from_dict(json.loads(THREE_HOURS_FORECAST_JSON))
+        self.assertTrue(result is not None)
+        self.assertTrue(result.get_reception_time() is not None)
+        self.assertFalse(result.get_interval() is not None)
+        loc = result.get_location()
+        self.assertTrue(loc is not None)
+        self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+        self.assertTrue(isinstance(result.get_weathers(), list))
+        for weather in result:
+            self.assertTrue(weather is not None)
+
+    def test_from_dict_fails_when_JSON_data_is_None(self):
+        with self.assertRaises(ParseResponseError):
+            Forecast.from_dict(None)
+
+    def test_from_dict_with_malformed_JSON_data(self):
+        with self.assertRaises(ParseResponseError):
+            Forecast.from_dict(json.loads(self.__bad_json))
+        with self.assertRaises(ParseResponseError):
+            Forecast.from_dict(json.loads(self.__bad_json_2))
+        with self.assertRaises(ParseResponseError):
+            Forecast.from_dict(json.loads(FORECAST_MALFORMED_JSON))
+
+    def test_from_dict_when_no_results(self):
+        result = Forecast.from_dict(json.loads(FORECAST_NOT_FOUND_JSON))
+        self.assertFalse(result is None)
+        self.assertEqual(0, len(result))
+        result = Forecast.from_dict(json.loads(self.__no_items_found_json))
+        self.assertEqual(0, len(result))
+
+    def test_from_dict_when_server_error(self):
+        with self.assertRaises(APIResponseError):
+            Forecast.from_dict(json.loads(INTERNAL_SERVER_ERROR_JSON))
+
+    def test_to_dict(self):
+        expected = json.loads(FORECAST_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)

@@ -1,11 +1,11 @@
-"""
-Module containing weather forecast classes and data structures.
-"""
-
 import json
+import time
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     FORECAST_XMLNS_PREFIX, FORECAST_XMLNS_URL)
+from pyowm.weatherapi25 import location
+from pyowm.weatherapi25 import weather
+from pyowm.exceptions import parse_response_error, api_response_error
 from pyowm.utils import timeutils, timeformatutils, xmlutils
 
 
@@ -221,6 +221,69 @@ class Forecast(object):
         for weather in self:
             weathers_node.append(weather._to_DOM())
         return root_node
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *Forecast* instance out of a raw data dictionary. Only certain properties of the data are used: if
+        these properties are not found or cannot be parsed, an error is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *Forecast* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the
+            data needed to build the result, *APIResponseError* if the input dictionary embeds an HTTP status error
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('JSON data is None')
+        # Check if server returned errors: this check overcomes the lack of use
+        # of HTTP error status codes by the OWM API 2.5. This mechanism is
+        # supposed to be deprecated as soon as the API fully adopts HTTP for
+        # conveying errors to the clients
+        if 'message' in the_dict and 'cod' in the_dict:
+            if the_dict['cod'] == "404":
+                print("OWM API: data not found - response payload", the_dict['cod'])
+                return None
+            elif the_dict['cod'] != "200":
+                raise api_response_error.APIResponseError("OWM API: error - response payload", the_dict['cod'])
+        try:
+            place = location.location_from_dictionary(the_dict)
+        except KeyError:
+            raise parse_response_error.ParseResponseError(''.join([__name__,
+                                                               ': impossible to read location info from JSON data']))
+        # Handle the case when no results are found
+        if 'count' in the_dict and the_dict['count'] == "0":
+            weathers = []
+        elif 'cnt' in the_dict and the_dict['cnt'] == 0:
+            weathers = []
+        else:
+            if 'list' in the_dict:
+                try:
+                    weathers = [weather.weather_from_dictionary(item) \
+                                for item in the_dict['list']]
+                except KeyError:
+                    raise parse_response_error.ParseResponseError(
+                          ''.join([__name__, ': impossible to read weather info from JSON data'])
+                                  )
+            else:
+                raise parse_response_error.ParseResponseError(
+                          ''.join([__name__, ': impossible to read weather list from JSON data'])
+                          )
+        current_time = int(round(time.time()))
+        return Forecast(None, current_time, place, weathers)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {"interval": self._interval,
+               "reception_time": self._reception_time,
+               "Location": json.loads(self._location.to_JSON()),
+               "weathers": json.loads("[" + \
+                    ",".join([w.to_JSON() for w in self]) + "]")}
 
     def __len__(self):
         """Redefine __len__ hook"""
