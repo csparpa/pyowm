@@ -1,9 +1,6 @@
-"""
-Test case for weather.py module
-"""
-
 import unittest
-from pyowm.weatherapi25.weather import Weather, weather_from_dictionary
+import json
+from pyowm.weatherapi25.weather import Weather
 from pyowm.utils.timeformatutils import UTC
 from tests.unit.weatherapi25.json_test_dumps import WEATHER_JSON_DUMP
 from datetime import datetime
@@ -149,7 +146,7 @@ class TestWeather(unittest.TestCase):
                           self.__test_humidex, self.__test_heat_index)
         self.assertIsNone(instance.get_sunrise_time())
 
-    def test_from_dictionary(self):
+    def test_from_dict(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
                  'coord': {'lat': 51.50853, 'lon': -0.12574},
                  'sys': {'country': 'GB', 'sunset': 1378923812,
@@ -217,16 +214,16 @@ class TestWeather(unittest.TestCase):
                 },
                 "params":["temp","pressure","wind","visibility"]
         }
-        result1 = weather_from_dictionary(dict1)
+        result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
         self.assertTrue(all(v is not None for v in result1.__dict__.values()))
-        result2 = weather_from_dictionary(dict2)
+        result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
         self.assertFalse(all(v is not None for v in result2.__dict__.values()))
-        result3 = weather_from_dictionary(dict3)
+        result3 = Weather.from_dict(dict3)
         self.assertTrue(isinstance(result3, Weather))
 
-    def test_from_dictionary_when_data_fields_are_none(self):
+    def test_from_dict_when_data_fields_are_none(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
                  'coord': {'lat': 51.50853, 'lon': -0.12574},
                  'sys': {'country': 'GB', 'sunset': 1378923812,
@@ -255,7 +252,7 @@ class TestWeather(unittest.TestCase):
                  'rain': None,
                  'snow': None
         }
-        result1 = weather_from_dictionary(dict1)
+        result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
         self.assertEquals(0, len(result1.get_wind()))
         self.assertEquals(0, len(result1.get_rain()))
@@ -288,9 +285,15 @@ class TestWeather(unittest.TestCase):
                 },
                 "params":["temp","pressure","wind","visibility"]
         }
-        result2 = weather_from_dictionary(dict2)
+        result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
         self.assertEquals(0, len(result2.get_wind()))
+
+    def test_to_dict(self):
+        expected = json.loads(WEATHER_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)
+
 
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reference_time(),
@@ -403,10 +406,3 @@ class TestWeather(unittest.TestCase):
         ordered_base_json = ''.join(sorted(WEATHER_JSON_DUMP))
         ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
         self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    '''
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(WEATHER_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
-    '''

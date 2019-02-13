@@ -1,6 +1,5 @@
-"""
-Module containing utility functions for temperature and wind units conversion
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-"""
 
 # Temperature coneversion constants
 KELVIN_OFFSET = 273.15

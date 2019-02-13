@@ -1,7 +1,5 @@
-"""
-Module containing classes and datastructures related to meteostation history
-data
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import json
 import xml.etree.ElementTree as ET

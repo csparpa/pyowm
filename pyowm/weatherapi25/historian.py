@@ -1,6 +1,5 @@
-"""
-Module containing weather history abstraction classes and data structures.
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from pyowm.utils import temputils
 from operator import itemgetter

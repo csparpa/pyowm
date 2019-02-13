@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import time
 import xml.etree.ElementTree as ET
@@ -260,7 +263,7 @@ class Forecast(object):
         else:
             if 'list' in the_dict:
                 try:
-                    weathers = [weather.weather_from_dictionary(item) \
+                    weathers = [weather.Weather.from_dict(item) \
                                 for item in the_dict['list']]
                 except KeyError:
                     raise parse_response_error.ParseResponseError(

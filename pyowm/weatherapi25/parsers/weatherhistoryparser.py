@@ -55,7 +55,7 @@ class WeatherHistoryParser(jsonparser.JSONParser):
         else:
             if 'list' in d:
                 try:
-                    return [weather.weather_from_dictionary(item) \
+                    return [weather.Weather.from_dict(item) \
                             for item in d['list']]
                 except KeyError:
                     raise parse_response_error.ParseResponseError(

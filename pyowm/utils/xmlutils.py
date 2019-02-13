@@ -1,6 +1,6 @@
-"""
-Module containing utility functions for generating XML strings
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 
 import xml.etree.ElementTree as ET
 

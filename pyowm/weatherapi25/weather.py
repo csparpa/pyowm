@@ -1,9 +1,9 @@
-"""
-Module containing weather data classes and data structures.
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import json
 import xml.etree.ElementTree as ET
+from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
 from pyowm.utils import timeformatutils, temputils, xmlutils
@@ -396,195 +396,221 @@ class Weather(object):
         return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (
             __name__, self.__class__.__name__, self.get_reference_time('iso'), self._status.lower(), self._detailed_status.lower())
 
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *Weather* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
 
-def weather_from_dictionary(d):
-    """
-    Builds a *Weather* object out of a data dictionary. Only certain
-    properties of the dictionary are used: if these properties are not
-    found or cannot be read, an error is issued.
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *Weather* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the
+            data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
-    :param d: a data dictionary
-    :type d: dict
-    :returns: a *Weather* instance
-    :raises: *KeyError* if it is impossible to find or read the data
-        needed to build the instance
-
-    """
-    # -- times
-    if 'dt' in d:
-        reference_time = d['dt']
-    elif 'dt' in d['last']:
-        reference_time = d['last']['dt']
-    if 'sys' in d and 'sunset' in d['sys']:
-        sunset_time = d['sys']['sunset']
-    else:
-        sunset_time = 0
-    if 'sys' in d and 'sunrise' in d['sys']:
-        sunrise_time = d['sys']['sunrise']
-    else:
-        sunrise_time = 0
-    # -- calc
-    if 'calc' in d:
-        if 'dewpoint' in d['calc']:
-            dewpoint = d['calc']['dewpoint']
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        # -- times
+        if 'dt' in the_dict:
+            reference_time = the_dict['dt']
+        elif 'dt' in the_dict['last']:
+            reference_time = the_dict['last']['dt']
+        if 'sys' in the_dict and 'sunset' in the_dict['sys']:
+            sunset_time = the_dict['sys']['sunset']
         else:
-            dewpoint = None
-        if 'humidex' in d['calc']:
-            humidex = d['calc']['humidex']
+            sunset_time = 0
+        if 'sys' in the_dict and 'sunrise' in the_dict['sys']:
+            sunrise_time = the_dict['sys']['sunrise']
         else:
-            humidex = None
-        if 'heatindex' in d['calc']:
-            heat_index = d['calc']['heatindex']
-        else:
-            heat_index = None
-    elif 'last' in d:
-        if 'calc' in d['last']:
-            if 'dewpoint' in d['last']['calc']:
-                dewpoint = d['last']['calc']['dewpoint']
+            sunrise_time = 0
+        # -- calc
+        if 'calc' in the_dict:
+            if 'dewpoint' in the_dict['calc']:
+                dewpoint = the_dict['calc']['dewpoint']
             else:
                 dewpoint = None
-            if 'humidex' in d['last']['calc']:
-                humidex = d['last']['calc']['humidex']
+            if 'humidex' in the_dict['calc']:
+                humidex = the_dict['calc']['humidex']
             else:
                 humidex = None
-            if 'heatindex' in d['last']['calc']:
-                heat_index = d['last']['calc']['heatindex']
+            if 'heatindex' in the_dict['calc']:
+                heat_index = the_dict['calc']['heatindex']
             else:
                 heat_index = None
-    else:
-        dewpoint = None
-        humidex = None
-        heat_index = None
-    # -- visibility
-    if 'visibility' in d:
-        if isinstance(d['visibility'], int):
-            visibility_distance = d['visibility']
-        elif 'distance' in d['visibility']:
-            visibility_distance = d['visibility']['distance']
+        elif 'last' in the_dict:
+            if 'calc' in the_dict['last']:
+                if 'dewpoint' in the_dict['last']['calc']:
+                    dewpoint = the_dict['last']['calc']['dewpoint']
+                else:
+                    dewpoint = None
+                if 'humidex' in the_dict['last']['calc']:
+                    humidex = the_dict['last']['calc']['humidex']
+                else:
+                    humidex = None
+                if 'heatindex' in the_dict['last']['calc']:
+                    heat_index = the_dict['last']['calc']['heatindex']
+                else:
+                    heat_index = None
+        else:
+            dewpoint = None
+            humidex = None
+            heat_index = None
+        # -- visibility
+        if 'visibility' in the_dict:
+            if isinstance(the_dict['visibility'], int):
+                visibility_distance = the_dict['visibility']
+            elif 'distance' in the_dict['visibility']:
+                visibility_distance = the_dict['visibility']['distance']
+            else:
+                visibility_distance = None
+        elif 'last' in the_dict and 'visibility' in the_dict['last']:
+            if isinstance(the_dict['last']['visibility'], int):
+                visibility_distance = the_dict['last']['visibility']
+            elif 'distance' in the_dict['last']['visibility']:
+                visibility_distance = the_dict['last']['visibility']['distance']
+            else:
+                visibility_distance = None
         else:
             visibility_distance = None
-    elif 'last' in d and 'visibility' in d['last']:
-        if isinstance(d['last']['visibility'], int):
-            visibility_distance = d['last']['visibility']
-        elif 'distance' in d['last']['visibility']:
-            visibility_distance = d['last']['visibility']['distance']
-        else:
-            visibility_distance = None
-    else:
-        visibility_distance = None
-    # -- clouds
-    if 'clouds' in d:
-        if isinstance(d['clouds'], int) or isinstance(d['clouds'], float):
-            clouds = d['clouds']
-        elif 'all' in d['clouds']:
-            clouds = d['clouds']['all']
+        # -- clouds
+        if 'clouds' in the_dict:
+            if isinstance(the_dict['clouds'], int) or isinstance(the_dict['clouds'], float):
+                clouds = the_dict['clouds']
+            elif 'all' in the_dict['clouds']:
+                clouds = the_dict['clouds']['all']
+            else:
+                clouds = 0
         else:
             clouds = 0
-    else:
-        clouds = 0
-    # -- rain
-    if 'rain' in d:
-        if isinstance(d['rain'], int) or isinstance(d['rain'], float):
-            rain = {'all': d['rain']}
-        else:
-            if d['rain'] is not None:
-                rain = d['rain'].copy()
+        # -- rain
+        if 'rain' in the_dict:
+            if isinstance(the_dict['rain'], int) or isinstance(the_dict['rain'], float):
+                rain = {'all': the_dict['rain']}
             else:
-                rain = dict()
-    else:
-        rain = dict()
-    # -- wind
-    if 'wind' in d and d['wind'] is not None:
-        wind = d['wind'].copy()
-    elif 'last' in d:
-        if 'wind' in d['last'] and d['last']['wind'] is not None:
-            wind = d['last']['wind'].copy()
+                if the_dict['rain'] is not None:
+                    rain = the_dict['rain'].copy()
+                else:
+                    rain = dict()
+        else:
+            rain = dict()
+        # -- wind
+        if 'wind' in the_dict and the_dict['wind'] is not None:
+            wind = the_dict['wind'].copy()
+        elif 'last' in the_dict:
+            if 'wind' in the_dict['last'] and the_dict['last']['wind'] is not None:
+                wind = the_dict['last']['wind'].copy()
+            else:
+                wind = dict()
         else:
             wind = dict()
-    else:
-        wind = dict()
-        if 'speed' in d:
-            wind['speed'] = d['speed']
-        if 'deg' in d:
-            wind['deg'] = d['deg']
-    # -- humidity
-    if 'humidity' in d:
-        humidity = d['humidity']
-    elif 'main' in d and 'humidity' in d['main']:
-        humidity = d['main']['humidity']
-    elif 'last' in d and 'main' in d['last'] and 'humidity' in d['last']['main']:
-        humidity = d['last']['main']['humidity']
-    else:
-        humidity = 0
-    # -- snow
-    if 'snow' in d:
-        if isinstance(d['snow'], int) or isinstance(d['snow'], float):
-            snow = {'all': d['snow']}
+            if 'speed' in the_dict:
+                wind['speed'] = the_dict['speed']
+            if 'deg' in the_dict:
+                wind['deg'] = the_dict['deg']
+        # -- humidity
+        if 'humidity' in the_dict:
+            humidity = the_dict['humidity']
+        elif 'main' in the_dict and 'humidity' in the_dict['main']:
+            humidity = the_dict['main']['humidity']
+        elif 'last' in the_dict and 'main' in the_dict['last'] and 'humidity' in the_dict['last']['main']:
+            humidity = the_dict['last']['main']['humidity']
         else:
-            if d['snow'] is not None:
-                snow = d['snow'].copy()
+            humidity = 0
+        # -- snow
+        if 'snow' in the_dict:
+            if isinstance(the_dict['snow'], int) or isinstance(the_dict['snow'], float):
+                snow = {'all': the_dict['snow']}
             else:
-                snow = dict()
-    else:
-        snow = dict()
-    # -- pressure
-    if 'pressure' in d:
-        atm_press = d['pressure']
-    elif 'main' in d and 'pressure' in d['main']:
-        atm_press = d['main']['pressure']
-    elif 'last' in d:
-        if 'main' in d['last']:
-            atm_press = d['last']['main']['pressure']
-    else:
-        atm_press = None
-    if 'main' in d and 'sea_level' in d['main']:
-        sea_level_press = d['main']['sea_level']
-    else:
-        sea_level_press = None
-    pressure = {'press': atm_press, 'sea_level': sea_level_press}
-    # -- temperature
-    if 'temp' in d:
-        if d['temp'] is not None:
-            temperature = d['temp'].copy()
+                if the_dict['snow'] is not None:
+                    snow = the_dict['snow'].copy()
+                else:
+                    snow = dict()
+        else:
+            snow = dict()
+        # -- pressure
+        if 'pressure' in the_dict:
+            atm_press = the_dict['pressure']
+        elif 'main' in the_dict and 'pressure' in the_dict['main']:
+            atm_press = the_dict['main']['pressure']
+        elif 'last' in the_dict:
+            if 'main' in the_dict['last']:
+                atm_press = the_dict['last']['main']['pressure']
+        else:
+            atm_press = None
+        if 'main' in the_dict and 'sea_level' in the_dict['main']:
+            sea_level_press = the_dict['main']['sea_level']
+        else:
+            sea_level_press = None
+        pressure = {'press': atm_press, 'sea_level': sea_level_press}
+        # -- temperature
+        if 'temp' in the_dict:
+            if the_dict['temp'] is not None:
+                temperature = the_dict['temp'].copy()
+            else:
+                temperature = dict()
+        elif 'main' in the_dict and 'temp' in the_dict['main']:
+            temp = the_dict['main']['temp']
+            if 'temp_kf' in the_dict['main']:
+                temp_kf = the_dict['main']['temp_kf']
+            else:
+                temp_kf = None
+            if 'temp_max' in the_dict['main']:
+                temp_max = the_dict['main']['temp_max']
+            else:
+                temp_max = None
+            if 'temp_min' in the_dict['main']:
+                temp_min = the_dict['main']['temp_min']
+            else:
+                temp_min = None
+            temperature = {'temp': temp,
+                           'temp_kf': temp_kf,
+                           'temp_max': temp_max,
+                           'temp_min': temp_min
+                           }
+        elif 'last' in the_dict:
+            if 'main' in the_dict['last']:
+                temperature = dict(temp=the_dict['last']['main']['temp'])
         else:
             temperature = dict()
-    elif 'main' in d and 'temp' in d['main']:
-        temp = d['main']['temp']
-        if 'temp_kf' in d['main']:
-            temp_kf = d['main']['temp_kf']
+        # -- weather status info
+        if 'weather' in the_dict:
+            status = the_dict['weather'][0]['main']
+            detailed_status = the_dict['weather'][0]['description']
+            weather_code = the_dict['weather'][0]['id']
+            weather_icon_name = the_dict['weather'][0]['icon']
         else:
-            temp_kf = None
-        if 'temp_max' in d['main']:
-            temp_max = d['main']['temp_max']
-        else:
-            temp_max = None
-        if 'temp_min' in d['main']:
-            temp_min = d['main']['temp_min']
-        else:
-            temp_min = None
-        temperature = {'temp': temp,
-                       'temp_kf': temp_kf,
-                       'temp_max': temp_max,
-                       'temp_min': temp_min
-                       }
-    elif 'last' in d:
-        if 'main' in d['last']:
-            temperature = dict(temp=d['last']['main']['temp'])
-    else:
-        temperature = dict()
-    # -- weather status info
-    if 'weather' in d:
-        status = d['weather'][0]['main']
-        detailed_status = d['weather'][0]['description']
-        weather_code = d['weather'][0]['id']
-        weather_icon_name = d['weather'][0]['icon']
-    else:
-        status = ''
-        detailed_status = ''
-        weather_code = 0
-        weather_icon_name = ''
+            status = ''
+            detailed_status = ''
+            weather_code = 0
+            weather_icon_name = ''
 
-    return Weather(reference_time, sunset_time, sunrise_time, clouds,
-                   rain, snow, wind, humidity, pressure, temperature,
-                   status, detailed_status, weather_code, weather_icon_name,
-                   visibility_distance, dewpoint, humidex, heat_index)
+        return Weather(reference_time, sunset_time, sunrise_time, clouds,
+                       rain, snow, wind, humidity, pressure, temperature,
+                       status, detailed_status, weather_code, weather_icon_name,
+                       visibility_distance, dewpoint, humidex, heat_index)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {'reference_time': self._reference_time,
+                'sunset_time': self._sunset_time,
+                'sunrise_time': self._sunrise_time,
+                'clouds': self._clouds,
+                'rain': self._rain,
+                'snow': self._snow,
+                'wind': self._wind,
+                'humidity': self._humidity,
+                'pressure': self._pressure,
+                'temperature': self._temperature,
+                'status': self._status,
+                'detailed_status': self._detailed_status,
+                'weather_code': self._weather_code,
+                'weather_icon_name': self._weather_icon_name,
+                'visibility_distance': self._visibility_distance,
+                'dewpoint': self._dewpoint,
+                'humidex': self._humidex,
+                'heat_index': self._heat_index}

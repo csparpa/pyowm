@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (

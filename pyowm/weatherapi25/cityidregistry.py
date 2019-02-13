@@ -1,6 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import gzip
 from pyowm.weatherapi25.location import Location
-from pyowm.abstractions.decorators import deprecated
 from pkg_resources import resource_filename
 
 """

@@ -1,7 +1,6 @@
-"""
-Module containing search and filter utilities for *Weather* objects lists
-management
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.exceptions import api_response_error
 
 

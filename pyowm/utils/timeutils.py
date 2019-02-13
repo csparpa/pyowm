@@ -1,6 +1,6 @@
-"""
-Module containing utility functions for time values generation/management
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.utils import timeformatutils
 from datetime import datetime, date, timedelta
 

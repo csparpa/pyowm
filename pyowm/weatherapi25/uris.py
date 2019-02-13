@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 URIs templates for resources exposed by the Weather API 2.5
 """

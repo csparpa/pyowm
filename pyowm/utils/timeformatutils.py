@@ -1,7 +1,5 @@
-"""
-Module containing utility functions for time formats conversion
-"""
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from datetime import datetime, timedelta, tzinfo
 from calendar import timegm
 

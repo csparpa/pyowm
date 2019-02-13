@@ -1,6 +1,6 @@
-"""
-Module containing weather code lookup and resolution classes
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 
 class WeatherCodeRegistry(object):
 

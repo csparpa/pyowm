@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 DEFAULT_CONFIG = {
     'api_key': 'b1b15e88fa797225412429c1c50c122a',   # fake API key, won't work
     'subscription_type': 'free',

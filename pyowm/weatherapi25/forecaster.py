@@ -1,6 +1,5 @@
-"""
-Module containing weather forecast abstraction classes and data structures.
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from pyowm.utils import timeformatutils, weatherutils
 from pyowm.weatherapi25.configuration25 import weather_code_registry

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
@@ -130,12 +133,13 @@ class Observation(object):
             data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
         """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('JSON data is None')
+
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API 2.5. This mechanism is
         # supposed to be deprecated as soon as the API fully adopts HTTP for
         # conveying errors to the clients
-        if the_dict is None:
-            raise parse_response_error.ParseResponseError('JSON data is None')
         if 'message' in the_dict and 'cod' in the_dict:
             if the_dict['cod'] == "404":
                 print("OWM API: observation data not available")
@@ -149,7 +153,7 @@ class Observation(object):
             raise parse_response_error.ParseResponseError(
                                       ''.join([__name__, ': impossible to read location info from JSON data']))
         try:
-            w = weather.weather_from_dictionary(the_dict)
+            w = weather.Weather.from_dict(the_dict)
         except KeyError:
             raise parse_response_error.ParseResponseError(
                                       ''.join([__name__, ': impossible to read weather info from JSON data']))
