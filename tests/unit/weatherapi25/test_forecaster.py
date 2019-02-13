@@ -8,7 +8,7 @@ from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.forecast import Forecast
 from pyowm.weatherapi25.forecaster import Forecaster
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestForecaster(unittest.TestCase):

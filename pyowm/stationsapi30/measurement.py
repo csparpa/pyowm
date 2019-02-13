@@ -1,5 +1,5 @@
 import json
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 
 
 class AggregatedMeasurement:
@@ -59,7 +59,7 @@ class AggregatedMeasurement:
         """
         if self.timestamp is None:
             return None
-        return timeformatutils.timeformat(self.timestamp, timeformat)
+        return formatting.timeformat(self.timestamp, timeformat)
 
     def to_dict(self):
         """Dumps object fields into a dict
@@ -147,7 +147,7 @@ class Measurement:
         """
         if self.timestamp is None:
             return None
-        return timeformatutils.timeformat(self.timestamp, timeformat)
+        return formatting.timeformat(self.timestamp, timeformat)
 
     @classmethod
     def from_dict(cls, the_dict):

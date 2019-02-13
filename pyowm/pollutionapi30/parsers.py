@@ -3,7 +3,7 @@ from pyowm.pollutionapi30 import no2index, so2index
 from pyowm.weatherapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
-from pyowm.utils import timeformatutils, timeutils
+from pyowm.utils import formatting, timestamps
 
 
 class NO2IndexParser(jsonparser.JSONParser):
@@ -36,10 +36,10 @@ class NO2IndexParser(jsonparser.JSONParser):
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             t = d['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = timeformatutils._ISO8601_to_UNIXtime(t)
+            reference_time = formatting._ISO8601_to_UNIXtime(t)
 
             # -- reception time (now)
-            reception_time = timeutils.now('unix')
+            reception_time = timestamps.now('unix')
 
             # -- location
             lon = float(d['location']['longitude'])
@@ -92,10 +92,10 @@ class SO2IndexParser(jsonparser.JSONParser):
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             t = d['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = timeformatutils._ISO8601_to_UNIXtime(t)
+            reference_time = formatting._ISO8601_to_UNIXtime(t)
 
             # -- reception time (now)
-            reception_time = timeutils.now('unix')
+            reception_time = timestamps.now('unix')
 
             # -- location
             lon = float(d['location']['longitude'])

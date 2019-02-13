@@ -5,7 +5,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL)
-from pyowm.utils import timeformatutils, xml
+from pyowm.utils import formatting, xml
 
 
 class StationHistory(object):
@@ -104,7 +104,7 @@ class StationHistory(object):
         :raises: ValueError
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string

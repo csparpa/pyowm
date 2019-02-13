@@ -4,7 +4,7 @@ import unittest
 from pyowm.pollutionapi30.airpollution_client import AirPollutionHttpClient
 from pyowm.commons.http_client import HttpClient
 from pyowm.caches.nullcache import NullCache
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 
 
 class TestAirPollutionHttpClient(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
     __instance = AirPollutionHttpClient('xyz', HttpClient(cache=__test_cache))
 
     def test_trim_to(self):
-        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+        ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z
         self.assertEquals(self.__instance._trim_to(ts, 'minute'),
                           '2016-05-12T08:27Z')
         self.assertEquals(self.__instance._trim_to(ts, 'hour'),
@@ -41,7 +41,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_coi(params)
         self.assertEqual(expected_url, result)
 
-        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+        ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z
 
         # case: no interval specified
         params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': None}
@@ -93,7 +93,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_o3(params)
         self.assertEqual(expected_url, result)
 
-        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+        ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z
 
         # case: no interval specified
         params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': None}
@@ -146,7 +146,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_no2(params)
         self.assertEqual(expected_url, result)
 
-        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+        ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z
 
         # case: no interval specified
         params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': None}
@@ -199,7 +199,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_so2(params)
         self.assertEqual(expected_url, result)
 
-        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+        ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z
 
         # case: no interval specified
         params = {'lon': 8.25, 'lat': 43.75, 'start': ts, 'interval': None}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 from datetime import datetime, date, timedelta
 
 
@@ -18,7 +18,7 @@ def now(timeformat='date'):
     :raises: ValueError when unknown timeformat switches are provided or
         when negative time values are provided
     """
-    return timeformatutils.timeformat(datetime.now(), timeformat)
+    return formatting.timeformat(datetime.now(), timeformat)
 
 
 def next_hour(date=None):

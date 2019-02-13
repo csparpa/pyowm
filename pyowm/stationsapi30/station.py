@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import xml.etree.ElementTree as ET
 from pyowm.stationsapi30.xsd.xmlnsconfig import (
     STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
-from pyowm.utils import xml, timeformatutils
+from pyowm.utils import xml, formatting
 
 
 class Station:
@@ -52,15 +52,15 @@ class Station:
             padded_created_at = self._format_micros(created_at)
             t = dt.strptime(padded_created_at,
                             '%Y-%m-%dT%H:%M:%S.%fZ').replace(
-                                tzinfo=timeformatutils.UTC())
-            self.created_at = timeformatutils.timeformat(t, 'unix')
+                                tzinfo=formatting.UTC())
+            self.created_at = formatting.timeformat(t, 'unix')
         self.updated_at = updated_at
         if self.updated_at is not None:
             padded_updated_at = self._format_micros(updated_at)
             t = dt.strptime(padded_updated_at,
                             '%Y-%m-%dT%H:%M:%S.%fZ').replace(
-                                tzinfo=timeformatutils.UTC())
-            self.updated_at = timeformatutils.timeformat(t, 'unix')
+                                tzinfo=formatting.UTC())
+            self.updated_at = formatting.timeformat(t, 'unix')
         self.external_id = external_id
         self.name = name
         self.lon = lon
@@ -98,7 +98,7 @@ class Station:
         """
         if self.created_at is None:
             return None
-        return timeformatutils.timeformat(self.created_at, timeformat)
+        return formatting.timeformat(self.created_at, timeformat)
 
     def last_update_time(self, timeformat='unix'):
         """Returns the UTC time of the last update on this station's metadata
@@ -114,7 +114,7 @@ class Station:
         """
         if self.updated_at is None:
             return None
-        return timeformatutils.timeformat(self.updated_at, timeformat)
+        return formatting.timeformat(self.updated_at, timeformat)
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string
@@ -125,8 +125,8 @@ class Station:
         return json.dumps({'id': self.id,
                            'external_id': self.external_id,
                            'name': self.name,
-                           'created_at': timeformatutils.to_ISO8601(self.created_at),
-                           'updated_at': timeformatutils.to_ISO8601(self.updated_at),
+                           'created_at': formatting.to_ISO8601(self.created_at),
+                           'updated_at': formatting.to_ISO8601(self.updated_at),
                            'lat': self.lat,
                            'lon': self.lon,
                            'alt': self.alt if self.alt is not None else 'None',
@@ -165,10 +165,10 @@ class Station:
         root_node = ET.Element('station')
         created_at_node = ET.SubElement(root_node, "created_at")
         created_at_node.text = \
-            timeformatutils.to_ISO8601(self.created_at)if self.created_at is not None else 'null'
+            formatting.to_ISO8601(self.created_at)if self.created_at is not None else 'null'
         updated_at_node = ET.SubElement(root_node, "updated_at")
         updated_at_node.text = \
-            timeformatutils.to_ISO8601(self.updated_at)if self.updated_at is not None else 'null'
+            formatting.to_ISO8601(self.updated_at)if self.updated_at is not None else 'null'
         station_id_node = ET.SubElement(root_node, 'id')
         station_id_node.text = str(self.id)
         station_id_node = ET.SubElement(root_node, 'external_id')

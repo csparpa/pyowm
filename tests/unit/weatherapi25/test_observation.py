@@ -4,7 +4,7 @@ from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.observation import Observation
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from tests.unit.weatherapi25.json_test_dumps import OBSERVATION_JSON_DUMP

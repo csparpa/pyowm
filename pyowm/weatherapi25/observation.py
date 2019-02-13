@@ -8,7 +8,7 @@ from pyowm.weatherapi25.xsd.xmlnsconfig import (
 from time import time
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
-from pyowm.utils import timeformatutils, xml
+from pyowm.utils import formatting, xml
 from pyowm.exceptions import parse_response_error, api_response_error
 
 
@@ -52,7 +52,7 @@ class Observation(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def get_location(self):
         """

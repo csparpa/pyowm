@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \

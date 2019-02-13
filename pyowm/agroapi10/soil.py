@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils, temperature
+from pyowm.utils import formatting, temperature
 
 
 class Soil:
@@ -50,7 +50,7 @@ class Soil:
         :returns: an int or a str
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def surface_temp(self, unit='kelvin'):
         """Returns the soil surface temperature

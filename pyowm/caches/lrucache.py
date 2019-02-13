@@ -4,7 +4,7 @@ Module containing LRU cache related class
 
 from pyowm.abstractions import owmcache
 from pyowm.commons import frontlinkedlist
-from pyowm.utils import timeutils
+from pyowm.utils import timestamps
 
 
 class LRUCache(owmcache.OWMCache):
@@ -69,7 +69,7 @@ class LRUCache(owmcache.OWMCache):
         """
         try:
             cached_item = self._table[request_url]
-            cur_time = timeutils.now('unix')
+            cur_time = timestamps.now('unix')
             if cur_time - cached_item['insertion_time'] > self._item_lifetime:
                 # Cache item has expired
                 self._clean_item(request_url)
@@ -98,7 +98,7 @@ class LRUCache(owmcache.OWMCache):
         if self.size() == self._max_size:
             popped = self._usage_recency.pop()
             del self._table[popped]
-        current_time = timeutils.now('unix')
+        current_time = timestamps.now('unix')
         if request_url not in self._table:
             self._table[request_url] = {'data': response_json,
                                         'insertion_time': current_time}

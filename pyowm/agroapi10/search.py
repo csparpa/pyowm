@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage
 from pyowm.agroapi10.enums import PresetEnum
 from pyowm.commons.databoxes import ImageType
@@ -143,7 +143,7 @@ class SatelliteImagerySearchResultSet:
         :returns: an int or a str
 
         """
-        return timeformatutils.timeformat(self.query_timestamp, timeformat)
+        return formatting.timeformat(self.query_timestamp, timeformat)
 
     def __len__(self):
         return len(self.metaimages)

@@ -1,7 +1,7 @@
 import unittest
 import json
 from pyowm.weatherapi25.weather import Weather
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 from tests.unit.weatherapi25.json_test_dumps import WEATHER_JSON_DUMP
 from datetime import datetime
 

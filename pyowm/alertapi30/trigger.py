@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 from pyowm.alertapi30.enums import AlertChannelsEnum
 
 
@@ -83,7 +83,7 @@ class Trigger:
         :type timestamp: int, ``datetime.datetime`` or ISO8601-formatted string
         :return: list of `Alert` instances
         """
-        unix_timestamp = timeformatutils.to_UNIXtime(timestamp)
+        unix_timestamp = formatting.to_UNIXtime(timestamp)
         result = []
         for alert in self.alerts:
             if alert.last_update >= unix_timestamp:

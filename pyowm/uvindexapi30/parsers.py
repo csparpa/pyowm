@@ -8,7 +8,7 @@ from pyowm.uvindexapi30 import uvindex
 from pyowm.weatherapi25 import location
 from pyowm.abstractions import jsonparser
 from pyowm.exceptions import parse_response_error
-from pyowm.utils import timeutils
+from pyowm.utils import timestamps
 
 
 class UVIndexParser(jsonparser.JSONParser):
@@ -43,7 +43,7 @@ class UVIndexParser(jsonparser.JSONParser):
             reference_time = d['date']
 
             # -- reception time (now)
-            reception_time = timeutils.now('unix')
+            reception_time = timestamps.now('unix')
 
             # -- location
             lon = float(d['lon'])

@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils, strings
+from pyowm.utils import formatting, strings
 
 
 class AlertChannel:
@@ -56,8 +56,8 @@ class Alert:
 
     def __repr__(self):
         return "<%s.%s - id=%s, trigger id=%s, last update=%s>" % (
-                    __name__,
-                    self.__class__.__name__,
-                    self.id,
-                    self.trigger_id,
-                    timeformatutils.to_ISO8601(self.last_update))
+            __name__,
+            self.__class__.__name__,
+            self.id,
+            self.trigger_id,
+            formatting.to_ISO8601(self.last_update))

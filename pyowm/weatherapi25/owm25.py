@@ -15,7 +15,7 @@ from pyowm.commons import http_client
 from pyowm.pollutionapi30 import airpollution_client, ozone, coindex
 from pyowm.uvindexapi30 import uv_client
 from pyowm.exceptions import api_call_error
-from pyowm.utils import timeformatutils, strings, timeutils, geo
+from pyowm.utils import formatting, strings, timestamps, geo
 from pyowm.weatherapi25 import forecaster
 from pyowm.weatherapi25.forecast import Forecast
 from pyowm.weatherapi25 import historian
@@ -709,8 +709,8 @@ class OWM25(owm.OWM):
         if start is None and end is None:
             pass
         elif start is not None and end is not None:
-            unix_start = timeformatutils.to_UNIXtime(start)
-            unix_end = timeformatutils.to_UNIXtime(end)
+            unix_start = formatting.to_UNIXtime(start)
+            unix_end = formatting.to_UNIXtime(end)
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must " \
                                  "precede the end time!")
@@ -757,7 +757,7 @@ class OWM25(owm.OWM):
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if start is not None:
-            unix_start = timeformatutils.to_UNIXtime(start)
+            unix_start = formatting.to_UNIXtime(start)
 
             current_time = time()
             if unix_start > current_time:
@@ -768,7 +768,7 @@ class OWM25(owm.OWM):
             unix_start = None
 
         if end is not None:
-            unix_end = timeformatutils.to_UNIXtime(end)
+            unix_end = formatting.to_UNIXtime(end)
             params['end'] = str(unix_end)
         else:
             unix_end = None
@@ -817,8 +817,8 @@ class OWM25(owm.OWM):
         if start is None and end is None:
             pass
         elif start is not None and end is not None:
-            unix_start = timeformatutils.to_UNIXtime(start)
-            unix_end = timeformatutils.to_UNIXtime(end)
+            unix_start = formatting.to_UNIXtime(start)
+            unix_end = formatting.to_UNIXtime(end)
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must " \
                                  "precede the end time!")
@@ -1029,11 +1029,11 @@ class OWM25(owm.OWM):
         geo.assert_is_lon(lon)
         geo.assert_is_lat(lat)
         assert start is not None
-        start = timeformatutils.timeformat(start, 'unix')
+        start = formatting.timeformat(start, 'unix')
         if end is None:
-            end = timeutils.now(timeformat='unix')
+            end = timestamps.now(timeformat='unix')
         else:
-            end = timeformatutils.timeformat(end, 'unix')
+            end = formatting.timeformat(end, 'unix')
         params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
         json_data = self._uvapi.get_uvi_history(params)
         uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)

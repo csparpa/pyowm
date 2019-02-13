@@ -4,7 +4,7 @@ from datetime import datetime
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
 from pyowm.agroapi10.enums import PresetEnum
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestSatelliteImagerySearchResultSet(unittest.TestCase):

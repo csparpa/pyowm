@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 from pyowm.agroapi10.soil import Soil
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestSoil(unittest.TestCase):

@@ -2,7 +2,7 @@ import unittest
 import json
 from datetime import datetime as dt
 from pyowm.stationsapi30.measurement import AggregatedMeasurement, Measurement
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestAggregatedMeasurement(unittest.TestCase):

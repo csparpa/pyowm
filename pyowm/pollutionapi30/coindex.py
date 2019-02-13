@@ -2,7 +2,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.pollutionapi30.xsd.xmlnsconfig import COINDEX_XMLNS_URL, COINDEX_XMLNS_PREFIX
 from pyowm.weatherapi25 import location
-from pyowm.utils import timeformatutils, timeutils, xml
+from pyowm.utils import formatting, timestamps, xml
 from pyowm.exceptions import parse_response_error
 
 
@@ -57,7 +57,7 @@ class COIndex(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -73,7 +73,7 @@ class COIndex(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def get_location(self):
         """
@@ -121,7 +121,7 @@ class COIndex(object):
         to the current date
         :return: bool
         """
-        return timeutils.now(timeformat='unix') < \
+        return timestamps.now(timeformat='unix') < \
                self.get_reference_time(timeformat='unix')
 
     def to_JSON(self):
@@ -203,10 +203,10 @@ class COIndex(object):
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = timeformatutils._ISO8601_to_UNIXtime(t)
+            reference_time = formatting._ISO8601_to_UNIXtime(t)
 
             # -- reception time (now)
-            reception_time = timeutils.now('unix')
+            reception_time = timestamps.now('unix')
 
             # -- location
             lon = float(the_dict['location']['longitude'])

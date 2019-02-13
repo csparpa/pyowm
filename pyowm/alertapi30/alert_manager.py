@@ -2,7 +2,7 @@ from pyowm.constants import ALERT_API_VERSION
 from pyowm.commons.http_client import HttpClient
 from pyowm.alertapi30.parsers import TriggerParser, AlertParser
 from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
-from pyowm.utils import timeformatutils, timeutils
+from pyowm.utils import formatting, timestamps
 
 
 class AlertManager:
@@ -52,13 +52,13 @@ class AlertManager:
         assert end is not None
 
         # prepare time period
-        unix_start = timeformatutils.to_UNIXtime(start)
-        unix_end = timeformatutils.to_UNIXtime(end)
-        unix_current = timeutils.now(timeformat='unix')
+        unix_start = formatting.to_UNIXtime(start)
+        unix_end = formatting.to_UNIXtime(end)
+        unix_current = timestamps.now(timeformat='unix')
         if unix_start >= unix_end:
             raise ValueError("The start timestamp must precede the end timestamp")
-        delta_millis_start = timeutils.millis_offset_between_epochs(unix_current, unix_start)
-        delta_millis_end = timeutils.millis_offset_between_epochs(unix_current, unix_end)
+        delta_millis_start = timestamps.millis_offset_between_epochs(unix_current, unix_start)
+        delta_millis_end = timestamps.millis_offset_between_epochs(unix_current, unix_end)
         the_time_period = {
             "start": {
                 "expression": "after",

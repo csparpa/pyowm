@@ -2,7 +2,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.uvindexapi30.xsd.xmlnsconfig import (
     UVINDEX_XMLNS_URL, UVINDEX_XMLNS_PREFIX)
-from pyowm.utils import timeformatutils, xml
+from pyowm.utils import formatting, xml
 
 
 def uv_intensity_to_exposure_risk(uv_intensity):
@@ -65,7 +65,7 @@ class UVIndex(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -80,7 +80,7 @@ class UVIndex(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def get_location(self):
         """

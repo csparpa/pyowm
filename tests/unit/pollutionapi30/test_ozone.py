@@ -4,7 +4,7 @@ from datetime import datetime
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.ozone import Ozone
-from pyowm.utils.timeformatutils import UTC, _datetime_to_UNIXtime
+from pyowm.utils.formatting import UTC, _datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import OZONE_JSON_DUMP
 from tests.unit.pollutionapi30.xml_test_dumps import OZONE_XML_DUMP
 

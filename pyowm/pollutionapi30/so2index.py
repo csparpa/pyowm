@@ -5,7 +5,7 @@ Sulphur Dioxide classes and data structures.
 import json
 import xml.etree.ElementTree as ET
 from pyowm.pollutionapi30.xsd.xmlnsconfig import SO2INDEX_XMLNS_URL, SO2INDEX_XMLNS_PREFIX
-from pyowm.utils import timeformatutils, timeutils, xml
+from pyowm.utils import formatting, timestamps, xml
 
 
 class SO2Index(object):
@@ -58,7 +58,7 @@ class SO2Index(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -74,7 +74,7 @@ class SO2Index(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def get_location(self):
         """
@@ -108,7 +108,7 @@ class SO2Index(object):
         to the current date
         :return: bool
         """
-        return timeutils.now(timeformat='unix') < \
+        return timestamps.now(timeformat='unix') < \
                self.get_reference_time(timeformat='unix')
 
     def to_JSON(self):

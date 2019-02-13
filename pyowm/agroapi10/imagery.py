@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
@@ -70,7 +70,7 @@ class MetaImage:
         :returns: an int or a str
 
         """
-        return timeformatutils.timeformat(self._acquisition_time, timeformat)
+        return formatting.timeformat(self._acquisition_time, timeformat)
 
     def __repr__(self):
         return "<%s.%s - %s %s image acquired at %s by %s on polygon with id=%s>" % (
@@ -139,7 +139,7 @@ class SatelliteImage:
         :returns: an int or a str
 
         """
-        return timeformatutils.timeformat(self._downloaded_on, timeformat)
+        return formatting.timeformat(self._downloaded_on, timeformat)
 
     def persist(self, path_to_file):
         """

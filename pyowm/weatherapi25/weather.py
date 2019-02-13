@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
-from pyowm.utils import timeformatutils, temperature, xml
+from pyowm.utils import formatting, temperature, xml
 from pyowm.weatherapi25.uris import ICONS_BASE_URL
 
 
@@ -108,7 +108,7 @@ class Weather(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def get_sunset_time(self, timeformat='unix'):
         """Returns the GMT time of sunset
@@ -123,7 +123,7 @@ class Weather(object):
         """
         if self._sunset_time is None:
             return None
-        return timeformatutils.timeformat(self._sunset_time, timeformat)
+        return formatting.timeformat(self._sunset_time, timeformat)
 
     def get_sunrise_time(self, timeformat='unix'):
         """Returns the GMT time of sunrise
@@ -138,7 +138,7 @@ class Weather(object):
         """
         if self._sunrise_time is None:
             return None
-        return timeformatutils.timeformat(self._sunrise_time, timeformat)
+        return formatting.timeformat(self._sunrise_time, timeformat)
 
     def get_clouds(self):
         """Returns the cloud coverage percentage as an int

@@ -9,7 +9,7 @@ from pyowm.weatherapi25.xsd.xmlnsconfig import (
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
 from pyowm.exceptions import parse_response_error, api_response_error
-from pyowm.utils import timeutils, timeformatutils, xml
+from pyowm.utils import timestamps, formatting, xml
 
 
 class ForecastIterator(object):
@@ -132,7 +132,7 @@ class Forecast(object):
         :raises: ValueError
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def get_location(self):
         """
@@ -166,7 +166,7 @@ class Forecast(object):
         Removes from this forecast all the *Weather* objects having a reference
         timestamp in the past with respect to the current timestamp
         """
-        current_time = timeutils.now(timeformat='unix')
+        current_time = timestamps.now(timeformat='unix')
         for w in self._weathers:
             if w.get_reference_time(timeformat='unix') < current_time:
                 self._weathers.remove(w)

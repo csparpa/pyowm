@@ -2,7 +2,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25 import location
 from pyowm.pollutionapi30.xsd.xmlnsconfig import OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX
-from pyowm.utils import timeformatutils, timeutils, xml
+from pyowm.utils import formatting, timestamps, xml
 from pyowm.exceptions import parse_response_error
 
 
@@ -55,7 +55,7 @@ class Ozone(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -71,7 +71,7 @@ class Ozone(object):
         :raises: ValueError when negative values are provided
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self._reception_time, timeformat)
 
     def get_location(self):
         """
@@ -105,7 +105,7 @@ class Ozone(object):
         to the current date
         :return: bool
         """
-        return timeutils.now(timeformat='unix') < \
+        return timestamps.now(timeformat='unix') < \
                self.get_reference_time(timeformat='unix')
 
     def to_JSON(self):
@@ -180,10 +180,10 @@ class Ozone(object):
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             ref_t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = timeformatutils._ISO8601_to_UNIXtime(ref_t)
+            reference_time = formatting._ISO8601_to_UNIXtime(ref_t)
 
             # -- reception time (now)
-            reception_time = timeutils.now('unix')
+            reception_time = timestamps.now('unix')
 
             # -- location
             lon = float(the_dict['location']['longitude'])

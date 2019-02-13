@@ -5,7 +5,7 @@ Test case for stationhistory.py module
 import unittest
 from datetime import datetime
 from pyowm.weatherapi25.stationhistory import StationHistory
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 from tests.unit.weatherapi25.json_test_dumps import STATIONHISTORY_JSON_DUMP
 from tests.unit.weatherapi25.xml_test_dumps import STATIONHISTORY_XML_DUMP
 

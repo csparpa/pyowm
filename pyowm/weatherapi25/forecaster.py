@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.utils import timeformatutils, weather
+from pyowm.utils import formatting, weather
 from pyowm.weatherapi25.configuration25 import weather_code_registry
 from pyowm.abstractions.decorators import deprecated
 
@@ -47,7 +47,7 @@ class Forecaster(object):
         """
         start_coverage = min([item.get_reference_time() \
                               for item in self._forecast])
-        return timeformatutils.timeformat(start_coverage, timeformat)
+        return formatting.timeformat(start_coverage, timeformat)
 
     def when_ends(self, timeformat='unix'):
         """
@@ -65,7 +65,7 @@ class Forecaster(object):
         """
         end_coverage = max([item.get_reference_time()
                             for item in self._forecast])
-        return timeformatutils.timeformat(end_coverage, timeformat)
+        return formatting.timeformat(end_coverage, timeformat)
 
     def will_have_rain(self):
         """
@@ -259,7 +259,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time_value = timeformatutils.to_UNIXtime(timeobject)
+        time_value = formatting.to_UNIXtime(timeobject)
         closest_weather = weather.find_closest_weather(
                                         self._forecast.get_weathers(),
                                         time_value)
@@ -400,7 +400,7 @@ class Forecaster(object):
         """
         return weather. \
             find_closest_weather(self._forecast.get_weathers(),
-                                 timeformatutils.to_UNIXtime(timeobject))
+                                 formatting.to_UNIXtime(timeobject))
 
     def most_hot(self):
         """

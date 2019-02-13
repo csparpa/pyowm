@@ -13,7 +13,7 @@ from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.soil import Soil
 from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
-from pyowm.utils import timeutils
+from pyowm.utils import timestamps
 
 
 class AgroManager(object):
@@ -235,7 +235,7 @@ class AgroManager(object):
         # call API
         status, data = self.http_client.get_json(SATELLITE_IMAGERY_SEARCH_URI, params=params)
 
-        result_set = SatelliteImagerySearchResultSet(polygon_id, data, timeutils.now(timeformat='unix'))
+        result_set = SatelliteImagerySearchResultSet(polygon_id, data, timestamps.now(timeformat='unix'))
 
         # further filter by img_type and/or preset (if specified)
         if img_type is not None and preset is not None:
@@ -277,14 +277,14 @@ class AgroManager(object):
             status, data = self.http_client.get_png(
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
-            return SatelliteImage(metaimage, img, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
+            return SatelliteImage(metaimage, img, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         # GeoTIF
         elif isinstance(metaimage, MetaGeoTiffImage):
             prepared_url = metaimage.url
             status, data = self.http_client.get_geotiff(
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
-            return SatelliteImage(metaimage, img, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
+            return SatelliteImage(metaimage, img, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         # tile PNG
         elif isinstance(metaimage, MetaTile):
             assert x is not None
@@ -295,7 +295,7 @@ class AgroManager(object):
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
             tile = Tile(x, y, zoom, None, img)
-            return SatelliteImage(metaimage, tile, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
+            return SatelliteImage(metaimage, tile, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         else:
             raise ValueError("Cannot download: unsupported MetaImage subtype")
 

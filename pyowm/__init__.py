@@ -3,7 +3,7 @@
 
 from pyowm import constants
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.utils import timeutils, strings
+from pyowm.utils import timestamps, strings
 
 
 strings.check_if_running_with_python_2()

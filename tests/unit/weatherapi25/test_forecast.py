@@ -6,7 +6,7 @@ from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.forecast import Forecast
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 from tests.unit.weatherapi25.json_test_dumps import FORECAST_JSON_DUMP
 from tests.unit.weatherapi25.xml_test_dumps import FORECAST_XML_DUMP
 from tests.unit.weatherapi25.json_test_responses import (

@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils
+from pyowm.utils import formatting
 from pyowm.pollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
 from pyowm.commons import http_client
 
@@ -55,9 +55,9 @@ class AirPollutionHttpClient(object):
             timeref = 'current'
         else:
             if interval is None:
-                timeref = self._trim_to(timeformatutils.to_date(start), 'year')
+                timeref = self._trim_to(formatting.to_date(start), 'year')
             else:
-                timeref = self._trim_to(timeformatutils.to_date(start), interval)
+                timeref = self._trim_to(formatting.to_date(start), interval)
 
         fixed_url = '%s/%s,%s/%s.json' % (CO_INDEX_URL, lat, lon, timeref)
         uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
@@ -84,10 +84,10 @@ class AirPollutionHttpClient(object):
         else:
             if interval is None:
                 timeref = self._trim_to(
-                    timeformatutils.to_date(start), 'year')
+                    formatting.to_date(start), 'year')
             else:
                 timeref = self._trim_to(
-                    timeformatutils.to_date(start), interval)
+                    formatting.to_date(start), interval)
 
         fixed_url = '%s/%s,%s/%s.json' % (OZONE_URL, lat, lon, timeref)
         uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
@@ -115,10 +115,10 @@ class AirPollutionHttpClient(object):
         else:
             if interval is None:
                 timeref = self._trim_to(
-                    timeformatutils.to_date(start), 'year')
+                    formatting.to_date(start), 'year')
             else:
                 timeref = self._trim_to(
-                    timeformatutils.to_date(start), interval)
+                    formatting.to_date(start), interval)
 
         fixed_url = '%s/%s,%s/%s.json' % (NO2_INDEX_URL, lat, lon, timeref)
         uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
@@ -146,10 +146,10 @@ class AirPollutionHttpClient(object):
         else:
             if interval is None:
                 timeref = self._trim_to(
-                    timeformatutils.to_date(start), 'year')
+                    formatting.to_date(start), 'year')
             else:
                 timeref = self._trim_to(
-                    timeformatutils.to_date(start), interval)
+                    formatting.to_date(start), interval)
 
         fixed_url = '%s/%s,%s/%s.json' % (SO2_INDEX_URL, lat, lon, timeref)
         uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
