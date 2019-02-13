@@ -1,7 +1,9 @@
 import json
 import xml.etree.ElementTree as ET
+from pyowm.weatherapi25 import location
 from pyowm.pollutionapi30.xsd.xmlnsconfig import OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX
 from pyowm.utils import timeformatutils, timeutils, xmlutils
+from pyowm.exceptions import parse_response_error
 
 
 class Ozone(object):
@@ -160,6 +162,56 @@ class Ozone(object):
         value_node.text = str(self.du_value)
         root_node.append(self._location._to_DOM())
         return root_node
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses an *Ozone* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: an *Ozone* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        try:
+            # -- reference time (strip away Z and T on ISO8601 format)
+            ref_t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
+            reference_time = timeformatutils._ISO8601_to_UNIXtime(ref_t)
+
+            # -- reception time (now)
+            reception_time = timeutils.now('unix')
+
+            # -- location
+            lon = float(the_dict['location']['longitude'])
+            lat = float(the_dict['location']['latitude'])
+            place = location.Location(None, lon, lat, None)
+
+            # -- ozone Dobson Units value
+            du = the_dict['data']
+            if du is not None:
+                du_value = float(du)
+            else:
+                raise ValueError('No information about Ozon Dobson Units')
+        except KeyError:
+            raise parse_response_error.ParseResponseError(
+                      ''.join([__name__, ': impossible to parse UV Index']))
+        return Ozone(reference_time, place, None, du_value, reception_time)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {"reference_time": self._reference_time,
+                "location": self._location.to_dict(),
+                "interval": self._interval,
+                "value": self.du_value,
+                "reception_time": self._reception_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \

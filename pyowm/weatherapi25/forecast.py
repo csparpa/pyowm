@@ -248,7 +248,7 @@ class Forecast(object):
             elif the_dict['cod'] != "200":
                 raise api_response_error.APIResponseError("OWM API: error - response payload", the_dict['cod'])
         try:
-            place = location.location_from_dictionary(the_dict)
+            place = location.Location.from_dict(the_dict)
         except KeyError:
             raise parse_response_error.ParseResponseError(''.join([__name__,
                                                                ': impossible to read location info from JSON data']))

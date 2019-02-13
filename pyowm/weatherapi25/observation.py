@@ -76,8 +76,8 @@ class Observation(object):
 
         """
         return json.dumps({"reception_time": self._reception_time,
-                           "Location": json.loads(self._location.to_JSON()),
-                           "Weather": json.loads(self._weather.to_JSON())
+                           "location": json.loads(self._location.to_JSON()),
+                           "weather": json.loads(self._weather.to_JSON())
                            })
 
     def to_XML(self, xml_declaration=True, xmlns=True):
@@ -144,7 +144,7 @@ class Observation(object):
                 raise api_response_error.APIResponseError(
                                       "OWM API: error - response payload", the_dict['cod'])
         try:
-            place = location.location_from_dictionary(the_dict)
+            place = location.Location.from_dict(the_dict)
         except KeyError:
             raise parse_response_error.ParseResponseError(
                                       ''.join([__name__, ': impossible to read location info from JSON data']))
@@ -163,8 +163,8 @@ class Observation(object):
 
         """
         return {"reception_time": self._reception_time,
-                "Location": json.loads(self._location.to_JSON()),
-                "Weather": json.loads(self._weather.to_JSON())}
+                "location": self._location.to_dict(),
+                "weather": json.loads(self._weather.to_JSON())}
 
     def __repr__(self):
         return "<%s.%s - reception time=%s>" % (__name__, self.__class__.__name__,

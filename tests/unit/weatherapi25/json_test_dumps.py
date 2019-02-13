@@ -17,9 +17,9 @@ WEATHER_JSON_DUMP = '{"status": "Clouds", "visibility_distance": 1000, ' \
                     '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
                     '{"speed": 1.1, "deg": 252.002, "gust": 2.09}}'
 
-OBSERVATION_JSON_DUMP = '{"reception_time": 1234567, "Location": ' \
+OBSERVATION_JSON_DUMP = '{"reception_time": 1234567, "location": ' \
                         '{"country": "UK", "name": "test", "coordinates": ' \
-                        '{"lat": 43.7, "lon": 12.3}, "ID": 987}, "Weather": ' \
+                        '{"lat": 43.7, "lon": 12.3}, "ID": 987}, "weather": ' \
                         '{"status": "Clouds", "visibility_distance": 1000, ' \
                         '"humidity": 57, "clouds": 67, "temperature": ' \
                         '{"temp_kf": -1.899, "temp_max": 296.098, ' \

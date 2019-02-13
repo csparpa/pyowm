@@ -1,12 +1,9 @@
-"""
-Module containing location-related classes and data structures.
-"""
-
 import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     LOCATION_XMLNS_URL, LOCATION_XMLNS_PREFIX)
 from pyowm.utils import xmlutils, geo
+from pyowm.exceptions import parse_response_error
 
 
 class Location(object):
@@ -159,53 +156,64 @@ class Location(object):
         country_node.text = self._country
         return root_node
 
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *Location* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *Location* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        country = None
+        if 'sys' in the_dict and 'country' in the_dict['sys']:
+            country = the_dict['sys']['country']
+        if 'city' in the_dict:
+            data = the_dict['city']
+        else:
+            data = the_dict
+        if 'name' in data:
+            name = data['name']
+        else:
+            name = None
+        if 'id' in data:
+            ID = int(data['id'])
+        else:
+            ID = None
+        if 'coord' in data:
+            lon = data['coord'].get('lon', 0.0)
+            lat = data['coord'].get('lat', 0.0)
+        elif 'coord' in data['station']:
+            if 'lon' in data['station']['coord']:
+                lon = data['station']['coord'].get('lon', 0.0)
+            elif 'lng' in data['station']['coord']:
+                lon = data['station']['coord'].get('lng', 0.0)
+            else:
+                lon = 0.0
+            lat = data['station']['coord'].get('lat', 0.0)
+        else:
+            raise KeyError("Impossible to read geographical coordinates from JSON")
+        if 'country' in data:
+            country = data['country']
+        return Location(name, lon, lat, ID, country)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {'name': self._name,
+                'coordinates': {'lon': self._lon, 'lat': self._lat},
+                'ID': self._ID,
+                'country': self._country}
+
     def __repr__(self):
         return "<%s.%s - id=%s, name=%s, lon=%s, lat=%s>" % (__name__, \
           self.__class__.__name__, self._ID, self._name, str(self._lon), \
           str(self._lat))
-
-
-def location_from_dictionary(d):
-    """
-    Builds a *Location* object out of a data dictionary. Only certain
-    properties of the dictionary are used: if these properties are not
-    found or cannot be read, an error is issued.
-
-    :param d: a data dictionary
-    :type d: dict
-    :returns: a *Location* instance
-    :raises: *KeyError* if it is impossible to find or read the data
-        needed to build the instance
-
-    """
-    country = None
-    if 'sys' in d and 'country' in d['sys']:
-        country = d['sys']['country']
-    if 'city' in d:
-        data = d['city']
-    else:
-        data = d
-    if 'name' in data:
-        name = data['name']
-    else:
-        name = None
-    if 'id' in data:
-        ID = int(data['id'])
-    else:
-        ID = None
-    if 'coord' in data:
-        lon = data['coord'].get('lon', 0.0)
-        lat = data['coord'].get('lat', 0.0)
-    elif 'coord' in data['station']:
-        if 'lon' in data['station']['coord']:
-            lon = data['station']['coord'].get('lon', 0.0)
-        elif 'lng' in data['station']['coord']:
-            lon = data['station']['coord'].get('lng', 0.0)
-        else:
-            lon = 0.0
-        lat = data['station']['coord'].get('lat', 0.0)
-    else:
-        raise KeyError("Impossible to read geographical coordinates from JSON")
-    if 'country' in data:
-        country = data['country']
-    return Location(name, lon, lat, ID, country)

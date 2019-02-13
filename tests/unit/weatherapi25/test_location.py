@@ -4,7 +4,7 @@ Test case for location.py module
 
 import unittest
 import json
-from pyowm.weatherapi25.location import Location, location_from_dictionary
+from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
 from tests.unit.weatherapi25.json_test_dumps import LOCATION_JSON_DUMP
 from tests.unit.weatherapi25.xml_test_dumps import LOCATION_XML_DUMP
@@ -41,9 +41,9 @@ class TestLocation(unittest.TestCase):
                  "population": 1000000}
                 }
         dict3 = {"station":{"coord":{"lon":-90.47,"lat":39.38}}}
-        result1 = location_from_dictionary(dict1)
-        result2 = location_from_dictionary(dict2)
-        result3 = location_from_dictionary(dict3)
+        result1 = Location.from_dict(dict1)
+        result2 = Location.from_dict(dict2)
+        result3 = Location.from_dict(dict3)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
         self.assertFalse(result1.get_country() is not None)
@@ -65,20 +65,25 @@ class TestLocation(unittest.TestCase):
     def test_from_dictionary_holds_the_lack_of_geocoords(self):
         dict1 = {"station":{"coord":{}}}
         dict2 = {"coord":{}}
-        result1 = location_from_dictionary(dict1)
+        result1 = Location.from_dict(dict1)
         self.assertTrue(isinstance(result1, Location))
         self.assertEqual(result1.get_lat(), 0.0)
         self.assertEqual(result1.get_lon(), 0.0)
         self.assertTrue(result1.get_country() is None)
         self.assertTrue(result1.get_name() is None)
         self.assertTrue(result1.get_ID() is None)
-        result2 = location_from_dictionary(dict2)
+        result2 = Location.from_dict(dict2)
         self.assertTrue(isinstance(result2, Location))
         self.assertEqual(result2.get_lat(), 0.0)
         self.assertEqual(result2.get_lon(), 0.0)
         self.assertTrue(result2.get_country() is None)
         self.assertTrue(result2.get_name() is None)
         self.assertTrue(result2.get_ID() is None)
+
+    def test_to_dict(self):
+        expected = json.loads(LOCATION_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)
 
     def test_getters_return_expected_data(self):
         instance = Location(self.__test_name, self.__test_lon, self.__test_lat,
