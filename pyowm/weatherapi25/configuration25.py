@@ -2,7 +2,7 @@ from pyowm.caches import nullcache
 from pyowm.weatherapi25 import weathercoderegistry, cityidregistry
 from pyowm.weatherapi25.parsers import stationhistoryparser, weatherhistoryparser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
-from pyowm.pollutionapi30.parsers import COIndexParser, NO2IndexParser, SO2IndexParser
+from pyowm.pollutionapi30.parsers import NO2IndexParser, SO2IndexParser
 
 
 """
@@ -41,7 +41,6 @@ parsers = {
   'station_history': stationhistoryparser.StationHistoryParser(),
   'uvindex': UVIndexParser(),
   'uvindex_list': UVIndexListParser(),
-  'coindex': COIndexParser(),
   'no2index': NO2IndexParser(),
   'so2index': SO2IndexParser()
 }

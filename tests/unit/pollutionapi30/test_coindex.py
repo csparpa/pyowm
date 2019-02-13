@@ -1,10 +1,15 @@
 import unittest
+import json
 from datetime import datetime
+from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.utils.timeformatutils import UTC, _datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import COINDEX_JSON_DUMP
 from tests.unit.pollutionapi30.xml_test_dumps import COINDEX_XML_DUMP
+
+COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
+COINDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
 
 
 class TestCOIndex(unittest.TestCase):
@@ -128,3 +133,31 @@ class TestCOIndex(unittest.TestCase):
         ordered_base_xml = ''.join(sorted(COINDEX_XML_DUMP))
         ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
         self.assertEqual(ordered_base_xml, ordered_actual_xml)
+
+    def test_from_dict(self):
+        d = json.loads(COINDEX_JSON)
+        result = COIndex.from_dict(d)
+        self.assertIsNotNone(result)
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reference_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNone(loc.get_name())
+        self.assertIsNone(loc.get_ID())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNone(result.get_interval())
+        self.assertNotEquals(0, len(result.get_co_samples()))
+
+    def test_from_dict_fails_when_JSON_data_is_None(self):
+        self.assertRaises(parse_response_error.ParseResponseError, COIndex.from_dict, None)
+
+    def test_from_dict_fails_with_malformed_JSON_data(self):
+        self.assertRaises(parse_response_error.ParseResponseError, COIndex.from_dict, json.loads(COINDEX_MALFORMED_JSON))
+
+    def test_to_dict(self):
+        expected = json.loads(COINDEX_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        ordered_str_expected = sorted(str(expected))
+        ordered_str_result = sorted(str(result))
+        self.assertEqual(ordered_str_expected, ordered_str_result)

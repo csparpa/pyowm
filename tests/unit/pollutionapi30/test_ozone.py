@@ -108,7 +108,7 @@ class TestOzone(unittest.TestCase):
     def test_from_dict_fails_when_JSON_data_is_None(self):
         self.assertRaises(parse_response_error.ParseResponseError, Ozone.from_dict, None)
 
-    def test_parse_JSON_fails_with_malformed_JSON_data(self):
+    def test_from_dict_fails_with_malformed_JSON_data(self):
         self.assertRaises(parse_response_error.ParseResponseError, Ozone.from_dict, json.loads(OZONE_MALFORMED_JSON))
 
     def test_to_dict(self):
