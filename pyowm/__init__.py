@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from pyowm import constants
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.utils import timeutils, stringutils
 
 
 stringutils.check_if_running_with_python_2()
 
 
-def OWM(API_key=constants.DEFAULT_API_KEY, version=constants.WEATHER_API_VERSION,
+def OWM(API_key=DEFAULT_CONFIG['api_key'], version=constants.WEATHER_API_VERSION,
         config_module=None, language=None, subscription_type=None, use_ssl=None):
     """
     A parametrized factory method returning a global OWM instance that

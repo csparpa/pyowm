@@ -8,8 +8,7 @@ and running
 
 import unittest
 import os
-from datetime import datetime
-from pyowm.constants import DEFAULT_API_KEY
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.exceptions import api_response_error
@@ -17,7 +16,7 @@ from pyowm.exceptions import api_response_error
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
 
     def test_is_API_online(self):
         self.assertTrue(self.__owm.is_API_online())

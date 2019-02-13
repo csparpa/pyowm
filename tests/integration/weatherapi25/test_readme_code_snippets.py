@@ -8,12 +8,12 @@ and running
 
 import unittest
 import os
-from pyowm.constants import DEFAULT_API_KEY
+from pyowm.config import DEFAULT_CONFIG
 
 
 class IntegrationTestsREADMESnippets(unittest.TestCase):
 
-    __API_key = os.getenv('OWM_API_KEY', DEFAULT_API_KEY)
+    __API_key = os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key'])
 
     def test_free_subscription_snippets(self):
 

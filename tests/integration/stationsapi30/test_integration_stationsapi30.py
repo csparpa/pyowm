@@ -1,7 +1,7 @@
 import unittest
 import os
 import copy
-from pyowm.constants import DEFAULT_API_KEY
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.stationsapi30.buffer import Buffer
@@ -10,7 +10,7 @@ from pyowm.stationsapi30.measurement import Measurement
 
 class IntegrationTestsStationsAPI30(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
 
     def test_stations_CRUD(self):
 

@@ -1,15 +1,15 @@
 import unittest
 import os
-from pyowm.constants import DEFAULT_API_KEY
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.weatherapi25.configuration25 import parsers
-from pyowm.agroapi10.polygon import Polygon, GeoPolygon
+from pyowm.agroapi10.polygon import GeoPolygon
 from pyowm.agroapi10.soil import Soil
 
 
 class IntegrationTestsSoilData(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
 
     def test_call_soil_data(self):
 

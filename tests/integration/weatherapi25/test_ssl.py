@@ -2,14 +2,14 @@
 
 import unittest
 import os
-from pyowm.constants import DEFAULT_API_KEY
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 
 
 class TestSecureAPICalls(unittest.TestCase):
 
-    __API_key = os.getenv('OWM_API_KEY', DEFAULT_API_KEY)
+    __API_key = os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key'])
 
     def test_ssl(self):
 
