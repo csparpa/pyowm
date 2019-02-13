@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import xml.etree.ElementTree as ET
 from pyowm.stationsapi30.xsd.xmlnsconfig import (
     STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
-from pyowm.utils import xmlutils, timeformatutils
+from pyowm.utils import xml, timeformatutils
 
 
 class Station:
@@ -149,10 +149,10 @@ class Station:
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         STATION_XMLNS_PREFIX,
-                                         STATION_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+            xml.annotate_with_XMLNS(root_node,
+                                    STATION_XMLNS_PREFIX,
+                                    STATION_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """

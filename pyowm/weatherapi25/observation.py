@@ -8,7 +8,7 @@ from pyowm.weatherapi25.xsd.xmlnsconfig import (
 from time import time
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
-from pyowm.utils import timeformatutils, xmlutils
+from pyowm.utils import timeformatutils, xml
 from pyowm.exceptions import parse_response_error, api_response_error
 
 
@@ -100,10 +100,10 @@ class Observation(object):
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         OBSERVATION_XMLNS_PREFIX,
-                                         OBSERVATION_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+            xml.annotate_with_XMLNS(root_node,
+                                    OBSERVATION_XMLNS_PREFIX,
+                                    OBSERVATION_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """

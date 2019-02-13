@@ -2,7 +2,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25 import location
 from pyowm.pollutionapi30.xsd.xmlnsconfig import OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX
-from pyowm.utils import timeformatutils, timeutils, xmlutils
+from pyowm.utils import timeformatutils, timeutils, xml
 from pyowm.exceptions import parse_response_error
 
 
@@ -138,10 +138,10 @@ class Ozone(object):
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         OZONE_XMLNS_PREFIX,
-                                         OZONE_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+            xml.annotate_with_XMLNS(root_node,
+                                    OZONE_XMLNS_PREFIX,
+                                    OZONE_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """

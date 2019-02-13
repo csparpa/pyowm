@@ -2,7 +2,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.uvindexapi30.xsd.xmlnsconfig import (
     UVINDEX_XMLNS_URL, UVINDEX_XMLNS_PREFIX)
-from pyowm.utils import timeformatutils, xmlutils
+from pyowm.utils import timeformatutils, xml
 
 
 def uv_intensity_to_exposure_risk(uv_intensity):
@@ -137,10 +137,10 @@ class UVIndex(object):
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         UVINDEX_XMLNS_PREFIX,
-                                         UVINDEX_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+            xml.annotate_with_XMLNS(root_node,
+                                    UVINDEX_XMLNS_PREFIX,
+                                    UVINDEX_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """

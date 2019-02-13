@@ -5,7 +5,7 @@ import json
 import xml.etree.ElementTree as ET
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL)
-from pyowm.utils import timeformatutils, xmlutils
+from pyowm.utils import timeformatutils, xml
 
 
 class StationHistory(object):
@@ -135,10 +135,10 @@ class StationHistory(object):
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         STATION_HISTORY_XMLNS_PREFIX,
-                                         STATION_HISTORY_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+            xml.annotate_with_XMLNS(root_node,
+                                    STATION_HISTORY_XMLNS_PREFIX,
+                                    STATION_HISTORY_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """
@@ -159,8 +159,8 @@ class StationHistory(object):
         for m in self._measurements:
             d = self._measurements[m].copy()
             d['reference_time'] = m
-            xmlutils.create_DOM_node_from_dict(d, "measurement",
-                                               measurements_node)
+            xml.create_DOM_node_from_dict(d, "measurement",
+                                          measurements_node)
         return root_node
 
     def __len__(self):

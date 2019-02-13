@@ -1,10 +1,10 @@
 """
-Test case for xmlutils.py module
+Test case for xml.py module
 """
 
 import unittest
 import xml.etree.ElementTree as ET
-from pyowm.utils import xmlutils
+from pyowm.utils import xml
 
 
 class TestXMLUtils(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestXMLUtils(unittest.TestCase):
         name = "test"
         test_root_node = ET.Element("root")
         expected = "<root><test><a>43.2</a></test></root>"
-        xmlutils.create_DOM_node_from_dict(d, name, test_root_node)
+        xml.create_DOM_node_from_dict(d, name, test_root_node)
         result_DOM_tree = ET.ElementTree(test_root_node)
         self.assertEqual(expected, ET.tostring(result_DOM_tree.getroot(),
                                                 encoding='utf8',
@@ -25,7 +25,7 @@ class TestXMLUtils(unittest.TestCase):
         name = "test"
         test_root_node = ET.Element("root")
         expected = "<root></root>"
-        xmlutils.create_DOM_node_from_dict(d, name, test_root_node)
+        xml.create_DOM_node_from_dict(d, name, test_root_node)
         result_DOM_tree = ET.ElementTree(test_root_node)
         self.assertEqual(expected, ET.tostring(result_DOM_tree.getroot(),
                                                 encoding='utf8',
@@ -41,9 +41,9 @@ class TestXMLUtils(unittest.TestCase):
         test_grand_child_node_1 = ET.SubElement(test_child_node, "b")
         test_grand_child_node_1.text = "3"
         self.assertEqual(expected,
-                          xmlutils.DOM_node_to_XML(test_root_node, False))
+                         xml.DOM_node_to_XML(test_root_node, False))
         self.assertEqual(XML_declaration_line + expected,
-                          xmlutils.DOM_node_to_XML(test_root_node))
+                         xml.DOM_node_to_XML(test_root_node))
 
     def test_annotate_with_XMLNS_with_ElementTree_as_input(self):
         expected = '<root xmlns:p="http://test.com/schemas/f.xsd">' + \
@@ -53,10 +53,10 @@ class TestXMLUtils(unittest.TestCase):
         gc1_node = ET.SubElement(c1_node, "gc1")
         gc1_node.text = "test"
         tree = ET.ElementTree(root_node)
-        xmlutils.annotate_with_XMLNS(tree, 'p',
+        xml.annotate_with_XMLNS(tree, 'p',
                                      'http://test.com/schemas/f.xsd')
-        self.assertEqual(expected, xmlutils.DOM_node_to_XML(tree.getroot(),
-                                                            False))
+        self.assertEqual(expected, xml.DOM_node_to_XML(tree.getroot(),
+                                                       False))
 
     def test_annotate_with_XMLNS_with_Element_as_input(self):
         expected = '<root xmlns:p="http://test.com/schemas/f.xsd">' + \
@@ -65,6 +65,6 @@ class TestXMLUtils(unittest.TestCase):
         c1_node = ET.SubElement(root_node, "c1")
         gc1_node = ET.SubElement(c1_node, "gc1")
         gc1_node.text = "test"
-        xmlutils.annotate_with_XMLNS(root_node, 'p',
+        xml.annotate_with_XMLNS(root_node, 'p',
                                      'http://test.com/schemas/f.xsd')
-        self.assertEqual(expected, xmlutils.DOM_node_to_XML(root_node, False))
+        self.assertEqual(expected, xml.DOM_node_to_XML(root_node, False))

@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
-from pyowm.utils import timeformatutils, temperature, xmlutils
+from pyowm.utils import timeformatutils, temperature, xml
 from pyowm.weatherapi25.uris import ICONS_BASE_URL
 
 
@@ -339,10 +339,10 @@ class Weather(object):
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         WEATHER_XMLNS_PREFIX,
-                                         WEATHER_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration). \
+            xml.annotate_with_XMLNS(root_node,
+                                    WEATHER_XMLNS_PREFIX,
+                                    WEATHER_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration). \
             encode('utf-8')
 
     def _to_DOM(self):
@@ -358,10 +358,10 @@ class Weather(object):
         status_node.text = self._status
         weather_code_node = ET.SubElement(root_node, "weather_code")
         weather_code_node.text = str(self._weather_code)
-        xmlutils.create_DOM_node_from_dict(self._rain, "rain", root_node)
-        xmlutils.create_DOM_node_from_dict(self._snow, "snow", root_node)
-        xmlutils.create_DOM_node_from_dict(self._pressure, "pressure",
-                                           root_node)
+        xml.create_DOM_node_from_dict(self._rain, "rain", root_node)
+        xml.create_DOM_node_from_dict(self._snow, "snow", root_node)
+        xml.create_DOM_node_from_dict(self._pressure, "pressure",
+                                      root_node)
         node_sunrise_time = ET.SubElement(root_node, "sunrise_time")
         node_sunrise_time.text = str(
             self._sunrise_time) if self._sunrise_time is not None else 'null'
@@ -369,7 +369,7 @@ class Weather(object):
         weather_icon_name_node.text = self._weather_icon_name
         clouds_node = ET.SubElement(root_node, "clouds")
         clouds_node.text = str(self._clouds)
-        xmlutils.create_DOM_node_from_dict(self._temperature,
+        xml.create_DOM_node_from_dict(self._temperature,
                                            "temperature", root_node)
         detailed_status_node = ET.SubElement(root_node, "detailed_status")
         detailed_status_node.text = self._detailed_status
@@ -380,7 +380,7 @@ class Weather(object):
             self._sunset_time) if self._sunset_time is not None else 'null'
         humidity_node = ET.SubElement(root_node, "humidity")
         humidity_node.text = str(self._humidity)
-        xmlutils.create_DOM_node_from_dict(self._wind, "wind", root_node)
+        xml.create_DOM_node_from_dict(self._wind, "wind", root_node)
         visibility_distance_node = ET.SubElement(
             root_node, "visibility_distance")
         visibility_distance_node.text = str(self._visibility_distance)

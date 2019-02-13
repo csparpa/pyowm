@@ -5,7 +5,7 @@ Sulphur Dioxide classes and data structures.
 import json
 import xml.etree.ElementTree as ET
 from pyowm.pollutionapi30.xsd.xmlnsconfig import SO2INDEX_XMLNS_URL, SO2INDEX_XMLNS_PREFIX
-from pyowm.utils import timeformatutils, timeutils, xmlutils
+from pyowm.utils import timeformatutils, timeutils, xml
 
 
 class SO2Index(object):
@@ -141,10 +141,10 @@ class SO2Index(object):
         """
         root_node = self._to_DOM()
         if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         SO2INDEX_XMLNS_PREFIX,
-                                         SO2INDEX_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
+            xml.annotate_with_XMLNS(root_node,
+                                    SO2INDEX_XMLNS_PREFIX,
+                                    SO2INDEX_XMLNS_URL)
+        return xml.DOM_node_to_XML(root_node, xml_declaration)
 
     def _to_DOM(self):
         """
@@ -168,8 +168,8 @@ class SO2Index(object):
             s['pressure'] = '{:.12e}'.format(s['pressure'])
             s['value'] = '{:.12e}'.format(s['value'])
             s['precision'] = '{:.12e}'.format(s['precision'])
-            xmlutils.create_DOM_node_from_dict(s, "so2_sample",
-                                               so2_samples_node)
+            xml.create_DOM_node_from_dict(s, "so2_sample",
+                                          so2_samples_node)
         root_node.append(self._location._to_DOM())
         return root_node
 
