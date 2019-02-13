@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils, temputils
+from pyowm.utils import timeformatutils, temperature
 
 
 class Soil:
@@ -65,9 +65,9 @@ class Soil:
         if unit == 'kelvin':
             return self._surface_temp
         if unit == 'celsius':
-            return temputils.kelvin_to_celsius(self._surface_temp)
+            return temperature.kelvin_to_celsius(self._surface_temp)
         if unit == 'fahrenheit':
-            return temputils.kelvin_to_fahrenheit(self._surface_temp)
+            return temperature.kelvin_to_fahrenheit(self._surface_temp)
         else:
             raise ValueError('Wrong temperature unit')
 
@@ -84,9 +84,9 @@ class Soil:
         if unit == 'kelvin':
             return self._ten_cm_temp
         if unit == 'celsius':
-            return temputils.kelvin_to_celsius(self._ten_cm_temp)
+            return temperature.kelvin_to_celsius(self._ten_cm_temp)
         if unit == 'fahrenheit':
-            return temputils.kelvin_to_fahrenheit(self._ten_cm_temp)
+            return temperature.kelvin_to_fahrenheit(self._ten_cm_temp)
         else:
             raise ValueError('Wrong temperature unit')
 

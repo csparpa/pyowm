@@ -15,7 +15,7 @@ from pyowm.commons import http_client
 from pyowm.pollutionapi30 import airpollution_client, ozone, coindex
 from pyowm.uvindexapi30 import uv_client
 from pyowm.exceptions import api_call_error
-from pyowm.utils import timeformatutils, stringutils, timeutils, geo
+from pyowm.utils import timeformatutils, strings, timeutils, geo
 from pyowm.weatherapi25 import forecaster
 from pyowm.weatherapi25.forecast import Forecast
 from pyowm.weatherapi25 import historian
@@ -58,7 +58,7 @@ class OWM25(owm.OWM):
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
                  language="en", subscription_type='free', use_ssl=False):
 
-        stringutils.check_if_running_with_python_2()  # Python 3 only
+        strings.check_if_running_with_python_2()  # Python 3 only
 
         self._parsers = parsers
         if API_key is not None:
@@ -1200,9 +1200,9 @@ class OWM25(owm.OWM):
         return "<%s.%s - API key=%s, OWM Weather API version=%s, " \
                "subscription type=%s, PyOWM version=%s, language=%s>" % \
                     (__name__,
-                      self.__class__.__name__,
-                      stringutils.obfuscate_API_key(self._API_key) if self._API_key is not None else 'None',
-                      self.get_API_version(),
-                      self._subscription_type,
-                      self.get_version(),
-                      self._language)
+                     self.__class__.__name__,
+                     strings.obfuscate_API_key(self._API_key) if self._API_key is not None else 'None',
+                     self.get_API_version(),
+                     self._subscription_type,
+                     self.get_version(),
+                     self._language)

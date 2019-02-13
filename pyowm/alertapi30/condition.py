@@ -1,4 +1,4 @@
-from pyowm.utils import stringutils
+from pyowm.utils import strings
 
 
 class Condition:

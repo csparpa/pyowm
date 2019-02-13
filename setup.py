@@ -2,7 +2,7 @@
 
 from setuptools import setup
 from pyowm import constants
-from pyowm.utils.stringutils import version_tuple_to_str
+from pyowm.utils.strings import version_tuple_to_str
 
 setup(
     name='pyowm',

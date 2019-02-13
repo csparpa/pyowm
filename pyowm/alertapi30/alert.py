@@ -1,4 +1,4 @@
-from pyowm.utils import timeformatutils, stringutils
+from pyowm.utils import timeformatutils, strings
 
 
 class AlertChannel:

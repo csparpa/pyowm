@@ -3,10 +3,10 @@
 
 from pyowm import constants
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.utils import timeutils, stringutils
+from pyowm.utils import timeutils, strings
 
 
-stringutils.check_if_running_with_python_2()
+strings.check_if_running_with_python_2()
 
 
 def OWM(API_key=DEFAULT_CONFIG['api_key'], version=constants.WEATHER_API_VERSION,

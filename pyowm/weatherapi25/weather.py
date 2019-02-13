@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
-from pyowm.utils import timeformatutils, temputils, xmlutils
+from pyowm.utils import timeformatutils, temperature, xmlutils
 from pyowm.weatherapi25.uris import ICONS_BASE_URL
 
 
@@ -178,11 +178,11 @@ class Weather(object):
         elif unit == 'miles_hour':
             wind_dict = {k: self._wind[k]
                          for k in self._wind if self._wind[k] is not None}
-            return temputils.metric_wind_dict_to_imperial(wind_dict)
+            return temperature.metric_wind_dict_to_imperial(wind_dict)
         elif unit == 'km_hour':
             wind_dict = {k: self._wind[k]
                          for k in self._wind if self._wind[k] is not None}
-            return temputils.metric_wind_dict_to_km_h(wind_dict)
+            return temperature.metric_wind_dict_to_km_h(wind_dict)
         else:
             raise ValueError("Invalid value for target wind conversion unit")
 
@@ -221,7 +221,7 @@ class Weather(object):
                 not_to_be_converted[label] = temp
             else:
                 to_be_converted[label] = temp
-        converted = temputils.kelvin_dict_to(to_be_converted, unit)
+        converted = temperature.kelvin_dict_to(to_be_converted, unit)
         return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
 

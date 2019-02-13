@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.utils import temputils
+from pyowm.utils import temperature
 from operator import itemgetter
 
 
@@ -48,9 +48,9 @@ class Historian(object):
             if unit == 'kelvin':
                 temp = t
             if unit == 'celsius':
-                temp = temputils.kelvin_to_celsius(t)
+                temp = temperature.kelvin_to_celsius(t)
             if unit == 'fahrenheit':
-                temp = temputils.kelvin_to_fahrenheit(t)
+                temp = temperature.kelvin_to_fahrenheit(t)
             result.append((tstamp, temp))
         return result
 
@@ -116,9 +116,9 @@ class Historian(object):
         if unit == 'kelvin':
             result = maximum
         if unit == 'celsius':
-            result = (maximum[0], temputils.kelvin_to_celsius(maximum[1]))
+            result = (maximum[0], temperature.kelvin_to_celsius(maximum[1]))
         if unit == 'fahrenheit':
-            result = (maximum[0], temputils.kelvin_to_fahrenheit(maximum[1]))
+            result = (maximum[0], temperature.kelvin_to_fahrenheit(maximum[1]))
         return result
         
     def min_temperature(self, unit='kelvin'):
@@ -139,9 +139,9 @@ class Historian(object):
         if unit == 'kelvin':
             result = minimum
         if unit == 'celsius':
-            result = (minimum[0], temputils.kelvin_to_celsius(minimum[1]))
+            result = (minimum[0], temperature.kelvin_to_celsius(minimum[1]))
         if unit == 'fahrenheit':
-            result = (minimum[0], temputils.kelvin_to_fahrenheit(minimum[1]))
+            result = (minimum[0], temperature.kelvin_to_fahrenheit(minimum[1]))
         return result
         
     def average_temperature(self, unit='kelvin'):
@@ -161,9 +161,9 @@ class Historian(object):
         if unit == 'kelvin':
             result = average
         if unit == 'celsius':
-            result = temputils.kelvin_to_celsius(average)
+            result = temperature.kelvin_to_celsius(average)
         if unit == 'fahrenheit':
-            result = temputils.kelvin_to_fahrenheit(average)
+            result = temperature.kelvin_to_fahrenheit(average)
         return result
     
     def max_humidity(self):
