@@ -146,3 +146,8 @@ class TestNO2Index(unittest.TestCase):
 
     def test_test_from_dict_fails_with_malformed_JSON_data(self):
         self.assertRaises(ParseResponseError, NO2Index.from_dict, json.loads(NO2INDEX_MALFORMED_JSON))
+
+    def test_to_dict(self):
+        expected = json.loads(NO2INDEX_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)

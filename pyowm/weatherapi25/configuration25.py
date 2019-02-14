@@ -2,7 +2,6 @@ from pyowm.caches import nullcache
 from pyowm.weatherapi25 import weathercoderegistry, cityidregistry
 from pyowm.weatherapi25.parsers import stationhistoryparser, weatherhistoryparser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
-from pyowm.pollutionapi30.parsers import SO2IndexParser
 
 
 """
@@ -40,8 +39,7 @@ parsers = {
   'weather_history': weatherhistoryparser.WeatherHistoryParser(),
   'station_history': stationhistoryparser.StationHistoryParser(),
   'uvindex': UVIndexParser(),
-  'uvindex_list': UVIndexListParser(),
-  'so2index': SO2IndexParser()
+  'uvindex_list': UVIndexListParser()
 }
 
 # City ID registry

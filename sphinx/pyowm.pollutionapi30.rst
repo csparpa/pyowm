@@ -51,15 +51,6 @@ pyowm.pollutionapi30.so2index module
     :undoc-members:
     :show-inheritance:
 
-pyowm.pollutionapi30.parsers module
------------------------------------
-
-.. automodule:: pyowm.pollutionapi30.parsers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 
 Module contents
 ---------------

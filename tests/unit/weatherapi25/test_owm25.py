@@ -24,10 +24,10 @@ from tests.unit.weatherapi25.json_test_responses import (OBSERVATION_JSON,
                                                          WEATHER_AT_PLACES_IN_BBOX_JSON)
 from tests.unit.uvindexapi30.test_uvindexparser import UVINDEX_JSON
 from tests.unit.uvindexapi30.test_uvindexlistparser import UVINDEX_LIST_JSON
-from tests.unit.pollutionapi30.test_parsers import SO2INDEX_JSON
 from tests.unit.pollutionapi30.test_ozone import OZONE_JSON
 from tests.unit.pollutionapi30.test_coindex import COINDEX_JSON
 from tests.unit.pollutionapi30.test_no2index import NO2INDEX_JSON
+from tests.unit.pollutionapi30.test_so2index import SO2INDEX_JSON
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION, WEATHER_API_VERSION
 from pyowm.commons.http_client import HttpClient
@@ -49,7 +49,6 @@ from pyowm.pollutionapi30.so2index import SO2Index
 from pyowm.weatherapi25.parsers.stationhistoryparser import StationHistoryParser
 from pyowm.weatherapi25.parsers.weatherhistoryparser import WeatherHistoryParser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
-from pyowm.pollutionapi30.parsers import SO2IndexParser
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.alertapi30.alert_manager import AlertManager
 
@@ -60,8 +59,7 @@ class TestOWM25(unittest.TestCase):
       'weather_history': WeatherHistoryParser(),
       'station_history': StationHistoryParser(),
       'uvindex': UVIndexParser(),
-      'uvindex_list': UVIndexListParser(),
-      'so2index': SO2IndexParser()
+      'uvindex_list': UVIndexListParser()
     }
     __test_instance = OWM25(__test_parsers, 'test_API_key')
 

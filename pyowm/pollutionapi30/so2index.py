@@ -1,11 +1,9 @@
-"""
-Sulphur Dioxide classes and data structures.
-"""
-
 import json
 import xml.etree.ElementTree as ET
+from pyowm.exceptions import parse_response_error
 from pyowm.pollutionapi30.xsd.xmlnsconfig import SO2INDEX_XMLNS_URL, SO2INDEX_XMLNS_PREFIX
 from pyowm.utils import formatting, timestamps, xml
+from pyowm.weatherapi25 import location
 
 
 class SO2Index(object):
@@ -172,6 +170,54 @@ class SO2Index(object):
                                           so2_samples_node)
         root_node.append(self._location._to_DOM())
         return root_node
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *SO2Index* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *SO2Index* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        try:
+            # -- reference time (strip away Z and T on ISO8601 format)
+            t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
+            reference_time = formatting.ISO8601_to_UNIXtime(t)
+
+            # -- reception time (now)
+            reception_time = timestamps.now('unix')
+
+            # -- location
+            lon = float(the_dict['location']['longitude'])
+            lat = float(the_dict['location']['latitude'])
+            place = location.Location(None, lon, lat, None)
+
+            # -- SO2 samples
+            so2_samples = the_dict['data']
+
+        except KeyError:
+            raise parse_response_error.ParseResponseError(
+                      ''.join([__name__, ': impossible to parse COIndex']))
+
+        return SO2Index(reference_time, place, None, so2_samples, reception_time)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {"reference_time": self._reference_time,
+                "location": self._location.to_dict(),
+                "interval": self._interval,
+                "so2_samples": self._so2_samples,
+                "reception_time": self._reception_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
