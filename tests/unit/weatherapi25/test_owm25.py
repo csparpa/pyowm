@@ -46,7 +46,6 @@ from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.pollutionapi30.ozone import Ozone
 from pyowm.pollutionapi30.no2index import NO2Index
 from pyowm.pollutionapi30.so2index import SO2Index
-from pyowm.weatherapi25.parsers.stationhistoryparser import StationHistoryParser
 from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.alertapi30.alert_manager import AlertManager
@@ -55,7 +54,6 @@ from pyowm.alertapi30.alert_manager import AlertManager
 class TestOWM25(unittest.TestCase):
 
     __test_parsers = {
-      'station_history': StationHistoryParser(),
       'uvindex': UVIndexParser(),
       'uvindex_list': UVIndexListParser()
     }
@@ -432,13 +430,13 @@ class TestOWM25(unittest.TestCase):
         result = self.__test_instance.three_hours_forecast_at_id(2643743)
         HttpClient.cacheable_get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        forecast = result.get_forecast()
-        self.assertTrue(isinstance(forecast, Forecast))
-        self.assertTrue(forecast.get_interval() is not None)
-        self.assertTrue(forecast.get_reception_time() is not None)
-        self.assertTrue(isinstance(forecast.get_location(), Location))
-        self.assertEqual(1, len(forecast))
-        for weather in forecast:
+        f = result.get_forecast()
+        self.assertTrue(isinstance(f, Forecast))
+        self.assertTrue(f.get_interval() is not None)
+        self.assertTrue(f.get_reception_time() is not None)
+        self.assertTrue(isinstance(f.get_location(), Location))
+        self.assertEqual(1, len(f))
+        for weather in f:
             self.assertTrue(isinstance(weather, Weather))
 
     def test_three_hours_forecast_at_id_when_forecast_not_found(self):

@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import json
+import time
 import xml.etree.ElementTree as ET
-from pyowm.weatherapi25.xsd.xmlnsconfig import (
-    STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL)
+from pyowm.exceptions import parse_response_error, api_response_error
 from pyowm.utils import formatting, xml
+from pyowm.weatherapi25.xsd.xmlnsconfig import STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL
 
 
 class StationHistory(object):
@@ -173,3 +174,83 @@ class StationHistory(object):
                                      self.get_reception_time('iso'),
                                      self._interval, str(len(self))
                                      )
+
+    @classmethod
+    def from_dict(cls, d):
+        """
+        Parses a *StationHistory* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *StationHistory* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the
+            data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
+
+        """
+        if d is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        # Check if server returned errors: this check overcomes the lack of use
+        # of HTTP error status codes by the OWM API but it's supposed to be
+        # deprecated as soon as the API implements a correct HTTP mechanism for
+        # communicating errors to the clients. In addition, in this specific
+        # case the OWM API responses are the very same either when no results
+        # are found for a station and when the station does not exist!
+        measurements = {}
+        try:
+            if 'cod' in d:
+                if d['cod'] != "200":
+                    raise api_response_error.APIResponseError(
+                                              "OWM API: error - response payload: " + str(d), d['cod'])
+            if str(d['cnt']) == "0":
+                return None
+            else:
+                for item in d['list']:
+                    if 'temp' not in item:
+                        temp = None
+                    elif isinstance(item['temp'], dict):
+                        temp = item['temp']['v']
+                    else:
+                        temp = item['temp']
+                    if 'humidity' not in item:
+                        hum = None
+                    elif isinstance(item['humidity'], dict):
+                        hum = item['humidity']['v']
+                    else:
+                        hum = item['humidity']
+                    if 'pressure' not in item:
+                        pres = None
+                    elif isinstance(item['pressure'], dict):
+                        pres = item['pressure']['v']
+                    else:
+                        pres = item['pressure']
+                    if 'rain' in item and isinstance(item['rain']['today'],
+                                                     dict):
+                        rain = item['rain']['today']['v']
+                    else:
+                        rain = None
+                    if 'wind' in item and isinstance(item['wind']['speed'],
+                                                     dict):
+                        wind = item['wind']['speed']['v']
+                    else:
+                        wind = None
+                    measurements[item['dt']] = {"temperature": temp,
+                                                "humidity": hum,
+                                                "pressure": pres,
+                                                "rain": rain,
+                                                "wind": wind}
+        except KeyError:
+            raise parse_response_error.ParseResponseError(__name__ + ': impossible to read input data')
+        current_time = round(time.time())
+        return StationHistory(None, None, current_time, measurements)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {"station_ID": self._station_ID,
+                "interval": self._interval,
+                "reception_time": self._reception_time,
+                "measurements": self._measurements}

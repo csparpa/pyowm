@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     pyowm.weatherapi25.cityids
-    pyowm.weatherapi25.parsers
     pyowm.weatherapi25.xsd
 
 Submodules

@@ -15,10 +15,7 @@ from pyowm.stationsapi30 import stations_manager
 from pyowm.tiles import tile_manager
 from pyowm.utils import formatting, strings, timestamps, geo
 from pyowm.uvindexapi30 import uv_client
-from pyowm.weatherapi25 import forecaster
-from pyowm.weatherapi25.forecast import Forecast
-from pyowm.weatherapi25 import historian
-from pyowm.weatherapi25 import observation
+from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory
 from pyowm.weatherapi25.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
@@ -28,7 +25,6 @@ from pyowm.weatherapi25 import weather
 
 
 class OWM25(owm.OWM):
-
 
     """
     OWM subclass providing methods for each OWM Weather API 2.5 endpoint and ad-hoc API clients for the other
@@ -477,10 +473,10 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = Forecast.from_dict(json.loads(json_data))
-        if forecast is not None:
-            forecast.set_interval("3h")
-            return forecaster.Forecaster(forecast)
+        fc = forecast.Forecast.from_dict(json.loads(json_data))
+        if fc is not None:
+            fc.set_interval("3h")
+            return forecaster.Forecaster(fc)
         else:
             return None
 
@@ -511,10 +507,10 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = Forecast.from_dict(json.loads(json_data))
-        if forecast is not None:
-            forecast.set_interval("3h")
-            return forecaster.Forecaster(forecast)
+        fc = forecast.Forecast.from_dict(json.loads(json_data))
+        if fc is not None:
+            fc.set_interval("3h")
+            return forecaster.Forecaster(fc)
         else:
             return None
 
@@ -543,10 +539,10 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = Forecast.from_dict(json.loads(json_data))
-        if forecast is not None:
-            forecast.set_interval("3h")
-            return forecaster.Forecaster(forecast)
+        fc = forecast.Forecast.from_dict(json.loads(json_data))
+        if fc is not None:
+            fc.set_interval("3h")
+            return forecaster.Forecaster(fc)
         else:
             return None
 
@@ -584,10 +580,10 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = Forecast.from_dict(json.loads(json_data))
-        if forecast is not None:
-            forecast.set_interval("daily")
-            return forecaster.Forecaster(forecast)
+        fc = forecast.Forecast.from_dict(json.loads(json_data))
+        if fc is not None:
+            fc.set_interval("daily")
+            return forecaster.Forecaster(fc)
         else:
             return None
 
@@ -628,10 +624,10 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = Forecast.from_dict(json.loads(json_data))
-        if forecast is not None:
-            forecast.set_interval("daily")
-            return forecaster.Forecaster(forecast)
+        fc = forecast.Forecast.from_dict(json.loads(json_data))
+        if fc is not None:
+            fc.set_interval("daily")
+            return forecaster.Forecaster(fc)
         else:
             return None
 
@@ -671,10 +667,10 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        forecast = Forecast.from_dict(json.loads(json_data))
-        if forecast is not None:
-            forecast.set_interval("daily")
-            return forecaster.Forecaster(forecast)
+        fc = forecast.Forecast.from_dict(json.loads(json_data))
+        if fc is not None:
+            fc.set_interval("daily")
+            return forecaster.Forecaster(fc)
         else:
             return None
 
@@ -952,12 +948,11 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        station_history = \
-            self._parsers['station_history'].parse_JSON(json_data)
-        if station_history is not None:
-            station_history.set_station_ID(station_ID)
-            station_history.set_interval(interval)
-        return station_history
+        sh = stationhistory.StationHistory.from_dict(json.loads(json_data))
+        if sh is not None:
+            sh.set_station_ID(station_ID)
+            sh.set_interval(interval)
+        return sh
 
     #  --- UV API ENDPOINTS ---
 
