@@ -4,7 +4,7 @@ from datetime import datetime
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.ozone import Ozone
-from pyowm.utils.formatting import UTC, _datetime_to_UNIXtime
+from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import OZONE_JSON_DUMP
 from tests.unit.pollutionapi30.xml_test_dumps import OZONE_XML_DUMP
 
@@ -82,7 +82,7 @@ class TestOzone(unittest.TestCase):
 
     def test_is_forecast(self):
         self.assertFalse(self.__test_instance.is_forecast())
-        in_a_year = _datetime_to_UNIXtime(datetime.utcnow()) + 31536000
+        in_a_year = datetime_to_UNIXtime(datetime.utcnow()) + 31536000
         uvindex = Ozone(in_a_year,
                           self.__test_location,
                           self.__test_interval,

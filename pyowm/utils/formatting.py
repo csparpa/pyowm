@@ -123,16 +123,16 @@ def to_UNIXtime(timeobject):
             raise ValueError("The time value is a negative number")
         return timeobject
     elif isinstance(timeobject, datetime):
-        return _datetime_to_UNIXtime(timeobject)
+        return datetime_to_UNIXtime(timeobject)
     elif isinstance(timeobject, str):
-        return _ISO8601_to_UNIXtime(timeobject)
+        return ISO8601_to_UNIXtime(timeobject)
     else:
         raise TypeError('The time value must be expressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
                          'ISO8601-formatted string')
 
 
-def _ISO8601_to_UNIXtime(iso):
+def ISO8601_to_UNIXtime(iso):
     """
     Converts an ISO8601-formatted string in the format
     ``YYYY-MM-DD HH:MM:SS+00`` to the correspondant UNIXtime
@@ -149,10 +149,10 @@ def _ISO8601_to_UNIXtime(iso):
     except ValueError:
         raise ValueError(__name__ + ": bad format for input ISO8601 string, ' \
             'should have been: YYYY-MM-DD HH:MM:SS+00")
-    return _datetime_to_UNIXtime(d)
+    return datetime_to_UNIXtime(d)
 
 
-def _datetime_to_UNIXtime(date):
+def datetime_to_UNIXtime(date):
     """
     Converts a ``datetime.datetime`` object to its correspondent UNIXtime
 

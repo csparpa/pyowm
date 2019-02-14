@@ -180,7 +180,7 @@ class Ozone(object):
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             ref_t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = formatting._ISO8601_to_UNIXtime(ref_t)
+            reference_time = formatting.ISO8601_to_UNIXtime(ref_t)
 
             # -- reception time (now)
             reception_time = timestamps.now('unix')

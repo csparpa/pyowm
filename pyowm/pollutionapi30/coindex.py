@@ -203,7 +203,7 @@ class COIndex(object):
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
-            reference_time = formatting._ISO8601_to_UNIXtime(t)
+            reference_time = formatting.ISO8601_to_UNIXtime(t)
 
             # -- reception time (now)
             reception_time = timestamps.now('unix')

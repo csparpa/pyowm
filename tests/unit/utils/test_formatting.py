@@ -67,16 +67,16 @@ class TestTimeFormatUtils(unittest.TestCase):
         iso = "2013-09-06 09:20:00+00"
         expected = 1378459200
         self.assertEqual(expected,
-                         formatting._ISO8601_to_UNIXtime(iso))
+                         formatting.ISO8601_to_UNIXtime(iso))
 
     def test_datetime_to_UNIXtime(self):
         date = datetime(2013, 9, 19, 12, 0, tzinfo=formatting.UTC())
         expected = 1379592000
-        self.assertEqual(formatting._datetime_to_UNIXtime(date), expected)
+        self.assertEqual(formatting.datetime_to_UNIXtime(date), expected)
 
     def test_ISO8601_to_UNIXtime_fails_with_bad_arugments(self):
         self.assertRaises(ValueError,
-                          formatting._ISO8601_to_UNIXtime,
+                          formatting.ISO8601_to_UNIXtime,
                           "Tue, Sep 16 2013")
 
     def test_to_UNIXtime(self):

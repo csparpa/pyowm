@@ -12,7 +12,7 @@ from pyowm.weatherapi25.configuration25 import city_id_registry as reg
 from pyowm.abstractions import owm
 from pyowm.caches import nullcache
 from pyowm.commons import http_client
-from pyowm.pollutionapi30 import airpollution_client, ozone, coindex
+from pyowm.pollutionapi30 import airpollution_client, ozone, coindex, no2index
 from pyowm.uvindexapi30 import uv_client
 from pyowm.exceptions import api_call_error
 from pyowm.utils import formatting, strings, timestamps, geo
@@ -1151,11 +1151,11 @@ class OWM25(owm.OWM):
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self._pollapi.get_no2(params)
-        no2index = self._parsers['no2index'].parse_JSON(json_data)
+        no2 = no2index.NO2Index.from_dict(json.loads(json_data))
         if interval is None:
             interval = 'year'
-        no2index._interval = interval
-        return no2index
+        no2._interval = interval
+        return no2
 
     def so2index_around_coords(self, lat, lon, start=None, interval=None):
         """

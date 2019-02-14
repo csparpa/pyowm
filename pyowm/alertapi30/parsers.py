@@ -142,7 +142,7 @@ class AlertParser(jsonparser.JSONParser):
         try:
             alert_id = d['_id']
             t = d['last_update'].split('.')[0].replace('T', ' ') + '+00'
-            alert_last_update = formatting._ISO8601_to_UNIXtime(t)
+            alert_last_update = formatting.ISO8601_to_UNIXtime(t)
             alert_trigger_id = d['triggerId']
             alert_met_conds = [
                 dict(current_value=c['current_value']['min'], condition=Condition.from_dict(c['condition']))

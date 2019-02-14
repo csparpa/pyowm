@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.so2index import SO2Index
-from pyowm.utils.formatting import UTC, _datetime_to_UNIXtime
+from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import SO2INDEX_JSON_DUMP
 from tests.unit.pollutionapi30.xml_test_dumps import SO2INDEX_XML_DUMP
 
@@ -91,7 +91,7 @@ class TestSO2Index(unittest.TestCase):
 
     def test_is_forecast(self):
         self.assertFalse(self.__test_instance.is_forecast())
-        in_a_year = _datetime_to_UNIXtime(datetime.utcnow()) + 31536000
+        in_a_year = datetime_to_UNIXtime(datetime.utcnow()) + 31536000
         uvindex = SO2Index(in_a_year,
                            self.__test_location, self.__test_interval,
                            [], self.__test_reception_time)

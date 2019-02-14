@@ -4,7 +4,7 @@ from datetime import datetime
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.coindex import COIndex
-from pyowm.utils.formatting import UTC, _datetime_to_UNIXtime
+from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import COINDEX_JSON_DUMP
 from tests.unit.pollutionapi30.xml_test_dumps import COINDEX_XML_DUMP
 
@@ -97,7 +97,7 @@ class TestCOIndex(unittest.TestCase):
 
     def test_is_forecast(self):
         self.assertFalse(self.__test_instance.is_forecast())
-        in_a_year = _datetime_to_UNIXtime(datetime.utcnow()) + 31536000
+        in_a_year = datetime_to_UNIXtime(datetime.utcnow()) + 31536000
         uvindex = COIndex(in_a_year,
                           self.__test_location, self.__test_interval,
                           [], self.__test_reception_time)
