@@ -1,8 +1,10 @@
 import json
 import xml.etree.ElementTree as ET
+from pyowm.exceptions import parse_response_error
+from pyowm.utils import formatting, timestamps, xml
 from pyowm.uvindexapi30.xsd.xmlnsconfig import (
     UVINDEX_XMLNS_URL, UVINDEX_XMLNS_PREFIX)
-from pyowm.utils import formatting, xml
+from pyowm.weatherapi25 import location
 
 
 def uv_intensity_to_exposure_risk(uv_intensity):
@@ -159,6 +161,50 @@ class UVIndex(object):
         value_node.text = str(self._value)
         root_node.append(self._location._to_DOM())
         return root_node
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses an *UVIndex* instance out of raw JSON data. Only certain properties of the data are used: if these
+        properties are not found or cannot be parsed, an error is issued.
+
+        :param the_dict: the input dict
+        :type the_dict: dict
+        :returns: an *UVIndex* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the
+            data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        try:
+            # -- reference time
+            reference_time = the_dict['date']
+
+            # -- reception time (now)
+            reception_time = timestamps.now('unix')
+
+            # -- location
+            lon = float(the_dict['lon'])
+            lat = float(the_dict['lat'])
+            place = location.Location(None, lon, lat, None)
+
+            # -- UV intensity
+            uv_intensity = float(the_dict['value'])
+        except KeyError:
+            raise parse_response_error.ParseResponseError(''.join([__name__, ': impossible to parse UV Index']))
+        return UVIndex(reference_time, place, uv_intensity, reception_time)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {"reference_time": self._reference_time,
+                "location": self._location.to_dict(),
+                "value": self._value,
+                "reception_time": self._reception_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \

@@ -14,7 +14,7 @@ from pyowm.pollutionapi30 import airpollution_client, ozone, coindex, no2index, 
 from pyowm.stationsapi30 import stations_manager
 from pyowm.tiles import tile_manager
 from pyowm.utils import formatting, strings, timestamps, geo
-from pyowm.uvindexapi30 import uv_client
+from pyowm.uvindexapi30 import uv_client, uvindex
 from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory
 from pyowm.weatherapi25.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
@@ -976,8 +976,7 @@ class OWM25(owm.OWM):
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self._uvapi.get_uvi(params)
-        uvindex = self._parsers['uvindex'].parse_JSON(json_data)
-        return uvindex
+        return uvindex.UVIndex.from_dict(json.loads((json_data)))
 
     def uvindex_forecast_around_coords(self, lat, lon):
         """
@@ -997,7 +996,7 @@ class OWM25(owm.OWM):
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self._uvapi.get_uvi_forecast(params)
-        uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)
+        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
         return uvindex_list
 
     def uvindex_history_around_coords(self, lat, lon, start, end=None):
@@ -1032,7 +1031,7 @@ class OWM25(owm.OWM):
             end = formatting.timeformat(end, 'unix')
         params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
         json_data = self._uvapi.get_uvi_history(params)
-        uvindex_list = self._parsers['uvindex_list'].parse_JSON(json_data)
+        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
         return uvindex_list
 
     #  --- POLLUTION API ENDPOINTS ---

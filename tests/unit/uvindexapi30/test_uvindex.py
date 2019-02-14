@@ -1,8 +1,11 @@
+import json
 import unittest
 from datetime import datetime
-from pyowm.weatherapi25.location import Location
-from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
+from pyowm.exceptions import parse_response_error
 from pyowm.utils.formatting import UTC
+from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
+from pyowm.weatherapi25.location import Location
+
 
 UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
@@ -12,6 +15,20 @@ UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", '
 UVINDEX_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
 <uvindex xmlns:u="http://github.com/csparpa/pyowm/tree/master/pyowm/uvindexapi30/xsd/uvindex.xsd"><u:reception_time>1234567</u:reception_time><u:reference_time>1475283600</u:reference_time><u:value>6.8</u:value><u:location><u:name>test</u:name><u:coordinates><u:lon>12.3</u:lon><u:lat>43.7</u:lat></u:coordinates><u:ID>987</u:ID><u:country>UK</u:country></u:location></uvindex>"""
 
+UVINDEX_JSON = '{"lat":43.75,"lon":8.25,"date_iso":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"value":4.58}'
+UVINDEX_MALFORMED_JSON = '{"lat":43.75,"lon":8.25,"zzz":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"test":4.58}'
+
+
+UVINDEX_LIST_JSON = '[{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-22T12:00:00Z",' \
+                    '"date":1498132800,"value":9.92},{"lat":37.75,"lon":-122.37,' \
+                    '"date_iso":"2017-06-23T12:00:00Z","date":1498219200,' \
+                    '"value":10.09},{"lat":37.75,"lon":-122.37,"date_iso":' \
+                    '"2017-06-24T12:00:00Z","date":1498305600,"value":10.95},' \
+                    '{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-25T12:00:00Z",' \
+                    '"date":1498392000,"value":11.03},{"lat":37.75,"lon":-122.37,' \
+                    '"date_iso":"2017-06-26T12:00:00Z","date":1498478400,"value":10.06}]'
 
 class TestUVIndex(unittest.TestCase):
 
@@ -97,3 +114,27 @@ class TestUVIndex(unittest.TestCase):
         ordered_base_xml = ''.join(sorted(UVINDEX_XML_DUMP))
         ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
         self.assertEqual(ordered_base_xml, ordered_actual_xml)
+
+    def test_to_dict(self):
+        expected = json.loads(UVINDEX_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)
+
+    def test_from_dict(self):
+        result = UVIndex.from_dict(json.loads(UVINDEX_JSON))
+        self.assertIsNotNone(result)
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNone(loc.get_name())
+        self.assertIsNone(loc.get_ID())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(result.get_value())
+
+    def test_from_dict_fails_when_JSON_data_is_None(self):
+        self.assertRaises(parse_response_error.ParseResponseError, UVIndex.from_dict, None)
+
+    def test_from_dict_fails_with_malformed_JSON_data(self):
+        self.assertRaises(parse_response_error.ParseResponseError, UVIndex.from_dict, json.loads(UVINDEX_MALFORMED_JSON))

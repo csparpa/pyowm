@@ -19,15 +19,6 @@ pyowm.uvindexapi30.uvindex module
     :show-inheritance:
 
 
-pyowm.uvindexapi30.parsers module
----------------------------------
-
-.. automodule:: pyowm.uvindexapi30.parsers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 pyowm.uvindexapi30.uv_client module
 -----------------------------------
 

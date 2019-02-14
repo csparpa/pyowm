@@ -22,8 +22,7 @@ from tests.unit.weatherapi25.json_test_responses import (OBSERVATION_JSON,
                                                          STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
                                                          DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
                                                          WEATHER_AT_PLACES_IN_BBOX_JSON)
-from tests.unit.uvindexapi30.test_uvindexparser import UVINDEX_JSON
-from tests.unit.uvindexapi30.test_uvindexlistparser import UVINDEX_LIST_JSON
+from tests.unit.uvindexapi30.test_uvindex import UVINDEX_JSON, UVINDEX_LIST_JSON
 from tests.unit.pollutionapi30.test_ozone import OZONE_JSON
 from tests.unit.pollutionapi30.test_coindex import COINDEX_JSON
 from tests.unit.pollutionapi30.test_no2index import NO2INDEX_JSON
@@ -46,18 +45,13 @@ from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.pollutionapi30.ozone import Ozone
 from pyowm.pollutionapi30.no2index import NO2Index
 from pyowm.pollutionapi30.so2index import SO2Index
-from pyowm.uvindexapi30.parsers import UVIndexParser, UVIndexListParser
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.alertapi30.alert_manager import AlertManager
 
 
 class TestOWM25(unittest.TestCase):
 
-    __test_parsers = {
-      'uvindex': UVIndexParser(),
-      'uvindex_list': UVIndexListParser()
-    }
-    __test_instance = OWM25(__test_parsers, 'test_API_key')
+    __test_instance = OWM25({}, 'test_API_key')
 
     # Mock functions
     def mock_api_call_returning_single_obs(self, uri, params=None, headers=None):
@@ -142,14 +136,14 @@ class TestOWM25(unittest.TestCase):
 
     def test_wrong_API_key(self):
         try:
-            OWM25(self.__test_parsers, 1234)
+            OWM25({}, 1234)
             self.fail("Didn't raise AssertionError")
         except AssertionError:
             pass
 
     def test_API_key_is_mandatory_with_paid_subscription(self):
         try:
-            owm_paid = OWM25(self.__test_parsers, subscription_type='pro')
+            owm_paid = OWM25({}, subscription_type='pro')
             self.fail("Didn't raise AssertionError")
         except AssertionError:
             pass
@@ -164,7 +158,7 @@ class TestOWM25(unittest.TestCase):
     def test_get_subscription_type(self):
         owm_free = OWM25({})
         self.assertEqual(owm_free.get_subscription_type(), 'free')
-        owm_paid = OWM25(self.__test_parsers, API_key='xyz',
+        owm_paid = OWM25({}, API_key='xyz',
                          subscription_type='pro')
         self.assertEqual(owm_paid.get_subscription_type(), 'pro')
 

@@ -21,14 +21,14 @@ class TestStationHistory(unittest.TestCase):
     __test_date_reception_time = datetime.strptime(__test_reception_time_iso,
                                    '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_measurements = {
-        1362933983: {
+        '1362933983': {
              "temperature": 266.25,
              "humidity": 27.3,
              "pressure": 1010.02,
              "rain": None,
              "wind": 4.7
          },
-        1362934043: {
+        '1362934043': {
              "temperature": 266.85,
              "humidity": 27.7,
              "pressure": 1010.09,
@@ -108,3 +108,8 @@ class TestStationHistory(unittest.TestCase):
 
     def test_from_dict_when_server_error(self):
         self.assertRaises(APIResponseError, StationHistory.from_dict, json.loads(INTERNAL_SERVER_ERROR_JSON))
+
+    def test_to_dict(self):
+        expected = json.loads(STATIONHISTORY_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)
