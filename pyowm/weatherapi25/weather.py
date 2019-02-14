@@ -3,7 +3,7 @@
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.exceptions import parse_response_error
+from pyowm.exceptions import parse_response_error, api_response_error
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
 from pyowm.utils import formatting, temperature, xml
@@ -589,6 +589,48 @@ class Weather(object):
                        rain, snow, wind, humidity, pressure, temperature,
                        status, detailed_status, weather_code, weather_icon_name,
                        visibility_distance, dewpoint, humidex, heat_index)
+
+    @classmethod
+    def from_dict_of_lists(cls, the_dict):
+        """
+        Parses a list of *Weather* instances out of an input dict. Only certain properties of the data are used: if
+        these properties are not found or cannot be parsed, an error is issued.
+
+        :param the_dict: the input dict
+        :type the_dict: dict
+        :returns: a list of *Weather* instances or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result,
+            *APIResponseError* if the input dict an HTTP status error
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        # Check if server returned errors: this check overcomes the lack of use
+        # of HTTP error status codes by the OWM API 2.5. This mechanism is
+        # supposed to be deprecated as soon as the API fully adopts HTTP for
+        # conveying errors to the clients
+        if 'message' in the_dict and 'cod' in the_dict:
+            if the_dict['cod'] == "404":
+                print("OWM API: data not found - response payload: " + \
+                      json.dumps(the_dict))
+                return None
+            elif the_dict['cod'] != "200":
+                raise api_response_error.APIResponseError(
+                                      "OWM API: error - response payload: " + json.dumps(the_dict), the_dict['cod'])
+        # Handle the case when no results are found
+        if 'cnt' in the_dict and the_dict['cnt'] == "0":
+            return []
+        else:
+            if 'list' in the_dict:
+                try:
+                    return [Weather.from_dict(item) for item in the_dict['list']]
+                except KeyError:
+                    raise parse_response_error.ParseResponseError(
+                              ''.join([__name__, ': impossible to read weather info from input data'])
+                          )
+            else:
+                raise parse_response_error.ParseResponseError(
+                              ''.join([__name__, ': impossible to read weather list from input data']))
 
     def to_dict(self):
         """Dumps object to a dictionary

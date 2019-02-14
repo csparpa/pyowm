@@ -4,26 +4,27 @@
 import json
 from time import time
 from pyowm import constants
+from pyowm.abstractions import owm
+from pyowm.agroapi10 import agro_manager
+from pyowm.alertapi30 import alert_manager
+from pyowm.caches import nullcache
+from pyowm.commons import http_client
+from pyowm.exceptions import api_call_error
+from pyowm.pollutionapi30 import airpollution_client, ozone, coindex, no2index, so2index
+from pyowm.stationsapi30 import stations_manager
+from pyowm.tiles import tile_manager
+from pyowm.utils import formatting, strings, timestamps, geo
+from pyowm.uvindexapi30 import uv_client
+from pyowm.weatherapi25 import forecaster
+from pyowm.weatherapi25.forecast import Forecast
+from pyowm.weatherapi25 import historian
+from pyowm.weatherapi25 import observation
 from pyowm.weatherapi25.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, BBOX_CITY_URL)
 from pyowm.weatherapi25.configuration25 import city_id_registry as reg
-from pyowm.abstractions import owm
-from pyowm.caches import nullcache
-from pyowm.commons import http_client
-from pyowm.pollutionapi30 import airpollution_client, ozone, coindex, no2index, so2index
-from pyowm.uvindexapi30 import uv_client
-from pyowm.exceptions import api_call_error
-from pyowm.utils import formatting, strings, timestamps, geo
-from pyowm.weatherapi25 import forecaster
-from pyowm.weatherapi25.forecast import Forecast
-from pyowm.weatherapi25 import historian
-from pyowm.weatherapi25 import observation
-from pyowm.stationsapi30 import stations_manager
-from pyowm.alertapi30 import alert_manager
-from pyowm.tiles import tile_manager
-from pyowm.agroapi10 import agro_manager
+from pyowm.weatherapi25 import weather
 
 
 class OWM25(owm.OWM):
@@ -728,7 +729,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['weather_history'].parse_JSON(json_data)
+        return weather.Weather.from_dict_of_lists(json.loads(json_data))
 
     def weather_history_at_coords(self, lat, lon, start=None, end=None):
         """
@@ -782,7 +783,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['weather_history'].parse_JSON(json_data)
+        return weather.Weather.from_dict_of_lists(json.loads(json_data))
 
     def weather_history_at_id(self, id, start=None, end=None):
         """
@@ -836,7 +837,7 @@ class OWM25(owm.OWM):
                                             self._subscription_type,
                                             self._use_ssl)
         _, json_data = self._wapi.cacheable_get_json(uri, params=params)
-        return self._parsers['weather_history'].parse_JSON(json_data)
+        return weather.Weather.from_dict_of_lists(json.loads(json_data))
 
     def station_tick_history(self, station_ID, limit=None):
         """

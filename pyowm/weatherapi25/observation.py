@@ -180,8 +180,6 @@ class Observation(object):
         Parses a list of *Observation* instances out of raw input dict containing a list. Only certain properties of
         the data are used: if these properties are not found or cannot be parsed, an error is issued.
 
-        :param the_dict: a raw JSON string
-        :type the_dict: str
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a `list` of *Observation* instances or ``None`` if no data is available

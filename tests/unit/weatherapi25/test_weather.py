@@ -1,8 +1,12 @@
-import unittest
 import json
-from pyowm.weatherapi25.weather import Weather
+import unittest
+from pyowm.exceptions.api_response_error import APIResponseError
+from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.utils.formatting import UTC
+from pyowm.weatherapi25.weather import Weather
 from tests.unit.weatherapi25.json_test_dumps import WEATHER_JSON_DUMP
+from tests.unit.weatherapi25.json_test_responses import (CITY_WEATHER_HISTORY_JSON, CITY_WEATHER_HISTORY_NO_RESULTS_JSON,
+                                                         CITY_WEATHER_HISTORY_NOT_FOUND_JSON, INTERNAL_SERVER_ERROR_JSON)
 from datetime import datetime
 
 
@@ -49,6 +53,10 @@ class TestWeather(unittest.TestCase):
                               __test_weather_code, __test_weather_icon_name,
                               __test_visibility_distance, __test_dewpoint,
                               __test_humidex, __test_heat_index)
+
+    __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
+    __bad_json_2 = '{"list": [{"test":"fake"}] }'
+    __no_items_json = '{"cnt": "0"}'
 
     def test_init_fails_when_negative_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
@@ -254,9 +262,9 @@ class TestWeather(unittest.TestCase):
         }
         result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
-        self.assertEquals(0, len(result1.get_wind()))
-        self.assertEquals(0, len(result1.get_rain()))
-        self.assertEquals(0, len(result1.get_snow()))
+        self.assertEqual(0, len(result1.get_wind()))
+        self.assertEqual(0, len(result1.get_rain()))
+        self.assertEqual(0, len(result1.get_snow()))
 
         dict2 = {"station":{
                     "name":"KPPQ",
@@ -287,13 +295,40 @@ class TestWeather(unittest.TestCase):
         }
         result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
-        self.assertEquals(0, len(result2.get_wind()))
+        self.assertEqual(0, len(result2.get_wind()))
 
     def test_to_dict(self):
         expected = json.loads(WEATHER_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
 
+    def test_from_dict_of_lists(self):
+        result = Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_JSON))
+        self.assertTrue(result)
+        self.assertTrue(isinstance(result, list))
+        for weather in result:
+            self.assertTrue(weather is not None)
+
+    def test_from_dict_of_lists_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseResponseError, Weather.from_dict_of_lists, None)
+
+    def test_from_dict_of_lists_with_malformed_JSON_data(self):
+        self.assertRaises(ParseResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json))
+        self.assertRaises(ParseResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json_2))
+
+    def test_from_dict_of_lists_when_no_results(self):
+        result = Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_NO_RESULTS_JSON))
+        self.assertTrue(isinstance(result, list))
+        self.assertEqual(0, len(result))
+        result = Weather.from_dict_of_lists(json.loads(self.__no_items_json))
+        self.assertTrue(isinstance(result, list))
+        self.assertEqual(0, len(result))
+
+    def test_parse_JSON_when_location_not_found(self):
+        self.assertFalse(Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_NOT_FOUND_JSON)))
+
+    def test_parse_JSON_when_server_error(self):
+        self.assertRaises(APIResponseError, Weather.from_dict_of_lists, json.loads(INTERNAL_SERVER_ERROR_JSON))
 
     def test_getters_return_expected_data(self):
         self.assertEqual(self.__test_instance.get_reference_time(),
