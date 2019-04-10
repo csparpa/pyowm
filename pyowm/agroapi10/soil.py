@@ -27,13 +27,13 @@ class Soil:
             raise ValueError("reference_time must be greater than 0")
         self._reference_time = reference_time
         assert surface_temp is not None
-        assert isinstance(surface_temp, float), 'surface_temp must be a float'
+        assert isinstance(surface_temp, float) or isinstance(surface_temp, int), 'surface_temp must be a number'
         self._surface_temp = surface_temp
         assert ten_cm_temp is not None
-        assert isinstance(ten_cm_temp, float), 'ten_cm_temp must be a float'
+        assert isinstance(ten_cm_temp, float) or isinstance(ten_cm_temp, int), 'ten_cm_temp must be a number'
         self._ten_cm_temp = ten_cm_temp
         assert moisture is not None
-        assert isinstance(moisture, float), 'moisture must be a float'
+        assert isinstance(moisture, float) or isinstance(moisture, int), 'moisture must be a number'
         if moisture < 0.:
             raise ValueError("moisture must be greater than 0")
         self.moisture = moisture
