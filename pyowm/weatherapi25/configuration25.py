@@ -66,7 +66,7 @@ language = 'en'
 API_SUBSCRIPTION_TYPE = 'free'
 
 # OWM Weather API availability timeout in seconds
-API_AVAILABILITY_TIMEOUT = 2
+API_AVAILABILITY_TIMEOUT = 5
 
 # Weather status code registry
 weather_code_registry = weathercoderegistry.WeatherCodeRegistry({
