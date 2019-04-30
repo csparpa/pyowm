@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
-from datetime import datetime as dt
 import xml.etree.ElementTree as ET
-from pyowm.stationsapi30.xsd.xmlnsconfig import (
-    STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
+from datetime import datetime as dt
+from pyowm.exceptions import parse_response_error
+from pyowm.stationsapi30.xsd.xmlnsconfig import STATION_XMLNS_PREFIX, STATION_XMLNS_URL
 from pyowm.utils import xml, formatting
 
 
@@ -185,6 +188,51 @@ class Station:
         rank_node.text = str(self.rank) if self.rank is not None else 'null'
 
         return root_node
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *Station* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *Station* instance or ``None`` if no data is available
+        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+
+        """
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        try:
+            id = the_dict.get('ID', None) or the_dict.get('id', None)
+            external_id = the_dict.get('external_id', None)
+            lon = the_dict.get('longitude', None)
+            lat = the_dict.get('latitude', None)
+            alt = the_dict.get('altitude', None)
+        except KeyError as e:
+            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+        name = the_dict.get('name', None)
+        rank = the_dict.get('rank', None)
+        created_at = the_dict.get('created_at', None)
+        updated_at = the_dict.get('updated_at', None)
+        return Station(id, created_at, updated_at, external_id, name, lon, lat, alt, rank)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {
+            'id': self.id,
+            'external_id': self.external_id,
+            'name': self.name,
+            'created_at': formatting.to_ISO8601(self.created_at),
+            'updated_at': formatting.to_ISO8601(self.updated_at),
+            'latitude': self.lat,
+            'longitude': self.lon,
+            'altitude': self.alt if self.alt is not None else 'None',
+            'rank': self.rank}
 
     def __repr__(self):
         return '<%s.%s - id=%s, external_id=%s, name=%s>' \

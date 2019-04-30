@@ -6,7 +6,6 @@ from pyowm.stationsapi30.measurement import Measurement, AggregatedMeasurement
 from pyowm.stationsapi30.buffer import Buffer
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.parsers.station_parser import StationParser
 from pyowm.constants import STATIONS_API_VERSION
 
 
@@ -139,31 +138,27 @@ class TestStationManager(unittest.TestCase):
 
     def test_update_station(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
+        modified_station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         modified_station.external_id = 'CHNG'
         result = instance.update_station(modified_station)
         self.assertIsNone(result)
 
     def test_update_station_fails_when_id_is_none(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
+        modified_station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         modified_station.id = None
         with self.assertRaises(AssertionError):
             instance.update_station(modified_station)
 
     def test_delete_station(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        station = parser.parse_JSON(MockHttpClient.test_station_json)
+        station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         result = instance.delete_station(station)
         self.assertIsNone(result)
 
     def test_delete_station_fails_when_id_is_none(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        station = parser.parse_JSON(MockHttpClient.test_station_json)
+        station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         station.id = None
         with self.assertRaises(AssertionError):
             instance.delete_station(station)
@@ -211,7 +206,7 @@ class TestStationManager(unittest.TestCase):
         self.assertEqual(3, len(results))
         for item in results:
             self.assertTrue(isinstance(item, AggregatedMeasurement))
-            self.assertEquals(item.station_id, station_id)
+            self.assertEqual(item.station_id, station_id)
             self.assertTrue(from_ts <= item.timestamp <= to_ts)
 
     def test_get_measurements_cut_time_windows(self):
@@ -223,7 +218,7 @@ class TestStationManager(unittest.TestCase):
         self.assertEqual(1, len(results))
         item = results[0]
         self.assertTrue(isinstance(item, AggregatedMeasurement))
-        self.assertEquals(item.station_id, station_id)
+        self.assertEqual(item.station_id, station_id)
         self.assertTrue(from_ts <= item.timestamp <= to_ts)
 
     def test_get_measurements_with_limits(self):
@@ -237,7 +232,7 @@ class TestStationManager(unittest.TestCase):
         self.assertEqual(2, len(results))
         for item in results:
             self.assertTrue(isinstance(item, AggregatedMeasurement))
-            self.assertEquals(item.station_id, station_id)
+            self.assertEqual(item.station_id, station_id)
             self.assertTrue(from_ts <= item.timestamp <= to_ts)
 
     def test_get_measurements_failing(self):

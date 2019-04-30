@@ -1,11 +1,10 @@
-"""
-Object that can read/write meteostations metadata and extract related
-measurements
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+import json
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.parsers.station_parser import StationParser
 from pyowm.stationsapi30.parsers.aggregated_measurement_parser import AggregatedMeasurementParser
+from pyowm.stationsapi30.station import Station
 from pyowm.stationsapi30.uris import STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 from pyowm.constants import STATIONS_API_VERSION
 
@@ -27,7 +26,6 @@ class StationsManager(object):
     def __init__(self, API_key):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.stations_parser = StationParser()
         self.aggregated_measurements_parser = AggregatedMeasurementParser()
         self.http_client = HttpClient()
 
@@ -48,7 +46,7 @@ class StationsManager(object):
             STATIONS_URI,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return [self.stations_parser.parse_dict(item) for item in data]
+        return [Station.from_dict(item) for item in data]
 
     def get_station(self, id):
         """
@@ -63,7 +61,7 @@ class StationsManager(object):
             NAMED_STATION_URI % str(id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return self.stations_parser.parse_dict(data)
+        return Station.from_dict(data)
 
     def create_station(self, external_id, name, lat, lon, alt=None):
         """
@@ -98,7 +96,7 @@ class StationsManager(object):
             data=dict(external_id=external_id, name=name, lat=lat,
                       lon=lon, alt=alt),
             headers={'Content-Type': 'application/json'})
-        return self.stations_parser.parse_dict(payload)
+        return Station.from_dict(payload)
 
     def update_station(self, station):
         """
