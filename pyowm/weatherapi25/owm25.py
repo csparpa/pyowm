@@ -54,9 +54,6 @@ class OWM25(owm.OWM):
     """
     def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
                  language="en", subscription_type='free', use_ssl=False):
-
-        strings.check_if_running_with_python_2()  # Python 3 only
-
         self._parsers = parsers
         if API_key is not None:
             assert isinstance(API_key, str), "Value must be a string"

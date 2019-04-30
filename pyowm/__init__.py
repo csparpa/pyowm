@@ -6,9 +6,6 @@ from pyowm.config import DEFAULT_CONFIG
 from pyowm.utils import timestamps, strings
 
 
-strings.check_if_running_with_python_2()
-
-
 def OWM(API_key=DEFAULT_CONFIG['api_key'], version=constants.WEATHER_API_VERSION,
         config_module=None, language=None, subscription_type=None, use_ssl=None):
     """
