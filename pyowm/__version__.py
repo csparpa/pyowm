@@ -7,5 +7,4 @@ __url__ = 'https://github.com/csparpa/pyowm'
 __version__ = version_tuple_to_str(constants.PYOWM_VERSION)
 __author__ = 'Claudio Sparpaglione'
 __author_email__ = 'csparpa@gmail.com'
-__author_twitter__ = '@csparpa'
 __license__ = 'MIT'

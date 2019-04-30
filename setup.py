@@ -3,7 +3,7 @@
 from setuptools import setup
 from pyowm import constants
 from pyowm.utils.strings import version_tuple_to_str
-from pyowm.__version__ import __author__, __author_email__, __author_twitter__, __description__, __license__, __title__,\
+from pyowm.__version__ import __author__, __author_email__, __description__, __license__, __title__,\
     __url__
 
 setup(
@@ -12,7 +12,6 @@ setup(
     description=__description__,
     author=__author__,
     author_email=__author_email__,
-    author_twitter = __author_twitter__,
     url=__url__,
     packages=['pyowm',
               'pyowm.abstractions',
