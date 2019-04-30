@@ -3,14 +3,17 @@
 from setuptools import setup
 from pyowm import constants
 from pyowm.utils.strings import version_tuple_to_str
+from pyowm.__version__ import __author__, __author_email__, __author_twitter__, __description__, __license__, __title__,\
+    __url__
 
 setup(
-    name='pyowm',
+    name=__title__,
     version=version_tuple_to_str(constants.PYOWM_VERSION),
-    description='A Python wrapper around OpenWeatherMap web APIs',
-    author='Claudio Sparpaglione (@csparpa)',
-    author_email='csparpa@gmail.com',
-    url='http://github.com/csparpa/pyowm',
+    description=__description__,
+    author=__author__,
+    author_email=__author_email__,
+    author_twitter = __author_twitter__,
+    url=__url__,
     packages=['pyowm',
               'pyowm.abstractions',
               'pyowm.agroapi10',
@@ -47,5 +50,5 @@ setup(
         '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
     },
     keywords='openweathermap web api client weather forecast uv alerting owm pollution meteostation agro agriculture',
-    license='MIT'
+    license=__license__
 )
