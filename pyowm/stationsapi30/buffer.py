@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import copy
 from pyowm.stationsapi30.measurement import Measurement

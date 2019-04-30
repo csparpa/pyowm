@@ -1,8 +1,5 @@
-"""
-Module containing asbtract classes and a few convenience implementations
-of raw measurements I/O
-"""
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import json

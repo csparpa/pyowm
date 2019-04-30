@@ -1,6 +1,7 @@
 import unittest
 import json
 from datetime import datetime as dt
+from pyowm.exceptions import parse_response_error
 from pyowm.stationsapi30.measurement import AggregatedMeasurement, Measurement
 from pyowm.utils.formatting import UTC
 
@@ -54,6 +55,39 @@ class TestAggregatedMeasurement(unittest.TestCase):
         self.assertEqual(self.date_ts, result)
         with self.assertRaises(ValueError):
             self._test_instance.creation_time(timeformat='unknown')
+
+    def test_from_dict(self):
+        the_dict = {
+            "station_id": "mytest",
+            "date": 123456789,
+            "type": "m",
+            "temp":{"min": 0, "max": 100},
+            "humidity": {"min": 10, "max": 110},
+            "wind": {"speed": 2.1,"gust": 67},
+            "pressure": {},
+            "precipitation": {}}
+
+        expected = AggregatedMeasurement('mytest', 123456789, 'm',
+                                          temp=dict(min=0, max=100),
+                                          humidity=dict(min=10, max=110),
+                                          wind=dict(speed=2.1, gust=67),
+                                          pressure=None,
+                                          precipitation=None)
+
+        result = AggregatedMeasurement.from_dict(the_dict)
+        self.assertTrue(isinstance(result, AggregatedMeasurement))
+
+        self.assertEqual(expected.station_id, result.station_id)
+        self.assertEqual(expected.timestamp, result.timestamp)
+        self.assertEqual(expected.aggregated_on, result.aggregated_on)
+        self.assertEqual(expected.temp, result.temp)
+        self.assertEqual(expected.humidity, result.humidity)
+        self.assertEqual(expected.wind, result.wind)
+        self.assertEqual(expected.pressure, result.pressure)
+        self.assertEqual(expected.precipitation, result.precipitation)
+
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            AggregatedMeasurement.from_dict(None)
 
     def test_to_dict(self):
         expected_dict = {
