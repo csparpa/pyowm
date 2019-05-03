@@ -1,5 +1,8 @@
-import warnings
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from functools import wraps
+import warnings
 
 
 def deprecated(will_be=None, on_version=None, name=None):

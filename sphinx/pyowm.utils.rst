@@ -12,6 +12,14 @@ pyowm.utils.config module
     :undoc-members:
     :show-inheritance:
 
+pyowm.utils.decorators module
+-----------------------------
+
+.. automodule:: pyowm.utils.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 pyowm.utils.geo module
 ----------------------

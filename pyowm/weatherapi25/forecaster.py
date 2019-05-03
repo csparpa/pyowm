@@ -3,7 +3,6 @@
 
 from pyowm.utils import formatting, weather
 from pyowm.weatherapi25.configuration25 import weather_code_registry
-from pyowm.abstractions.decorators import deprecated
 
 
 class Forecaster(object):
