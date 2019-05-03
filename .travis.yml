@@ -1,8 +1,8 @@
+dist: xenial
 language: python
 python:
-  - "3.5"
-  - "3.6"
-  - "3.7-dev"
+  - "3.7"
+  - "3.8-dev"
 script: tox
 after_success:
   - coveralls
@@ -29,31 +29,25 @@ jobs:
   include:
     - &local_installation_test
       stage: "Local Installation Test"
-      python: 3.5
+      python: "3.7"
       script: bash tests/local_installation_test.sh
     - <<: *local_installation_test
-      python: 3.6
-    - <<: *local_installation_test
-      python: "3.7-dev"
+      python: "3.8-dev"
 
     - stage: "Build docs"
       script: cd sphinx && make clean && make html
 
     - &deploy_to_pypi
       stage: "Deploy to PyPI"
-      python: 3.5
+      python: "3.7"
       script: bash deploy/deploy_to_pypi.sh
     - <<: *deploy_to_pypi
-      python: 3.6
-    - <<: *deploy_to_pypi
-      python: "3.7-dev"
+      python: "3.8-dev"
 
     - &pypi_installation_test
       stage: "PyPI Installation Test"
-      python: 3.5
+      python: "3.7"
       if: branch = master
       script: bash tests/pypi_installation_test.sh
     - <<: *pypi_installation_test
-      python: 3.6
-    - <<: *pypi_installation_test
-      python: "3.7-dev"
+      python: "3.8-dev"
