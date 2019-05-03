@@ -1,5 +1,6 @@
 coverage
 coveralls
+Jinja2
 pip>=18.0
 pytest
 recommonmark
