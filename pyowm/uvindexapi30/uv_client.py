@@ -1,9 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from pyowm.commons import http_client
 from pyowm.uvindexapi30.uris import UV_INDEX_URL, UV_INDEX_FORECAST_URL, \
     UV_INDEX_HISTORY_URL
-from pyowm.commons import http_client
 
 
-class UltraVioletHttpClient(object):
+class UltraVioletHttpClient:
 
     """
     An HTTP client class for the OWM UV web API, which is a subset of the

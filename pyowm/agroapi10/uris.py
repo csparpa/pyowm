@@ -1,6 +1,5 @@
-"""
-URIs templates for resources exposed by the Agro API 1.0
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ROOT_AGRO_API = 'http://api.agromonitoring.com/agro/1.0'
 

@@ -4,15 +4,14 @@
 import json
 import time
 import xml.etree.ElementTree as ET
-from pyowm.weatherapi25.xsd.xmlnsconfig import (
-    FORECAST_XMLNS_PREFIX, FORECAST_XMLNS_URL)
-from pyowm.weatherapi25 import location
-from pyowm.weatherapi25 import weather
 from pyowm.exceptions import parse_response_error, api_response_error
 from pyowm.utils import timestamps, formatting, xml
+from pyowm.weatherapi25.xsd.xmlnsconfig import FORECAST_XMLNS_PREFIX, FORECAST_XMLNS_URL
+from pyowm.weatherapi25 import location
+from pyowm.weatherapi25 import weather
 
 
-class ForecastIterator(object):
+class ForecastIterator:
     """
     Iterator over the list of *Weather* objects encapsulated in a *Forecast*
     class instance
@@ -51,7 +50,7 @@ class ForecastIterator(object):
             raise StopIteration
 
 
-class Forecast(object):
+class Forecast:
     """
     A class encapsulating weather forecast data for a certain location and
     relative to a specific time interval (forecast for every three hours or

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 from pyowm.exceptions import parse_response_error
 from pyowm.utils import formatting

@@ -1,6 +1,5 @@
-"""
-Module containing APICallError class
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 from pyowm.exceptions import OWMError
@@ -24,8 +23,8 @@ class APICallError(OWMError):
     def __str__(self):
         """Redefine __str__ hook for pretty-printing"""
         return ''.join(['Exception in calling OWM Weather API.', os.linesep,
-                       'Reason: ', self._message, os.linesep,
-                       'Caused by: ', str(self._triggering_error)])
+                        'Reason: ', self._message, os.linesep,
+                        'Caused by: ', str(self._triggering_error)])
 
 
 class BadGatewayError(APICallError):

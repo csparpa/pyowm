@@ -1,6 +1,5 @@
-"""
-URIs templates for resources exposed by the UVIndex API 3.0
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ROOT_UV_API_URL = 'http://api.openweathermap.org/data/2.5'
 UV_INDEX_URL = ROOT_UV_API_URL + '/uvi'

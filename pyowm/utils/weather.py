@@ -23,6 +23,7 @@ def status_is(weather, status, weather_code_registry):
         status_for(weather.get_weather_code()).lower()
     return weather_status == status
 
+
 def any_status_is(weather_list, status, weather_code_registry):
     """
     Checks if the weather status code of any of the *Weather* objects in the

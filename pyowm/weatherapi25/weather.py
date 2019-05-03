@@ -4,13 +4,13 @@
 import json
 import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error, api_response_error
+from pyowm.utils import formatting, temperature, xml
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
-from pyowm.utils import formatting, temperature, xml
 from pyowm.weatherapi25.uris import ICONS_BASE_URL
 
 
-class Weather(object):
+class Weather:
     """
     A class encapsulating raw weather data.
     A reference about OWM weather codes and icons can be found at:

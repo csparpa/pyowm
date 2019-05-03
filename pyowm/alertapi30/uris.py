@@ -1,6 +1,5 @@
-"""
-URIs templates for resources exposed by the Alert API 3.0
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ROOT_ALERT_API_URL = 'http://api.openweathermap.org/data/3.0'
 

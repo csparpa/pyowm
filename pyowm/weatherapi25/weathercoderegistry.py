@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class WeatherCodeRegistry(object):
+class WeatherCodeRegistry:
 
     """
     A registry class for looking up weather statuses from weather codes.

@@ -5,7 +5,7 @@ from pyowm.utils import formatting, weather
 from pyowm.weatherapi25.configuration25 import weather_code_registry
 
 
-class Forecaster(object):
+class Forecaster:
 
     """
     A class providing convenience methods for manipulating weather forecast
@@ -232,6 +232,7 @@ class Forecaster(object):
         return weather.filter_by_status(self._forecast.get_weathers(),
                                              "tornado",
                                         weather_code_registry)
+
     def when_hurricane(self):
         """
         Returns a sublist of the *Weather* list in the forecast, containing

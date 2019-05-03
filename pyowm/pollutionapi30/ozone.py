@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import xml.etree.ElementTree as ET
-from pyowm.weatherapi25 import location
+from pyowm.exceptions import parse_response_error
 from pyowm.pollutionapi30.xsd.xmlnsconfig import OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX
 from pyowm.utils import formatting, timestamps, xml
-from pyowm.exceptions import parse_response_error
+from pyowm.weatherapi25 import location
 
 
-class Ozone(object):
+class Ozone:
     """
     A class representing the Ozone (O3) data observed in a certain location
     in the world. The location is represented by the encapsulated *Location* object.

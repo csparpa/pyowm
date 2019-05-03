@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 def obfuscate_API_key(API_key):
     """
     Return a mostly obfuscated version of the API Key

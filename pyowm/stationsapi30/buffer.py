@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
 import copy
+import json
 from pyowm.stationsapi30.measurement import Measurement
 from pyowm.utils import timestamps, formatting
 
@@ -85,8 +85,6 @@ class Buffer:
 
         """
         self.measurements.sort(key=lambda m: m.timestamp, reverse=True)
-
-    # Magic methods
 
     def __len__(self):
         return len(self.measurements)

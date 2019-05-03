@@ -1,6 +1,6 @@
-"""
-Module containing ParseResponseError class
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 from pyowm.exceptions import OWMError
 

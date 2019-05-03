@@ -9,7 +9,7 @@ from pyowm.utils import formatting, xml
 from pyowm.weatherapi25.xsd.xmlnsconfig import STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL
 
 
-class StationHistory(object):
+class StationHistory:
 
     """
     A class representing historic weather measurements collected by a

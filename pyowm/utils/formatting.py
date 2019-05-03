@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta, tzinfo
+
 from calendar import timegm
+from datetime import datetime, timedelta, tzinfo
 
 ZERO = timedelta(0)
 

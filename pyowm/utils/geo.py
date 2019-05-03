@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import geojson
 import json
 import math
-import geojson
 
 
 EARTH_RADIUS_KM = 6378.1

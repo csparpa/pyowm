@@ -1,9 +1,12 @@
-from pyowm.utils import formatting
-from pyowm.pollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.commons import http_client
+from pyowm.pollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
+from pyowm.utils import formatting
 
 
-class AirPollutionHttpClient(object):
+class AirPollutionHttpClient:
 
     """
     A class representing the OWM Air Pollution web API, which is a subset of the
@@ -94,7 +97,6 @@ class AirPollutionHttpClient(object):
         _, json_data = self._client.cacheable_get_json(uri)
         return json_data
 
-
     def get_no2(self, params_dict):
         """
         Invokes the NO2 Index endpoint
@@ -124,7 +126,6 @@ class AirPollutionHttpClient(object):
         uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
         _, json_data = self._client.cacheable_get_json(uri)
         return json_data
-
 
     def get_so2(self, params_dict):
         """

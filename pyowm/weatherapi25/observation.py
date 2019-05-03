@@ -3,16 +3,15 @@
 
 import json
 import xml.etree.ElementTree as ET
-from pyowm.weatherapi25.xsd.xmlnsconfig import (
-    OBSERVATION_XMLNS_URL, OBSERVATION_XMLNS_PREFIX)
-from time import time
+from pyowm.exceptions import parse_response_error, api_response_error
+from pyowm.utils import formatting, xml
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
-from pyowm.utils import formatting, xml
-from pyowm.exceptions import parse_response_error, api_response_error
+from pyowm.weatherapi25.xsd.xmlnsconfig import OBSERVATION_XMLNS_URL, OBSERVATION_XMLNS_PREFIX
+from time import time
 
 
-class Observation(object):
+class Observation:
     """
     A class representing the weather which is currently being observed in a
     certain location in the world. The location is represented by the

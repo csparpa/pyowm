@@ -1,6 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import math
-from pyowm.utils.geo import Polygon
 from pyowm.commons.image import Image
+from pyowm.utils.geo import Polygon
 
 
 class Tile:

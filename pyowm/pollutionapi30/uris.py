@@ -1,6 +1,5 @@
-"""
-URIs templates for resources exposed by the Air Pollution API 3.0
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ROOT_POLLUTION_API_URL = 'http://api.openweathermap.org/pollution/v1'
 CO_INDEX_URL = ROOT_POLLUTION_API_URL + '/co'

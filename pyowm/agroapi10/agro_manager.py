@@ -1,22 +1,20 @@
-"""
-Programmatic interface to OWM Agro API endpoints
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from pyowm.constants import AGRO_API_VERSION
+from pyowm.agroapi10.enums import PresetEnum, PaletteEnum
+from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
+from pyowm.agroapi10.polygon import Polygon, GeoPolygon
+from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
+from pyowm.agroapi10.soil import Soil
+from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
 from pyowm.commons.http_client import HttpClient
-from pyowm.commons.databoxes import ImageType
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
-from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
-from pyowm.agroapi10.enums import PresetEnum, PaletteEnum
-from pyowm.agroapi10.polygon import Polygon, GeoPolygon
-from pyowm.agroapi10.soil import Soil
-from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
-from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
+from pyowm.constants import AGRO_API_VERSION
 from pyowm.utils import timestamps
 
 
-class AgroManager(object):
+class AgroManager:
 
     """
     A manager objects that provides a full interface to OWM Agro API.

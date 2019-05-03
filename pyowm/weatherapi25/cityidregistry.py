@@ -2,12 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import gzip
-from pyowm.weatherapi25.location import Location
 from pkg_resources import resource_filename
-
-"""
-Module containing a registry with lookup methods for OWM-provided city IDs
-"""
+from pyowm.weatherapi25.location import Location
 
 
 class CityIDRegistry:

@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.station import Station
-from pyowm.stationsapi30.measurement import AggregatedMeasurement
-from pyowm.stationsapi30.uris import STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 from pyowm.constants import STATIONS_API_VERSION
+from pyowm.stationsapi30.measurement import AggregatedMeasurement
+from pyowm.stationsapi30.station import Station
+from pyowm.stationsapi30.uris import STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 
 
-class StationsManager(object):
+class StationsManager:
 
     """
     A manager objects that provides a full interface to OWM Stations API. Mainly

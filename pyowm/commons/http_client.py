@@ -1,12 +1,15 @@
-import requests
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
+import requests
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
 from pyowm.weatherapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
     API_SUBSCRIPTION_SUBDOMAINS, VERIFY_SSL_CERTS
 
 
-class HttpClient(object):
+class HttpClient:
 
     def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None,
                  use_ssl=False, verify_ssl_certs=VERIFY_SSL_CERTS):

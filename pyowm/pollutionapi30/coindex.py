@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import xml.etree.ElementTree as ET
-from pyowm.pollutionapi30.xsd.xmlnsconfig import COINDEX_XMLNS_URL, COINDEX_XMLNS_PREFIX
-from pyowm.weatherapi25 import location
-from pyowm.utils import formatting, timestamps, xml
 from pyowm.exceptions import parse_response_error
+from pyowm.pollutionapi30.xsd.xmlnsconfig import COINDEX_XMLNS_URL, COINDEX_XMLNS_PREFIX
+from pyowm.utils import formatting, timestamps, xml
+from pyowm.weatherapi25 import location
 
 
-class COIndex(object):
+class COIndex:
     """
     A class representing the Carbon monOxide Index observed in a certain location
     in the world. The index is made up of several measurements, each one at a

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
@@ -21,7 +24,7 @@ def uv_intensity_to_exposure_risk(uv_intensity):
         return 'extreme'
 
 
-class UVIndex(object):
+class UVIndex:
     """
     A class representing the UltraViolet Index observed in a certain location
     in the world. The location is represented by the encapsulated *Location* object.

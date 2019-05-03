@@ -1,8 +1,11 @@
-from pyowm.constants import ALERT_API_VERSION
-from pyowm.commons.http_client import HttpClient
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.trigger import Trigger
 from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
+from pyowm.commons.http_client import HttpClient
+from pyowm.constants import ALERT_API_VERSION
 from pyowm.utils import formatting, timestamps
 
 

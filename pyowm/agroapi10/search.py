@@ -1,7 +1,10 @@
-from pyowm.utils import formatting
-from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.agroapi10.enums import PresetEnum
+from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage
 from pyowm.commons.databoxes import ImageType
+from pyowm.utils import formatting
 
 
 class SatelliteImagerySearchResultSet:

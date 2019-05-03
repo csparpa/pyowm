@@ -1,5 +1,8 @@
-from pyowm.commons.enums import ImageTypeEnum
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.commons.databoxes import ImageType
+from pyowm.commons.enums import ImageTypeEnum
 
 
 class Image:

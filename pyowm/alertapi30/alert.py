@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.alertapi30.condition import Condition
 from pyowm.exceptions import parse_response_error
 from pyowm.utils import formatting

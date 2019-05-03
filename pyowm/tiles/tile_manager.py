@@ -1,15 +1,14 @@
-"""
-Object that can download tile images at various zoom levels
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.http_client import HttpClient
 from pyowm.commons.image import Image
-from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.tile import Tile
 from pyowm.tiles.uris import ROOT_TILE_URL
 
 
-class TileManager(object):
+class TileManager:
 
     """
     A manager objects that reads OWM map layers tile images .

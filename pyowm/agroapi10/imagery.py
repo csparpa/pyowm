@@ -1,7 +1,10 @@
-from pyowm.utils import formatting
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
+from pyowm.utils import formatting
 
 
 class MetaImage:
@@ -150,7 +153,6 @@ class SatelliteImage:
         :return: `None`
         """
         self.data.persist(path_to_file)
-
 
     def __repr__(self):
         return "<%s.%s - %s %s satellite image downloaded on: %s>" % (

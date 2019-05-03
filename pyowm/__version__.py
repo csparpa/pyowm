@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm import constants
 from pyowm.utils.strings import version_tuple_to_str
 

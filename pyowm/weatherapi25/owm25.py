@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import json
-from time import time
 from pyowm import constants
 from pyowm.agroapi10 import agro_manager
 from pyowm.alertapi30 import alert_manager
@@ -20,6 +19,7 @@ from pyowm.weatherapi25.configuration25 import (
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, BBOX_CITY_URL)
 from pyowm.weatherapi25.configuration25 import city_id_registry as reg
 from pyowm.weatherapi25 import weather
+from time import time
 
 
 class OWM25:

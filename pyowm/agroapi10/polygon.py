@@ -1,6 +1,9 @@
-from pyowm.utils.geo import Polygon as GeoPolygon
-from pyowm.utils.geo import Point as GeoPoint
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.utils.geo import GeometryBuilder
+from pyowm.utils.geo import Point as GeoPoint
+from pyowm.utils.geo import Polygon as GeoPolygon
 
 
 class Polygon:

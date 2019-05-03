@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.utils import formatting
 from datetime import datetime, date, timedelta
+from pyowm.utils import formatting
 
 
 def now(timeformat='date'):

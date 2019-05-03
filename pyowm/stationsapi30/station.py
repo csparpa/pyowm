@@ -78,7 +78,6 @@ class Station:
                 return datestring[:-1] + '.000000Z'
             else:
                 return datestring + '.000000Z'
-            return datestring
         else:
             if len(parts[-1]) > 6:
                 micros = parts[-1][:6]

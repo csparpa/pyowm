@@ -3,13 +3,13 @@
 
 import json
 import xml.etree.ElementTree as ET
+from pyowm.exceptions import parse_response_error
+from pyowm.utils import xml, geo
 from pyowm.weatherapi25.xsd.xmlnsconfig import (
     LOCATION_XMLNS_URL, LOCATION_XMLNS_PREFIX)
-from pyowm.utils import xml, geo
-from pyowm.exceptions import parse_response_error
 
 
-class Location(object):
+class Location:
     """
     A class representing a location in the world. A location is defined through
     a toponym, a couple of geographic coordinates such as longitude and
@@ -100,7 +100,6 @@ class Location(object):
         if self._lon is None or self._lat is None:
             return None
         return geo.Point(self._lon, self._lat)
-
 
     def to_JSON(self):
         """Dumps object fields into a JSON formatted string

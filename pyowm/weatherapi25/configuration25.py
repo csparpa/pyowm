@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.weatherapi25 import weathercoderegistry, cityidregistry
 
 

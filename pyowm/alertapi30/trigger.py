@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.enums import AlertChannelsEnum

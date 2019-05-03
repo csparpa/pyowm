@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.utils import temperature
 from operator import itemgetter
+from pyowm.utils import temperature
 
 
-class Historian(object):
+class Historian:
     """
     A class providing convenience methods for manipulating meteostation weather
     history data. The class encapsulates a *StationHistory* instance and
@@ -47,10 +47,12 @@ class Historian(object):
             t = self._station_history.get_measurements()[tstamp]['temperature']
             if unit == 'kelvin':
                 temp = t
-            if unit == 'celsius':
+            elif unit == 'celsius':
                 temp = temperature.kelvin_to_celsius(t)
-            if unit == 'fahrenheit':
+            elif unit == 'fahrenheit':
                 temp = temperature.kelvin_to_fahrenheit(t)
+            else:
+                raise ValueError("Unknown temperature unit")
             result.append((tstamp, temp))
         return result
 
@@ -114,12 +116,13 @@ class Historian(object):
         maximum = max(self._purge_none_samples(self.temperature_series()),
                    key=itemgetter(1))
         if unit == 'kelvin':
-            result = maximum
-        if unit == 'celsius':
-            result = (maximum[0], temperature.kelvin_to_celsius(maximum[1]))
-        if unit == 'fahrenheit':
-            result = (maximum[0], temperature.kelvin_to_fahrenheit(maximum[1]))
-        return result
+            return maximum
+        elif unit == 'celsius':
+            return (maximum[0], temperature.kelvin_to_celsius(maximum[1]))
+        elif unit == 'fahrenheit':
+            return (maximum[0], temperature.kelvin_to_fahrenheit(maximum[1]))
+        else:
+            raise ValueError("Unknown temperature unit")
         
     def min_temperature(self, unit='kelvin'):
         """Returns a tuple containing the min value in the temperature
@@ -137,12 +140,13 @@ class Historian(object):
         minimum = min(self._purge_none_samples(self.temperature_series()),
                    key=itemgetter(1))
         if unit == 'kelvin':
-            result = minimum
-        if unit == 'celsius':
-            result = (minimum[0], temperature.kelvin_to_celsius(minimum[1]))
-        if unit == 'fahrenheit':
-            result = (minimum[0], temperature.kelvin_to_fahrenheit(minimum[1]))
-        return result
+            return minimum
+        elif unit == 'celsius':
+            return (minimum[0], temperature.kelvin_to_celsius(minimum[1]))
+        elif unit == 'fahrenheit':
+            return (minimum[0], temperature.kelvin_to_fahrenheit(minimum[1]))
+        else:
+            raise ValueError("Unknown temperature unit")
         
     def average_temperature(self, unit='kelvin'):
         """Returns the average value in the temperature series
@@ -159,12 +163,13 @@ class Historian(object):
         average = self._average(self._purge_none_samples(
                                                   self.temperature_series()))
         if unit == 'kelvin':
-            result = average
-        if unit == 'celsius':
-            result = temperature.kelvin_to_celsius(average)
-        if unit == 'fahrenheit':
-            result = temperature.kelvin_to_fahrenheit(average)
-        return result
+            return average
+        elif unit == 'celsius':
+            return temperature.kelvin_to_celsius(average)
+        elif unit == 'fahrenheit':
+            return temperature.kelvin_to_fahrenheit(average)
+        else:
+            raise ValueError("Unknown temperature unit")
     
     def max_humidity(self):
         """Returns a tuple containing the max value in the humidity
