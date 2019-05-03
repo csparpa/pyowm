@@ -74,11 +74,7 @@ just run:
 
 `pip install -r dev-requirements.txt`
 
-It is adviced that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/) or, if you prefer to spin up the 
-whole dev environment with just one command, you can run the PyOWM Docker image:
-
-`docker run -d --name pyowm csparpa/pyowm`
-
+It is adviced that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/).
 
 ## Guidelines for code branching
 The project adopts @nvie's branching model:
