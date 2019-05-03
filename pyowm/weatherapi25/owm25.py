@@ -4,7 +4,6 @@
 import json
 from time import time
 from pyowm import constants
-from pyowm.abstractions import owm
 from pyowm.agroapi10 import agro_manager
 from pyowm.alertapi30 import alert_manager
 from pyowm.commons import http_client
@@ -23,7 +22,7 @@ from pyowm.weatherapi25.configuration25 import city_id_registry as reg
 from pyowm.weatherapi25 import weather
 
 
-class OWM25(owm.OWM):
+class OWM25:
 
     """
     OWM subclass providing methods for each OWM Weather API 2.5 endpoint and ad-hoc API clients for the other
