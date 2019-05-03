@@ -1,6 +1,7 @@
 from pyowm.constants import ALERT_API_VERSION
 from pyowm.commons.http_client import HttpClient
-from pyowm.alertapi30.parsers import TriggerParser, AlertParser
+from pyowm.alertapi30.alert import Alert
+from pyowm.alertapi30.trigger import Trigger
 from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
 from pyowm.utils import formatting, timestamps
 
@@ -21,8 +22,6 @@ class AlertManager:
     def __init__(self, API_key):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.trigger_parser = TriggerParser()
-        self.alert_parser = AlertParser()
         self.http_client = HttpClient()
 
     def alert_api_version(self):
@@ -87,7 +86,7 @@ class AlertManager:
             params={'appid': self.API_key},
             data=dict(time_period=the_time_period, conditions=the_conditions, area=the_area),
             headers={'Content-Type': 'application/json'})
-        return self.trigger_parser.parse_dict(payload)
+        return Trigger.from_dict(payload)
 
     def get_triggers(self):
         """
@@ -100,7 +99,7 @@ class AlertManager:
             TRIGGERS_URI,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return [self.trigger_parser.parse_dict(item) for item in data]
+        return [Trigger.from_dict(item) for item in data]
 
     def get_trigger(self, trigger_id):
         """
@@ -115,7 +114,7 @@ class AlertManager:
             NAMED_TRIGGER_URI % trigger_id,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return self.trigger_parser.parse_dict(data)
+        return Trigger.from_dict(data)
 
     def update_trigger(self, trigger):
         """
@@ -178,7 +177,7 @@ class AlertManager:
             ALERTS_URI % trigger.id,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return [self.alert_parser.parse_dict(item) for item in data]
+        return [Alert.from_dict(item) for item in data]
 
     def get_alert(self, alert_id, trigger):
         """
@@ -198,7 +197,7 @@ class AlertManager:
             NAMED_ALERT_URI % (trigger.id, alert_id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return self.alert_parser.parse_dict(data)
+        return Alert.from_dict(data)
 
     def delete_all_alerts_for(self, trigger):
         """

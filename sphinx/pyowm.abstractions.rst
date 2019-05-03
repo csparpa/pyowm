@@ -4,14 +4,6 @@ pyowm.abstractions package
 Submodules
 ----------
 
-pyowm.abstractions.jsonparser module
-------------------------------------
-
-.. automodule:: pyowm.abstractions.jsonparser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.abstractions.linkedlist module
 ------------------------------------
 

@@ -4,7 +4,6 @@ from pyowm.alertapi30.alert_manager import AlertManager
 from pyowm.alertapi30.trigger import Trigger
 from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.condition import Condition
-from pyowm.alertapi30.parsers import TriggerParser
 from pyowm.commons.http_client import HttpClient
 from pyowm.utils import geo
 from pyowm.constants import ALERT_API_VERSION
@@ -169,8 +168,7 @@ class TestAlertManager(unittest.TestCase):
 
     def test_delete_trigger(self):
         instance = self.factory(MockHttpClient)
-        parser = TriggerParser()
-        trigger = parser.parse_JSON(MockHttpClient.test_trigger_json)
+        trigger = Trigger.from_dict(json.loads(MockHttpClient.test_trigger_json))
         result = instance.delete_trigger(trigger)
         self.assertIsNone(result)
 
@@ -184,8 +182,7 @@ class TestAlertManager(unittest.TestCase):
 
     def test_update_trigger(self):
         instance = self.factory(MockHttpClient)
-        parser = TriggerParser()
-        modified_trigger = parser.parse_JSON(MockHttpClient.test_trigger_json)
+        modified_trigger = Trigger.from_dict(json.loads(MockHttpClient.test_trigger_json))
         modified_trigger.id = '5852816a9aaacb00153134a3'
         modified_trigger.end = self._trigger.end_after_millis + 10000
         result = instance.update_trigger(modified_trigger)
