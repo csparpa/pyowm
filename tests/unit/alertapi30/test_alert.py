@@ -1,5 +1,5 @@
 import unittest
-from pyowm.alertapi30.alert import Alert
+from pyowm.alertapi30.alert import Alert, AlertChannel
 from pyowm.alertapi30.condition import Condition
 from pyowm.exceptions import parse_response_error
 
@@ -63,3 +63,11 @@ class TestAlert(unittest.TestCase):
         self.assertEqual(dict(current_value=263.576, condition=condition.to_dict()), mc)
         self.assertEqual({"lon": 37, "lat": 53}, result['coordinates'])
         self.assertEqual(1481802090232, result['last_update'])
+
+
+class TestAlertChannel(unittest.TestCase):
+
+    def test_to_dict(self):
+        name = 'foobaz'
+        instance = AlertChannel(name)
+        self.assertEqual(dict(name=name), instance.to_dict())
