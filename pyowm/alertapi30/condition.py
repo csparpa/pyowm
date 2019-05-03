@@ -1,6 +1,3 @@
-from pyowm.utils import strings
-
-
 class Condition:
     """
     Object representing a condition to be checked on a specific weather parameter. A condition is given when comparing
@@ -42,3 +39,11 @@ class Condition:
         amount = the_dict['amount']
         the_id = the_dict.get('_id', None)
         return Condition(weather_param, operator, amount, id=the_id)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'weather_param': self.weather_param,
+            'operator': self.operator,
+            'amount': self.amount}
+

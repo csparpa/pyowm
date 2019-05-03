@@ -28,3 +28,12 @@ class TestCondition(unittest.TestCase):
         self.assertEqual(expected.operator, result.operator)
         self.assertEqual(expected.amount, result.amount)
         self.assertEqual(expected.id, result.id)
+
+    def test_to_dict(self):
+        instance = Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456')
+        result = instance.to_dict()
+        self.assertIsInstance(result, dict)
+        self.assertEqual('123456', result['id'])
+        self.assertEqual(WeatherParametersEnum.TEMPERATURE, result['weather_param'])
+        self.assertEqual(OperatorsEnum.GREATER_THAN, result['operator'])
+        self.assertEqual(78.6, result['amount'])
