@@ -1,3 +1,6 @@
+from pyowm.exceptions import parse_response_error
+
+
 class Condition:
     """
     Object representing a condition to be checked on a specific weather parameter. A condition is given when comparing
@@ -33,12 +36,16 @@ class Condition:
 
     @classmethod
     def from_dict(cls, the_dict):
-        assert isinstance(the_dict, dict)
-        weather_param = the_dict['name']
-        operator = the_dict['expression']
-        amount = the_dict['amount']
-        the_id = the_dict.get('_id', None)
-        return Condition(weather_param, operator, amount, id=the_id)
+        if the_dict is None:
+            raise parse_response_error.ParseResponseError('Data is None')
+        try:
+            weather_param = the_dict['name']
+            operator = the_dict['expression']
+            amount = the_dict['amount']
+            the_id = the_dict.get('_id', None)
+            return Condition(weather_param, operator, amount, id=the_id)
+        except KeyError as e:
+            raise parse_response_error.ParseResponseError('Impossible to parse data: %s' % e)
 
     def to_dict(self):
         return {
