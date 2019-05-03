@@ -172,7 +172,7 @@ class Trigger:
             "start_after_millis": self.start_after_millis,
             "end_after_millis": self.end_after_millis,
             "conditions": [c.to_dict() for c in self.conditions],
-            "area": [g.as_dict() for g in self.area],
+            "area": [g.to_dict() for g in self.area],
             "alerts": [alert.to_dict() for alert in self.alerts],
             "alert_channels": [ac.to_dict() for ac in self.alert_channels],
             "id": self.id

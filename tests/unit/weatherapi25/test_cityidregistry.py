@@ -67,7 +67,7 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
     def _assertGeopointsEqual(self, point1, point2):
         self.assertIsInstance(point1, Point)
         self.assertIsInstance(point2, Point)
-        self.assertEqual(point1.as_dict(), point2.as_dict())
+        self.assertEqual(point1.to_dict(), point2.to_dict())
 
     # tests for helper functions
 

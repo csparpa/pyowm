@@ -80,7 +80,7 @@ class AlertManager:
         assert area is not None
         if len(area) == 0:
             raise ValueError('The area for a trigger must contain at least one geoJSON type: you provided none')
-        the_area = [a.as_dict() for a in area]
+        the_area = [a.to_dict() for a in area]
 
         # >>> for the moment, no specific handling for alert channels
 
@@ -141,7 +141,7 @@ class AlertManager:
             }
         }
         the_conditions = [dict(name=c.weather_param, expression=c.operator, amount=c.amount) for c in trigger.conditions]
-        the_area = [a.as_dict() for a in trigger.area]
+        the_area = [a.to_dict() for a in trigger.area]
 
         status, _ = self.http_client.put(
             NAMED_TRIGGER_URI % trigger.id,

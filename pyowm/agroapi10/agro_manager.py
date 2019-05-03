@@ -52,7 +52,7 @@ class AgroManager:
         data['geo_json'] = {
             "type": "Feature",
             "properties": {},
-            "geometry": geopolygon.as_dict()
+            "geometry": geopolygon.to_dict()
         }
         if name is not None:
             data['name'] = name
