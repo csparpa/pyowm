@@ -1,4 +1,3 @@
-from pyowm.caches import nullcache
 from pyowm.weatherapi25 import weathercoderegistry, cityidregistry
 
 
@@ -39,7 +38,7 @@ parsers = {}
 city_id_registry = cityidregistry.CityIDRegistry('cityids/%03d-%03d.txt.gz')
 
 # Cache provider to be used
-cache = nullcache.NullCache()
+cache = None
 
 # Default language for OWM Weather API queries text results
 language = 'en'

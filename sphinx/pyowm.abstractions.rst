@@ -4,10 +4,10 @@ pyowm.abstractions package
 Submodules
 ----------
 
-pyowm.abstractions.linkedlist module
+pyowm.abstractions.decorators module
 ------------------------------------
 
-.. automodule:: pyowm.abstractions.linkedlist
+.. automodule:: pyowm.abstractions.decorators
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,14 +16,6 @@ pyowm.abstractions.owm module
 -----------------------------
 
 .. automodule:: pyowm.abstractions.owm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.abstractions.owmcache module
-----------------------------------
-
-.. automodule:: pyowm.abstractions.owmcache
     :members:
     :undoc-members:
     :show-inheritance:

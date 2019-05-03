@@ -7,7 +7,6 @@ from pyowm import constants
 from pyowm.abstractions import owm
 from pyowm.agroapi10 import agro_manager
 from pyowm.alertapi30 import alert_manager
-from pyowm.caches import nullcache
 from pyowm.commons import http_client
 from pyowm.exceptions import api_call_error
 from pyowm.pollutionapi30 import airpollution_client, ozone, coindex, no2index, so2index
@@ -36,8 +35,7 @@ class OWM25(owm.OWM):
     :type parsers: dict
     :param API_key: the OWM Weather API key (defaults to ``None``)
     :type API_key: str
-    :param cache: a concrete implementation of class *OWMCache* serving as the
-        cache provider (defaults to a *NullCache* instance)
+    :param cache: a concrete implementation of class *OWMCache* serving as the cache provider
     :type cache: an *OWMCache* concrete instance
     :param language: the language in which you want text results to be returned.
           It's a two-characters string, eg: "en", "ru", "it". Defaults to: "en"
@@ -52,7 +50,7 @@ class OWM25(owm.OWM):
     :returns: an *OWM25* instance
 
     """
-    def __init__(self, parsers, API_key=None, cache=nullcache.NullCache(),
+    def __init__(self, parsers, API_key=None, cache=None,
                  language="en", subscription_type='free', use_ssl=False):
         self._parsers = parsers
         if API_key is not None:

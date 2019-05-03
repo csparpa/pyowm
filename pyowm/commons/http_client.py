@@ -1,6 +1,5 @@
 import requests
 import json
-from pyowm.caches import nullcache
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
 from pyowm.weatherapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
@@ -12,10 +11,7 @@ class HttpClient(object):
     def __init__(self, timeout=API_AVAILABILITY_TIMEOUT, cache=None,
                  use_ssl=False, verify_ssl_certs=VERIFY_SSL_CERTS):
         self.timeout = timeout
-        if cache is None:
-            self.cache = nullcache.NullCache()
-        else:
-            self.cache = cache
+        self.cache = cache,
         self.use_ssl = use_ssl
         self.verify_ssl_certs = verify_ssl_certs
 
@@ -79,14 +75,8 @@ class HttpClient(object):
                                                           'API response data')
 
     def cacheable_get_json(self, uri, params=None, headers=None):
-        # check if already cached
-        cached_url_key = requests.Request('GET', uri, params=params).prepare().url
-        cached = self.cache.get(cached_url_key)
-        if cached:
-            return 200, cached
         status_code, data = self.get_json(uri, params=params, headers=headers)
         json_string = json.dumps(data)
-        self.cache.set(cached_url_key, json_string)
         return status_code, json_string
 
     def post(self, uri, params=None, data=None, headers=None):
@@ -194,7 +184,6 @@ class HttpClient(object):
             return API_endpoint_URL
 
     def __repr__(self):
-        return "<%s.%s - timeout=%s - cache=%s>" % \
-               (__name__, self.__class__.__name__, repr(self.timeout),
-                str(self.cache) if self.cache is not None else 'None')
+        return "<%s.%s - timeout=%s>" % \
+               (__name__, self.__class__.__name__, repr(self.timeout))
 

@@ -3,14 +3,12 @@
 import unittest
 from pyowm.pollutionapi30.airpollution_client import AirPollutionHttpClient
 from pyowm.commons.http_client import HttpClient
-from pyowm.caches.nullcache import NullCache
 from pyowm.utils import formatting
 
 
 class TestAirPollutionHttpClient(unittest.TestCase):
 
-    __test_cache = NullCache()
-    __instance = AirPollutionHttpClient('xyz', HttpClient(cache=__test_cache))
+    __instance = AirPollutionHttpClient('xyz', HttpClient())
 
     def test_trim_to(self):
         ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z

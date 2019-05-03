@@ -7,14 +7,12 @@ Test cases for uv_client.py
 import unittest
 from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient
 from pyowm.commons.http_client import HttpClient
-from pyowm.caches.nullcache import NullCache
 from pyowm.utils import formatting
 
 
 class TestOWMHttpUVClient(unittest.TestCase):
 
-    __test_cache = NullCache()
-    __instance = UltraVioletHttpClient('xyz', HttpClient(cache=__test_cache))
+    __instance = UltraVioletHttpClient('xyz', HttpClient())
 
     def test_trim_to(self):
         ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z

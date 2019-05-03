@@ -20,14 +20,6 @@ pyowm.commons.enums module
     :undoc-members:
     :show-inheritance:
 
-pyowm.commons.frontlinkedlist module
-------------------------------------
-
-.. automodule:: pyowm.commons.frontlinkedlist
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.commons.http_client module
 -----------------------------------
 
