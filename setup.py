@@ -33,7 +33,7 @@ setup(
       "Intended Audience :: Developers",
       "Topic :: Software Development :: Libraries"],
     package_data={
-        '': ['*.gz', '*.xsd', '*.md', '*.txt', '*.json']
+        '': ['*.gz', '*.md', '*.txt', '*.json']
     },
     keywords='openweathermap web api client weather forecast uv alerting owm pollution meteostation agro agriculture',
     license=__license__

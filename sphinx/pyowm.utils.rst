@@ -64,15 +64,6 @@ pyowm.utils.weather module
     :show-inheritance:
 
 
-pyowm.utils.xmlmodule
----------------------
-
-.. automodule:: pyowm.utils.xml
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Module contents
 ---------------
 

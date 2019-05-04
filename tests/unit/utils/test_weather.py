@@ -1,12 +1,12 @@
-"""
-Test case for weather.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 from pyowm.weatherapi25.weather import Weather
 from pyowm.utils import weather
 from pyowm.weatherapi25.weathercoderegistry import WeatherCodeRegistry
 from pyowm.exceptions.api_response_error import NotFoundError
+
 
 class TestWeatherUtils(unittest.TestCase):
 

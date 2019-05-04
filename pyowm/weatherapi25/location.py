@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
-import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
-from pyowm.utils import xml, geo
-from pyowm.weatherapi25.xsd.xmlnsconfig import (
-    LOCATION_XMLNS_URL, LOCATION_XMLNS_PREFIX)
+from pyowm.utils import geo
 
 
 class Location:

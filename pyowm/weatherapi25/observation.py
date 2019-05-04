@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
-import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error, api_response_error
-from pyowm.utils import formatting, xml
+from pyowm.utils import formatting
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
-from pyowm.weatherapi25.xsd.xmlnsconfig import OBSERVATION_XMLNS_URL, OBSERVATION_XMLNS_PREFIX
 from time import time
 
 

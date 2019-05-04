@@ -1,6 +1,5 @@
-"""
-Test case for timestamps.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 from datetime import datetime, date, timedelta

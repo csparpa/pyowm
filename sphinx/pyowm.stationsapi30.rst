@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    pyowm.stationsapi30.xsd
 
 Submodules
 ----------

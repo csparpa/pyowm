@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
 import time
-import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error, api_response_error
-from pyowm.utils import formatting, xml
-from pyowm.weatherapi25.xsd.xmlnsconfig import STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL
+from pyowm.utils import formatting
 
 
 class StationHistory:
