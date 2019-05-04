@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import os
 from pyowm.config import DEFAULT_CONFIG

@@ -1,13 +1,9 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Integration tests for the PyOWM library
-These are "live" executions, that of course need the OWM Weather API to be up
-and running
-"""
 
 import unittest
 import os
+from datetime import datetime
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.weatherapi25.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25

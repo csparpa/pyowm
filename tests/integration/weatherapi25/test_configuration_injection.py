@@ -1,9 +1,5 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Integration test for checking that external configuration modules can be
-injected by the user and their values are correctly used
-"""
 
 import unittest
 import os
@@ -18,7 +14,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
     API_KEY = os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key'])
 
     def test(self):
-        pyowm.OWM(self.API_KEY, '2.5', self._config_module_name)
+        pyowm.OWM(self.API_KEY, (2, 5, 0), self._config_module_name)
 
     def test_library_is_instantiated_with_wrong_API_version(self):
         self.assertRaises(ValueError, pyowm.OWM, 'abcd', '0.0')
@@ -29,7 +25,7 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         configuration
         """
         try:
-            pyowm.OWM(self.API_KEY, '2.5', self._config_module_name)
+            pyowm.OWM(self.API_KEY, (2, 5, 0), self._config_module_name)
         except Exception:
             self.fail("Error raised during library instantiation")
 
@@ -40,20 +36,6 @@ class ConfigurationInjectionTestsWebAPI25(unittest.TestCase):
         """
         self.assertRaises(Exception, pyowm.OWM, self.API_KEY, '2.5',
                           self._non_existent_config_module_name)
-
-    def test_library_performs_API_calls_with_external_config(self):
-        """
-        Test that API works correctly with external config values. For testing
-        purposes, we do that by specifying None values for JSON parsers, which
-        leads to errors raising
-        """
-        try:
-            instance = \
-                pyowm.OWM(self.API_KEY, '2.5',
-                          self._config_module_name)
-        except:
-            self.fail("Error raised during library instantiation")
-        self.assertRaises(Exception, instance.weather_at_place, 'London,uk')
 
 
 if __name__ == "__main__":

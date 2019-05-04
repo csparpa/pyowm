@@ -1,6 +1,5 @@
-"""
-Configuration for the PyOWM library specific to OWM Weather API version 2.5
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # OWM Weather API URLs
 ROOT_API_URL = 'apibase'

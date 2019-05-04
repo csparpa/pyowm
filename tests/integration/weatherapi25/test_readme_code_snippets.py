@@ -1,10 +1,5 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Integration tests for the README.md code snippets
-These are "live" executions, that of course need the OWM Weather API to be up
-and running
-"""
 
 import unittest
 import os
