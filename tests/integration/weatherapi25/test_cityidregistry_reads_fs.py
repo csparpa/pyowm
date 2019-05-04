@@ -1,6 +1,5 @@
-"""
-Integration test case for cityidregistry.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 from os import sep
@@ -34,29 +33,29 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         self.assertTrue(self._instance. \
                             _lookup_line_by_city_name('aaaaaaaa') is None)
 
-    def test_id_for(self):
-        self.assertEqual(self._instance.id_for('dongen'), 2756723)
-        self.assertTrue(self._instance.id_for('aaaaaaaaaa') is None)
+    def test_ids_for(self):
+        self.assertEqual([(2756723, 'Dongen', 'NL')], self._instance.ids_for('dongen'))
+        self.assertEqual([], self._instance.ids_for('aaaaaaaaaa'))
 
-    def test_id_for_fails_with_malformed_inputs(self):
-        self.assertRaises(ValueError, CityIDRegistry.id_for, self._instance,
-                          '123abc')
+    def test_ids_for_fails_with_malformed_inputs(self):
+        self.assertRaises(ValueError, CityIDRegistry.ids_for, self._instance, '123abc')
 
-    def test_location_for(self):
+    def test_locations_for(self):
         expected = Location('Dongen', 4.938890, 51.626671, 2756723, 'NL')
-        result = self._instance.location_for('dongen')
+        result_list = self._instance.locations_for('dongen')
+        self.assertEqual(1, len(result_list))
+        result = result_list[0]
         self.assertEqual(result.get_name(), expected.get_name())
         self.assertEqual(result.get_country(), expected.get_country())
         self.assertEqual(result.get_ID(), expected.get_ID())
         self.assertEqual(result.get_lat(), expected.get_lat())
         self.assertEqual(result.get_lon(), expected.get_lon())
-        self.assertTrue(self._instance.location_for('aaaaaaaaaa') is None)
+        self.assertEqual([], self._instance.locations_for('aaaaaaaaaa'))
 
-    def test_location_for_fails_with_malformed_inputs(self):
-        self.assertRaises(ValueError, CityIDRegistry.location_for,
-                          self._instance, '123abc')
+    def test_locations_for_fails_with_malformed_inputs(self):
+        self.assertRaises(ValueError, CityIDRegistry.locations_for, self._instance, '123abc')
 
-    def test_ids_for(self):
+    def test_ids_for_more_cases(self):
         result = self._instance.ids_for("bologna", matching='exact')
         self.assertEqual(0, len(result))
 
@@ -68,7 +67,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         result = self._instance.ids_for("Dessus", matching='like')
         self.assertEqual(6, len(result))
 
-    def test_locations_for(self):
+    def test_locations_for_more_cases(self):
         expected1 = Location('Abbans-Dessus', 5.88188, 47.120548, 3038800, 'FR')
         expected2 = Location('Abbans-Dessus', 5.88333, 47.116669, 6452202, 'FR')
         result = self._instance.locations_for("Abbans-Dessus")
