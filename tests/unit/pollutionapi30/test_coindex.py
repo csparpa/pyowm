@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from datetime import datetime
@@ -6,7 +9,6 @@ from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import COINDEX_JSON_DUMP
-from tests.unit.pollutionapi30.xml_test_dumps import COINDEX_XML_DUMP
 
 COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
 COINDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
@@ -120,19 +122,6 @@ class TestCOIndex(unittest.TestCase):
         }
         result = self.__test_instance.get_co_sample_with_lowest_vmr()
         self.assertEquals(expected, result)
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(COINDEX_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(COINDEX_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
 
     def test_from_dict(self):
         d = json.loads(COINDEX_JSON)

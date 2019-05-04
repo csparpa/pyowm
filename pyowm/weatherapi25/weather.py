@@ -2,11 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import json
-import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error, api_response_error
-from pyowm.utils import formatting, temperature, xml
-from pyowm.weatherapi25.xsd.xmlnsconfig import (
-    WEATHER_XMLNS_PREFIX, WEATHER_XMLNS_URL)
+from pyowm.utils import formatting, temperature
 from pyowm.weatherapi25.uris import ICONS_BASE_URL
 
 
@@ -296,101 +293,6 @@ class Weather:
 
         """
         return self._heat_index
-
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns: the JSON string
-
-        """
-        return json.dumps({'reference_time': self._reference_time,
-                           'sunset_time': self._sunset_time,
-                           'sunrise_time': self._sunrise_time,
-                           'clouds': self._clouds,
-                           'rain': self._rain,
-                           'snow': self._snow,
-                           'wind': self._wind,
-                           'humidity': self._humidity,
-                           'pressure': self._pressure,
-                           'temperature': self._temperature,
-                           'status': self._status,
-                           'detailed_status': self._detailed_status,
-                           'weather_code': self._weather_code,
-                           'weather_icon_name': self._weather_icon_name,
-                           'visibility_distance': self._visibility_distance,
-                           'dewpoint': self._dewpoint,
-                           'humidex': self._humidex,
-                           'heat_index': self._heat_index})
-
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xml.annotate_with_XMLNS(root_node,
-                                    WEATHER_XMLNS_PREFIX,
-                                    WEATHER_XMLNS_URL)
-        return xml.DOM_node_to_XML(root_node, xml_declaration). \
-            encode('utf-8')
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("weather")
-        status_node = ET.SubElement(root_node, "status")
-        status_node.text = self._status
-        weather_code_node = ET.SubElement(root_node, "weather_code")
-        weather_code_node.text = str(self._weather_code)
-        xml.create_DOM_node_from_dict(self._rain, "rain", root_node)
-        xml.create_DOM_node_from_dict(self._snow, "snow", root_node)
-        xml.create_DOM_node_from_dict(self._pressure, "pressure",
-                                      root_node)
-        node_sunrise_time = ET.SubElement(root_node, "sunrise_time")
-        node_sunrise_time.text = str(
-            self._sunrise_time) if self._sunrise_time is not None else 'null'
-        weather_icon_name_node = ET.SubElement(root_node, "weather_icon_name")
-        weather_icon_name_node.text = self._weather_icon_name
-        clouds_node = ET.SubElement(root_node, "clouds")
-        clouds_node.text = str(self._clouds)
-        xml.create_DOM_node_from_dict(self._temperature,
-                                           "temperature", root_node)
-        detailed_status_node = ET.SubElement(root_node, "detailed_status")
-        detailed_status_node.text = self._detailed_status
-        reference_time_node = ET.SubElement(root_node, "reference_time")
-        reference_time_node.text = str(self._reference_time)
-        sunset_time_node = ET.SubElement(root_node, "sunset_time")
-        sunset_time_node.text = str(
-            self._sunset_time) if self._sunset_time is not None else 'null'
-        humidity_node = ET.SubElement(root_node, "humidity")
-        humidity_node.text = str(self._humidity)
-        xml.create_DOM_node_from_dict(self._wind, "wind", root_node)
-        visibility_distance_node = ET.SubElement(
-            root_node, "visibility_distance")
-        visibility_distance_node.text = str(self._visibility_distance)
-        dewpoint_node = ET.SubElement(root_node, "dewpoint")
-        dewpoint_node.text = str(self._dewpoint)
-        humidex_node = ET.SubElement(root_node, "humidex")
-        humidex_node.text = str(self._humidex)
-        heat_index_node = ET.SubElement(root_node, "heat_index")
-        heat_index_node.text = str(self._heat_index)
-        return root_node
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (

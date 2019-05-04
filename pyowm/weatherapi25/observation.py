@@ -71,54 +71,6 @@ class Observation:
         """
         return self._weather
 
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns:  the JSON string
-
-        """
-        return json.dumps({"reception_time": self._reception_time,
-                           "location": json.loads(self._location.to_JSON()),
-                           "weather": json.loads(self._weather.to_JSON())
-                           })
-
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xml.annotate_with_XMLNS(root_node,
-                                    OBSERVATION_XMLNS_PREFIX,
-                                    OBSERVATION_XMLNS_URL)
-        return xml.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("observation")
-        reception_time_node = ET.SubElement(root_node, "reception_time")
-        reception_time_node.text = str(self._reception_time)
-        root_node.append(self._location._to_DOM())
-        root_node.append(self._weather._to_DOM())
-        return root_node
-
     @classmethod
     def from_dict(cls, the_dict):
         """
@@ -167,7 +119,7 @@ class Observation:
         """
         return {"reception_time": self._reception_time,
                 "location": self._location.to_dict(),
-                "weather": json.loads(self._weather.to_JSON())}
+                "weather": self._weather.to_dict()}
 
     def __repr__(self):
         return "<%s.%s - reception time=%s>" % (__name__, self.__class__.__name__,

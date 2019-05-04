@@ -1,13 +1,11 @@
-"""
-Test case for location.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 import json
 from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
 from tests.unit.weatherapi25.json_test_dumps import LOCATION_JSON_DUMP
-from tests.unit.weatherapi25.xml_test_dumps import LOCATION_XML_DUMP
 
 
 class TestLocation(unittest.TestCase):
@@ -112,15 +110,3 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(sorted(expected_geojson),
                          sorted(result.geojson()))
 
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(LOCATION_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(LOCATION_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)

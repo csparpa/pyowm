@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from datetime import datetime
@@ -8,7 +11,6 @@ from pyowm.utils.formatting import UTC
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from tests.unit.weatherapi25.json_test_dumps import OBSERVATION_JSON_DUMP
-from tests.unit.weatherapi25.xml_test_dumps import OBSERVATION_XML_DUMP
 from tests.unit.weatherapi25.json_test_responses import (
      OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, OBSERVATION_MALFORMED_JSON)
 from tests.unit.weatherapi25.json_test_responses import (
@@ -57,19 +59,6 @@ class TestObservation(unittest.TestCase):
                          self.__test_reception_time)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(OBSERVATION_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(OBSERVATION_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
 
     def test_from_dict(self):
         d = json.loads(OBSERVATION_JSON)

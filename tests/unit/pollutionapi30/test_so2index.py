@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import unittest
 from datetime import datetime
@@ -104,19 +107,6 @@ class TestSO2Index(unittest.TestCase):
                            self.__test_location, self.__test_interval,
                            [], self.__test_reception_time)
         self.assertTrue(uvindex.is_forecast())
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(SO2INDEX_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(SO2INDEX_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
 
     def test_from_dict(self):
         result = SO2Index.from_dict(json.loads(SO2INDEX_JSON))

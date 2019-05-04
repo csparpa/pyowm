@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from pyowm.alertapi30.alert import Alert, AlertChannel
 from pyowm.alertapi30.condition import Condition

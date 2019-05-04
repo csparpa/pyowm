@@ -1,8 +1,5 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Test cases for uv_client.py
-"""
 
 import unittest
 from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient

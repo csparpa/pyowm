@@ -1,6 +1,5 @@
-"""
-Test case for forecaster.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 from datetime import datetime

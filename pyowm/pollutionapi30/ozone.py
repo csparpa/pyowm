@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
-import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
-from pyowm.pollutionapi30.xsd.xmlnsconfig import OZONE_XMLNS_URL, OZONE_XMLNS_PREFIX
-from pyowm.utils import formatting, timestamps, xml
+from pyowm.utils import formatting, timestamps
 from pyowm.weatherapi25 import location
 
 
@@ -110,61 +107,6 @@ class Ozone:
         """
         return timestamps.now(timeformat='unix') < \
                self.get_reference_time(timeformat='unix')
-
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns:  the JSON string
-
-        """
-        return json.dumps({"reference_time": self._reference_time,
-                           "location": json.loads(self._location.to_JSON()),
-                           "interval": self._interval,
-                           "value": self.du_value,
-                           "reception_time": self._reception_time,
-                           })
-
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xml.annotate_with_XMLNS(root_node,
-                                    OZONE_XMLNS_PREFIX,
-                                    OZONE_XMLNS_URL)
-        return xml.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("ozone")
-        reference_time_node = ET.SubElement(root_node, "reference_time")
-        reference_time_node.text = str(self._reference_time)
-        reception_time_node = ET.SubElement(root_node, "reception_time")
-        reception_time_node.text = str(self._reception_time)
-        interval_node = ET.SubElement(root_node, "interval")
-        interval_node.text = str(self._interval)
-        value_node = ET.SubElement(root_node, "value")
-        value_node.text = str(self.du_value)
-        root_node.append(self._location._to_DOM())
-        return root_node
 
     @classmethod
     def from_dict(cls, the_dict):

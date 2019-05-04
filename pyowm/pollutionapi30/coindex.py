@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
-import xml.etree.ElementTree as ET
 from pyowm.exceptions import parse_response_error
-from pyowm.pollutionapi30.xsd.xmlnsconfig import COINDEX_XMLNS_URL, COINDEX_XMLNS_PREFIX
-from pyowm.utils import formatting, timestamps, xml
+from pyowm.utils import formatting, timestamps
 from pyowm.weatherapi25 import location
 
 
@@ -126,68 +123,6 @@ class COIndex:
         """
         return timestamps.now(timeformat='unix') < \
                self.get_reference_time(timeformat='unix')
-
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns:  the JSON string
-
-        """
-        return json.dumps({"reference_time": self._reference_time,
-                           "location": json.loads(self._location.to_JSON()),
-                           "interval": self._interval,
-                           "co_samples": self._co_samples,
-                           "reception_time": self._reception_time,
-                           })
-
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xml.annotate_with_XMLNS(root_node,
-                                    COINDEX_XMLNS_PREFIX,
-                                    COINDEX_XMLNS_URL)
-        return xml.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("coindex")
-        reference_time_node = ET.SubElement(root_node, "reference_time")
-        reference_time_node.text = str(self._reference_time)
-        reception_time_node = ET.SubElement(root_node, "reception_time")
-        reception_time_node.text = str(self._reception_time)
-        interval_node = ET.SubElement(root_node, "interval")
-        interval_node.text = str(self._interval)
-        co_samples_node = ET.SubElement(root_node, "co_samples")
-        for smpl in self._co_samples:
-            s = smpl.copy()
-            # turn values to 12 decimal digits-formatted strings
-            s['pressure'] = '{:.12e}'.format(s['pressure'])
-            s['value'] = '{:.12e}'.format(s['value'])
-            s['precision'] = '{:.12e}'.format(s['precision'])
-            xml.create_DOM_node_from_dict(s, "co_sample",
-                                          co_samples_node)
-        root_node.append(self._location._to_DOM())
-        return root_node
 
     @classmethod
     def from_dict(cls, the_dict):

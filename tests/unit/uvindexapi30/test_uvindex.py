@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import unittest
 from datetime import datetime
@@ -29,6 +32,7 @@ UVINDEX_LIST_JSON = '[{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-22T12:00:00
                     '{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-25T12:00:00Z",' \
                     '"date":1498392000,"value":11.03},{"lat":37.75,"lon":-122.37,' \
                     '"date_iso":"2017-06-26T12:00:00Z","date":1498478400,"value":10.06}]'
+
 
 class TestUVIndex(unittest.TestCase):
 
@@ -101,19 +105,6 @@ class TestUVIndex(unittest.TestCase):
         self.assertEqual(uv_intensity_to_exposure_risk(6.5), 'high')
         self.assertEqual(uv_intensity_to_exposure_risk(8.5), 'very high')
         self.assertEqual(uv_intensity_to_exposure_risk(30.5), 'extreme')
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(UVINDEX_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(UVINDEX_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
 
     def test_to_dict(self):
         expected = json.loads(UVINDEX_JSON_DUMP)

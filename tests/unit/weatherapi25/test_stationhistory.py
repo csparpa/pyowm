@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import unittest
 from datetime import datetime
@@ -9,7 +12,6 @@ from tests.unit.weatherapi25.json_test_dumps import STATIONHISTORY_JSON_DUMP
 from tests.unit.weatherapi25.json_test_responses import (
      STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_NOT_FOUND_JSON,
      INTERNAL_SERVER_ERROR_JSON)
-from tests.unit.weatherapi25.xml_test_dumps import STATIONHISTORY_XML_DUMP
 
 
 class TestStationHistory(unittest.TestCase):
@@ -67,19 +69,6 @@ class TestStationHistory(unittest.TestCase):
                          self.__test_reception_time)
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(STATIONHISTORY_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(STATIONHISTORY_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
 
     def test_from_dict(self):
         result = StationHistory.from_dict(json.loads(STATION_TICK_WEATHER_HISTORY_JSON))

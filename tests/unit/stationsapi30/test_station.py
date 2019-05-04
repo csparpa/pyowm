@@ -1,5 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
-import json
 from pyowm.exceptions import parse_response_error
 from pyowm.stationsapi30.station import Station
 
@@ -93,26 +95,6 @@ class TestStation(unittest.TestCase):
 
     def test_repr(self):
         print(self._test_instance)
-
-    def test_to_JSON(self):
-        expected = '''{
-            "alt": 150,
-            "name": "San Francisco Test Station",
-            "lat": 37.76,
-            "lon": -122.43,
-            "created_at": "2016-11-22 12:15:25+00",
-            "external_id": "SF_TEST001",
-            "id": "583436dd9643a9000196b8d6",
-            "rank": 0,
-            "updated_at": "2016-11-22 12:15:25+00"}'''
-        instance = Station("583436dd9643a9000196b8d6",
-                           "2016-11-22T12:15:25.967Z",
-                           "2016-11-22T12:15:25.967Z",
-                           "SF_TEST001",
-                           "San Francisco Test Station",
-                           -122.43, 37.76, 150, 0)
-        result = instance.to_JSON()
-        self.assertEquals(json.loads(expected), json.loads(result))
 
     def test_from_dictionary(self):
         the_dict = {

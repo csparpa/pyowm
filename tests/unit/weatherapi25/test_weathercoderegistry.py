@@ -1,9 +1,9 @@
-"""
-Test case for weathercoderegistry.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 from pyowm.weatherapi25.weathercoderegistry import WeatherCodeRegistry
+
 
 class TestWeatherCodeRegistry(unittest.TestCase):
 

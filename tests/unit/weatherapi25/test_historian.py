@@ -1,6 +1,5 @@
-"""
-Test case for historian.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-e for historian.py module
 
 import unittest
 from pyowm.weatherapi25.stationhistory import StationHistory

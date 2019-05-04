@@ -8,7 +8,6 @@ from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from pyowm.utils.formatting import UTC
 from tests.unit.weatherapi25.json_test_dumps import FORECAST_JSON_DUMP
-from tests.unit.weatherapi25.xml_test_dumps import FORECAST_XML_DUMP
 from tests.unit.weatherapi25.json_test_responses import (
      THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
      INTERNAL_SERVER_ERROR_JSON, FORECAST_MALFORMED_JSON)
@@ -130,19 +129,6 @@ class TestForecast(unittest.TestCase):
         
     def test__len__(self):
         self.assertEqual(len(self.__test_instance), len(self.__test_weathers))
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(FORECAST_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(FORECAST_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
 
     def test_from_dict(self):
         result = self.__test_instance.from_dict(json.loads(THREE_HOURS_FORECAST_JSON))

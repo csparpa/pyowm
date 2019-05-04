@@ -107,14 +107,6 @@ class AggregatedMeasurement:
                 'pressure': self.pressure,
                 'precipitation': self.precipitation}
 
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns: the JSON string
-
-        """
-        return json.dumps(self.to_dict())
-
     def __repr__(self):
         return '<%s.%s - station_id=%s, created_at=%s>' \
                % (__name__, self.__class__.__name__,

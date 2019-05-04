@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import unittest
 from pyowm.exceptions.api_response_error import APIResponseError
@@ -433,11 +436,3 @@ class TestWeather(unittest.TestCase):
     def test_get_wind_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.get_wind,
                           self.__test_instance, 'xyz')
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(WEATHER_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)

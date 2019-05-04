@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from datetime import datetime
@@ -6,7 +9,6 @@ from pyowm.weatherapi25.location import Location
 from pyowm.pollutionapi30.ozone import Ozone
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from tests.unit.pollutionapi30.json_test_dumps import OZONE_JSON_DUMP
-from tests.unit.pollutionapi30.xml_test_dumps import OZONE_XML_DUMP
 
 OZONE_JSON = '{"time":"2016-10-06T13:32:53Z","location":{"latitude":1.3841,"longitude":9.8633},"data":276.8447570800781}'
 OZONE_MALFORMED_JSON = '{"time":"2016-10-06T13:32:53Z", "x": 1234}'
@@ -115,16 +117,3 @@ class TestOzone(unittest.TestCase):
         expected = json.loads(OZONE_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
-
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
-
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(OZONE_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(OZONE_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)

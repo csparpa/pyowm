@@ -170,60 +170,6 @@ class Forecast:
             if w.get_reference_time(timeformat='unix') < current_time:
                 self._weathers.remove(w)
 
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns: the JSON string
-
-        """
-        return json.dumps({"interval": self._interval,
-                           "reception_time": self._reception_time,
-                           "Location": json.loads(self._location.to_JSON()),
-                           "weathers": json.loads("[" + \
-                                ",".join([w.to_JSON() for w in self]) + "]")
-                           })
-
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xml.annotate_with_XMLNS(root_node,
-                                    FORECAST_XMLNS_PREFIX,
-                                    FORECAST_XMLNS_URL)
-        return xml.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("forecast")
-        interval_node = ET.SubElement(root_node, "interval")
-        interval_node.text = self._interval
-        reception_time_node = ET.SubElement(root_node, "reception_time")
-        reception_time_node.text = str(self._reception_time)
-        root_node.append(self._location._to_DOM())
-        weathers_node = ET.SubElement(root_node, "weathers")
-        for weather in self:
-            weathers_node.append(weather._to_DOM())
-        return root_node
-
     @classmethod
     def from_dict(cls, the_dict):
         """
@@ -283,9 +229,8 @@ class Forecast:
         """
         return {"interval": self._interval,
                "reception_time": self._reception_time,
-               "Location": json.loads(self._location.to_JSON()),
-               "weathers": json.loads("[" + \
-                    ",".join([w.to_JSON() for w in self]) + "]")}
+               "location": self._location.to_dict(),
+               "weathers": [w.to_dict() for w in self]}
 
     def __len__(self):
         """Redefine __len__ hook"""

@@ -1,16 +1,5 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Test case for owm.py module.
-Here we don't use mock objects because we don't want to rely on external
-mocking libraries; we use monkey patching instead.
-Monkey patching pattern:
-  1. Keep a reference to the original function to be patched
-  2. Replace the original function with the mock version
-  3. Call function and get results
-  4. Restore the original function (if possible, before unittest assertions
-     because they might fail)
-"""
 
 import unittest
 import time

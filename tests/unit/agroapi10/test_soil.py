@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from datetime import datetime
 from pyowm.agroapi10.soil import Soil

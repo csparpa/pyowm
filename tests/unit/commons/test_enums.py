@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.databoxes import ImageType

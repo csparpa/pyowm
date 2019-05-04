@@ -1,6 +1,5 @@
-"""
-JSON dumps for PyOWM test objects
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 LOCATION_JSON_DUMP = '{"country": "UK", "name": "London", "coordinates": ' \
         + '{"lat": 43.7, "lon": 12.3}, "ID": 1234}'
@@ -35,7 +34,7 @@ OBSERVATION_JSON_DUMP = '{"reception_time": 1234567, "location": ' \
                         '{"speed": 1.1, "deg": 252.002}}}'
 
 FORECAST_JSON_DUMP = '{"reception_time": 1234567, "interval": "daily", ' \
-                     '"Location": {"country": "IT", "name": "test", ' \
+                     '"location": {"country": "IT", "name": "test", ' \
                      '"coordinates": {"lat": 43.7, "lon": 12.3}, "ID": 987}, ' \
                      '"weathers": [{"status": "Clouds", ' \
                      '"visibility_distance": 1000, "humidity": 57, "clouds": 67,' \

@@ -101,63 +101,6 @@ class Location:
             return None
         return geo.Point(self._lon, self._lat)
 
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns:  the JSON string
-
-        """
-        return json.dumps({'name': self._name,
-                         'coordinates': {'lon': self._lon,
-                                         'lat': self._lat
-                                        },
-                         'ID': self._ID,
-                         'country': self._country})
-
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xml.annotate_with_XMLNS(root_node,
-                                    LOCATION_XMLNS_PREFIX,
-                                    LOCATION_XMLNS_URL)
-        return xml.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("location")
-        name_node = ET.SubElement(root_node, "name")
-        name_node.text = self._name
-        coords_node = ET.SubElement(root_node, "coordinates")
-        lon_node = ET.SubElement(coords_node, "lon")
-        lon_node.text = str(self._lon)
-        lat_node = ET.SubElement(coords_node, "lat")
-        lat_node.text = str(self._lat)
-        id_node = ET.SubElement(root_node, "ID")
-        id_node.text = str(self._ID)
-        country_node = ET.SubElement(root_node, "country")
-        country_node.text = self._country
-        return root_node
-
     @classmethod
     def from_dict(cls, the_dict):
         """

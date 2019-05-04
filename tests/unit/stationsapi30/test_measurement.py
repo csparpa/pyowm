@@ -1,5 +1,8 @@
-import unittest
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
+import unittest
 from datetime import datetime as dt
 from pyowm.exceptions import parse_response_error
 from pyowm.stationsapi30.measurement import AggregatedMeasurement, Measurement
@@ -102,19 +105,6 @@ class TestAggregatedMeasurement(unittest.TestCase):
         result_dict = self._test_instance.to_dict()
         self.assertTrue(all(item in result_dict.items()
                             for item in expected_dict.items()))
-
-    def test_to_JSON(self):
-        expected = '''
-        {"station_id": "mytest",
-        "timestamp": 1378459200,
-        "aggregated_on": "m",
-        "temp":{"min":0, "max": 100},
-        "humidity":{"min":10, "max": 110},
-        "wind":{"speed":2.1,"gust":67},
-        "pressure":{}, "precipitation":{}}
-        '''
-        result = self._test_instance.to_JSON()
-        self.assertEquals(json.loads(expected), json.loads(result))
 
 
 class TestMeasurement(unittest.TestCase):

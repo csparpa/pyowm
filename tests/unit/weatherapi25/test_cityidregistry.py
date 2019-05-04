@@ -1,6 +1,5 @@
-"""
-Test case for cityidregistry.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 try:
