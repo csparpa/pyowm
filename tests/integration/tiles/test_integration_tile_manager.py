@@ -3,7 +3,7 @@
 
 import unittest
 import os
-from pyowm.weatherapi25.configuration25 import parsers
+from pyowm.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.tiles.enums import MapLayerEnum
 from pyowm.commons.tile import Tile

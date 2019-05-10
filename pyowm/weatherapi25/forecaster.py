@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyowm.utils import formatting, weather
-from pyowm.weatherapi25.configuration25 import weather_code_registry
+from pyowm.configuration25 import weather_code_registry
 
 
 class Forecaster:

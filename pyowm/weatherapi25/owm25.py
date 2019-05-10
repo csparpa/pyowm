@@ -13,11 +13,11 @@ from pyowm.tiles import tile_manager
 from pyowm.utils import formatting, strings, timestamps, geo
 from pyowm.uvindexapi30 import uv_client, uvindex
 from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory
-from pyowm.weatherapi25.configuration25 import (
+from pyowm.configuration25 import (
     OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
     FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
     DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, BBOX_CITY_URL)
-from pyowm.weatherapi25.configuration25 import city_id_registry as reg
+from pyowm.configuration25 import city_id_registry as reg
 from pyowm.weatherapi25 import weather
 from time import time
 

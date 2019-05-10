@@ -5,7 +5,7 @@ import json
 import requests
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
-from pyowm.weatherapi25.configuration25 import API_AVAILABILITY_TIMEOUT, \
+from pyowm.configuration25 import API_AVAILABILITY_TIMEOUT, \
     API_SUBSCRIPTION_SUBDOMAINS, VERIFY_SSL_CERTS
 
 

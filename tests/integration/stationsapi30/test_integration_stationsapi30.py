@@ -5,7 +5,7 @@ import unittest
 import os
 import copy
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.weatherapi25.configuration25 import parsers
+from pyowm.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.stationsapi30.buffer import Buffer
 from pyowm.stationsapi30.measurement import Measurement
