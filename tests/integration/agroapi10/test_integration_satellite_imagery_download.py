@@ -6,7 +6,6 @@ import os
 import uuid
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.weatherapi25.owm25 import OWM25
-from pyowm.configuration25 import parsers
 from pyowm.agroapi10.polygon import GeoPolygon
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.image import Image
@@ -16,7 +15,7 @@ from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage, Sa
 
 class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
+    __owm = OWM25(os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
     __polygon = None
     __acquired_from = 1500336000  # 18 July 2017
     __acquired_to = 1508976000  # 26 October 2017

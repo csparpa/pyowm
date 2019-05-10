@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.weatherapi25 import weathercoderegistry, cityidregistry
-
-
-"""
-Configuration for the PyOWM library specific to OWM Weather API version 2.5
-"""
-
 # Subdomains mapping
 API_SUBSCRIPTION_SUBDOMAINS = {
     'free': 'api',
@@ -17,13 +10,6 @@ API_SUBSCRIPTION_SUBDOMAINS = {
 # Default usage of SSL on OWM API calls
 USE_SSL = False
 VERIFY_SSL_CERTS = True
-
-
-# Parser objects injection for OWM Weather API responses parsing
-parsers = {}
-
-# City ID registry
-city_id_registry = cityidregistry.CityIDRegistry('cityids/%03d-%03d.txt.gz')
 
 # Cache provider to be used
 cache = None

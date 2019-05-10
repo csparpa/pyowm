@@ -6,6 +6,9 @@ from pkg_resources import resource_filename
 from pyowm.weatherapi25.location import Location
 
 
+CITY_ID_FILES_PATH = 'cityids/%03d-%03d.txt.gz'
+
+
 class CityIDRegistry:
 
     MATCHINGS = {
@@ -26,6 +29,14 @@ class CityIDRegistry:
 
         """
         self._filepath_regex = filepath_regex
+
+    @classmethod
+    def get_instance(cls):
+        """
+        Factory method returning the default city ID registry
+        :return: a `CityIDRegistry` instance
+        """
+        return CityIDRegistry(CITY_ID_FILES_PATH)
 
     def ids_for(self, city_name, country=None, matching='nocase'):
         """

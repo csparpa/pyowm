@@ -68,6 +68,10 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self.assertIsInstance(point2, Point)
         self.assertEqual(point1.to_dict(), point2.to_dict())
 
+    def test_get_instance(self):
+        result = CityIDRegistry.get_instance()
+        self.assertTrue(isinstance(result, CityIDRegistry))
+
     # tests for helper functions
 
     def test_assess_subfile_from(self):

@@ -4,7 +4,6 @@
 import unittest
 import os
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.configuration25 import parsers
 from pyowm.weatherapi25.owm25 import OWM25
 
 
@@ -15,7 +14,7 @@ class TestSecureAPICalls(unittest.TestCase):
     def test_ssl(self):
 
         # Try to call the OWM API using SSL and certificate validation
-        owm = OWM25(parsers, API_key=self.__API_key, use_ssl=True)
+        owm = OWM25(API_key=self.__API_key, use_ssl=True)
         try:
             # weather API
             owm.weather_at_place('London,GB')

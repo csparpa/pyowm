@@ -15,8 +15,7 @@ from pyowm.uvindexapi30 import uv_client, uvindex
 from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory
 from pyowm.weatherapi25.uris import OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, BBOX_CITY_URI, \
     THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, CITY_WEATHER_HISTORY_URI, STATION_WEATHER_HISTORY_URI
-from pyowm.configuration25 import city_id_registry as reg
-from pyowm.weatherapi25 import weather
+from pyowm.weatherapi25 import cityidregistry, weather
 from time import time
 
 
@@ -47,12 +46,12 @@ class OWM25:
     :returns: an *OWM25* instance
 
     """
-    def __init__(self, parsers, API_key=None, cache=None,
+    def __init__(self, API_key=None, cache=None,
                  language="en", subscription_type='free', use_ssl=False):
-        self._parsers = parsers
         if API_key is not None:
             assert isinstance(API_key, str), "Value must be a string"
         self._API_key = API_key
+        self._city_id_reg = cityidregistry.CityIDRegistry.get_instance()
         self._wapi = http_client.HttpClient(cache=cache)
         self._uvapi = uv_client.UltraVioletHttpClient(API_key, self._wapi)
         self._pollapi = airpollution_client.AirPollutionHttpClient(API_key, self._wapi)
@@ -134,7 +133,7 @@ class OWM25:
 
         :returns: a *CityIDRegistry* instance
         """
-        return reg
+        return self._city_id_reg
 
     def stations_manager(self):
         """
