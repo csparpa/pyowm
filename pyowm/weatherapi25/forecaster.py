@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyowm.utils import formatting, weather
-from pyowm.configuration25 import weather_code_registry
+from pyowm.weatherapi25 import weathercoderegistry
 
 
 class Forecaster:
@@ -21,6 +21,7 @@ class Forecaster:
 
     def __init__(self, forecast):
         self._forecast = forecast
+        self._wc_registry = weathercoderegistry.WeatherCodeRegistry.get_instance()
 
     def get_forecast(self):
         """
@@ -74,8 +75,7 @@ class Forecaster:
         :returns: boolean
 
         """        
-        return weather.any_status_is(self._forecast.get_weathers(), "rain",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "rain", self._wc_registry)
 
     def will_have_clear(self):
         """
@@ -85,8 +85,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(), "sun",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "sun", self._wc_registry)
 
     def will_have_fog(self):
         """
@@ -96,8 +95,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(), "fog",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "fog", self._wc_registry)
 
     def will_have_clouds(self):
         """
@@ -107,9 +105,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(),
-                                          "clouds",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "clouds", self._wc_registry)
 
     def will_have_snow(self):
         """
@@ -119,8 +115,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(), "snow",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "snow", self._wc_registry)
 
     def will_have_storm(self):
         """
@@ -130,8 +125,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(), "storm",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "storm", self._wc_registry)
 
     def will_have_tornado(self):
         """
@@ -141,8 +135,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(), "tornado",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "tornado", self._wc_registry)
 
     def will_have_hurricane(self):
         """
@@ -152,8 +145,7 @@ class Forecaster:
         :returns: boolean
 
         """
-        return weather.any_status_is(self._forecast.get_weathers(), "hurricane",
-                                     weather_code_registry)
+        return weather.any_status_is(self._forecast.get_weathers(), "hurricane", self._wc_registry)
 
     def when_rain(self):
         """
@@ -162,9 +154,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "rain",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "rain", self._wc_registry)
 
     def when_clear(self):
         """
@@ -173,9 +163,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "sun",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "sun", self._wc_registry)
 
 
     def when_fog(self):
@@ -185,9 +173,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "fog",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "fog", self._wc_registry)
 
     def when_clouds(self):
         """
@@ -196,9 +182,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "clouds",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "clouds", self._wc_registry)
 
     def when_snow(self):
         """
@@ -207,9 +191,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "snow",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "snow", self._wc_registry)
 
     def when_storm(self):
         """
@@ -218,9 +200,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "storm",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "storm", self._wc_registry)
 
     def when_tornado(self):
         """
@@ -229,9 +209,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "tornado",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "tornado", self._wc_registry)
 
     def when_hurricane(self):
         """
@@ -240,9 +218,7 @@ class Forecaster:
 
         :returns: a list of *Weather* objects
         """
-        return weather.filter_by_status(self._forecast.get_weathers(),
-                                             "hurricane",
-                                        weather_code_registry)
+        return weather.filter_by_status(self._forecast.get_weathers(), "hurricane", self._wc_registry)
 
     def _will_be(self, timeobject, weather_condition):
         """
@@ -263,8 +239,7 @@ class Forecaster:
         closest_weather = weather.find_closest_weather(
                                         self._forecast.get_weathers(),
                                         time_value)
-        return weather.status_is(closest_weather, weather_condition,
-                                 weather_code_registry)
+        return weather.status_is(closest_weather, weather_condition, self._wc_registry)
 
     def will_be_rainy_at(self, timeobject):
         """

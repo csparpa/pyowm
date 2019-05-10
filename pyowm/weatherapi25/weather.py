@@ -4,7 +4,7 @@
 import json
 from pyowm.exceptions import parse_response_error, api_response_error
 from pyowm.utils import formatting, temperature
-from pyowm.weatherapi25.uris import ICONS_BASE_URL
+from pyowm.weatherapi25.uris import ICONS_BASE_URI
 
 
 class Weather:
@@ -260,7 +260,7 @@ class Weather:
         :returns: the icon URL.
 
         """
-        return ICONS_BASE_URL % self._weather_icon_name
+        return ICONS_BASE_URI % self._weather_icon_name
 
     def get_visibility_distance(self):
         """Returns the visibility distance as a float

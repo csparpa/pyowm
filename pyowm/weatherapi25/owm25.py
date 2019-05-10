@@ -13,10 +13,8 @@ from pyowm.tiles import tile_manager
 from pyowm.utils import formatting, strings, timestamps, geo
 from pyowm.uvindexapi30 import uv_client, uvindex
 from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory
-from pyowm.configuration25 import (
-    OBSERVATION_URL, GROUP_OBSERVATIONS_URL,
-    FIND_OBSERVATIONS_URL, THREE_HOURS_FORECAST_URL,
-    DAILY_FORECAST_URL, CITY_WEATHER_HISTORY_URL, STATION_WEATHER_HISTORY_URL, BBOX_CITY_URL)
+from pyowm.weatherapi25.uris import OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, BBOX_CITY_URI, \
+    THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, CITY_WEATHER_HISTORY_URI, STATION_WEATHER_HISTORY_URI
 from pyowm.configuration25 import city_id_registry as reg
 from pyowm.weatherapi25 import weather
 from time import time
@@ -178,7 +176,7 @@ class OWM25:
 
         """
         params = {'q': 'London,GB'}
-        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+        uri = http_client.HttpClient.to_url(OBSERVATION_URI,
                                             self._API_key,
                                             self._subscription_type)
         try:
@@ -206,7 +204,7 @@ class OWM25:
         assert isinstance(name, str), "Value must be a string"
         encoded_name = name
         params = {'q': encoded_name, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+        uri = http_client.HttpClient.to_url(OBSERVATION_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -231,7 +229,7 @@ class OWM25:
         geo.assert_is_lon(lon)
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+        uri = http_client.HttpClient.to_url(OBSERVATION_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -259,7 +257,7 @@ class OWM25:
         encoded_country = country
         zip_param = encoded_zip + ',' + encoded_country
         params = {'zip': zip_param, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+        uri = http_client.HttpClient.to_url(OBSERVATION_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -283,7 +281,7 @@ class OWM25:
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
         params = {'id': id, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(OBSERVATION_URL,
+        uri = http_client.HttpClient.to_url(OBSERVATION_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -310,7 +308,7 @@ class OWM25:
                 raise ValueError("id values in 'ids_list' must be greater "
                                  "than 0")
         params = {'id': ','.join(list(map(str, ids_list))), 'lang': self._language}
-        uri = http_client.HttpClient.to_url(GROUP_OBSERVATIONS_URL,
+        uri = http_client.HttpClient.to_url(GROUP_OBSERVATIONS_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -352,7 +350,7 @@ class OWM25:
         if limit is not None:
             # fix for OWM 2.5 API bug!
             params['cnt'] = limit - 1
-        uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
+        uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -402,7 +400,7 @@ class OWM25:
                                     str(lat_top),
                                     str(zoom)]),
                   'cluster': 'yes' if cluster else 'no'}
-        uri = http_client.HttpClient.to_url(BBOX_CITY_URL,
+        uri = http_client.HttpClient.to_url(BBOX_CITY_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -436,7 +434,7 @@ class OWM25:
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
             params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URL,
+        uri = http_client.HttpClient.to_url(FIND_OBSERVATIONS_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -462,7 +460,7 @@ class OWM25:
         assert isinstance(name, str), "Value must be a string"
         encoded_name = name
         params = {'q': encoded_name, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
+        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -496,7 +494,7 @@ class OWM25:
         geo.assert_is_lon(lon)
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
+        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -528,7 +526,7 @@ class OWM25:
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
         params = {'id': id, 'lang': self._language}
-        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URL,
+        uri = http_client.HttpClient.to_url(THREE_HOURS_FORECAST_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -569,7 +567,7 @@ class OWM25:
         params = {'q': encoded_name, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
+        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -613,7 +611,7 @@ class OWM25:
         params = {'lon': lon, 'lat': lat, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
+        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -656,7 +654,7 @@ class OWM25:
         params = {'id': id, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URL,
+        uri = http_client.HttpClient.to_url(DAILY_FORECAST_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -714,7 +712,7 @@ class OWM25:
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
+        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -768,7 +766,7 @@ class OWM25:
             if unix_start >= unix_end:
                 raise ValueError("Error: the start time boundary must "
                                  "precede the end time!")
-        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
+        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -822,7 +820,7 @@ class OWM25:
         else:
             raise ValueError("Error: one of the time boundaries is None, " \
                              "while the other is not!")
-        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URL,
+        uri = http_client.HttpClient.to_url(CITY_WEATHER_HISTORY_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)
@@ -937,7 +935,7 @@ class OWM25:
         params = {'id': station_ID, 'type': interval, 'lang': self._language}
         if limit is not None:
             params['cnt'] = limit
-        uri = http_client.HttpClient.to_url(STATION_WEATHER_HISTORY_URL,
+        uri = http_client.HttpClient.to_url(STATION_WEATHER_HISTORY_URI,
                                             self._API_key,
                                             self._subscription_type,
                                             self._use_ssl)

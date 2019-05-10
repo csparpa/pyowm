@@ -22,7 +22,14 @@ class TestWeatherCodeRegistry(unittest.TestCase):
         }]
     })
 
+    def test_wrong_instantiation_parameters(self):
+        self.assertRaises(AssertionError, WeatherCodeRegistry, 'this-is-not-a-dict')
+
     def test_status_for(self):
         self.assertTrue(self._test_instance.status_for(999) is None)
         self.assertEqual("abc", self._test_instance.status_for(150))
         self.assertEqual("xyz", self._test_instance.status_for(345))
+
+    def test_get_instance(self):
+        result = WeatherCodeRegistry.get_instance()
+        self.assertTrue(isinstance(result, WeatherCodeRegistry))
