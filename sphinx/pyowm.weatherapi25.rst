@@ -19,14 +19,6 @@ pyowm.weatherapi25.cityidregistry module
     :undoc-members:
     :show-inheritance:
 
-pyowm.weatherapi25.configuration25 module
------------------------------------------
-
-.. automodule:: pyowm.weatherapi25.configuration25
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.weatherapi25.forecast module
 ----------------------------------
 

@@ -11,9 +11,6 @@ API_SUBSCRIPTION_SUBDOMAINS = {
 USE_SSL = False
 VERIFY_SSL_CERTS = True
 
-# Cache provider to be used
-cache = None
-
 # Default language for OWM Weather API queries text results
 language = 'en'
 
