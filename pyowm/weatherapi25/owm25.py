@@ -6,7 +6,6 @@ from pyowm import constants
 from pyowm.agroapi10 import agro_manager
 from pyowm.alertapi30 import alert_manager
 from pyowm.commons import http_client
-from pyowm.exceptions import api_call_error
 from pyowm.pollutionapi30 import airpollution_client, ozone, coindex, no2index, so2index
 from pyowm.stationsapi30 import stations_manager
 from pyowm.tiles import tile_manager
@@ -926,86 +925,6 @@ class OWM25:
             sh.set_station_ID(station_ID)
             sh.set_interval(interval)
         return sh
-
-    #  --- UV API ENDPOINTS ---
-
-    def uvindex_around_coords(self, lat, lon):
-        """
-        Queries the OWM Weather API for Ultra Violet value sampled in the
-        surroundings of the provided geocoordinates and in the specified time
-        interval. A *UVIndex* object instance is returned, encapsulating a
-        *Location* object and the UV intensity value.
-
-        :param lat: the location's latitude, must be between -90.0 and 90.0
-        :type lat: int/float
-        :param lon: the location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
-        :return: a *UVIndex* instance or ``None`` if data is not available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached, *ValueError* for wrong input values
-        """
-        geo.assert_is_lon(lon)
-        geo.assert_is_lat(lat)
-        params = {'lon': lon, 'lat': lat}
-        json_data = self._uvapi.get_uvi(params)
-        return uvindex.UVIndex.from_dict(json.loads((json_data)))
-
-    def uvindex_forecast_around_coords(self, lat, lon):
-        """
-        Queries the OWM Weather API for forecast Ultra Violet values in the next 8
-        days in the surroundings of the provided geocoordinates.
-
-        :param lat: the location's latitude, must be between -90.0 and 90.0
-        :type lat: int/float
-        :param lon: the location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
-        :return: a list of *UVIndex* instances or empty list if data is not available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached, *ValueError* for wrong input values
-        """
-        geo.assert_is_lon(lon)
-        geo.assert_is_lat(lat)
-        params = {'lon': lon, 'lat': lat}
-        json_data = self._uvapi.get_uvi_forecast(params)
-        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
-        return uvindex_list
-
-    def uvindex_history_around_coords(self, lat, lon, start, end=None):
-        """
-        Queries the OWM Weather API for UV index historical values in the
-        surroundings of the provided geocoordinates and in the specified
-        time frame. If the end of the time frame is not provided, that is
-        intended to be the current datetime.
-
-        :param lat: the location's latitude, must be between -90.0 and 90.0
-        :type lat: int/float
-        :param lon: the location's longitude, must be between -180.0 and 180.0
-        :type lon: int/float
-        :param start: the object conveying the time value for the start query boundary
-        :type start: int, ``datetime.datetime`` or ISO8601-formatted string
-        :param end: the object conveying the time value for the end query
-            boundary (defaults to ``None``, in which case the current datetime
-            will be used)
-        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
-        :return: a list of *UVIndex* instances or empty list if data is not available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached, *ValueError* for wrong input values
-        """
-        geo.assert_is_lon(lon)
-        geo.assert_is_lat(lat)
-        assert start is not None
-        start = formatting.timeformat(start, 'unix')
-        if end is None:
-            end = timestamps.now(timeformat='unix')
-        else:
-            end = formatting.timeformat(end, 'unix')
-        params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
-        json_data = self._uvapi.get_uvi_history(params)
-        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
-        return uvindex_list
 
     #  --- POLLUTION API ENDPOINTS ---
 

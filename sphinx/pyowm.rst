@@ -20,6 +20,14 @@ Subpackages
 Submodules
 ----------
 
+pyowm.config module
+-------------------
+
+.. automodule:: pyowm.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.constants module
 ----------------------
 
@@ -28,6 +36,13 @@ pyowm.constants module
     :undoc-members:
     :show-inheritance:
 
+pyowm.owm module
+----------------
+
+.. automodule:: pyowm.owm
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------

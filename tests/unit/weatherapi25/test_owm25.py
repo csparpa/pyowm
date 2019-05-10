@@ -11,7 +11,6 @@ from tests.unit.weatherapi25.json_test_responses import (OBSERVATION_JSON,
                                                          STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
                                                          DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
                                                          WEATHER_AT_PLACES_IN_BBOX_JSON)
-from tests.unit.uvindexapi30.test_uvindex import UVINDEX_JSON, UVINDEX_LIST_JSON
 from tests.unit.pollutionapi30.test_ozone import OZONE_JSON
 from tests.unit.pollutionapi30.test_coindex import COINDEX_JSON
 from tests.unit.pollutionapi30.test_no2index import NO2INDEX_JSON
@@ -19,7 +18,6 @@ from tests.unit.pollutionapi30.test_so2index import SO2INDEX_JSON
 from pyowm.weatherapi25.owm25 import OWM25
 from pyowm.constants import PYOWM_VERSION, WEATHER_API_VERSION
 from pyowm.commons.http_client import HttpClient
-from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient
 from pyowm.pollutionapi30.airpollution_client import AirPollutionHttpClient
 from pyowm.exceptions.api_call_error import APICallTimeoutError
 from pyowm.weatherapi25.forecast import Forecast
@@ -29,7 +27,6 @@ from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.forecaster import Forecaster
 from pyowm.weatherapi25.stationhistory import StationHistory
 from pyowm.weatherapi25.historian import Historian
-from pyowm.uvindexapi30.uvindex import UVIndex
 from pyowm.pollutionapi30.coindex import COIndex
 from pyowm.pollutionapi30.ozone import Ozone
 from pyowm.pollutionapi30.no2index import NO2Index
@@ -99,15 +96,6 @@ class TestOWM25(unittest.TestCase):
 
     def mock_api_call_returning_weather_history_at_coords(self, uri, params=None, headers=None):
         return 200, CITY_WEATHER_HISTORY_JSON
-
-    def mock_get_uvi_returning_uvindex_around_coords(self, params_dict):
-        return UVINDEX_JSON
-
-    def mock_get_uvi_forecast(self, params_dict):
-        return UVINDEX_LIST_JSON
-
-    def mock_get_uvi_history(self, params_dict):
-        return UVINDEX_LIST_JSON
 
     def mock_get_coi_returning_coindex_around_coords(self, params_dict):
         return COINDEX_JSON
@@ -556,24 +544,6 @@ class TestOWM25(unittest.TestCase):
                           self.__test_instance, 51.50853, -0.12574,
                           current_time + 1000, current_time + 2000)
 
-    def test_weather_history_at_place_fails_with_wrong_time_boundaries(self):
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, None, 1234567)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, 1234567, None)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, 1234567, None)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, -1234567, None)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, None, -1234567)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, -999, -888)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, "test", 1234567)
-        self.assertRaises(ValueError, OWM25.weather_history_at_coords,
-                          self.__test_instance, 51.50853, -0.12574, 1234567, "test")
-
     def test_weather_history_at_place_fails_with_unordered_time_boundaries(self):
         self.assertRaises(ValueError, OWM25.weather_history_at_place,
                           self.__test_instance, "London,uk",
@@ -673,7 +643,6 @@ class TestOWM25(unittest.TestCase):
             self.assertTrue(isinstance(result.get_location(), Location))
             self.assertTrue(result.get_reception_time() is not None)
 
-
     def test_station_tick_history(self):
         original_func = HttpClient.cacheable_get_json
         HttpClient.cacheable_get_json = \
@@ -735,93 +704,7 @@ class TestOWM25(unittest.TestCase):
         self.assertRaises(ValueError, OWM25.station_day_history,
                           self.__test_instance, 1234, -3)
 
-    #  ---- UltraViolet API methods tests ---
 
-    def test_uvindex_around_coords(self):
-        ref_to_original = UltraVioletHttpClient.get_uvi
-        UltraVioletHttpClient.get_uvi = \
-            self.mock_get_uvi_returning_uvindex_around_coords
-        result = self.__test_instance.uvindex_around_coords(45, 9)
-        UltraVioletHttpClient.get_uvi = ref_to_original
-        self.assertTrue(isinstance(result, UVIndex))
-        self.assertIsNotNone(result.get_reference_time())
-        self.assertIsNotNone(result.get_reception_time())
-        loc = result.get_location()
-        self.assertIsNotNone(loc)
-        self.assertIsNotNone(loc.get_lat())
-        self.assertIsNotNone(loc.get_lon())
-        self.assertIsNotNone(result.get_value())
-
-    def test_uvindex_around_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
-                          self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
-                          self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
-                          self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, OWM25.uvindex_around_coords, \
-                          self.__test_instance, 200, 2.5)
-
-    def test_uvindex_forecast_around_coords(self):
-        ref_to_original = UltraVioletHttpClient.get_uvi_forecast
-        UltraVioletHttpClient.get_uvi_forecast = \
-            self.mock_get_uvi_forecast
-        result = self.__test_instance.uvindex_forecast_around_coords(45, 9)
-        UltraVioletHttpClient.get_uvi_forecast = ref_to_original
-        self.assertTrue(isinstance(result, list))
-        self.assertTrue(all([isinstance(i, UVIndex) for i in result]))
-
-    def test_uvindex_forecast_around_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, OWM25.uvindex_forecast_around_coords, \
-                          self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, OWM25.uvindex_forecast_around_coords, \
-                          self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, OWM25.uvindex_forecast_around_coords, \
-                          self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, OWM25.uvindex_forecast_around_coords, \
-                          self.__test_instance, 200, 2.5)
-
-    def test_uvindex_history_around_coords(self):
-        ref_to_original = UltraVioletHttpClient.get_uvi_history
-        UltraVioletHttpClient.get_uvi_history = \
-            self.mock_get_uvi_history
-        result = self.__test_instance.uvindex_history_around_coords(
-            45, 9, 1498049953, end=1498481991)
-        UltraVioletHttpClient.get_uvi_history = ref_to_original
-        self.assertTrue(isinstance(result, list))
-        self.assertTrue(all([isinstance(i, UVIndex) for i in result]))
-
-    def test_uvindex_history_around_coords_fails_with_wrong_parameters(self):
-        # wrong lat/lon
-        self.assertRaises(ValueError, OWM25.uvindex_history_around_coords, \
-                          self.__test_instance, 43.7, -200.0, 1498049953)
-        self.assertRaises(ValueError, OWM25.uvindex_history_around_coords, \
-                          self.__test_instance, 43.7, 200.0, 1498049953)
-        self.assertRaises(ValueError, OWM25.uvindex_history_around_coords, \
-                          self.__test_instance, -200, 2.5, 1498049953)
-        self.assertRaises(ValueError, OWM25.uvindex_history_around_coords, \
-                          self.__test_instance, 200, 2.5, 1498049953)
-        # wrong start of time period
-        self.assertRaises(TypeError, OWM25.uvindex_history_around_coords, \
-                          self.__test_instance, 45, 9, dict(a=1, b=2))
-        # wrong end of time period
-        self.assertRaises(TypeError, OWM25.uvindex_history_around_coords, \
-                          self.__test_instance, 45, 9, 1498049953,
-                          end=dict(a=1, b=2))
-
-    def test_uvindex_history_around_coords_when_no_end_specified(self):
-        ref_to_original = UltraVioletHttpClient.get_uvi_history
-
-        def mock_get_uvi_history_checking_end_parameter(instance, params_dict):
-            self.assertIn('end', params_dict)
-            self.assertIsNotNone(params_dict['end'])
-            return UVINDEX_LIST_JSON
-
-        UltraVioletHttpClient.get_uvi_history = \
-            mock_get_uvi_history_checking_end_parameter
-        _ = self.__test_instance.uvindex_history_around_coords(
-            45, 9, 1498049953)
-        UltraVioletHttpClient.get_uvi_history = ref_to_original
 
     #  ---- Pollution API methods tests ---
 

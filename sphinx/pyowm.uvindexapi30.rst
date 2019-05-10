@@ -19,6 +19,15 @@ pyowm.uvindexapi30.uvindex module
     :show-inheritance:
 
 
+pyowm.uvindexapi30.uvindex_manager module
+-----------------------------------------
+
+.. automodule:: pyowm.uvindexapi30.uvindex_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 pyowm.uvindexapi30.uv_client module
 -----------------------------------
 
