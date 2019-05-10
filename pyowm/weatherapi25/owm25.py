@@ -166,24 +166,6 @@ class OWM25:
         """
         return agro_manager.AgroManager(self._API_key)
 
-    def is_API_online(self):
-        """
-        Returns True if the OWM Weather API is currently online. A short timeout
-        is used to determine API service availability.
-
-        :returns: bool
-
-        """
-        params = {'q': 'London,GB'}
-        uri = http_client.HttpClient.to_url(OBSERVATION_URI,
-                                            self._API_key,
-                                            self._subscription_type)
-        try:
-            _1, _2 = self._wapi.cacheable_get_json(uri, params=params)
-            return True
-        except api_call_error.APICallTimeoutError:
-            return False
-
     #  --- WEATHER API ENDPOINTS ---
 
     def weather_at_place(self, name):

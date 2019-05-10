@@ -13,9 +13,6 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
 
     __owm = OWM25(os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
 
-    def test_is_API_online(self):
-        self.assertTrue(self.__owm.is_API_online())
-
     def test_weather_at_place(self):
         """
         Test feature: get currently observed weather at specific location

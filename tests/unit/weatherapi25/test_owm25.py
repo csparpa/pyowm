@@ -148,22 +148,6 @@ class TestOWM25(unittest.TestCase):
                          subscription_type='pro')
         self.assertEqual(owm_paid.get_subscription_type(), 'pro')
 
-    def test_is_API_online(self):
-        original_func = HttpClient.cacheable_get_json
-        HttpClient.cacheable_get_json = \
-            self.mock_api_call_ping
-        result = self.__test_instance.is_API_online()
-        HttpClient.call_API = original_func
-        self.assertTrue(result)
-
-    def test_is_API_online_failure(self):
-        original_func = HttpClient.cacheable_get_json
-        HttpClient.cacheable_get_json = \
-            self.mock_api_call_failing_ping
-        result = self.__test_instance.is_API_online()
-        HttpClient.cacheable_get_json = original_func
-        self.assertFalse(result)
-
     def test_city_id_registry(self):
         result = self.__test_instance.city_id_registry()
         self.assertTrue(result is not None)
