@@ -96,6 +96,10 @@ class WeatherCodeRegistry:
 
     @classmethod
     def get_instance(cls):
+        """
+        Factory method returning the default weather code registry
+        :return: a `WeatherCodeRegistry` instance
+        """
         return WeatherCodeRegistry(WEATHER_CODES_INTERVALS)
 
     def __repr__(self):
