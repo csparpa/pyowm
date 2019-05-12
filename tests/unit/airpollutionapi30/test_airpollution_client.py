@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pyowm.pollutionapi30.airpollution_client import AirPollutionHttpClient
+from pyowm.airpollutionapi30.airpollution_client import AirPollutionHttpClient
 from pyowm.commons.http_client import HttpClient
 from pyowm.utils import formatting
 

@@ -6,9 +6,9 @@ import json
 from datetime import datetime
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.location import Location
-from pyowm.pollutionapi30.ozone import Ozone
+from pyowm.airpollutionapi30.ozone import Ozone
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
-from tests.unit.pollutionapi30.json_test_dumps import OZONE_JSON_DUMP
+from tests.unit.airpollutionapi30.json_test_dumps import OZONE_JSON_DUMP
 
 OZONE_JSON = '{"time":"2016-10-06T13:32:53Z","location":{"latitude":1.3841,"longitude":9.8633},"data":276.8447570800781}'
 OZONE_MALFORMED_JSON = '{"time":"2016-10-06T13:32:53Z", "x": 1234}'

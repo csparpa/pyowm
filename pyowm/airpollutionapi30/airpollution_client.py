@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyowm.commons import http_client
-from pyowm.pollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
+from pyowm.airpollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
 from pyowm.utils import formatting
 
 

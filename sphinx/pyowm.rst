@@ -10,7 +10,7 @@ Subpackages
     pyowm.alertapi30
     pyowm.commons
     pyowm.exceptions
-    pyowm.pollutionapi30
+    pyowm.airpollutionapi30
     pyowm.stationsapi30
     pyowm.tiles
     pyowm.utils

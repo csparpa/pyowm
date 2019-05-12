@@ -6,9 +6,9 @@ import json
 from datetime import datetime
 from pyowm.exceptions import parse_response_error
 from pyowm.weatherapi25.location import Location
-from pyowm.pollutionapi30.coindex import COIndex
+from pyowm.airpollutionapi30.coindex import COIndex
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
-from tests.unit.pollutionapi30.json_test_dumps import COINDEX_JSON_DUMP
+from tests.unit.airpollutionapi30.json_test_dumps import COINDEX_JSON_DUMP
 
 COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
 COINDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'

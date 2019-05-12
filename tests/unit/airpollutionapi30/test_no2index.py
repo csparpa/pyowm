@@ -6,9 +6,9 @@ import json
 from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.pollutionapi30.no2index import NO2Index
+from pyowm.airpollutionapi30.no2index import NO2Index
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
-from tests.unit.pollutionapi30.json_test_dumps import NO2INDEX_JSON_DUMP
+from tests.unit.airpollutionapi30.json_test_dumps import NO2INDEX_JSON_DUMP
 
 NO2INDEX_JSON = '{"time":"2016-03-03T12:00:00Z","location":{"latitude":0.0,"longitude":10.0},"data":{"no2":{"precision":1.436401748934656e+15,"value":2.550915831693312e+15},"no2_strat":{"precision":2.00000000753664e+14,"value":1.780239650783232e+15},"no2_trop":{"precision":1.464945698930688e+15,"value":7.7067618091008e+14}}}'
 NO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","abc":[]}'

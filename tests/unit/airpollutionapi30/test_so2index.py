@@ -5,10 +5,10 @@ import json
 import unittest
 from datetime import datetime
 from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.pollutionapi30.so2index import SO2Index
+from pyowm.airpollutionapi30.so2index import SO2Index
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
-from tests.unit.pollutionapi30.json_test_dumps import SO2INDEX_JSON_DUMP
-from tests.unit.pollutionapi30.xml_test_dumps import SO2INDEX_XML_DUMP
+from tests.unit.airpollutionapi30.json_test_dumps import SO2INDEX_JSON_DUMP
+from tests.unit.airpollutionapi30.xml_test_dumps import SO2INDEX_XML_DUMP
 from pyowm.weatherapi25.location import Location
 
 SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},' \

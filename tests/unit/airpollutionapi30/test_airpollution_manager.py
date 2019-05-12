@@ -1,0 +1,139 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import unittest
+from pyowm.airpollutionapi30 import airpollution_client, airpollution_manager, coindex, so2index, ozone, no2index
+from pyowm.constants import AIRPOLLUTION_API_VERSION
+from tests.unit.airpollutionapi30.test_ozone import OZONE_JSON
+from tests.unit.airpollutionapi30.test_coindex import COINDEX_JSON
+from tests.unit.airpollutionapi30.test_no2index import NO2INDEX_JSON
+from tests.unit.airpollutionapi30.test_so2index import SO2INDEX_JSON
+
+
+class TestAirPollutionManager(unittest.TestCase):
+
+    __test_instance = airpollution_manager.AirPollutionAPIManager(API_key='fakeapikey')
+
+    def mock_get_coi_returning_coindex_around_coords(self, params_dict):
+        return COINDEX_JSON
+
+    def mock_get_o3_returning_coindex_around_coords(self, params_dict):
+        return OZONE_JSON
+
+    def mock_get_no2_returning_no2index_around_coords(self, params_dict):
+        return NO2INDEX_JSON
+
+    def mock_get_so2_returning_so2index_around_coords(self, params_dict):
+        return SO2INDEX_JSON
+
+    def test_get_uvindex_api_version(self):
+        result = self.__test_instance.airpollution_api_version()
+        self.assertIsInstance(result, tuple)
+        self.assertEqual(result, AIRPOLLUTION_API_VERSION)
+
+    def test_coindex_around_coords(self):
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_coi
+        airpollution_client.AirPollutionHttpClient.get_coi = \
+            self.mock_get_coi_returning_coindex_around_coords
+        result = self.__test_instance.coindex_around_coords(45, 9)
+        airpollution_client.AirPollutionHttpClient.get_coi = ref_to_original
+        self.assertTrue(isinstance(result, coindex.COIndex))
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_co_samples())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_coindex_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_ozone_around_coords(self):
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_o3
+        airpollution_client.AirPollutionHttpClient.get_o3 = \
+            self.mock_get_o3_returning_coindex_around_coords
+        result = self.__test_instance.ozone_around_coords(45, 9)
+        airpollution_client.AirPollutionHttpClient.get_o3 = ref_to_original
+        self.assertTrue(isinstance(result, ozone.Ozone))
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_du_value())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_ozone_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_no2index_around_coords(self):
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_no2
+        airpollution_client.AirPollutionHttpClient.get_no2 = \
+            self.mock_get_no2_returning_no2index_around_coords
+        result = self.__test_instance.no2index_around_coords(45, 9)
+        airpollution_client.AirPollutionHttpClient.get_no2 = ref_to_original
+        self.assertTrue(isinstance(result, no2index.NO2Index))
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_no2_samples())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_no2index_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_so2index_around_coords(self):
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_so2
+        airpollution_client.AirPollutionHttpClient.get_so2 = \
+            self.mock_get_so2_returning_so2index_around_coords
+        result = self.__test_instance.so2index_around_coords(45, 9)
+        airpollution_client.AirPollutionHttpClient.get_so2 = ref_to_original
+        self.assertTrue(isinstance(result, so2index.SO2Index))
+        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.get_reception_time())
+        loc = result.get_location()
+        self.assertIsNotNone(loc)
+        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(result.get_so2_samples())
+        self.assertIsNotNone(result.get_interval())
+
+    def test_so2index_around_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+                          self.__test_instance, 43.7, -200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+                          self.__test_instance, 43.7, 200.0)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+                          self.__test_instance, -200, 2.5)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+                          self.__test_instance, 200, 2.5)
+
+    def test_repr(self):
+        print(self.__test_instance)
