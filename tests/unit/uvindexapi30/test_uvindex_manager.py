@@ -111,3 +111,6 @@ class TestUVIndexManager(unittest.TestCase):
         _ = self.__test_instance.uvindex_history_around_coords(
             45, 9, 1498049953)
         uv_client.UltraVioletHttpClient.get_uvi_history = ref_to_original
+
+    def test_repr(self):
+        print(self.__test_instance)

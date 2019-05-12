@@ -13,7 +13,7 @@ class UVIndexManager:
     """
     A manager objects that provides a full interface to OWM UV Index API.
 
-    :param API_key: the OWM Weather API key
+    :param API_key: the OWM UV Index API key
     :type API_key: str
     :returns: a *UVIndexManager* instance
     :raises: *AssertionError* when no API Key is provided
@@ -40,8 +40,8 @@ class UVIndexManager:
         :param lon: the location's longitude, must be between -180.0 and 180.0
         :type lon: int/float
         :return: a *UVIndex* instance or ``None`` if data is not available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
+        :raises: *ParseResponseException* when OWM UV Index API responses' data
+            cannot be parsed, *APICallException* when OWM UV Index API can not be
             reached, *ValueError* for wrong input values
         """
         geo.assert_is_lon(lon)
@@ -60,8 +60,8 @@ class UVIndexManager:
         :param lon: the location's longitude, must be between -180.0 and 180.0
         :type lon: int/float
         :return: a list of *UVIndex* instances or empty list if data is not available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
+        :raises: *ParseResponseException* when OWM UV Index API responses' data
+            cannot be parsed, *APICallException* when OWM UV Index API can not be
             reached, *ValueError* for wrong input values
         """
         geo.assert_is_lon(lon)
@@ -89,8 +89,8 @@ class UVIndexManager:
             will be used)
         :type end: int, ``datetime.datetime`` or ISO8601-formatted string
         :return: a list of *UVIndex* instances or empty list if data is not available
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
+        :raises: *ParseResponseException* when OWM UV Index API responses' data
+            cannot be parsed, *APICallException* when OWM UV Index API can not be
             reached, *ValueError* for wrong input values
         """
         geo.assert_is_lon(lon)
@@ -105,3 +105,6 @@ class UVIndexManager:
         json_data = self.uv_client.get_uvi_history(params)
         uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
         return uvindex_list
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)
