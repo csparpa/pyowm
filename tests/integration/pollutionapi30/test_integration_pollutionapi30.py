@@ -3,13 +3,12 @@
 
 import unittest
 import os
-from pyowm.config import DEFAULT_CONFIG
-from pyowm.weatherapi25.owm25 import OWM25
+from pyowm import owm
 
 
 class IntegrationTestsPollutionAPI30(unittest.TestCase):
 
-    __owm = OWM25(os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None)).airpollution_manager()
 
     def test_coindex_around_coords(self):
         """

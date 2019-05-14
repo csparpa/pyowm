@@ -3,15 +3,14 @@
 
 import unittest
 import os
-from pyowm.weatherapi25.owm25 import OWM25
+from pyowm import owm
 from pyowm.tiles.enums import MapLayerEnum
 from pyowm.commons.tile import Tile
-from pyowm.config import DEFAULT_CONFIG
 
 
 class TesIntegrationTileManager(unittest.TestCase):
 
-    __owm = OWM25(os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
 
     def test_tiles_fetch(self):
         mgr = self.__owm.tile_manager(MapLayerEnum.PRECIPITATION)

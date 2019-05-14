@@ -3,14 +3,13 @@
 
 import unittest
 import os
-from pyowm.config import DEFAULT_CONFIG
-from pyowm.weatherapi25.owm25 import OWM25
+from pyowm import owm
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 
 
 class IntegrationTestsPolygonsAPISubset(unittest.TestCase):
 
-    __owm = OWM25(os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
 
     def test_polygons_CRUD(self):
 

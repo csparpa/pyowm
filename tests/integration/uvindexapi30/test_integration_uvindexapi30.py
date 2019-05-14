@@ -4,13 +4,12 @@
 import unittest
 import os
 from datetime import datetime
-from pyowm.weatherapi25.owm25 import OWM25
-from pyowm.config import DEFAULT_CONFIG
+from pyowm import owm
 
 
 class IntegrationTestsUVIndexAPI30(unittest.TestCase):
 
-    __owm = OWM25(os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key']))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
 
     def test_uvindex_around_coords(self):
         """

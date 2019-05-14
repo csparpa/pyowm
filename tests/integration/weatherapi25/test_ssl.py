@@ -3,27 +3,27 @@
 
 import unittest
 import os
-from pyowm.config import DEFAULT_CONFIG
-from pyowm.weatherapi25.owm25 import OWM25
+from pyowm import owm
 
 
 class TestSecureAPICalls(unittest.TestCase):
 
-    __API_key = os.getenv('OWM_API_KEY', DEFAULT_CONFIG['api_key'])
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
 
     def test_ssl(self):
 
         # Try to call the OWM API using SSL and certificate validation
-        owm = OWM25(API_key=self.__API_key, use_ssl=True)
+        self.__owm.config['connection']['use_ssl'] = True
+        wm = self.__owm.weather_manager()
         try:
             # weather API
-            owm.weather_at_place('London,GB')
+            wm.weather_at_place('London,GB')
 
             # pollution API
-            owm.uvindex_around_coords(-22.57, -43.12)
+            wm.uvindex_around_coords(-22.57, -43.12)
 
             # stations API
-            mgr = owm.stations_manager()
+            mgr = self.__owm.stations_manager()
             mgr.get_stations()
 
         except Exception as e:
