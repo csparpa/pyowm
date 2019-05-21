@@ -62,9 +62,8 @@ class AirPollutionHttpClient:
             else:
                 timeref = self._trim_to(formatting.to_date(start), interval)
 
-        fixed_url = '%s/%s,%s/%s.json' % (CO_INDEX_URL, lat, lon, timeref)
-        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
-        _, json_data = self._client.cacheable_get_json(uri)
+        uri = '%s/%s,%s/%s.json' % (CO_INDEX_URL, lat, lon, timeref)
+        _, json_data = self._client.get_json(uri)
         return json_data
 
     def get_o3(self, params_dict):
@@ -92,9 +91,8 @@ class AirPollutionHttpClient:
                 timeref = self._trim_to(
                     formatting.to_date(start), interval)
 
-        fixed_url = '%s/%s,%s/%s.json' % (OZONE_URL, lat, lon, timeref)
-        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
-        _, json_data = self._client.cacheable_get_json(uri)
+        uri = '%s/%s,%s/%s.json' % (OZONE_URL, lat, lon, timeref)
+        _, json_data = self._client.get_json(uri)
         return json_data
 
     def get_no2(self, params_dict):
@@ -122,9 +120,8 @@ class AirPollutionHttpClient:
                 timeref = self._trim_to(
                     formatting.to_date(start), interval)
 
-        fixed_url = '%s/%s,%s/%s.json' % (NO2_INDEX_URL, lat, lon, timeref)
-        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
-        _, json_data = self._client.cacheable_get_json(uri)
+        uri = '%s/%s,%s/%s.json' % (NO2_INDEX_URL, lat, lon, timeref)
+        _, json_data = self._client.get_json(uri)
         return json_data
 
     def get_so2(self, params_dict):
@@ -152,9 +149,8 @@ class AirPollutionHttpClient:
                 timeref = self._trim_to(
                     formatting.to_date(start), interval)
 
-        fixed_url = '%s/%s,%s/%s.json' % (SO2_INDEX_URL, lat, lon, timeref)
-        uri = http_client.HttpClient.to_url(fixed_url, self._API_key, None)
-        _, json_data = self._client.cacheable_get_json(uri)
+        uri = '%s/%s,%s/%s.json' % (SO2_INDEX_URL, lat, lon, timeref)
+        _, json_data = self._client.get_json(uri)
         return json_data
 
     def __repr__(self):

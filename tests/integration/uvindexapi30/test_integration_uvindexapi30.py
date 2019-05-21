@@ -9,7 +9,7 @@ from pyowm import owm
 
 class IntegrationTestsUVIndexAPI30(unittest.TestCase):
 
-    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None)).uvindex_manager()
 
     def test_uvindex_around_coords(self):
         """

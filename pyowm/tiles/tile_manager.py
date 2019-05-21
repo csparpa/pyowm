@@ -5,7 +5,7 @@ from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.http_client import HttpClient
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
-from pyowm.tiles.uris import ROOT_TILE_URL
+from pyowm.tiles.uris import ROOT_TILE_URL, NAMED_MAP_LAYER_URL
 
 
 class TileManager:
@@ -15,20 +15,24 @@ class TileManager:
 
     :param API_key: the OWM Weather API key
     :type API_key: str
-    :param map_layer: the layer for which you want tiles fetched. Allowed map layers are specified by the `pyowm.tiles.enum.MapLayerEnum` enumerator class.
+    :param map_layer: the layer for which you want tiles fetched. Allowed map layers are specified by
+    the `pyowm.tiles.enum.MapLayerEnum` enumerator class.
     :type map_layer: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: a *TileManager* instance
     :raises: *AssertionError* when no API Key or no map layer is provided, or map layer name is not a string
 
     """
 
-    def __init__(self, API_key, map_layer):
+    def __init__(self, API_key, map_layer, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
         assert map_layer is not None, 'You must provide a valid map layer name'
         assert isinstance(map_layer, str), 'Map layer name must be a string'
         self.map_layer = map_layer
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_TILE_URL, admits_subdomains=False)
 
     def get_tile(self, x, y, zoom):
         """
@@ -44,7 +48,7 @@ class TileManager:
 
         """
         status, data = self.http_client.get_png(
-            ROOT_TILE_URL % self.map_layer + '/%s/%s/%s.png' % (zoom, x, y),
+            NAMED_MAP_LAYER_URL % self.map_layer + '/%s/%s/%s.png' % (zoom, x, y),
             params={'appid': self.API_key})
         img = Image(data, ImageTypeEnum.PNG)
         return Tile(x, y, zoom, self.map_layer, img)

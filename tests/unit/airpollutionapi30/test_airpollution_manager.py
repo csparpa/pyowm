@@ -3,6 +3,7 @@
 
 import unittest
 from pyowm.airpollutionapi30 import airpollution_client, airpollution_manager, coindex, so2index, ozone, no2index
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.constants import AIRPOLLUTION_API_VERSION
 from tests.unit.airpollutionapi30.test_ozone import OZONE_JSON
 from tests.unit.airpollutionapi30.test_coindex import COINDEX_JSON
@@ -12,7 +13,7 @@ from tests.unit.airpollutionapi30.test_so2index import SO2INDEX_JSON
 
 class TestAirPollutionManager(unittest.TestCase):
 
-    __test_instance = airpollution_manager.AirPollutionAPIManager(API_key='fakeapikey')
+    __test_instance = airpollution_manager.AirPollutionManager('fakeapikey', DEFAULT_CONFIG)
 
     def mock_get_coi_returning_coindex_around_coords(self, params_dict):
         return COINDEX_JSON
@@ -25,6 +26,10 @@ class TestAirPollutionManager(unittest.TestCase):
 
     def mock_get_so2_returning_so2index_around_coords(self, params_dict):
         return SO2INDEX_JSON
+
+    def test_instantiation_with_wrong_params(self):
+        self.assertRaises(AssertionError, airpollution_manager.AirPollutionManager, None, dict())
+        self.assertRaises(AssertionError, airpollution_manager.AirPollutionManager, 'apikey', None)
 
     def test_get_uvindex_api_version(self):
         result = self.__test_instance.airpollution_api_version()
@@ -48,13 +53,13 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(result.get_interval())
 
     def test_coindex_around_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.coindex_around_coords, \
                           self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.coindex_around_coords, \
                           self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.coindex_around_coords, \
                           self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.coindex_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.coindex_around_coords, \
                           self.__test_instance, 200, 2.5)
 
     def test_ozone_around_coords(self):
@@ -74,13 +79,13 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(result.get_interval())
 
     def test_ozone_around_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.ozone_around_coords, \
                           self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.ozone_around_coords, \
                           self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.ozone_around_coords, \
                           self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.ozone_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.ozone_around_coords, \
                           self.__test_instance, 200, 2.5)
 
     def test_no2index_around_coords(self):
@@ -100,13 +105,13 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(result.get_interval())
 
     def test_no2index_around_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.no2index_around_coords, \
                           self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.no2index_around_coords, \
                           self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.no2index_around_coords, \
                           self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.no2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.no2index_around_coords, \
                           self.__test_instance, 200, 2.5)
 
     def test_so2index_around_coords(self):
@@ -126,13 +131,13 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(result.get_interval())
 
     def test_so2index_around_coords_fails_with_wrong_parameters(self):
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.so2index_around_coords, \
                           self.__test_instance, 43.7, -200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.so2index_around_coords, \
                           self.__test_instance, 43.7, 200.0)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.so2index_around_coords, \
                           self.__test_instance, -200, 2.5)
-        self.assertRaises(ValueError, airpollution_manager.AirPollutionAPIManager.so2index_around_coords, \
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.so2index_around_coords, \
                           self.__test_instance, 200, 2.5)
 
     def test_repr(self):

@@ -3,7 +3,7 @@
 
 from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.trigger import Trigger
-from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
+from pyowm.alertapi30.uris import ROOT_ALERT_API_URL, TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import ALERT_API_VERSION
 from pyowm.utils import formatting, timestamps
@@ -17,15 +17,18 @@ class AlertManager:
 
     :param API_key: the OWM Weather API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: an *AlertManager* instance
     :raises: *AssertionError* when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
+    def __init__(self, API_key, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_ALERT_API_URL)
 
     def alert_api_version(self):
         return ALERT_API_VERSION

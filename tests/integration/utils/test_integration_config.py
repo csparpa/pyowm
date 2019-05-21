@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pathlib
 import unittest
 from pyowm.utils import config
 from pyowm.exceptions import config_error
@@ -9,7 +10,8 @@ from pyowm.exceptions import config_error
 class TesIntegrationConfig(unittest.TestCase):
 
     def test_get_config_from(self):
-        path = 'test_config.json'
+        config_file_name = 'test_config.json'
+        path = (pathlib.Path() / config_file_name).absolute()
         result = config.get_config_from(path)
         self.assertIsInstance(result, dict)
 

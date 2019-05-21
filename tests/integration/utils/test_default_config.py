@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from pyowm.commons.enums import SubscriptionTypeEnum
 from pyowm.config import DEFAULT_CONFIG
 
 
@@ -9,12 +10,9 @@ class TesDefaultConfig(unittest.TestCase):
 
     def test_default_config_is_complete(self):
 
-        # default fake API key
-        self.assertTrue('api_key' in DEFAULT_CONFIG)
-
         # subscription type is free
         self.assertTrue('subscription_type' in DEFAULT_CONFIG)
-        self.assertEqual('free', DEFAULT_CONFIG['subscription_type'])
+        self.assertEqual(SubscriptionTypeEnum.FREE, DEFAULT_CONFIG['subscription_type'])
 
         # language is English
         self.assertTrue('language' in DEFAULT_CONFIG)
@@ -26,11 +24,21 @@ class TesDefaultConfig(unittest.TestCase):
         self.assertIsInstance(connection, dict)
 
         self.assertTrue('use_ssl' in connection)
-        self.assertEqual(False, connection['use_ssl'])
+        self.assertFalse(connection['use_ssl'])
 
         self.assertTrue('verify_ssl_certs' in connection)
-        self.assertEqual(True, connection['verify_ssl_certs'])
+        self.assertTrue(connection['verify_ssl_certs'])
+
+        self.assertTrue('use_proxy' in connection)
+        self.assertFalse(connection['use_proxy'])
 
         self.assertTrue('timeout_secs' in connection)
-        self.assertEqual(2, connection['timeout_secs'])
+        self.assertEqual(5, connection['timeout_secs'])
 
+        # proxies is a sub-dict, check its keys
+        self.assertTrue('proxies' in DEFAULT_CONFIG)
+        proxies = DEFAULT_CONFIG['proxies']
+        self.assertIsInstance(proxies, dict)
+
+        self.assertTrue('http' in  proxies)
+        self.assertTrue('https' in  proxies)

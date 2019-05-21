@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.uvindexapi30 import uv_client, uvindex, uvindex_manager
 from tests.unit.uvindexapi30.test_uvindex import UVINDEX_JSON, UVINDEX_LIST_JSON
 from pyowm.constants import UVINDEX_API_VERSION
@@ -9,7 +10,7 @@ from pyowm.constants import UVINDEX_API_VERSION
 
 class TestUVIndexManager(unittest.TestCase):
 
-    __test_instance = uvindex_manager.UVIndexManager(API_key='fakeapikey')
+    __test_instance = uvindex_manager.UVIndexManager('fakeapikey', DEFAULT_CONFIG)
 
     def mock_get_uvi_returning_uvindex_around_coords(self, params_dict):
         return UVINDEX_JSON
@@ -19,6 +20,12 @@ class TestUVIndexManager(unittest.TestCase):
 
     def mock_get_uvi_history(self, params_dict):
         return UVINDEX_LIST_JSON
+
+    def test_instantiation_with_wrong_params(self):
+        with self.assertRaises(AssertionError):
+            uvindex_manager.UVIndexManager(None, dict())
+        with self.assertRaises(AssertionError):
+            uvindex_manager.UVIndexManager('apikey', None)
 
     def test_get_uvindex_api_version(self):
         result = self.__test_instance.uvindex_api_version()

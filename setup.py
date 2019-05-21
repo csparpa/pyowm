@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
-from pyowm import constants
-from pyowm.utils.strings import version_tuple_to_str
 from pyowm.__version__ import __author__, __author_email__, __description__, __license__, __title__,\
-    __url__
+    __url__, __version__
 
 setup(
     name=__title__,
-    version=version_tuple_to_str(constants.PYOWM_VERSION),
+    version=__version__,
     description=__description__,
     author=__author__,
     author_email=__author_email__,

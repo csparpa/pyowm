@@ -83,6 +83,14 @@ pyowm.weatherapi25.weather module
     :undoc-members:
     :show-inheritance:
 
+pyowm.weatherapi25.weather_manager module
+-----------------------------------------
+
+.. automodule:: pyowm.weatherapi25.weather_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.weatherapi25.weathercoderegistry module
 ---------------------------------------------
 

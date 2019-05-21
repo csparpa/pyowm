@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import UVINDEX_API_VERSION
 from pyowm.utils import formatting, geo, timestamps
 from pyowm.uvindexapi30 import uv_client, uvindex
+from pyowm.uvindexapi30.uris import ROOT_UV_API_URL
 
 
 class UVIndexManager:
@@ -15,15 +15,19 @@ class UVIndexManager:
 
     :param API_key: the OWM UV Index API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: a *UVIndexManager* instance
     :raises: *AssertionError* when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
+    def __init__(self, API_key, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.uv_client = uv_client.UltraVioletHttpClient(API_key, HttpClient())
+        assert isinstance(config, dict)
+        self.uv_client = uv_client.UltraVioletHttpClient(
+            API_key, HttpClient(API_key, config, ROOT_UV_API_URL))
 
     def uvindex_api_version(self):
         return UVINDEX_API_VERSION
@@ -48,7 +52,7 @@ class UVIndexManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self.uv_client.get_uvi(params)
-        return uvindex.UVIndex.from_dict(json.loads((json_data)))
+        return uvindex.UVIndex.from_dict(json_data)
 
     def uvindex_forecast_around_coords(self, lat, lon):
         """
@@ -68,7 +72,7 @@ class UVIndexManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self.uv_client.get_uvi_forecast(params)
-        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
+        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json_data]
         return uvindex_list
 
     def uvindex_history_around_coords(self, lat, lon, start, end=None):
@@ -103,7 +107,7 @@ class UVIndexManager:
             end = formatting.timeformat(end, 'unix')
         params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
         json_data = self.uv_client.get_uvi_history(params)
-        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json.loads(json_data)]
+        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json_data]
         return uvindex_list
 
     def __repr__(self):

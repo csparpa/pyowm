@@ -6,7 +6,7 @@ from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, Sa
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
 from pyowm.agroapi10.soil import Soil
-from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
+from pyowm.agroapi10.uris import ROOT_AGRO_API, POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
 from pyowm.commons.http_client import HttpClient
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
@@ -21,15 +21,18 @@ class AgroManager:
 
     :param API_key: the OWM Weather API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: an `AgroManager` instance
     :raises: `AssertionError` when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
-        assert API_key is not None, 'You must provide a valid API Key'
+    def __init__(self, API_key, config):
+        assert isinstance(API_key, str), 'You must provide a valid API Key'
         self.API_key = API_key
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_AGRO_API)
 
     def agro_api_version(self):
         return AGRO_API_VERSION

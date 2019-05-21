@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pyowm.commons.databoxes import ImageType, Satellite
+from pyowm.commons.databoxes import ImageType, Satellite, SubscriptionType
 
 
 class TestImageType(unittest.TestCase):
@@ -18,3 +18,9 @@ class TestSatellite(unittest.TestCase):
         instance = Satellite('Terrasat', 'tst')
         repr(instance)
 
+
+class TestSubscriptionType(unittest.TestCase):
+
+    def test_repr(self):
+        instance = SubscriptionType('startup', 'pro', True)
+        repr(instance)

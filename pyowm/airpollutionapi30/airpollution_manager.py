@@ -1,29 +1,34 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
 from pyowm.airpollutionapi30 import airpollution_client, coindex, no2index, ozone, so2index
+from pyowm.airpollutionapi30.uris import ROOT_POLLUTION_API_URL
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import AIRPOLLUTION_API_VERSION
 from pyowm.utils import geo
 
 
-class AirPollutionAPIManager:
+class AirPollutionManager:
 
     """
     A manager objects that provides a full interface to OWM Air Pollution API.
 
     :param API_key: the OWM AirPollution API key
     :type API_key: str
-    :returns: an *AirPollutionAPIManager* instance
+    :param config: the configuration dictionary
+    :type config: dict
+    :returns: an *AirPollutionManager* instance
     :raises: *AssertionError* when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
+    def __init__(self, API_key, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.ap_client = airpollution_client.AirPollutionHttpClient(API_key, HttpClient())
+        assert isinstance(config, dict)
+        self.ap_client = airpollution_client.AirPollutionHttpClient(
+            API_key,
+            HttpClient(API_key, config, ROOT_POLLUTION_API_URL))
 
     def airpollution_api_version(self):
         return AIRPOLLUTION_API_VERSION
@@ -61,7 +66,7 @@ class AirPollutionAPIManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self.ap_client.get_coi(params)
-        coi = coindex.COIndex.from_dict(json.loads(json_data))
+        coi = coindex.COIndex.from_dict(json_data)
         if interval is None:
             interval = 'year'
         coi._interval = interval
@@ -99,7 +104,7 @@ class AirPollutionAPIManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self.ap_client.get_o3(params)
-        oz = ozone.Ozone.from_dict(json.loads(json_data))
+        oz = ozone.Ozone.from_dict(json_data)
         if interval is None:
             interval = 'year'
             oz._interval = interval
@@ -138,7 +143,7 @@ class AirPollutionAPIManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self.ap_client.get_no2(params)
-        no2 = no2index.NO2Index.from_dict(json.loads(json_data))
+        no2 = no2index.NO2Index.from_dict(json_data)
         if interval is None:
             interval = 'year'
         no2._interval = interval
@@ -177,7 +182,7 @@ class AirPollutionAPIManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat, 'start': start, 'interval': interval}
         json_data = self.ap_client.get_so2(params)
-        so2 = so2index.SO2Index.from_dict(json.loads(json_data))
+        so2 = so2index.SO2Index.from_dict(json_data)
         if interval is None:
             interval = 'year'
             so2._interval = interval

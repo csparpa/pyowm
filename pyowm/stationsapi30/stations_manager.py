@@ -5,7 +5,7 @@ from pyowm.commons.http_client import HttpClient
 from pyowm.constants import STATIONS_API_VERSION
 from pyowm.stationsapi30.measurement import AggregatedMeasurement
 from pyowm.stationsapi30.station import Station
-from pyowm.stationsapi30.uris import STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
+from pyowm.stationsapi30.uris import ROOT_STATIONS_API_URL, STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 
 
 class StationsManager:
@@ -17,15 +17,18 @@ class StationsManager:
 
     :param API_key: the OWM Weather API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: a *StationsManager* instance
     :raises: *AssertionError* when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
+    def __init__(self, API_key, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_STATIONS_API_URL)
 
     def stations_api_version(self):
         return STATIONS_API_VERSION

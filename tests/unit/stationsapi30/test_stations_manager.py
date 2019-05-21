@@ -4,6 +4,7 @@
 import unittest
 import json
 import copy
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.stationsapi30.station import Station
 from pyowm.stationsapi30.measurement import Measurement, AggregatedMeasurement
 from pyowm.stationsapi30.buffer import Buffer
@@ -92,15 +93,16 @@ class MockHttpClientMeasurements(HttpClient):
 class TestStationManager(unittest.TestCase):
 
     def factory(self, _kls):
-        sm = StationsManager('APIKey')
-        sm.http_client = _kls()
+        sm = StationsManager('APIKey', DEFAULT_CONFIG)
+        sm.http_client = _kls('APIKey', DEFAULT_CONFIG, 'anyurl.com')
         return sm
 
-    def test_instantiation_fails_without_api_key(self):
-        self.assertRaises(AssertionError, StationsManager, None)
+    def test_instantiation_with_wrong_params(self):
+        self.assertRaises(AssertionError, StationsManager, None, dict())
+        self.assertRaises(AssertionError, StationsManager, 'apikey', None)
 
     def test_get_stations_api_version(self):
-        instance = StationsManager('APIKey')
+        instance = StationsManager('APIKey', DEFAULT_CONFIG)
         result = instance.stations_api_version()
         self.assertIsInstance(result, tuple)
         self.assertEqual(result, STATIONS_API_VERSION)
@@ -287,7 +289,7 @@ class TestStationManager(unittest.TestCase):
                 }
             ]
         }
-        instance = StationsManager('API-Key')
+        instance = StationsManager('API-Key', DEFAULT_CONFIG)
         result = instance._structure_dict(msmt)
         self.assertEqual(expected['station_id'], result['station_id'])
         self.assertEqual(expected['dt'], result['dt'])

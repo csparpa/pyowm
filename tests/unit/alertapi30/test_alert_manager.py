@@ -8,6 +8,7 @@ from pyowm.alertapi30.trigger import Trigger
 from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.condition import Condition
 from pyowm.commons.http_client import HttpClient
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.utils import geo
 from pyowm.constants import ALERT_API_VERSION
 
@@ -107,15 +108,16 @@ class TestAlertManager(unittest.TestCase):
             {"lon": 37, "lat": 53}, 1481802090232)
 
     def factory(self, _kls):
-        sm = AlertManager('APIKey')
-        sm.http_client = _kls()
+        sm = AlertManager('APIKey', DEFAULT_CONFIG)
+        sm.http_client = _kls('APIKey', DEFAULT_CONFIG, 'anyurl.com')
         return sm
 
-    def test_instantiation_fails_without_api_key(self):
-        self.assertRaises(AssertionError, AlertManager, None)
+    def test_instantiation_with_wrong_params(self):
+        self.assertRaises(AssertionError, AlertManager, None, dict())
+        self.assertRaises(AssertionError, AlertManager, 'apikey', None)
 
     def test_get_alert_api_version(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         result = instance.alert_api_version()
         self.assertIsInstance(result, tuple)
         self.assertEqual(result, ALERT_API_VERSION)
@@ -128,7 +130,7 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsInstance(t, Trigger)
 
     def test_get_trigger_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.get_trigger(None)
         with self.assertRaises(AssertionError):
@@ -162,7 +164,7 @@ class TestAlertManager(unittest.TestCase):
             instance.create_trigger(1526809375, 1527809375, [self._cond1, self._cond2], [], alert_channels=None)
 
     def test_delete_trigger_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.delete_trigger(None)
         with self.assertRaises(AssertionError):
@@ -176,7 +178,7 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_update_trigger_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.update_trigger(None)
         with self.assertRaises(AssertionError):
@@ -192,7 +194,7 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_get_alerts_for_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.get_alerts_for(None)
         with self.assertRaises(AssertionError):
@@ -208,7 +210,7 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsInstance(results[1], Alert)
 
     def test_get_alert_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.get_alert(None, self._trigger)
         with self.assertRaises(AssertionError):
@@ -226,7 +228,7 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsInstance(result, Alert)
 
     def test_delete_all_alerts_for_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.delete_all_alerts_for(None)
         with self.assertRaises(AssertionError):
@@ -239,7 +241,7 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_delete_alert_fails_with_wrong_input(self):
-        instance = AlertManager('APIKey')
+        instance = AlertManager('APIKey', DEFAULT_CONFIG)
         with self.assertRaises(AssertionError):
             instance.delete_alert(None)
         with self.assertRaises(AssertionError):
