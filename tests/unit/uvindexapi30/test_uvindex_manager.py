@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 import unittest
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.uvindexapi30 import uv_client, uvindex, uvindex_manager
@@ -13,13 +14,13 @@ class TestUVIndexManager(unittest.TestCase):
     __test_instance = uvindex_manager.UVIndexManager('fakeapikey', DEFAULT_CONFIG)
 
     def mock_get_uvi_returning_uvindex_around_coords(self, params_dict):
-        return UVINDEX_JSON
+        return json.loads(UVINDEX_JSON)
 
     def mock_get_uvi_forecast(self, params_dict):
-        return UVINDEX_LIST_JSON
+        return json.loads(UVINDEX_LIST_JSON)
 
     def mock_get_uvi_history(self, params_dict):
-        return UVINDEX_LIST_JSON
+        return json.loads(UVINDEX_LIST_JSON)
 
     def test_instantiation_with_wrong_params(self):
         with self.assertRaises(AssertionError):
@@ -110,7 +111,7 @@ class TestUVIndexManager(unittest.TestCase):
         def mock_get_uvi_history_checking_end_parameter(instance, params_dict):
             self.assertIn('end', params_dict)
             self.assertIsNotNone(params_dict['end'])
-            return UVINDEX_LIST_JSON
+            return json.loads(UVINDEX_LIST_JSON)
 
         uv_client.UltraVioletHttpClient.get_uvi_history = \
             mock_get_uvi_history_checking_end_parameter

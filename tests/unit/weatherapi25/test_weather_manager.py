@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 import unittest
 from pyowm.weatherapi25.weather_manager import WeatherManager
 from pyowm.commons.http_client import HttpClient
@@ -30,58 +31,58 @@ class TestWeatherManager(unittest.TestCase):
     # --- MOCKS ---
 
     def mock_api_call_returning_single_obs(self, uri, params=None, headers=None):
-        return 200, OBSERVATION_JSON
+        return 200, json.loads(OBSERVATION_JSON)
 
     def mock_api_call_ping(self, uri, params=None, headers=None):
-        return 200, OBSERVATION_JSON
+        return 200, json.loads(OBSERVATION_JSON)
 
     def mock_api_call_returning_multiple_obs(self, uri, params=None, headers=None):
-        return 200, SEARCH_RESULTS_JSON
+        return 200, json.loads(SEARCH_RESULTS_JSON)
 
     def mock_api_call_returning_3h_forecast(self, uri, params=None, headers=None):
-        return 200, THREE_HOURS_FORECAST_JSON
+        return 200, json.loads(THREE_HOURS_FORECAST_JSON)
 
     def mock_api_call_returning_empty_3h_forecast(self, uri, params=None, headers=None):
-        return 200, THREE_HOURS_FORECAST_NOT_FOUND_JSON
+        return 200, json.loads(THREE_HOURS_FORECAST_NOT_FOUND_JSON)
 
     def mock_api_call_returning_empty_daily_forecast(self, uri, params=None, headers=None):
-        return 200, DAILY_FORECAST_NOT_FOUND_JSON
+        return 200, json.loads(DAILY_FORECAST_NOT_FOUND_JSON)
 
     def mock_api_call_returning_3h_forecast_at_coords(self,uri, params=None, headers=None):
-        return 200, THREE_HOURS_FORECAST_AT_COORDS_JSON
+        return 200, json.loads(THREE_HOURS_FORECAST_AT_COORDS_JSON)
 
     def mock_api_call_returning_3h_forecast_at_id(self, uri, params=None, headers=None):
-        return 200, THREE_HOURS_FORECAST_AT_ID_JSON
+        return 200, json.loads(THREE_HOURS_FORECAST_AT_ID_JSON)
 
     def mock_api_call_returning_daily_forecast(self, uri, params=None, headers=None):
-        return 200, DAILY_FORECAST_JSON
+        return 200, json.loads(DAILY_FORECAST_JSON)
 
     def mock_api_call_returning_daily_forecast_at_coords(self, uri, params=None, headers=None):
-        return 200, DAILY_FORECAST_AT_COORDS_JSON
+        return 200, json.loads(DAILY_FORECAST_AT_COORDS_JSON)
 
     def mock_api_call_returning_daily_forecast_at_id(self, uri, params=None, headers=None):
-        return 200, DAILY_FORECAST_AT_ID_JSON
+        return 200, json.loads(DAILY_FORECAST_AT_ID_JSON)
 
     def mock_api_call_returning_city_weather_history(self, uri, params=None, headers=None):
-        return 200, CITY_WEATHER_HISTORY_JSON
+        return 200, json.loads(CITY_WEATHER_HISTORY_JSON)
 
     def mock_api_call_returning_station_tick_weather_history(self, uri, params=None, headers=None):
-        return 200, STATION_TICK_WEATHER_HISTORY_JSON
+        return 200, json.loads(STATION_TICK_WEATHER_HISTORY_JSON)
 
     def mock_api_call_returning_station_hour_weather_history(self, uri, params=None, headers=None):
-        return 200, STATION_WEATHER_HISTORY_JSON
+        return 200, json.loads(STATION_WEATHER_HISTORY_JSON)
 
     def mock_call_api_returning_station_day_weather_history(self, uri, params=None, headers=None):
-        return 200, STATION_WEATHER_HISTORY_JSON
+        return 200, json.loads(STATION_WEATHER_HISTORY_JSON)
 
     def mock_call_api_returning_station_history_with_no_items(self, uri, params=None, headers=None):
-        return 200, STATION_HISTORY_NO_ITEMS_JSON
+        return 200, json.loads(STATION_HISTORY_NO_ITEMS_JSON)
 
     def mock_api_call_returning_weather_at_places_in_bbox(self, uri, params=None, headers=None):
-        return 200, WEATHER_AT_PLACES_IN_BBOX_JSON
+        return 200, json.loads(WEATHER_AT_PLACES_IN_BBOX_JSON)
 
     def mock_api_call_returning_weather_history_at_coords(self, uri, params=None, headers=None):
-        return 200, CITY_WEATHER_HISTORY_JSON
+        return 200, json.loads(CITY_WEATHER_HISTORY_JSON)
 
     # -- TESTS --
 

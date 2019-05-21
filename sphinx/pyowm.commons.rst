@@ -4,6 +4,16 @@ pyowm.commons package
 Submodules
 ----------
 
+    pyowm.commons.cityids
+
+pyowm.commons.cityidregistry module
+-----------------------------------
+
+.. automodule:: pyowm.commons.cityidregistry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.commons.databoxes module
 ------------------------------
 

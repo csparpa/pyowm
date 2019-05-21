@@ -6,7 +6,7 @@ try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
-from pyowm.weatherapi25.cityidregistry import CityIDRegistry
+from pyowm.commons.cityidregistry import CityIDRegistry
 from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
 

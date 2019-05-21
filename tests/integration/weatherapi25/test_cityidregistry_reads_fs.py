@@ -3,7 +3,7 @@
 
 import unittest
 from os import sep
-from pyowm.weatherapi25.cityidregistry import CityIDRegistry
+from pyowm.commons.cityidregistry import CityIDRegistry
 from pyowm.weatherapi25.location import Location
 
 

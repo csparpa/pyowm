@@ -10,7 +10,7 @@ from pyowm.tiles import tile_manager
 from pyowm.utils import strings
 from pyowm.uvindexapi30 import uvindex_manager
 from pyowm.utils import config as cfg
-from pyowm.weatherapi25 import cityidregistry
+from pyowm.commons import cityidregistry
 from pyowm.weatherapi25 import weather_manager
 
 

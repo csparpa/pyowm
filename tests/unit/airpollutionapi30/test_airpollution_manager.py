@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 import unittest
 from pyowm.airpollutionapi30 import airpollution_client, airpollution_manager, coindex, so2index, ozone, no2index
 from pyowm.config import DEFAULT_CONFIG
@@ -16,16 +17,16 @@ class TestAirPollutionManager(unittest.TestCase):
     __test_instance = airpollution_manager.AirPollutionManager('fakeapikey', DEFAULT_CONFIG)
 
     def mock_get_coi_returning_coindex_around_coords(self, params_dict):
-        return COINDEX_JSON
+        return json.loads(COINDEX_JSON)
 
     def mock_get_o3_returning_coindex_around_coords(self, params_dict):
-        return OZONE_JSON
+        return json.loads(OZONE_JSON)
 
     def mock_get_no2_returning_no2index_around_coords(self, params_dict):
-        return NO2INDEX_JSON
+        return json.loads(NO2INDEX_JSON)
 
     def mock_get_so2_returning_so2index_around_coords(self, params_dict):
-        return SO2INDEX_JSON
+        return json.loads(SO2INDEX_JSON)
 
     def test_instantiation_with_wrong_params(self):
         self.assertRaises(AssertionError, airpollution_manager.AirPollutionManager, None, dict())

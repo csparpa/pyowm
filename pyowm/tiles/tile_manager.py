@@ -16,7 +16,7 @@ class TileManager:
     :param API_key: the OWM Weather API key
     :type API_key: str
     :param map_layer: the layer for which you want tiles fetched. Allowed map layers are specified by
-    the `pyowm.tiles.enum.MapLayerEnum` enumerator class.
+        the `pyowm.tiles.enum.MapLayerEnum` enumerator class.
     :type map_layer: str
     :param config: the configuration dictionary
     :type config: dict

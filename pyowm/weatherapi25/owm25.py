@@ -4,12 +4,11 @@
 from pyowm import constants
 from pyowm.agroapi10 import agro_manager
 from pyowm.alertapi30 import alert_manager
-from pyowm.commons import http_client
+from pyowm.commons import http_client, cityidregistry
 from pyowm.airpollutionapi30 import airpollution_client
 from pyowm.stationsapi30 import stations_manager
 from pyowm.tiles import tile_manager
 from pyowm.utils import strings
-from pyowm.weatherapi25 import cityidregistry
 
 
 class OWM25:

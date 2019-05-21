@@ -6,18 +6,9 @@ Subpackages
 
 .. toctree::
 
-    pyowm.weatherapi25.cityids
 
 Submodules
 ----------
-
-pyowm.weatherapi25.cityidregistry module
-----------------------------------------
-
-.. automodule:: pyowm.weatherapi25.cityidregistry
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 pyowm.weatherapi25.forecast module
 ----------------------------------
