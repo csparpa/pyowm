@@ -44,8 +44,8 @@ class TestUVIndexManager(unittest.TestCase):
         self.assertIsNotNone(result.get_reception_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)
-        self.assertIsNotNone(loc.get_lat())
-        self.assertIsNotNone(loc.get_lon())
+        self.assertIsNotNone(loc.lat)
+        self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(result.get_value())
 
     def test_uvindex_around_coords_fails_with_wrong_parameters(self):

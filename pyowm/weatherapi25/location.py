@@ -22,7 +22,7 @@ class Location:
     :type lon: int/float
     :param lat: the location's latitude, must be between -90.0 and 90.0
     :type lat: int/float
-    :param ID: the location's OWM city ID
+    :param _id: the location's OWM city ID
     :type ID: int
     :param country: the location's country (``None`` by default)
     :type country: Unicode
@@ -30,61 +30,16 @@ class Location:
     :raises: *ValueError* if lon or lat values are provided out of bounds
     """
 
-    def __init__(self, name, lon, lat, ID, country=None):
-        self._name = name
+    def __init__(self, name, lon, lat, _id, country=None):
+        self.name = name
         if lon is None or lat is None:
             raise ValueError("Either 'lon' or 'lat' must be specified")
         geo.assert_is_lon(lon)
         geo.assert_is_lat(lat)
-        self._lon = float(lon)
-        self._lat = float(lat)
-        self._ID = ID
-        self._country = country
-
-    def get_name(self):
-        """
-        Returns the toponym of the location
-
-        :returns: the Unicode toponym
-
-        """
-        return self._name
-
-    def get_lon(self):
-        """
-        Returns the longitude of the location
-
-        :returns: the float longitude
-
-        """
-        return self._lon
-
-    def get_lat(self):
-        """
-        Returns the latitude of the location
-
-        :returns: the float latitude
-
-        """
-        return self._lat
-
-    def get_ID(self):
-        """
-        Returns the OWM city ID of the location
-
-        :returns: the int OWM city ID
-
-        """
-        return self._ID
-
-    def get_country(self):
-        """
-        Returns the country of the location
-
-        :returns: the Unicode country
-
-        """
-        return self._country
+        self.lon = float(lon)
+        self.lat = float(lat)
+        self.id = _id
+        self.country = country
 
     def to_geopoint(self):
         """
@@ -93,9 +48,9 @@ class Location:
         :returns: a ``pyowm.utils.geo.Point`` instance
 
         """
-        if self._lon is None or self._lat is None:
+        if self.lon is None or self.lat is None:
             return None
-        return geo.Point(self._lon, self._lat)
+        return geo.Point(self.lon, self.lat)
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -149,12 +104,12 @@ class Location:
         :returns: a `dict`
 
         """
-        return {'name': self._name,
-                'coordinates': {'lon': self._lon, 'lat': self._lat},
-                'ID': self._ID,
-                'country': self._country}
+        return {'name': self.name,
+                'coordinates': {'lon': self.lon, 'lat': self.lat},
+                'ID': self.id,
+                'country': self.country}
 
     def __repr__(self):
         return "<%s.%s - id=%s, name=%s, lon=%s, lat=%s>" % (__name__, \
-          self.__class__.__name__, self._ID, self._name, str(self._lon), \
-          str(self._lat))
+                                                             self.__class__.__name__, self.id, self.name, str(self.lon), \
+                                                             str(self.lat))

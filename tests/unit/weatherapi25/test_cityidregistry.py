@@ -57,11 +57,11 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         return StringIO(self._test_file_contents_with_commas_in_names).readlines()
 
     def _assertLocationsEqual(self, loc1, loc2):
-        self.assertEquals(loc1.get_ID(), loc2.get_ID())
-        self.assertEquals(loc1.get_name(), loc2.get_name())
-        self.assertEquals(loc1.get_lat(), loc2.get_lat())
-        self.assertEquals(loc1.get_lon(), loc2.get_lon())
-        self.assertEquals(loc1.get_country(), loc2.get_country())
+        self.assertEquals(loc1.id, loc2.id)
+        self.assertEquals(loc1.name, loc2.name)
+        self.assertEquals(loc1.lat, loc2.lat)
+        self.assertEquals(loc1.lon, loc2.lon)
+        self.assertEquals(loc1.country, loc2.country)
 
     def _assertGeopointsEqual(self, point1, point2):
         self.assertIsInstance(point1, Point)

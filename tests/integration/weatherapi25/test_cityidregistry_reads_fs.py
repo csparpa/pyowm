@@ -45,11 +45,11 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         result_list = self._instance.locations_for('dongen')
         self.assertEqual(1, len(result_list))
         result = result_list[0]
-        self.assertEqual(result.get_name(), expected.get_name())
-        self.assertEqual(result.get_country(), expected.get_country())
-        self.assertEqual(result.get_ID(), expected.get_ID())
-        self.assertEqual(result.get_lat(), expected.get_lat())
-        self.assertEqual(result.get_lon(), expected.get_lon())
+        self.assertEqual(result.get_name(), expected.name)
+        self.assertEqual(result.country, expected.country)
+        self.assertEqual(result.id, expected.id)
+        self.assertEqual(result.lat, expected.lat)
+        self.assertEqual(result.lon, expected.lon)
         self.assertEqual([], self._instance.locations_for('aaaaaaaaaa'))
 
     def test_locations_for_fails_with_malformed_inputs(self):
@@ -74,7 +74,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         self.assertEqual(2, len(result))
         for l in result:
             self.assertTrue(isinstance(l, Location))
-            self.assertTrue(l.get_ID() in [expected1.get_ID(), expected2.get_ID()])
+            self.assertTrue(l.id in [expected1.id, expected2.id])
 
 
 if __name__ == "__main__":

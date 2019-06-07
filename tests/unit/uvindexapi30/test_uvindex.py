@@ -118,10 +118,10 @@ class TestUVIndex(unittest.TestCase):
         self.assertIsNotNone(result.get_reception_time())
         loc = result.get_location()
         self.assertIsNotNone(loc)
-        self.assertIsNone(loc.get_name())
-        self.assertIsNone(loc.get_ID())
-        self.assertIsNotNone(loc.get_lon())
-        self.assertIsNotNone(loc.get_lat())
+        self.assertIsNone(loc.name)
+        self.assertIsNone(loc.id)
+        self.assertIsNotNone(loc.lon)
+        self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(result.get_value())
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
