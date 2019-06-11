@@ -164,7 +164,7 @@ class Forecast:
         """
         current_time = timestamps.now(timeformat='unix')
         for w in self._weathers:
-            if w.get_reference_time(timeformat='unix') < current_time:
+            if w.reference_time(timeformat='unix') < current_time:
                 self._weathers.remove(w)
 
     @classmethod

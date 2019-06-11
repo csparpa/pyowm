@@ -60,40 +60,40 @@ class Weather:
                  visibility_distance, dewpoint, humidex, heat_index):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self._reference_time = reference_time
+        self.ref_time = reference_time
         if sunset_time < 0:
             sunset_time = None
-        self._sunset_time = sunset_time
+        self.sset_time = sunset_time
         if sunrise_time < 0:
             sunrise_time = None
-        self._sunrise_time = sunrise_time
+        self.srise_time = sunrise_time
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
-        self._clouds = clouds
-        self._rain = rain
-        self._snow = snow
-        self._wind = wind
+        self.clouds = clouds
+        self.rain = rain
+        self.snow = snow
+        self.wnd = wind
         if humidity < 0:
             raise ValueError("'humidity' must be greatear than 0")
-        self._humidity = humidity
-        self._pressure = pressure
-        self._temperature = temperature
-        self._status = status
-        self._detailed_status = detailed_status
-        self._weather_code = weather_code
-        self._weather_icon_name = weather_icon_name
+        self.humidity = humidity
+        self.pressure = pressure
+        self.temp = temperature
+        self.status = status
+        self.detailed_status = detailed_status
+        self.weather_code = weather_code
+        self.weather_icon_name = weather_icon_name
         if visibility_distance is not None and visibility_distance < 0:
             raise ValueError("'visibility_distance' must be greater than 0")
-        self._visibility_distance = visibility_distance
-        self._dewpoint = dewpoint
+        self.visibility_distance = visibility_distance
+        self.dewpoint = dewpoint
         if humidex is not None and humidex < 0:
             raise ValueError("'humidex' must be greater than 0")
-        self._humidex = humidex
+        self.humidex = humidex
         if heat_index is not None and heat_index < 0:
             raise ValueError("'heat index' must be grater than 0")
-        self._heat_index = heat_index
+        self.heat_index = heat_index
 
-    def get_reference_time(self, timeformat='unix'):
+    def reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
 
         :param timeformat: the format for the time value. May be:
@@ -105,9 +105,9 @@ class Weather:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self.ref_time, timeformat)
 
-    def get_sunset_time(self, timeformat='unix'):
+    def sunset_time(self, timeformat='unix'):
         """Returns the GMT time of sunset
 
         :param timeformat: the format for the time value. May be:
@@ -118,11 +118,11 @@ class Weather:
         :raises: ValueError
 
         """
-        if self._sunset_time is None:
+        if self.sset_time is None:
             return None
-        return formatting.timeformat(self._sunset_time, timeformat)
+        return formatting.timeformat(self.sset_time, timeformat)
 
-    def get_sunrise_time(self, timeformat='unix'):
+    def sunrise_time(self, timeformat='unix'):
         """Returns the GMT time of sunrise
 
         :param timeformat: the format for the time value. May be:
@@ -133,35 +133,11 @@ class Weather:
         :raises: ValueError
 
         """
-        if self._sunrise_time is None:
+        if self.srise_time is None:
             return None
-        return formatting.timeformat(self._sunrise_time, timeformat)
+        return formatting.timeformat(self.srise_time, timeformat)
 
-    def get_clouds(self):
-        """Returns the cloud coverage percentage as an int
-
-        :returns: the cloud coverage percentage
-
-        """
-        return self._clouds
-
-    def get_rain(self):
-        """Returns a dict containing precipitation info
-
-        :returns: a dict containing rain info
-
-        """
-        return self._rain
-
-    def get_snow(self):
-        """Returns a dict containing snow info
-
-        :returns: a dict containing snow info
-
-        """
-        return self._snow
-
-    def get_wind(self, unit='meters_sec'):
+    def wind(self, unit='meters_sec'):
         """Returns a dict containing wind info
 
         :param unit: the unit of measure for the wind values. May be:
@@ -171,35 +147,19 @@ class Weather:
 
         """
         if unit == 'meters_sec':
-            return self._wind
+            return self.wnd
         elif unit == 'miles_hour':
-            wind_dict = {k: self._wind[k]
-                         for k in self._wind if self._wind[k] is not None}
+            wind_dict = {k: self.wnd[k]
+                         for k in self.wnd if self.wnd[k] is not None}
             return temperature.metric_wind_dict_to_imperial(wind_dict)
         elif unit == 'km_hour':
-            wind_dict = {k: self._wind[k]
-                         for k in self._wind if self._wind[k] is not None}
+            wind_dict = {k: self.wnd[k]
+                         for k in self.wnd if self.wnd[k] is not None}
             return temperature.metric_wind_dict_to_km_h(wind_dict)
         else:
             raise ValueError("Invalid value for target wind conversion unit")
 
-    def get_humidity(self):
-        """Returns the atmospheric humidity as an int
-
-        :returns: the humidity
-
-        """
-        return self._humidity
-
-    def get_pressure(self):
-        """Returns a dict containing atmospheric pressure info
-
-        :returns: a dict containing pressure info
-
-        """
-        return self._pressure
-
-    def get_temperature(self, unit='kelvin'):
+    def temperature(self, unit='kelvin'):
         """Returns a dict with temperature info
 
         :param unit: the unit of measure for the temperature values. May be:
@@ -213,7 +173,7 @@ class Weather:
         # absolute temperatures and temperature deltas together
         to_be_converted = dict()
         not_to_be_converted = dict()
-        for label, temp in self._temperature.items():
+        for label, temp in self.temp.items():
             if temp is None or temp < 0:
                 not_to_be_converted[label] = temp
             else:
@@ -222,81 +182,17 @@ class Weather:
         return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
 
-    def get_status(self):
-        """Returns the short weather status as a Unicode string
-
-        :returns: the short weather status
-
-        """
-        return self._status
-
-    def get_detailed_status(self):
-        """Returns the detailed weather status as a Unicode string
-
-        :returns: the detailed weather status
-
-        """
-        return self._detailed_status
-
-    def get_weather_code(self):
-        """Returns the OWM weather condition code as an int
-
-        :returns: the OWM weather condition code
-
-        """
-        return self._weather_code
-
-    def get_weather_icon_name(self):
-        """Returns weather-related icon name as a Unicode string.
-
-        :returns: the icon name.
-
-        """
-        return self._weather_icon_name
-
-    def get_weather_icon_url(self):
-        """Returns weather-related icon URL as a Unicode string.
+    def weather_icon_url(self):
+        """Returns weather-related icon URL as a string.
 
         :returns: the icon URL.
 
         """
-        return ICONS_BASE_URI % self._weather_icon_name
-
-    def get_visibility_distance(self):
-        """Returns the visibility distance as a float
-
-        :returns: the visibility distance
-
-        """
-        return self._visibility_distance
-
-    def get_dewpoint(self):
-        """Returns the dew point as a float
-
-        :returns: the dew point
-
-        """
-        return self._dewpoint
-
-    def get_humidex(self):
-        """Returns the Canadian humidex as a float
-
-        :returns: the Canadian humidex
-
-        """
-        return self._humidex
-
-    def get_heat_index(self):
-        """Returns the heat index as a float
-
-        :returns: the heat index
-
-        """
-        return self._heat_index
+        return ICONS_BASE_URI % self.weather_icon_name
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (
-            __name__, self.__class__.__name__, self.get_reference_time('iso'), self._status.lower(), self._detailed_status.lower())
+            __name__, self.__class__.__name__, self.reference_time('iso'), self.status.lower(), self.detailed_status.lower())
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -540,21 +436,21 @@ class Weather:
         :returns: a `dict`
 
         """
-        return {'reference_time': self._reference_time,
-                'sunset_time': self._sunset_time,
-                'sunrise_time': self._sunrise_time,
-                'clouds': self._clouds,
-                'rain': self._rain,
-                'snow': self._snow,
-                'wind': self._wind,
-                'humidity': self._humidity,
-                'pressure': self._pressure,
-                'temperature': self._temperature,
-                'status': self._status,
-                'detailed_status': self._detailed_status,
-                'weather_code': self._weather_code,
-                'weather_icon_name': self._weather_icon_name,
-                'visibility_distance': self._visibility_distance,
-                'dewpoint': self._dewpoint,
-                'humidex': self._humidex,
-                'heat_index': self._heat_index}
+        return {'reference_time': self.ref_time,
+                'sunset_time': self.sset_time,
+                'sunrise_time': self.srise_time,
+                'clouds': self.clouds,
+                'rain': self.rain,
+                'snow': self.snow,
+                'wind': self.wnd,
+                'humidity': self.humidity,
+                'pressure': self.pressure,
+                'temperature': self.temp,
+                'status': self.status,
+                'detailed_status': self.detailed_status,
+                'weather_code': self.weather_code,
+                'weather_icon_name': self.weather_icon_name,
+                'visibility_distance': self.visibility_distance,
+                'dewpoint': self.dewpoint,
+                'humidex': self.humidex,
+                'heat_index': self.heat_index}

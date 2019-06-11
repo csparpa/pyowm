@@ -20,7 +20,7 @@ def status_is(weather, status, weather_code_registry):
 
     """
     weather_status = weather_code_registry. \
-        status_for(weather.get_weather_code()).lower()
+        status_for(weather.weather_code).lower()
     return weather_status == status
 
 
@@ -84,9 +84,9 @@ def is_in_coverage(unixtime, weathers_list):
     if not weathers_list:
         return False
     else:
-        min_of_coverage = min([weather.get_reference_time() \
+        min_of_coverage = min([weather.reference_time() \
                                for weather in weathers_list])
-        max_of_coverage = max([weather.get_reference_time() \
+        max_of_coverage = max([weather.reference_time() \
                                for weather in weathers_list])
         if unixtime < min_of_coverage or unixtime > max_of_coverage:
             return False
@@ -111,9 +111,9 @@ def find_closest_weather(weathers_list, unixtime):
         raise api_response_error.NotFoundError('Error: the specified time is ' + \
                                 'not included in the weather coverage range')
     closest_weather = weathers_list[0]
-    time_distance = abs(closest_weather.get_reference_time() - unixtime)
+    time_distance = abs(closest_weather.reference_time() - unixtime)
     for weather in weathers_list:
-        if abs(weather.get_reference_time() - unixtime) < time_distance:
-            time_distance = abs(weather.get_reference_time() - unixtime)
+        if abs(weather.reference_time() - unixtime) < time_distance:
+            time_distance = abs(weather.reference_time() - unixtime)
             closest_weather = weather
     return closest_weather

@@ -45,7 +45,7 @@ class Forecaster:
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        start_coverage = min([item.get_reference_time() \
+        start_coverage = min([item.reference_time() \
                               for item in self._forecast])
         return formatting.timeformat(start_coverage, timeformat)
 
@@ -63,7 +63,7 @@ class Forecaster:
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        end_coverage = max([item.get_reference_time()
+        end_coverage = max([item.reference_time()
                             for item in self._forecast])
         return formatting.timeformat(end_coverage, timeformat)
 
@@ -390,7 +390,7 @@ class Forecaster:
         maxtemp = -270.0  # No one would survive that...
         hottest = None
         for weather in self._forecast.get_weathers():
-            d = weather.get_temperature()
+            d = weather.temperature()
             if 'temp_max' in d:
                 if d['temp_max'] > maxtemp:
                     maxtemp = d['temp_max']
@@ -410,7 +410,7 @@ class Forecaster:
         mintemp = 1000.0  # No one would survive that...
         coldest = None
         for weather in self._forecast.get_weathers():
-            d = weather.get_temperature()
+            d = weather.temperature()
             if 'temp_min' in d:
                 if d['temp_min'] < mintemp:
                     mintemp = d['temp_min']
@@ -428,7 +428,7 @@ class Forecaster:
         max_humidity = 0
         most_humid = None
         for weather in self._forecast.get_weathers():
-            h = weather.get_humidity()
+            h = weather.humidity
             if h > max_humidity:
                 max_humidity = h
                 most_humid = weather
@@ -447,7 +447,7 @@ class Forecaster:
         max_rain = 0
         most_rainy = None
         for weather in self._forecast.get_weathers():
-            d = weather.get_rain()
+            d = weather.rain
             if 'all' in d:
                 if d['all'] > max_rain:
                     max_rain = d['all']
@@ -467,7 +467,7 @@ class Forecaster:
         max_snow = 0
         most_snowy = None
         for weather in self._forecast.get_weathers():
-            d = weather.get_snow()
+            d = weather.snow
             if 'all' in d:
                 if d['all'] > max_snow:
                     max_snow = d['all']
@@ -487,7 +487,7 @@ class Forecaster:
         max_wind_speed = 0
         most_windy = None
         for weather in self._forecast.get_weathers():
-            d = weather.get_wind()
+            d = weather.wind()
             if 'speed' in d:
                 if d['speed'] > max_wind_speed:
                     max_wind_speed = d['speed']
