@@ -273,7 +273,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(THREE_HOURS_FORECAST_URI, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.set_interval("3h")
+            fc.interval = "3h"
             return forecaster.Forecaster(fc)
         else:
             return None
@@ -303,7 +303,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(THREE_HOURS_FORECAST_URI, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.set_interval("3h")
+            fc.interval = "3h"
             return forecaster.Forecaster(fc)
         else:
             return None
@@ -331,7 +331,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(THREE_HOURS_FORECAST_URI, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.set_interval("3h")
+            fc.interval = "3h"
             return forecaster.Forecaster(fc)
         else:
             return None
@@ -367,7 +367,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(DAILY_FORECAST_URI, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.set_interval("daily")
+            fc.interval= "daily"
             return forecaster.Forecaster(fc)
         else:
             return None
@@ -407,7 +407,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(DAILY_FORECAST_URI, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.set_interval("daily")
+            fc.interval = "daily"
             return forecaster.Forecaster(fc)
         else:
             return None
@@ -446,7 +446,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(DAILY_FORECAST_URI, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.set_interval("daily")
+            fc.interval = "daily"
             return forecaster.Forecaster(fc)
         else:
             return None

@@ -8,45 +8,6 @@ from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
 
 
-class ForecastIterator:
-    """
-    Iterator over the list of *Weather* objects encapsulated in a *Forecast*
-    class instance
-
-    :param obj: the iterable object
-    :type obj: object
-    :returns:  a *ForecastIterator* instance
-
-    """
-    def __init__(self, obj):
-        self._obj = obj
-        self._cnt = 0
-
-    def next(self):
-        """
-        Compatibility for Python 2.x, delegates to function: `__next__()`
-        Returns the next *Weather* item
-
-        :returns: the next *Weather* item
-
-        """
-        return self.__next__()
-
-    def __next__(self):
-        """
-        Returns the next *Weather* item
-
-        :returns: the next *Weather* item
-
-        """
-        try:
-            result = self._obj.get(self._cnt)
-            self._cnt += 1
-            return result
-        except IndexError:
-            raise StopIteration
-
-
 class Forecast:
     """
     A class encapsulating weather forecast data for a certain location and
@@ -69,20 +30,12 @@ class Forecast:
     """
 
     def __init__(self, interval, reception_time, location, weathers):
-        self._interval = interval
+        self.interval = interval
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
+        self.rec_time = reception_time
         self.location = location
-        self._weathers = weathers
-
-    def __iter__(self):
-        """
-        Creates a *ForecastIterator* instance
-
-        :returns: a *ForecastIterator* instance
-        """
-        return ForecastIterator(self)
+        self.weathers = weathers
 
     def get(self, index):
         """
@@ -93,29 +46,9 @@ class Forecast:
         :type index: int
         :returns: a *Weather* object
         """
-        return self._weathers[index]
+        return self.weathers[index]
 
-    def get_interval(self):
-        """
-        Returns the time granularity of the forecast
-
-        :returns: str
-
-        """
-        return self._interval
-
-    def set_interval(self, interval):
-        """
-        Sets the time granularity of the forecast
-
-        :param interval: the time granularity of the forecast, may be "3h" or
-            "daily"
-        :type interval: str
-
-        """
-        self._interval = interval
-
-    def get_reception_time(self, timeformat='unix'):
+    def reception_time(self, timeformat='unix'):
         """Returns the GMT time telling when the forecast was received
             from the OWM Weather API
 
@@ -128,34 +61,16 @@ class Forecast:
         :raises: ValueError
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self.rec_time, timeformat)
 
-    def get_location(self):
-        """
-        Returns the Location object relative to the forecast
-
-        :returns: a *Location* object
-
-        """
-        return self.location
-
-    def get_weathers(self):
+    def weathers(self):
         """
         Returns a copy of the *Weather* objects list composing the forecast
 
         :returns: a list of *Weather* objects
 
         """
-        return list(self._weathers)
-
-    def count_weathers(self):
-        """
-        Tells how many *Weather* items compose the forecast
-
-        :returns: the *Weather* objects total
-
-        """
-        return len(self._weathers)
+        return list(self.weathers)
 
     def actualize(self):
         """
@@ -163,9 +78,9 @@ class Forecast:
         timestamp in the past with respect to the current timestamp
         """
         current_time = timestamps.now(timeformat='unix')
-        for w in self._weathers:
+        for w in self.weathers:
             if w.reference_time(timeformat='unix') < current_time:
-                self._weathers.remove(w)
+                self.weathers.remove(w)
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -224,16 +139,18 @@ class Forecast:
         :returns: a `dict`
 
         """
-        return {"interval": self._interval,
-               "reception_time": self._reception_time,
+        return {"interval": self.interval,
+               "reception_time": self.rec_time,
                "location": self.location.to_dict(),
                "weathers": [w.to_dict() for w in self]}
 
     def __len__(self):
-        """Redefine __len__ hook"""
-        return self.count_weathers()
+        return len(self.weathers)
+
+    def __iter__(self):
+        return (w for w in self.weathers)
 
     def __repr__(self):
         return "<%s.%s - reception time=%s, interval=%s>" % (__name__, \
-              self.__class__.__name__, self.get_reception_time('iso'),
-              self._interval)
+              self.__class__.__name__, self.reception_time('iso'),
+              self.interval)

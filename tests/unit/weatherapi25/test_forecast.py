@@ -77,13 +77,6 @@ class TestForecast(unittest.TestCase):
         index = 1
         self.assertEqual(self.__test_weathers[index],
                          self.__test_instance.get(index))
-        
-    def test_accessors_interval_property(self):
-        former_interval = self.__test_instance.get_interval()
-        self.__test_instance.set_interval("3h")
-        result = self.__test_instance.get_interval()
-        self.__test_instance.set_interval(former_interval)        
-        self.assertEqual("3h", result)
 
     def test_getters_return_expected_3h_data(self):
         """
@@ -91,41 +84,37 @@ class TestForecast(unittest.TestCase):
         """
         instance = Forecast("3h", self.__test_reception_time,
                              self.__test_location, self.__test_weathers)
-        self.assertEqual(instance.get_interval(), "3h")
-        self.assertEqual(instance.get_reception_time(),
+        self.assertEqual(instance.interval, "3h")
+        self.assertEqual(instance.reception_time(),
                          self.__test_reception_time)
         self.assertEqual(instance.location, self.__test_location)
-        self.assertEqual(instance.get_weathers(), self.__test_weathers)
+        self.assertEqual(instance.weathers, self.__test_weathers)
 
     def test_getters_return_expected_daily_data(self):
         instance = Forecast("daily", self.__test_reception_time,
                              self.__test_location, self.__test_weathers)
-        self.assertEqual(instance.get_interval(), "daily")
-        self.assertEqual(instance.get_reception_time(),
+        self.assertEqual(instance.interval, "daily")
+        self.assertEqual(instance.reception_time(),
                          self.__test_reception_time)
         self.assertEqual(instance.location, self.__test_location)
-        self.assertEqual(instance.get_weathers(), self.__test_weathers)
+        self.assertEqual(instance.weathers, self.__test_weathers)
 
     def test_returning_different_formats_for_reception_time(self):
         instance = self.__test_instance
-        self.assertEqual(instance.get_reception_time(timeformat='iso'),
+        self.assertEqual(instance.reception_time(timeformat='iso'),
                          self.__test_iso_reception_time)
-        self.assertEqual(instance.get_reception_time(timeformat='unix'),
+        self.assertEqual(instance.reception_time(timeformat='unix'),
                          self.__test_reception_time)
-        self.assertEqual(instance.get_reception_time(timeformat='date'),
+        self.assertEqual(instance.reception_time(timeformat='date'),
                          self.__test_date_reception_time)
 
-    def test_count_weathers(self):
-        instance = self.__test_instance
-        self.assertEqual(instance.count_weathers(), self.__test_n_weathers)
-
-    def test_forecast_iterator(self):
+    def test__iter__(self):
         instance = self.__test_instance
         counter = 0
         for weather in instance:
             self.assertTrue(isinstance(weather, Weather))
             counter += 1
-        self.assertEqual(instance.count_weathers(), counter)
+        self.assertEqual(len(instance.weathers), counter)
         
     def test__len__(self):
         self.assertEqual(len(self.__test_instance), len(self.__test_weathers))
@@ -133,12 +122,12 @@ class TestForecast(unittest.TestCase):
     def test_from_dict(self):
         result = self.__test_instance.from_dict(json.loads(THREE_HOURS_FORECAST_JSON))
         self.assertTrue(result is not None)
-        self.assertTrue(result.get_reception_time() is not None)
-        self.assertFalse(result.get_interval() is not None)
+        self.assertTrue(result.reception_time() is not None)
+        self.assertFalse(result.interval is not None)
         loc = result.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        self.assertTrue(isinstance(result.get_weathers(), list))
+        self.assertTrue(isinstance(result.weathers, list))
         for weather in result:
             self.assertTrue(weather is not None)
 
