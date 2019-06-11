@@ -14,8 +14,8 @@ class StationHistory:
     the OWM Weather API: ticks (one data chunk per minute) data, hourly and daily
     data.
 
-    :param station_ID: the numeric ID of the meteostation
-    :type station_ID: int
+    :param station_id: the numeric ID of the meteostation
+    :type station_id: int
     :param interval: the time granularity of the meteostation data history
     :type interval: str
     :param reception_time: GMT UNIXtime of the data reception from the OWM web
@@ -28,68 +28,15 @@ class StationHistory:
         negative
     """
 
-    def __init__(self, station_ID, interval, reception_time, measurements):
-        self._station_ID = station_ID
-        self._interval = interval
+    def __init__(self, station_id, interval, reception_time, measurements):
+        self.station_id = station_id
+        self.interval = interval
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
-        self._measurements = measurements
+        self.rec_time = reception_time
+        self.measurements = measurements
 
-    def get_station_ID(self):
-        """
-        Returns the ID of the meteostation
-
-        :returns: the int station ID
-
-        """
-        return self._station_ID
-
-    def set_station_ID(self, station_ID):
-        """
-        Sets the numeric ID of the meteostation
-
-        :param station_ID: the numeric ID of the meteostation
-        :type station_ID: int
-
-        """
-        self._station_ID = station_ID
-
-    def get_interval(self):
-        """
-        Returns the interval of the meteostation history data
-
-        :returns: the int interval
-
-        """
-        return self._interval
-
-    def set_interval(self, interval):
-        """
-        Sets the interval of the meteostation history data
-
-        :param interval: the time granularity of the meteostation history data,
-            may be among "tick","hour" and "day"
-        :type interval: string
-
-        """
-        self._interval = interval
-
-    def get_measurements(self):
-        """
-        Returns the measurements of the meteostation as a dict. The dictionary
-        keys are UNIX timestamps and for each one the value is a dict
-        containing the keys 'temperature','humidity','pressure','rain','wind'
-        along with their corresponding numeric values.
-        Eg: ``{1362933983: { "temperature": 266.25, "humidity": 27.3,
-        "pressure": 1010.02, "rain": None, "wind": 4.7}, ... }``
-
-        :returns: the dict containing the meteostation's measurements
-
-        """
-        return self._measurements
-
-    def get_reception_time(self, timeformat='unix'):
+    def reception_time(self, timeformat='unix'):
         """Returns the GMT time telling when the meteostation history data was
            received from the OWM Weather API
 
@@ -102,7 +49,7 @@ class StationHistory:
         :raises: ValueError
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self.rec_time, timeformat)
 
     @classmethod
     def from_dict(cls, d):
@@ -179,7 +126,7 @@ class StationHistory:
         :returns: a `dict`
 
         """
-        return {"station_ID": self._station_ID,
-                "interval": self._interval,
-                "reception_time": self._reception_time,
-                "measurements": self._measurements}
+        return {"station_ID": self.station_id,
+                "interval": self.interval,
+                "reception_time": self.rec_time,
+                "measurements": self.measurements}

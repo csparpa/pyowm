@@ -559,8 +559,8 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(STATION_WEATHER_HISTORY_URI, params=params)
         sh = stationhistory.StationHistory.from_dict(json_data)
         if sh is not None:
-            sh.set_station_ID(station_ID)
-            sh.set_interval(interval)
+            sh.station_id = station_ID
+            sh.interval = interval
         return sh
 
     def __repr__(self):

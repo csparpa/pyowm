@@ -455,7 +455,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(result, Historian))
         station_history = result.station_history
         self.assertTrue(isinstance(station_history, StationHistory))
-        self.assertTrue(isinstance(station_history.get_measurements(), dict))
+        self.assertTrue(isinstance(station_history.measurements, dict))
 
     def test_station_tick_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.station_tick_history,
@@ -478,7 +478,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(result, Historian))
         station_history = result.station_history
         self.assertTrue(isinstance(station_history, StationHistory))
-        self.assertTrue(isinstance(station_history.get_measurements(), dict))
+        self.assertTrue(isinstance(station_history.measurements, dict))
 
     def test_station_hour_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.station_hour_history,
@@ -501,7 +501,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(result, Historian))
         station_history = result.station_history
         self.assertTrue(isinstance(station_history, StationHistory))
-        self.assertTrue(isinstance(station_history.get_measurements(), dict))
+        self.assertTrue(isinstance(station_history.measurements, dict))
 
     def test_station_day_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.station_day_history, self.__test_instance, 1234, -3)

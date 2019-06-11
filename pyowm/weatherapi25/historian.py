@@ -35,8 +35,8 @@ class Historian:
         if unit not in ('kelvin', 'celsius', 'fahrenheit'):
             raise ValueError("Invalid value for parameter 'unit'")
         result = []
-        for tstamp in self.station_history.get_measurements():
-            t = self.station_history.get_measurements()[tstamp]['temperature']
+        for tstamp in self.station_history.measurements:
+            t = self.station_history.measurements[tstamp]['temperature']
             if unit == 'kelvin':
                 temp = t
             elif unit == 'celsius':
@@ -56,8 +56,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self.station_history.get_measurements()[tstamp]['humidity']) \
-                for tstamp in self.station_history.get_measurements()]
+                self.station_history.measurements[tstamp]['humidity']) \
+                for tstamp in self.station_history.measurements]
 
     def pressure_series(self):
         """Returns the atmospheric pressure time series relative to the
@@ -67,8 +67,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self.station_history.get_measurements()[tstamp]['pressure']) \
-                for tstamp in self.station_history.get_measurements()]
+                self.station_history.measurements[tstamp]['pressure']) \
+                for tstamp in self.station_history.measurements]
 
     def rain_series(self):
         """Returns the precipitation time series relative to the
@@ -78,8 +78,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self.station_history.get_measurements()[tstamp]['rain']) \
-                for tstamp in self.station_history.get_measurements()]
+                self.station_history.measurements[tstamp]['rain']) \
+                for tstamp in self.station_history.measurements]
 
     def wind_series(self):
         """Returns the wind speed time series relative to the
@@ -89,8 +89,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(timestamp, \
-                self.station_history.get_measurements()[timestamp]['wind']) \
-                for timestamp in self.station_history.get_measurements()]
+                self.station_history.measurements[timestamp]['wind']) \
+                for timestamp in self.station_history.measurements]
 
     def max_temperature(self,  unit='kelvin'):
         """Returns a tuple containing the max value in the temperature

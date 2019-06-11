@@ -49,32 +49,22 @@ class TestStationHistory(unittest.TestCase):
         self.assertRaises(ValueError, StationHistory, 1234, 'tick', -1234567,
                           self.__test_measurements)
 
-    def test_getters_return_expected_3h_data(self):
-        self.assertEqual(self.__test_instance.get_interval(),
-                         self.__test_interval)
-        self.assertEqual(self.__test_instance.get_station_ID(),
-                         self.__test_station_ID)
-        self.assertEqual(self.__test_instance.get_reception_time(),
-                         self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_measurements(),
-                         self.__test_measurements)
-
     def test_returning_different_formats_for_reception_time(self):
         """
         Test get_reception_time returns timestamps in the expected formats
         """
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'),
+        self.assertEqual(self.__test_instance.reception_time(timeformat='iso'),
                          self.__test_reception_time_iso)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'),
+        self.assertEqual(self.__test_instance.reception_time(timeformat='unix'),
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
 
     def test_from_dict(self):
         result = StationHistory.from_dict(json.loads(STATION_TICK_WEATHER_HISTORY_JSON))
         self.assertTrue(result)
         self.assertTrue(isinstance(result, StationHistory))
-        self.assertTrue(result.get_measurements())
+        self.assertTrue(result.measurements)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
         self.assertRaises(ParseResponseError, StationHistory.from_dict, None)
@@ -87,7 +77,7 @@ class TestStationHistory(unittest.TestCase):
             '35579,"calctime": 0.1122,"cnt": 1,"list": [{"main": "test","dt": ' \
             '1381140000}]}'
         result = StationHistory.from_dict(json.loads(json_data))
-        datapoints = result.get_measurements()
+        datapoints = result.measurements
         for datapoint in datapoints:
             self.assertTrue(all(value is None for value \
                                 in datapoints[datapoint].values()))
