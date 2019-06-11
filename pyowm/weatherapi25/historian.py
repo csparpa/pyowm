@@ -18,15 +18,7 @@ class Historian:
     """
 
     def __init__(self, station_history):
-        self._station_history = station_history
-
-    def get_station_history(self):
-        """
-        Returns the *StationHistory* instance
-
-        :returns: the *StationHistory* instance
-        """
-        return self._station_history
+        self.station_history = station_history
 
     def temperature_series(self, unit='kelvin'):
         """Returns the temperature time series relative to the meteostation, in
@@ -43,8 +35,8 @@ class Historian:
         if unit not in ('kelvin', 'celsius', 'fahrenheit'):
             raise ValueError("Invalid value for parameter 'unit'")
         result = []
-        for tstamp in self._station_history.get_measurements():
-            t = self._station_history.get_measurements()[tstamp]['temperature']
+        for tstamp in self.station_history.get_measurements():
+            t = self.station_history.get_measurements()[tstamp]['temperature']
             if unit == 'kelvin':
                 temp = t
             elif unit == 'celsius':
@@ -64,8 +56,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self._station_history.get_measurements()[tstamp]['humidity']) \
-                for tstamp in self._station_history.get_measurements()]
+                self.station_history.get_measurements()[tstamp]['humidity']) \
+                for tstamp in self.station_history.get_measurements()]
 
     def pressure_series(self):
         """Returns the atmospheric pressure time series relative to the
@@ -75,8 +67,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self._station_history.get_measurements()[tstamp]['pressure']) \
-                for tstamp in self._station_history.get_measurements()]
+                self.station_history.get_measurements()[tstamp]['pressure']) \
+                for tstamp in self.station_history.get_measurements()]
 
     def rain_series(self):
         """Returns the precipitation time series relative to the
@@ -86,8 +78,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self._station_history.get_measurements()[tstamp]['rain']) \
-                for tstamp in self._station_history.get_measurements()]
+                self.station_history.get_measurements()[tstamp]['rain']) \
+                for tstamp in self.station_history.get_measurements()]
 
     def wind_series(self):
         """Returns the wind speed time series relative to the
@@ -97,8 +89,8 @@ class Historian:
         :returns: a list of tuples
         """
         return [(timestamp, \
-                self._station_history.get_measurements()[timestamp]['wind']) \
-                for timestamp in self._station_history.get_measurements()]
+                self.station_history.get_measurements()[timestamp]['wind']) \
+                for timestamp in self.station_history.get_measurements()]
 
     def max_temperature(self,  unit='kelvin'):
         """Returns a tuple containing the max value in the temperature

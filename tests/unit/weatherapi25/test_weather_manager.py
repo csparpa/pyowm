@@ -453,7 +453,7 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.station_tick_history(1234, limit=4)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Historian))
-        station_history = result.get_station_history()
+        station_history = result.station_history
         self.assertTrue(isinstance(station_history, StationHistory))
         self.assertTrue(isinstance(station_history.get_measurements(), dict))
 
@@ -476,7 +476,7 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.station_hour_history(1234, limit=4)
         HttpClient.get_json = original_call
         self.assertTrue(isinstance(result, Historian))
-        station_history = result.get_station_history()
+        station_history = result.station_history
         self.assertTrue(isinstance(station_history, StationHistory))
         self.assertTrue(isinstance(station_history.get_measurements(), dict))
 
@@ -499,7 +499,7 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.station_day_history(1234, limit=4)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Historian))
-        station_history = result.get_station_history()
+        station_history = result.station_history
         self.assertTrue(isinstance(station_history, StationHistory))
         self.assertTrue(isinstance(station_history.get_measurements(), dict))
 

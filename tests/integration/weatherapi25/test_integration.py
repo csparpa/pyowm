@@ -351,14 +351,14 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             h1 = self.__owm.station_tick_history(39276)
             if h1 is not None:
-                sh1 = h1.get_station_history()
+                sh1 = h1.station_history
                 self.assertTrue(sh1 is not None)
                 data1 = sh1.get_measurements()
                 self.assertTrue(data1 is not None)
                 self.assertFalse(0, len(data1))
                 h2 = self.__owm.station_tick_history(39276, limit=2)
                 self.assertTrue(h2 is not None)
-                sh2 = h2.get_station_history()
+                sh2 = h2.station_history
                 self.assertTrue(sh2 is not None)
                 data2 = sh2.get_measurements()
                 self.assertTrue(data2 is not None)
@@ -376,7 +376,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             h1 = self.__owm.station_hour_history(123)
             if h1 is not None:
-                sh1 = h1.get_station_history()
+                sh1 = h1.station_history
                 self.assertTrue(sh1 is not None)
                 data1 = sh1.get_measurements()
                 self.assertTrue(data1 is not None)
@@ -394,14 +394,14 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             h1 = self.__owm.station_day_history(123)
             if h1 is not None:
-                sh1 = h1.get_station_history()
+                sh1 = h1.station_history
                 self.assertTrue(sh1 is not None)
                 data1 = sh1.get_measurements()
                 self.assertTrue(data1 is not None)
                 self.assertFalse(0, len(data1))
                 h2 = self.__owm.station_day_history(123, limit=3)
                 self.assertTrue(h2 is not None)
-                sh2 = h2.get_station_history()
+                sh2 = h2.station_history
                 self.assertTrue(sh2 is not None)
                 data2 = sh2.get_measurements()
                 self.assertTrue(data2 is not None)
