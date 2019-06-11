@@ -30,11 +30,11 @@ class Observation:
     def __init__(self, reception_time, location, weather):
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
-        self._location = location
-        self._weather = weather
+        self.rec_time = reception_time
+        self.location = location
+        self.weather = weather
 
-    def get_reception_time(self, timeformat='unix'):
+    def reception_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the observation has been received
           from the OWM Weather API
@@ -48,25 +48,7 @@ class Observation:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
-
-    def get_location(self):
-        """
-        Returns the *Location* object for this observation
-
-        :returns: the *Location* object
-
-        """
-        return self._location
-
-    def get_weather(self):
-        """
-        Returns the *Weather* object for this observation
-
-        :returns: the *Weather* object
-
-        """
-        return self._weather
+        return formatting.timeformat(self.rec_time, timeformat)
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -114,13 +96,13 @@ class Observation:
         :returns: a `dict`
 
         """
-        return {"reception_time": self._reception_time,
-                "location": self._location.to_dict(),
-                "weather": self._weather.to_dict()}
+        return {"reception_time": self.rec_time,
+                "location": self.location.to_dict(),
+                "weather": self.weather.to_dict()}
 
     def __repr__(self):
         return "<%s.%s - reception time=%s>" % (__name__, self.__class__.__name__,
-                                                self.get_reception_time('iso'))
+                                                self.reception_time('iso'))
 
     @classmethod
     def from_dict_of_lists(self, the_dict):

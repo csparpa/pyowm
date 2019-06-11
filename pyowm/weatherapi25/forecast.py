@@ -73,7 +73,7 @@ class Forecast:
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
         self._reception_time = reception_time
-        self._location = location
+        self.location = location
         self._weathers = weathers
 
     def __iter__(self):
@@ -137,7 +137,7 @@ class Forecast:
         :returns: a *Location* object
 
         """
-        return self._location
+        return self.location
 
     def get_weathers(self):
         """
@@ -226,7 +226,7 @@ class Forecast:
         """
         return {"interval": self._interval,
                "reception_time": self._reception_time,
-               "location": self._location.to_dict(),
+               "location": self.location.to_dict(),
                "weathers": [w.to_dict() for w in self]}
 
     def __len__(self):

@@ -20,7 +20,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u.get_reception_time())
         self.assertIsNotNone(u.get_reference_time())
         self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
+        self.assertIsNotNone(u.location)
 
     def test_ozone_around_coords(self):
         """
@@ -32,7 +32,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u.get_reception_time())
         self.assertIsNotNone(u.get_reference_time())
         self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
+        self.assertIsNotNone(u.location)
 
     def test_no2index_around_coords(self):
         """
@@ -44,7 +44,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u.get_reception_time())
         self.assertIsNotNone(u.get_reference_time())
         self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
+        self.assertIsNotNone(u.location)
 
     def test_so2index_around_coords(self):
         """
@@ -56,7 +56,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u.get_reception_time())
         self.assertIsNotNone(u.get_reference_time())
         self.assertIsNotNone(u.get_interval())
-        self.assertIsNotNone(u.get_location())
+        self.assertIsNotNone(u.location)
 
 
 if __name__ == "__main__":

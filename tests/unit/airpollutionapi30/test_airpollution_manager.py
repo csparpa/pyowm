@@ -46,7 +46,7 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertTrue(isinstance(result, coindex.COIndex))
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
-        loc = result.get_location()
+        loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
@@ -72,7 +72,7 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertTrue(isinstance(result, ozone.Ozone))
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
-        loc = result.get_location()
+        loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
@@ -98,7 +98,7 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertTrue(isinstance(result, no2index.NO2Index))
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
-        loc = result.get_location()
+        loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
@@ -124,7 +124,7 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertTrue(isinstance(result, so2index.SO2Index))
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
-        loc = result.get_location()
+        loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)

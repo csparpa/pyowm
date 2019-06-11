@@ -42,7 +42,7 @@ class TestUVIndexManager(unittest.TestCase):
         self.assertTrue(isinstance(result, uvindex.UVIndex))
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reception_time())
-        loc = result.get_location()
+        loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)

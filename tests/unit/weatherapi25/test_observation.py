@@ -45,30 +45,30 @@ class TestObservation(unittest.TestCase):
                           self.__test_location, self.__test_weather)
 
     def test_getters_return_expected_data(self):
-        self.assertEqual(self.__test_instance.get_reception_time(),
+        self.assertEqual(self.__test_instance.reception_time(),
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_location(),
+        self.assertEqual(self.__test_instance.location,
                          self.__test_location)
-        self.assertEqual(self.__test_instance.get_weather(),
+        self.assertEqual(self.__test_instance.weather,
                          self.__test_weather)
 
     def test_returning_different_formats_for_reception_time(self):
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='iso'), \
                          self.__test_iso_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='unix'), \
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
 
     def test_from_dict(self):
         d = json.loads(OBSERVATION_JSON)
         result = Observation.from_dict(d)
         self.assertTrue(result is not None)
-        self.assertFalse(result.get_reception_time() is None)
-        loc = result.get_location()
+        self.assertFalse(result.reception_time() is None)
+        loc = result.location
         self.assertFalse(loc is None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = result.get_weather()
+        weat = result.weather
         self.assertFalse(weat is None)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
@@ -98,11 +98,11 @@ class TestObservation(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         for item in result:
             self.assertFalse(item is None)
-            self.assertFalse(item.get_reception_time() is None)
-            loc = item.get_location()
+            self.assertFalse(item.reception_time() is None)
+            loc = item.location
             self.assertFalse(loc is None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertFalse(weat is None)
 
     def test_from_dict_of_lists_fails_when_JSON_data_is_None(self):

@@ -35,7 +35,7 @@ class COIndex:
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self._reference_time = reference_time
-        self._location = location
+        self.location = location
         self._interval = interval
         if not isinstance(co_samples, list):
             raise ValueError("'co_samples' must be a list")
@@ -82,7 +82,7 @@ class COIndex:
         :returns: the *Location* object
 
         """
-        return self._location
+        return self.location
 
     def get_interval(self):
         """
@@ -167,7 +167,7 @@ class COIndex:
 
         """
         return {"reference_time": self._reference_time,
-                "location": self._location.to_dict(),
+                "location": self.location.to_dict(),
                 "interval": self._interval,
                 "co_samples": self._co_samples,
                 "reception_time": self._reception_time}
@@ -179,5 +179,5 @@ class COIndex:
                     self.__class__.__name__,
                     self.get_reference_time('iso'),
                     self.get_reception_time('iso'),
-                    str(self._location),
+                    str(self.location),
                     self._interval)

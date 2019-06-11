@@ -20,17 +20,17 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         o2 = self.__owm.weather_at_place('Kiev')
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
-        loc = o1.get_location()
+        loc = o1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o1.get_weather()
+        weat = o1.weather
         self.assertTrue(weat is not None)
         self.assertTrue(o2 is not None)
         self.assertTrue(o2.get_reception_time() is not None)
-        loc = o2.get_location()
+        loc = o2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o2.get_weather()
+        weat = o2.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_coords(self):
@@ -41,17 +41,17 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         o2 = self.__owm.weather_at_coords(-33.936524, 18.503723)  # Cape Town
         self.assertTrue(o1)
         self.assertTrue(o1.get_reception_time())
-        loc = o1.get_location()
+        loc = o1.location
         self.assertTrue(loc)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o1.get_weather()
+        weat = o1.weather
         self.assertTrue(weat)
         self.assertTrue(o2)
         self.assertTrue(o2.get_reception_time())
-        loc = o2.get_location()
+        loc = o2.location
         self.assertTrue(loc)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o2.get_weather()
+        weat = o2.weather
         self.assertTrue(weat)
 
     def test_weather_at_zipcode(self):
@@ -61,10 +61,10 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         o1 = self.__owm.weather_at_zip_code("94040", "US")
         self.assertTrue(o1)
         self.assertTrue(o1.get_reception_time())
-        loc = o1.get_location()
+        loc = o1.location
         self.assertTrue(loc)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o1.get_weather()
+        weat = o1.weather
         self.assertTrue(weat)
 
     def test_weather_at_id(self):
@@ -72,17 +72,17 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         o2 = self.__owm.weather_at_id(703448) # Kiev'
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
-        loc = o1.get_location()
+        loc = o1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o1.get_weather()
+        weat = o1.weather
         self.assertTrue(weat is not None)
         self.assertTrue(o2 is not None)
         self.assertTrue(o2.get_reception_time() is not None)
-        loc = o2.get_location()
+        loc = o2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o2.get_weather()
+        weat = o2.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_ids(self):
@@ -92,17 +92,17 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         o2 = observations[1]
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.get_reception_time() is not None)
-        loc = o1.get_location()
+        loc = o1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o1.get_weather()
+        weat = o1.weather
         self.assertTrue(weat is not None)
         self.assertTrue(o2 is not None)
         self.assertTrue(o2.get_reception_time() is not None)
-        loc = o2.get_location()
+        loc = o2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = o2.get_weather()
+        weat = o2.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_places(self):
@@ -117,20 +117,20 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for item in o1:
             self.assertTrue(item)
             self.assertTrue(item.get_reception_time())
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
         self.assertTrue(isinstance(o2, list))
         self.assertFalse(len(o2) > 2)
         for item in o2:
             self.assertTrue(item)
             self.assertTrue(item.get_reception_time())
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
 
         # Test using searchtype=like
@@ -140,20 +140,20 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for item in o3:
             self.assertTrue(item)
             self.assertTrue(item.get_reception_time())
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
         self.assertTrue(isinstance(o4, list))
         self.assertFalse(len(o4) > 2)
         for item in o4:
             self.assertTrue(item)
             self.assertTrue(item.get_reception_time())
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
 
     def test_weather_around_coords(self):
@@ -166,20 +166,20 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for item in o2:
             self.assertTrue(item is not None)
             self.assertTrue(item.get_reception_time() is not None)
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
         o1 = self.__owm.weather_around_coords(57.0, -2.15, 2)  # Scotland
         self.assertTrue(isinstance(o1, list))
         for item in o1:
             self.assertTrue(item is not None)
             self.assertTrue(item.get_reception_time() is not None)
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
 
     def test_three_hours_forecast(self):
@@ -192,7 +192,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.get_reception_time() is not None)
-        loc = f1.get_location()
+        loc = f1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f1:
@@ -201,7 +201,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f2 = fc2.get_forecast()
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.get_reception_time() is not None)
-        loc = f2.get_location()
+        loc = f2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f2:
@@ -219,7 +219,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.get_reception_time() is not None)
-        loc = f1.get_location()
+        loc = f1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f1:
@@ -228,7 +228,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f2 = fc2.get_forecast()
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.get_reception_time() is not None)
-        loc = f2.get_location()
+        loc = f2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f2:
@@ -248,7 +248,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.get_reception_time() is not None)
-        loc = f1.get_location()
+        loc = f1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f1:
@@ -257,7 +257,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f2 = fc2.get_forecast()
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.get_reception_time() is not None)
-        loc = f2.get_location()
+        loc = f2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f2:
@@ -279,7 +279,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.get_reception_time() is not None)
-        loc = f1.get_location()
+        loc = f1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f1:
@@ -288,7 +288,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f2 = fc2.get_forecast()
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.get_reception_time() is not None)
-        loc = f2.get_location()
+        loc = f2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f2:
@@ -303,7 +303,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.get_reception_time() is not None)
-        loc = f1.get_location()
+        loc = f1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f1:
@@ -328,7 +328,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f1 = fc1.get_forecast()
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.get_reception_time() is not None)
-        loc = f1.get_location()
+        loc = f1.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f1:
@@ -337,7 +337,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         f2 = fc2.get_forecast()
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.get_reception_time() is not None)
-        loc = f2.get_location()
+        loc = f2.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         for weather in f2:
@@ -416,9 +416,9 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for item in o:
             self.assertTrue(item is not None)
             self.assertTrue(item.get_reception_time() is not None)
-            loc = item.get_location()
+            loc = item.location
             self.assertTrue(loc is not None)
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
 
 

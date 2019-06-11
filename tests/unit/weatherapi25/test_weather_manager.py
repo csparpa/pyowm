@@ -107,11 +107,11 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.weather_at_place("London,uk")
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Observation))
-        self.assertTrue(result.get_reception_time() is not None)
-        loc = result.get_location()
+        self.assertTrue(result.reception_time() is not None)
+        loc = result.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = result.get_weather()
+        weat = result.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_place_fails_with_wrong_parameters(self):
@@ -124,11 +124,11 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.weather_at_coords(57.0, -2.15)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Observation))
-        self.assertTrue(result.get_reception_time() is not None)
-        loc = result.get_location()
+        self.assertTrue(result.reception_time() is not None)
+        loc = result.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = result.get_weather()
+        weat = result.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_zip_code(self):
@@ -138,11 +138,11 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.weather_at_zip_code("2000", "AU")
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Observation))
-        self.assertTrue(result.get_reception_time() is not None)
-        loc = result.get_location()
+        self.assertTrue(result.reception_time() is not None)
+        loc = result.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = result.get_weather()
+        weat = result.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_coords_fails_when_coordinates_out_of_bounds(self):
@@ -161,11 +161,11 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.weather_at_id(5128581)  # New York city, US
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Observation))
-        self.assertTrue(result.get_reception_time() is not None)
-        loc = result.get_location()
+        self.assertTrue(result.reception_time() is not None)
+        loc = result.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-        weat = result.get_weather()
+        weat = result.weather
         self.assertTrue(weat is not None)
 
     def test_weather_at_id_fails_when_id_negative(self):
@@ -181,7 +181,7 @@ class TestWeatherManager(unittest.TestCase):
         for obs in result:
             self.assertTrue(obs is not None)
             self.assertTrue(isinstance(obs, Observation))
-            weat = obs.get_weather()
+            weat = obs.weather
             self.assertTrue(weat is not None)
 
     def test_weather_at_ids_fails_when_wrong_parameters(self):
@@ -199,11 +199,11 @@ class TestWeatherManager(unittest.TestCase):
         self.assertEqual(2, len(result))
         for item in result:
             self.assertTrue(item is not None)
-            self.assertTrue(item.get_reception_time())
-            loc = item.get_location()
+            self.assertTrue(item.reception_time())
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
 
     def test_weather_at_places_fails_with_wrong_params(self):
@@ -219,11 +219,11 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         for item in result:
             self.assertTrue(item is not None)
-            self.assertTrue(item.get_reception_time() is not None)
-            loc = item.get_location()
+            self.assertTrue(item.reception_time() is not None)
+            loc = item.location
             self.assertTrue(loc is not None)
             self.assertTrue(all(v is not None for v in loc.__dict__.values()))
-            weat = item.get_weather()
+            weat = item.weather
             self.assertTrue(weat is not None)
 
     def test_weather_around_coords_fails_when_coordinates_out_of_bounds(self):
@@ -249,7 +249,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.get_interval() is not None)
         self.assertTrue(forecast.get_reception_time() is not None)
-        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertTrue(isinstance(forecast.location, Location))
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
@@ -275,7 +275,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.get_interval() is not None)
         self.assertTrue(forecast.get_reception_time() is not None)
-        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertTrue(isinstance(forecast.location, Location))
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
@@ -309,7 +309,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(f, Forecast))
         self.assertTrue(f.get_interval() is not None)
         self.assertTrue(f.get_reception_time() is not None)
-        self.assertTrue(isinstance(f.get_location(), Location))
+        self.assertTrue(isinstance(f.location, Location))
         self.assertEqual(1, len(f))
         for weather in f:
             self.assertTrue(isinstance(weather, Weather))
@@ -337,7 +337,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.get_interval() is not None)
         self.assertTrue(forecast.get_reception_time() is not None)
-        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertTrue(isinstance(forecast.location, Location))
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
@@ -368,7 +368,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.get_interval() is not None)
         self.assertTrue(forecast.get_reception_time() is not None)
-        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertTrue(isinstance(forecast.location, Location))
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
@@ -405,7 +405,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.get_interval() is not None)
         self.assertTrue(forecast.get_reception_time() is not None)
-        self.assertTrue(isinstance(forecast.get_location(), Location))
+        self.assertTrue(isinstance(forecast.location, Location))
         self.assertEqual(1, len(forecast))
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
@@ -442,9 +442,9 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(results, list))
         for result in results:
             self.assertTrue(isinstance(result, Observation))
-            self.assertTrue(isinstance(result.get_weather(), Weather))
-            self.assertTrue(isinstance(result.get_location(), Location))
-            self.assertTrue(result.get_reception_time() is not None)
+            self.assertTrue(isinstance(result.weather, Weather))
+            self.assertTrue(isinstance(result.location, Location))
+            self.assertTrue(result.reception_time() is not None)
 
     def test_station_tick_history(self):
         original_func = HttpClient.get_json

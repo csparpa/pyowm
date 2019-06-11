@@ -19,7 +19,7 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_value())
         self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_location())
+        self.assertIsNotNone(u.location)
 
     def test_uvindex_forecast_around_coords(self):
         """
@@ -30,7 +30,7 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         for item in uv_list:
             self.assertIsNotNone(item.get_value())
             self.assertIsNotNone(item.get_reception_time())
-            self.assertIsNotNone(item.get_location())
+            self.assertIsNotNone(item.location)
 
     def test_uvindex_history_around_coords(self):
         """
@@ -45,7 +45,7 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         for item in uv_list:
             self.assertIsNotNone(item.get_value())
             self.assertIsNotNone(item.get_reception_time())
-            self.assertIsNotNone(item.get_location())
+            self.assertIsNotNone(item.location)
 
 
 if __name__ == "__main__":

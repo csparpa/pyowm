@@ -94,7 +94,7 @@ class TestForecast(unittest.TestCase):
         self.assertEqual(instance.get_interval(), "3h")
         self.assertEqual(instance.get_reception_time(),
                          self.__test_reception_time)
-        self.assertEqual(instance.get_location(), self.__test_location)
+        self.assertEqual(instance.location, self.__test_location)
         self.assertEqual(instance.get_weathers(), self.__test_weathers)
 
     def test_getters_return_expected_daily_data(self):
@@ -103,7 +103,7 @@ class TestForecast(unittest.TestCase):
         self.assertEqual(instance.get_interval(), "daily")
         self.assertEqual(instance.get_reception_time(),
                          self.__test_reception_time)
-        self.assertEqual(instance.get_location(), self.__test_location)
+        self.assertEqual(instance.location, self.__test_location)
         self.assertEqual(instance.get_weathers(), self.__test_weathers)
 
     def test_returning_different_formats_for_reception_time(self):
@@ -135,7 +135,7 @@ class TestForecast(unittest.TestCase):
         self.assertTrue(result is not None)
         self.assertTrue(result.get_reception_time() is not None)
         self.assertFalse(result.get_interval() is not None)
-        loc = result.get_location()
+        loc = result.location
         self.assertTrue(loc is not None)
         self.assertTrue(all(v is not None for v in loc.__dict__.values()))
         self.assertTrue(isinstance(result.get_weathers(), list))

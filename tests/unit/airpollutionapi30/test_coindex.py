@@ -73,7 +73,7 @@ class TestCOIndex(unittest.TestCase):
                          self.__test_reference_time)
         self.assertEqual(self.__test_instance.get_reception_time(),
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_location(),
+        self.assertEqual(self.__test_instance.location,
                          self.__test_location)
         ordered = self.__test_instance.get_co_samples()
         self.assertEqual(ordered,
@@ -129,7 +129,7 @@ class TestCOIndex(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertIsNotNone(result.get_reference_time())
         self.assertIsNotNone(result.get_reference_time())
-        loc = result.get_location()
+        loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNone(loc.name)
         self.assertIsNone(loc.id)

@@ -34,7 +34,7 @@ class SO2Index:
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self._reference_time = reference_time
-        self._location = location
+        self.location = location
         self._interval = interval
         if not isinstance(so2_samples, list):
             raise ValueError("'so2_samples' must be a list")
@@ -81,7 +81,7 @@ class SO2Index:
         :returns: the *Location* object
 
         """
-        return self._location
+        return self.location
 
     def get_interval(self):
         """
@@ -152,7 +152,7 @@ class SO2Index:
 
         """
         return {"reference_time": self._reference_time,
-                "location": self._location.to_dict(),
+                "location": self.location.to_dict(),
                 "interval": self._interval,
                 "so2_samples": self._so2_samples,
                 "reception_time": self._reception_time}
@@ -164,5 +164,5 @@ class SO2Index:
                     self.__class__.__name__,
                     self.get_reference_time('iso'),
                     self.get_reception_time('iso'),
-                    str(self._location),
+                    str(self.location),
                     self._interval)

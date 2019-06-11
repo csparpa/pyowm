@@ -83,7 +83,7 @@ owm = pyowm.OWM('your-API-key')  # You MUST provide a valid API key
 
 # Search for current weather in London (Great Britain)
 observation = owm.weather_at_place('London,GB')
-w = observation.get_weather()
+w = observation.weather
 print(w)                      # <Weather - reference time=2013-12-18 09:20,
                               # status=Clouds>
 
