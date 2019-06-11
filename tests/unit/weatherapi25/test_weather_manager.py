@@ -245,7 +245,7 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.three_hours_forecast("London,uk")
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        forecast = result.get_forecast()
+        forecast = result.forecast
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.interval is not None)
         self.assertTrue(forecast.reception_time() is not None)
@@ -271,7 +271,7 @@ class TestWeatherManager(unittest.TestCase):
                 .three_hours_forecast_at_coords(51.50853, -0.12574)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        forecast = result.get_forecast()
+        forecast = result.forecast
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.interval is not None)
         self.assertTrue(forecast.reception_time() is not None)
@@ -305,7 +305,7 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.three_hours_forecast_at_id(2643743)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        f = result.get_forecast()
+        f = result.forecast
         self.assertTrue(isinstance(f, Forecast))
         self.assertTrue(f.interval is not None)
         self.assertTrue(f.reception_time() is not None)
@@ -333,7 +333,7 @@ class TestWeatherManager(unittest.TestCase):
         result = self.__test_instance.daily_forecast("London,uk", 2)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        forecast = result.get_forecast()
+        forecast = result.forecast
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.interval is not None)
         self.assertTrue(forecast.reception_time() is not None)
@@ -364,7 +364,7 @@ class TestWeatherManager(unittest.TestCase):
             self.__test_instance.daily_forecast_at_coords(51.50853, -0.12574, 2)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        forecast = result.get_forecast()
+        forecast = result.forecast
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.interval is not None)
         self.assertTrue(forecast.reception_time() is not None)
@@ -401,7 +401,7 @@ class TestWeatherManager(unittest.TestCase):
             self.__test_instance.daily_forecast_at_id(2643743, 2)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
-        forecast = result.get_forecast()
+        forecast = result.forecast
         self.assertTrue(isinstance(forecast, Forecast))
         self.assertTrue(forecast.interval is not None)
         self.assertTrue(forecast.reception_time() is not None)

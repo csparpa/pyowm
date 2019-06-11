@@ -189,7 +189,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         fc1 = self.__owm.three_hours_forecast("London,uk")
         fc2 = self.__owm.three_hours_forecast('Kiev')
         self.assertTrue(fc1)
-        f1 = fc1.get_forecast()
+        f1 = fc1.forecast
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.reception_time() is not None)
         loc = f1.location
@@ -198,7 +198,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         self.assertTrue(fc2 is not None)
-        f2 = fc2.get_forecast()
+        f2 = fc2.forecast
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.reception_time() is not None)
         loc = f2.location
@@ -216,7 +216,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         # Kiev
         fc2 = self.__owm.three_hours_forecast_at_coords(50.4501, 30.5234)
         self.assertTrue(fc1)
-        f1 = fc1.get_forecast()
+        f1 = fc1.forecast
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.reception_time() is not None)
         loc = f1.location
@@ -225,7 +225,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         self.assertTrue(fc2 is not None)
-        f2 = fc2.get_forecast()
+        f2 = fc2.forecast
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.reception_time() is not None)
         loc = f2.location
@@ -245,7 +245,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         # Kiev
         fc2 = self.__owm.three_hours_forecast_at_id(703448)
         self.assertTrue(fc1)
-        f1 = fc1.get_forecast()
+        f1 = fc1.forecast
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.reception_time() is not None)
         loc = f1.location
@@ -254,7 +254,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         self.assertTrue(fc2 is not None)
-        f2 = fc2.get_forecast()
+        f2 = fc2.forecast
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.reception_time() is not None)
         loc = f2.location
@@ -285,7 +285,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         self.assertTrue(fc2 is not None)
-        f2 = fc2.get_forecast()
+        f2 = fc2.forecast
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.reception_time() is not None)
         loc = f2.location
@@ -300,7 +300,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         fc1 = self.__owm.daily_forecast_at_coords(51.5073509, -0.1277583) # London,uk
         self.assertTrue(fc1)
-        f1 = fc1.get_forecast()
+        f1 = fc1.forecast
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.reception_time() is not None)
         loc = f1.location
@@ -325,7 +325,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         except api_response_error.NotFoundError:
             pass  # Ok!
         self.assertTrue(fc1)
-        f1 = fc1.get_forecast()
+        f1 = fc1.forecast
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.reception_time() is not None)
         loc = f1.location
@@ -334,7 +334,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         self.assertTrue(fc2 is not None)
-        f2 = fc2.get_forecast()
+        f2 = fc2.forecast
         self.assertTrue(f2 is not None)
         self.assertTrue(f2.reception_time() is not None)
         loc = f2.location

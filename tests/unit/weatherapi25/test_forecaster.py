@@ -94,7 +94,7 @@ class TestForecaster(unittest.TestCase):
     __test_instance = Forecaster(__test_forecast)
 
     def test_getter_returns_expected_data(self):
-        self.assertEqual(self.__test_instance.get_forecast(),
+        self.assertEqual(self.__test_instance.forecast,
                          self.__test_forecast)
 
     def test_when_starts_returning_different_timeformats(self):
