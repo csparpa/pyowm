@@ -68,24 +68,12 @@ class TestNO2Index(unittest.TestCase):
                           self.__test_location, self.__test_interval, 'test',
                           self.__test_reception_time)
 
-    def test_getters_return_expected_data(self):
-        self.assertEqual(self.__test_instance.get_reference_time(),
-                         self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_reception_time(),
-                         self.__test_reception_time)
-        self.assertEqual(self.__test_instance.location,
-                         self.__test_location)
-        self.assertEqual(self.__test_instance.get_no2_samples(),
-                         self.__test_no2_samples)
-        self.assertEqual(self.__test_instance.get_interval(),
-                         self.__test_interval)
-
     def test_returning_different_formats_for_reference_time(self):
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='iso'), \
                          self.__test_iso_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='unix'), \
                          self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='date'), \
                          self.__test_date_reference_time)
 
     def test_returning_different_formats_for_reception_time(self):
@@ -112,23 +100,23 @@ class TestNO2Index(unittest.TestCase):
         }
 
         result = self.__test_instance.get_sample_by_label('no2_strat')
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
         self.assertIsNone(self.__test_instance.get_sample_by_label('unexistent'))
 
     def test_from_dict(self):
         result = NO2Index.from_dict(json.loads(NO2INDEX_JSON))
         self.assertIsNotNone(result)
-        self.assertIsNotNone(result.get_reference_time())
-        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.reference_time())
+        self.assertIsNotNone(result.reference_time())
         loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNone(loc.name)
         self.assertIsNone(loc.id)
         self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(loc.lat)
-        self.assertIsNone(result.get_interval())
-        self.assertNotEqual(0, len(result.get_no2_samples()))
+        self.assertIsNone(result.interval)
+        self.assertNotEqual(0, len(result.no2_samples))
 
     def test_test_from_dict_fails_when_JSON_data_is_None(self):
         self.assertRaises(ParseResponseError, NO2Index.from_dict, None)

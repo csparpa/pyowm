@@ -54,18 +54,6 @@ class TestOzone(unittest.TestCase):
                           self.__test_location, self.__test_interval, -8.9,
                           self.__test_reception_time)
 
-    def test_getters_return_expected_data(self):
-        self.assertEqual(self.__test_instance.get_reception_time(),
-                         self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reference_time(),
-                         self.__test_reference_time)
-        self.assertEqual(self.__test_instance.location,
-                         self.__test_location)
-        self.assertEqual(self.__test_instance.get_du_value(),
-                         self.__test_du_value)
-        self.assertEqual(self.__test_instance.get_interval(),
-                         self.__test_interval)
-
     def test_returning_different_formats_for_reception_time(self):
         self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), \
                          self.__test_iso_reception_time)
@@ -75,11 +63,11 @@ class TestOzone(unittest.TestCase):
                          self.__test_date_reception_time)
 
     def test_returning_different_formats_for_reference_time(self):
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='iso'), \
                          self.__test_iso_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='unix'), \
                          self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='date'), \
                          self.__test_date_reference_time)
 
     def test_is_forecast(self):
@@ -96,7 +84,7 @@ class TestOzone(unittest.TestCase):
         d = json.loads(OZONE_JSON)
         result = Ozone.from_dict(d)
         self.assertIsNotNone(result)
-        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.reference_time())
         self.assertIsNotNone(result.get_reception_time())
         loc = result.location
         self.assertIsNotNone(loc)
@@ -104,8 +92,8 @@ class TestOzone(unittest.TestCase):
         self.assertIsNone(loc.id)
         self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(loc.lat)
-        self.assertIsNone(result.get_interval())
-        self.assertIsNotNone(result.get_du_value())
+        self.assertIsNone(result.interval)
+        self.assertIsNotNone(result.du_value)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
         self.assertRaises(parse_response_error.ParseResponseError, Ozone.from_dict, None)

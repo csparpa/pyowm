@@ -18,7 +18,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_co_samples())
         self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
+        self.assertIsNotNone(u.reference_time())
         self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.location)
 
@@ -30,7 +30,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_du_value())
         self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
+        self.assertIsNotNone(u.reference_time())
         self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.location)
 
@@ -42,7 +42,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_no2_samples())
         self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
+        self.assertIsNotNone(u.reference_time())
         self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.location)
 
@@ -54,7 +54,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.get_so2_samples())
         self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_reference_time())
+        self.assertIsNotNone(u.reference_time())
         self.assertIsNotNone(u.get_interval())
         self.assertIsNotNone(u.location)
 

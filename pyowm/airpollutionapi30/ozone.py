@@ -32,17 +32,17 @@ class Ozone:
     def __init__(self, reference_time, location, interval, du_value, reception_time):
         if reference_time < 0:
             raise ValueError("'referencetime' must be greater than 0")
-        self._reference_time = reference_time
+        self.ref_time = reference_time
         self.location = location
-        self._interval = interval
+        self.interval = interval
         if du_value < 0.0:
             raise ValueError("'du_value' must be greater than 0")
         self.du_value = du_value
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
+        self.rec_time = reception_time
 
-    def get_reference_time(self, timeformat='unix'):
+    def reference_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the O3 data have been measured
 
@@ -55,7 +55,7 @@ class Ozone:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self.ref_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -71,33 +71,7 @@ class Ozone:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
-
-    def get_location(self):
-        """
-        Returns the *Location* object for this O3 observation
-
-        :returns: the *Location* object
-
-        """
-        return self.location
-
-    def get_interval(self):
-        """
-        Returns the time granularity interval for this O3 observation
-
-        :return: str
-        """
-        return self._interval
-
-    def get_du_value(self):
-        """
-        Returns the O3 Dobson Unit of this observation
-
-        :returns: float
-
-        """
-        return self.du_value
+        return formatting.timeformat(self.rec_time, timeformat)
 
     def is_forecast(self):
         """
@@ -106,7 +80,7 @@ class Ozone:
         :return: bool
         """
         return timestamps.now(timeformat='unix') < \
-               self.get_reference_time(timeformat='unix')
+               self.reference_time(timeformat='unix')
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -152,19 +126,19 @@ class Ozone:
         :returns: a `dict`
 
         """
-        return {"reference_time": self._reference_time,
+        return {"reference_time": self.ref_time,
                 "location": self.location.to_dict(),
-                "interval": self._interval,
+                "interval": self.interval,
                 "value": self.du_value,
-                "reception_time": self._reception_time}
+                "reception_time": self.rec_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
                "interval=%s, value=%s>" % (
                     __name__,
                     self.__class__.__name__,
-                    self.get_reference_time('iso'),
+                    self.reference_time('iso'),
                     self.get_reception_time('iso'),
                     str(self.location),
-                    self._interval,
+                    self.interval,
                     str(self.du_value))

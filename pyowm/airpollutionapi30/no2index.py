@@ -34,17 +34,17 @@ class NO2Index:
                  reception_time):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self._reference_time = reference_time
+        self.ref_time = reference_time
         self.location = location
-        self._interval = interval
+        self.interval = interval
         if not isinstance(no2_samples, list):
             raise ValueError("'no2_samples' must be a list")
-        self._no2_samples = no2_samples
+        self.no2_samples = no2_samples
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
+        self.rec_time = reception_time
 
-    def get_reference_time(self, timeformat='unix'):
+    def reference_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the NO2 samples have been measured
 
@@ -57,7 +57,7 @@ class NO2Index:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self.ref_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -73,33 +73,7 @@ class NO2Index:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
-
-    def get_location(self):
-        """
-        Returns the *Location* object for this NO2 index measurement
-
-        :returns: the *Location* object
-
-        """
-        return self.location
-
-    def get_interval(self):
-        """
-        Returns the time granularity interval for this NO2 index measurement
-
-        :return: str
-        """
-        return self._interval
-
-    def get_no2_samples(self):
-        """
-        Returns the NO2 samples for this index
-
-        :returns: list of dicts
-
-        """
-        return self._no2_samples
+        return formatting.timeformat(self.rec_time, timeformat)
 
     def get_sample_by_label(self, label):
         """
@@ -110,7 +84,7 @@ class NO2Index:
         :returns: dict or `None`
 
         """
-        for sample in self._no2_samples:
+        for sample in self.no2_samples:
             if sample['label'] == label:
                 return sample
         return None
@@ -122,7 +96,7 @@ class NO2Index:
         :return: bool
         """
         return timestamps.now(timeformat='unix') < \
-               self.get_reference_time(timeformat='unix')
+               self.reference_time(timeformat='unix')
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -168,18 +142,18 @@ class NO2Index:
         :returns: a `dict`
 
         """
-        return {"reference_time": self._reference_time,
+        return {"reference_time": self.ref_time,
                 "location": self.location.to_dict(),
-                "interval": self._interval,
-                "no2_samples": self._no2_samples,
-                "reception_time": self._reception_time}
+                "interval": self.interval,
+                "no2_samples": self.no2_samples,
+                "reception_time": self.rec_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
                "interval=%s>" % (
                     __name__,
                     self.__class__.__name__,
-                    self.get_reference_time('iso'),
+                    self.reference_time('iso'),
                     self.get_reception_time('iso'),
                     str(self.location),
-                    self._interval)
+                    self.interval)

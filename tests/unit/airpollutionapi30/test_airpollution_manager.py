@@ -42,16 +42,15 @@ class TestAirPollutionManager(unittest.TestCase):
         airpollution_client.AirPollutionHttpClient.get_coi = \
             self.mock_get_coi_returning_coindex_around_coords
         result = self.__test_instance.coindex_around_coords(45, 9)
-        airpollution_client.AirPollutionHttpClient.get_coi = ref_to_original
+        airpollution_client.AirPollutionHttpClient.coi = ref_to_original
         self.assertTrue(isinstance(result, coindex.COIndex))
-        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.reference_time)
         self.assertIsNotNone(result.get_reception_time())
         loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
-        self.assertIsNotNone(result.get_co_samples())
-        self.assertIsNotNone(result.get_interval())
+        self.assertIsNotNone(result.co_samples)
 
     def test_coindex_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.coindex_around_coords, \
@@ -68,16 +67,15 @@ class TestAirPollutionManager(unittest.TestCase):
         airpollution_client.AirPollutionHttpClient.get_o3 = \
             self.mock_get_o3_returning_coindex_around_coords
         result = self.__test_instance.ozone_around_coords(45, 9)
-        airpollution_client.AirPollutionHttpClient.get_o3 = ref_to_original
+        airpollution_client.AirPollutionHttpClient.o3 = ref_to_original
         self.assertTrue(isinstance(result, ozone.Ozone))
-        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.reference_time)
         self.assertIsNotNone(result.get_reception_time())
         loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
-        self.assertIsNotNone(result.get_du_value())
-        self.assertIsNotNone(result.get_interval())
+        self.assertIsNotNone(result.du_value)
 
     def test_ozone_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.ozone_around_coords, \
@@ -96,14 +94,13 @@ class TestAirPollutionManager(unittest.TestCase):
         result = self.__test_instance.no2index_around_coords(45, 9)
         airpollution_client.AirPollutionHttpClient.get_no2 = ref_to_original
         self.assertTrue(isinstance(result, no2index.NO2Index))
-        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.reference_time)
         self.assertIsNotNone(result.get_reception_time())
         loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
-        self.assertIsNotNone(result.get_no2_samples())
-        self.assertIsNotNone(result.get_interval())
+        self.assertIsNotNone(result.no2_samples)
 
     def test_no2index_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.no2index_around_coords, \
@@ -122,14 +119,14 @@ class TestAirPollutionManager(unittest.TestCase):
         result = self.__test_instance.so2index_around_coords(45, 9)
         airpollution_client.AirPollutionHttpClient.get_so2 = ref_to_original
         self.assertTrue(isinstance(result, so2index.SO2Index))
-        self.assertIsNotNone(result.get_reference_time())
+        self.assertIsNotNone(result.reference_time())
         self.assertIsNotNone(result.get_reception_time())
         loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
-        self.assertIsNotNone(result.get_so2_samples())
-        self.assertIsNotNone(result.get_interval())
+        self.assertIsNotNone(result.so2_samples)
+        self.assertIsNotNone(result._interval)
 
     def test_so2index_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.so2index_around_coords, \

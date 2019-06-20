@@ -34,17 +34,17 @@ class COIndex:
                  reception_time):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
-        self._reference_time = reference_time
+        self.ref_time = reference_time
         self.location = location
-        self._interval = interval
+        self.interval = interval
         if not isinstance(co_samples, list):
             raise ValueError("'co_samples' must be a list")
-        self._co_samples = sorted(co_samples, key=lambda k: k['value'], reverse=True)
+        self.co_samples = sorted(co_samples, key=lambda k: k['value'], reverse=True)
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
+        self.rec_time = reception_time
 
-    def get_reference_time(self, timeformat='unix'):
+    def reference_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the CO samples have been measured
 
@@ -57,7 +57,7 @@ class COIndex:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self.ref_time, timeformat)
 
     def get_reception_time(self, timeformat='unix'):
         """
@@ -73,47 +73,21 @@ class COIndex:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
-
-    def get_location(self):
-        """
-        Returns the *Location* object for this CO index measurement
-
-        :returns: the *Location* object
-
-        """
-        return self.location
-
-    def get_interval(self):
-        """
-        Returns the time granularity interval for this CO index measurement
-
-        :return: str
-        """
-        return self._interval
-
-    def get_co_samples(self):
-        """
-        Returns the CO samples for this index
-
-        :returns: list of dicts
-
-        """
-        return self._co_samples
+        return formatting.timeformat(self.rec_time, timeformat)
 
     def get_co_sample_with_highest_vmr(self):
         """
         Returns the CO sample with the highest Volume Mixing Ratio value
         :return: dict
         """
-        return max(self._co_samples, key=lambda x: x['value'])
+        return max(self.co_samples, key=lambda x: x['value'])
 
     def get_co_sample_with_lowest_vmr(self):
         """
         Returns the CO sample with the lowest Volume Mixing Ratio value
         :return: dict
         """
-        return min(self._co_samples, key=lambda x: x['value'])
+        return min(self.co_samples, key=lambda x: x['value'])
 
     def is_forecast(self):
         """
@@ -122,7 +96,7 @@ class COIndex:
         :return: bool
         """
         return timestamps.now(timeformat='unix') < \
-               self.get_reference_time(timeformat='unix')
+               self.reference_time(timeformat='unix')
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -166,18 +140,18 @@ class COIndex:
         :returns: a `dict`
 
         """
-        return {"reference_time": self._reference_time,
+        return {"reference_time": self.ref_time,
                 "location": self.location.to_dict(),
-                "interval": self._interval,
-                "co_samples": self._co_samples,
-                "reception_time": self._reception_time}
+                "interval": self.interval,
+                "co_samples": self.co_samples,
+                "reception_time": self.rec_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
                "interval=%s>" % (
                     __name__,
                     self.__class__.__name__,
-                    self.get_reference_time('iso'),
+                    self.reference_time('iso'),
                     self.get_reception_time('iso'),
                     str(self.location),
-                    self._interval)
+                    self.interval)
