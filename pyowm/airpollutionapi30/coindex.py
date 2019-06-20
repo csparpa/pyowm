@@ -75,14 +75,14 @@ class COIndex:
         """
         return formatting.timeformat(self.rec_time, timeformat)
 
-    def get_co_sample_with_highest_vmr(self):
+    def sample_with_highest_vmr(self):
         """
         Returns the CO sample with the highest Volume Mixing Ratio value
         :return: dict
         """
         return max(self.co_samples, key=lambda x: x['value'])
 
-    def get_co_sample_with_lowest_vmr(self):
+    def sample_with_lowest_vmr(self):
         """
         Returns the CO sample with the lowest Volume Mixing Ratio value
         :return: dict

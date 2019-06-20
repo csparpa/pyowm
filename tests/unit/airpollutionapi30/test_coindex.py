@@ -98,7 +98,7 @@ class TestCOIndex(unittest.TestCase):
             "pressure": 464.15887451171875,
             "value": 8.871462853221601e-8
         }
-        result = self.__test_instance.get_co_sample_with_highest_vmr()
+        result = self.__test_instance.sample_with_highest_vmr()
         self.assertEqual(expected, result)
 
     def test_co_sample_with_lowest_vmr(self):
@@ -107,7 +107,7 @@ class TestCOIndex(unittest.TestCase):
             "pressure": 1000,
             "value": 8.168363052618588e-8
         }
-        result = self.__test_instance.get_co_sample_with_lowest_vmr()
+        result = self.__test_instance.sample_with_lowest_vmr()
         self.assertEqual(expected, result)
 
     def test_from_dict(self):

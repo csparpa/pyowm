@@ -40,13 +40,13 @@ class TestUVIndexManager(unittest.TestCase):
         result = self.__test_instance.uvindex_around_coords(45, 9)
         uv_client.UltraVioletHttpClient.get_uvi = ref_to_original
         self.assertTrue(isinstance(result, uvindex.UVIndex))
-        self.assertIsNotNone(result.get_reference_time())
-        self.assertIsNotNone(result.get_reception_time())
+        self.assertIsNotNone(result.reference_time())
+        self.assertIsNotNone(result.reception_time())
         loc = result.location
         self.assertIsNotNone(loc)
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
-        self.assertIsNotNone(result.get_value())
+        self.assertIsNotNone(result.value)
 
     def test_uvindex_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, uvindex_manager.UVIndexManager.uvindex_around_coords, \

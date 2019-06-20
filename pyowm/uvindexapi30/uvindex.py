@@ -43,16 +43,16 @@ class UVIndex:
     def __init__(self, reference_time, location, value, reception_time):
         if reference_time < 0:
             raise ValueError("'referencetime' must be greater than 0")
-        self._reference_time = reference_time
+        self.ref_time = reference_time
         self.location = location
         if value < 0.0:
             raise ValueError("'UV intensity must be greater than 0")
-        self._value = value
+        self.value = value
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
+        self.rec_time = reception_time
 
-    def get_reference_time(self, timeformat='unix'):
+    def reference_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the UV has been observed
           from the OWM Weather API
@@ -66,9 +66,9 @@ class UVIndex:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self.ref_time, timeformat)
 
-    def get_reception_time(self, timeformat='unix'):
+    def reception_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the UV has been received from the API
 
@@ -81,25 +81,7 @@ class UVIndex:
         :raises: ValueError when negative values are provided
 
         """
-        return formatting.timeformat(self._reception_time, timeformat)
-
-    def get_location(self):
-        """
-        Returns the *Location* object for this UV observation
-
-        :returns: the *Location* object
-
-        """
-        return self.location
-
-    def get_value(self):
-        """
-        Returns the UV intensity for this observation
-
-        :returns: float
-
-        """
-        return self._value
+        return formatting.timeformat(self.rec_time, timeformat)
 
     def get_exposure_risk(self):
         """
@@ -107,7 +89,7 @@ class UVIndex:
         for the average adult on this UV observation
         :return: str
         """
-        return uv_intensity_to_exposure_risk(self._value)
+        return uv_intensity_to_exposure_risk(self.value)
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -148,17 +130,17 @@ class UVIndex:
         :returns: a `dict`
 
         """
-        return {"reference_time": self._reference_time,
+        return {"reference_time": self.ref_time,
                 "location": self.location.to_dict(),
-                "value": self._value,
-                "reception_time": self._reception_time}
+                "value": self.value,
+                "reception_time": self.rec_time}
 
     def __repr__(self):
         return "<%s.%s - reference time=%s, reception time=%s, location=%s, " \
                "value=%s>" % (
                     __name__,
                     self.__class__.__name__,
-                    self.get_reference_time('iso'),
-                    self.get_reception_time('iso'),
+                    self.reference_time('iso'),
+                    self.reception_time('iso'),
                     str(self.location),
-                    str(self._value))
+                    str(self.value))
