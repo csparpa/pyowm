@@ -77,11 +77,11 @@ class TestNO2Index(unittest.TestCase):
                          self.__test_date_reference_time)
 
     def test_returning_different_formats_for_reception_time(self):
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='iso'), \
                          self.__test_iso_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='unix'), \
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
 
     def test_is_forecast(self):

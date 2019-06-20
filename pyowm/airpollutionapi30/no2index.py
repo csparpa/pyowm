@@ -59,7 +59,7 @@ class NO2Index:
         """
         return formatting.timeformat(self.ref_time, timeformat)
 
-    def get_reception_time(self, timeformat='unix'):
+    def reception_time(self, timeformat='unix'):
         """
         Returns the GMT time telling when the NO2 observation has been received
         from the OWM Weather API
@@ -154,6 +154,6 @@ class NO2Index:
                     __name__,
                     self.__class__.__name__,
                     self.reference_time('iso'),
-                    self.get_reception_time('iso'),
+                    self.reception_time('iso'),
                     str(self.location),
                     self.interval)

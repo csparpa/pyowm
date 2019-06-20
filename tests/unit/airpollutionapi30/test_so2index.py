@@ -8,7 +8,6 @@ from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.airpollutionapi30.so2index import SO2Index
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from tests.unit.airpollutionapi30.json_test_dumps import SO2INDEX_JSON_DUMP
-from tests.unit.airpollutionapi30.xml_test_dumps import SO2INDEX_XML_DUMP
 from pyowm.weatherapi25.location import Location
 
 SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},' \
@@ -81,11 +80,11 @@ class TestSO2Index(unittest.TestCase):
                          self.__test_date_reference_time)
 
     def test_returning_different_formats_for_reception_time(self):
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='iso'), \
                          self.__test_iso_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='unix'), \
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
 
     def test_is_forecast(self):
