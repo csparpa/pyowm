@@ -8,10 +8,18 @@ from pyowm.weatherapi25.location import Location
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.airpollutionapi30.no2index import NO2Index
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
-from tests.unit.airpollutionapi30.json_test_dumps import NO2INDEX_JSON_DUMP
 
 NO2INDEX_JSON = '{"time":"2016-03-03T12:00:00Z","location":{"latitude":0.0,"longitude":10.0},"data":{"no2":{"precision":1.436401748934656e+15,"value":2.550915831693312e+15},"no2_strat":{"precision":2.00000000753664e+14,"value":1.780239650783232e+15},"no2_trop":{"precision":1.464945698930688e+15,"value":7.7067618091008e+14}}}'
 NO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","abc":[]}'
+NO2INDEX_JSON_DUMP = '{"reference_time": 1234567, "no2_samples": [{"label": ' \
+                    '"no2", "value": 8.168363052618588e-08, "precision": ' \
+                    '-4.999999987376214e-07}, {"label": "no2_strat", ' \
+                    '"value": 8.686949115599418e-08, "precision": ' \
+                    '-4.999999987376214e-07}, {"label": "no2_trop", ' \
+                    '"value": 8.871462853221601e-08, "precision": ' \
+                    '-4.999999987376214e-07}], "location": {"country": "UK", ' \
+                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
+                    '"ID": 987}, "interval": "day", "reception_time": 1475283600}'
 
 
 class TestNO2Index(unittest.TestCase):

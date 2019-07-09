@@ -4,10 +4,9 @@
 import json
 import unittest
 from datetime import datetime
-from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.airpollutionapi30.so2index import SO2Index
+from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
-from tests.unit.airpollutionapi30.json_test_dumps import SO2INDEX_JSON_DUMP
 from pyowm.weatherapi25.location import Location
 
 SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},' \
@@ -15,6 +14,15 @@ SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longit
                 '{"precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},' \
                 '{"precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
 SO2INDEX_MALFORMED_JSON = '{"time":"2016-10-01T13:07:01Z","xyz":[]}'
+SO2INDEX_JSON_DUMP = '{"reference_time": 1234567, "so2_samples": [{"pressure": ' \
+                    '1000, "value": 8.168363052618588e-08, "precision": ' \
+                    '-4.999999987376214e-07}, {"pressure": 681.2920532226562, ' \
+                    '"value": 8.686949115599418e-08, "precision": ' \
+                    '-4.999999987376214e-07}, {"pressure": 464.15887451171875, ' \
+                    '"value": 8.871462853221601e-08, "precision": ' \
+                    '-4.999999987376214e-07}], "location": {"country": "UK", ' \
+                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
+                    '"ID": 987}, "interval": "day", "reception_time": 1475283600}'
 
 
 class TestSO2Index(unittest.TestCase):
