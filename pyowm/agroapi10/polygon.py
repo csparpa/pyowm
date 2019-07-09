@@ -67,5 +67,4 @@ class Polygon:
         return Polygon(the_id, name, geopolygon, center, area, user_id)
 
     def __repr__(self):
-        return "<%s.%s - id=%s, name=%s, area=%s>" % (__name__, \
-              self.__class__.__name__, self.id, self.name, str(self.area))
+        return "<%s.%s - id=%s, name=%s, area=%s>" % (__name__, self.__class__.__name__, self.id, self.name, str(self.area))

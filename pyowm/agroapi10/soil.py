@@ -103,6 +103,13 @@ class Soil:
         polygon_id = the_dict.get('polygon_id', None)
         return Soil(reference_time, surface_temp, ten_cm_temp, moisture, polygon_id)
 
+    def to_dict(self):
+        return {'reference_time': self._reference_time,
+                'surface_temp': self._surface_temp,
+                'ten_cm_temp': self._ten_cm_temp,
+                'moisture': self.moisture,
+                'polygon_id': self.polygon_id}
+
     def __repr__(self):
         return "<%s.%s - polygon_id=%s,reference time=%s,>" % (__name__, self.__class__.__name__,
                                                                self.polygon_id, self.reference_time('iso'))
