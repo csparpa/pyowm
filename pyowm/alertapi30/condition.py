@@ -57,3 +57,7 @@ class Condition:
             'operator': self.operator,
             'amount': self.amount}
 
+    def __repr__(self):
+        return '<%s.%s - when %s %s %s>' % (__name__, self.__class__.__name__, self.weather_param,
+                                            self.operator, str(self.amount))
+

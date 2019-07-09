@@ -22,6 +22,9 @@ class AlertChannel:
     def to_dict(self):
         return dict(name=self.name)
 
+    def __repr__(self):
+        return '<%s.%s - name: %s>' % (__name__, self.__class__.__name__, self.name)
+
 
 class Alert:
     """

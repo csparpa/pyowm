@@ -233,3 +233,6 @@ class AlertManager:
             NAMED_ALERT_URI % (alert.trigger_id, alert.id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)
