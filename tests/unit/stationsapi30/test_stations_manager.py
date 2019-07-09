@@ -304,3 +304,5 @@ class TestStationManager(unittest.TestCase):
                 return
         self.fail()
 
+    def test_repr(self):
+        print(StationsManager('APIKey', DEFAULT_CONFIG))

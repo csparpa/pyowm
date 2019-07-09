@@ -70,3 +70,6 @@ class TestUVClient(unittest.TestCase):
         self.assertEqual('uvi/history',
                          result[0])
         self.assertEqual(expected, result[1])
+
+    def test_repr(self):
+        print(self.__instance)

@@ -117,3 +117,6 @@ class TestUVIndex(unittest.TestCase):
 
     def test_from_dict_fails_with_malformed_JSON_data(self):
         self.assertRaises(parse_response_error.ParseResponseError, UVIndex.from_dict, json.loads(UVINDEX_MALFORMED_JSON))
+
+    def test_repr(self):
+        print(self.__test_instance)

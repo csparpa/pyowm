@@ -54,4 +54,4 @@ class TileManager:
         return Tile(x, y, zoom, self.map_layer, img)
 
     def __repr__(self):
-        return "<%s.%s - layer name=%s>" % (__name__, self.__class__.__name__, self.map_layer)
+        return "<%s.%s - layer_name=%s>" % (__name__, self.__class__.__name__, self.map_layer)

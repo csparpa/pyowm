@@ -28,3 +28,6 @@ class TestTileManager(unittest.TestCase):
         result = instance.get_tile(1, 2, 3)
         self.assertIsInstance(result, Tile)
         self.assertEqual(mocked.d, result.image.data)
+
+    def test_repr(self):
+        print(TileManager('apikey', 'a_layer', DEFAULT_CONFIG))
