@@ -119,3 +119,6 @@ class TestSO2Index(unittest.TestCase):
         expected = json.loads(SO2INDEX_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
+
+    def test_repr(self):
+        print(self.__test_instance)

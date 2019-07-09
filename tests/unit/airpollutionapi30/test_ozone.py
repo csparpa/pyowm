@@ -105,3 +105,7 @@ class TestOzone(unittest.TestCase):
         expected = json.loads(OZONE_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
+
+    def test_repr(self):
+        print(self.__test_instance)
+

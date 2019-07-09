@@ -233,3 +233,6 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         expected_url = 'so2/43.75,8.25/2016Z.json'
         result = self.__instance.get_so2(params)
         self.assertEqual(expected_url, result)
+
+    def test_repr(self):
+        print(self.__instance)

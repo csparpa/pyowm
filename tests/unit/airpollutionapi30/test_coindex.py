@@ -137,3 +137,6 @@ class TestCOIndex(unittest.TestCase):
         ordered_str_expected = sorted(str(expected))
         ordered_str_result = sorted(str(result))
         self.assertEqual(ordered_str_expected, ordered_str_result)
+
+    def test_repr(self):
+        print(self.__test_instance)
