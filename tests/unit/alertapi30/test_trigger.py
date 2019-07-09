@@ -217,3 +217,8 @@ class TestTrigger(unittest.TestCase):
         self.assertEqual(list(), result['alerts'])
         self.assertEqual([{'type': 'Point', 'coordinates': [13.6, 46.9]}], result['area'])
         self.assertEqual([{'id': None, 'weather_param': 'humidity', 'operator': 'LESS_THAN', 'amount': 10}], result['conditions'])
+
+    def test_repr(self):
+        instance = Trigger(1526809375, 1527809375, [Condition('humidity', 'LESS_THAN', 10)],
+                           [geo.Point(13.6, 46.9)], alerts=None, alert_channels=None)
+        print(instance)

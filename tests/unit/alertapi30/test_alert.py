@@ -67,6 +67,19 @@ class TestAlert(unittest.TestCase):
         self.assertEqual({"lon": 37, "lat": 53}, result['coordinates'])
         self.assertEqual(1481802090232, result['last_update'])
 
+    def test_repr(self):
+        the_dict = {
+         '_id': '5853dbe27416a400011b1b77',
+         'conditions': [{'_id': '5853dbe27416a400011b1b78',
+                         'condition': {'amount': 273, 'expression': '$lt', 'name': 'temp'},
+                         'current_value': {'max': 258.62, 'min': 258.62}}],
+         'coordinates': {'lat': '53', 'lon': '37'},
+         'date': '2016-12-17T00:00:00.000Z',
+         'last_update': '2016-12-16T11:19:46.352Z',
+         'triggerId': '5852816a9aaacb00153134a3'}
+        instance = Alert.from_dict(the_dict)
+        print(instance)
+
 
 class TestAlertChannel(unittest.TestCase):
 
@@ -74,3 +87,6 @@ class TestAlertChannel(unittest.TestCase):
         name = 'foobaz'
         instance = AlertChannel(name)
         self.assertEqual(dict(name=name), instance.to_dict())
+
+    def test_repr(self):
+        print(AlertChannel('foobaz'))

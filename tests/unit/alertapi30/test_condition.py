@@ -47,3 +47,6 @@ class TestCondition(unittest.TestCase):
         self.assertEqual(WeatherParametersEnum.TEMPERATURE, result['weather_param'])
         self.assertEqual(OperatorsEnum.GREATER_THAN, result['operator'])
         self.assertEqual(78.6, result['amount'])
+
+    def test_repr(self):
+        print(Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456'))

@@ -259,3 +259,6 @@ class TestAlertManager(unittest.TestCase):
         instance = self.factory(MockHttpClientOneAlert)
         result = instance.delete_alert(self._alert)
         self.assertIsNone(result)
+
+    def test_repr(self):
+        print(AlertManager('APIKey', DEFAULT_CONFIG))
