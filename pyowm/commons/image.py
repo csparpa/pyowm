@@ -49,3 +49,6 @@ class Image:
         with open(path_to_file, 'rb') as f:
             data = f.read()
         return Image(data, image_type=img_type)
+
+    def __repr__(self):
+        return "<%s.%s - type=%s>" % (__name__, self.__class__.__name__, str(self.image_type))

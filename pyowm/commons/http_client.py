@@ -291,4 +291,4 @@ class HttpClient:
             raise api_call_error.APICallError(payload)
 
     def __repr__(self):
-        return "<%s.%s>" % (__name__, self.__class__.__name__)
+        return "<%s.%s - root: %s>" % (__name__, self.__class__.__name__, self.root_uri)

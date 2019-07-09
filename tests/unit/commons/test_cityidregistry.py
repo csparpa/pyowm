@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 from pyowm.commons.cityidregistry import CityIDRegistry
 from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
@@ -381,3 +378,6 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self._assertGeopointsEqual(expected2, result[1])
 
         CityIDRegistry._get_lines = ref_to_original
+
+    def test_repr(self):
+        print(self._instance)

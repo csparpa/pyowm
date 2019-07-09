@@ -108,3 +108,7 @@ class Tile:
         north_west_corner =  tile_to_geocoords(x, y, zoom)
         south_east_corner = tile_to_geocoords(x+1, y+1, zoom)
         return north_west_corner[1], south_east_corner[0], south_east_corner[1], north_west_corner[0]
+
+    def __repr__(self):
+        return "<%s.%s - x=%s, y=%s, zoom=%s, map_layer=%s>" % (
+            __name__, self.__class__.__name__, self.x, self.y, self.zoom, self.map_layer)

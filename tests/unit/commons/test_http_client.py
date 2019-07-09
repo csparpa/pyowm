@@ -162,6 +162,9 @@ class TestHTTPClient(unittest.TestCase):
         self.assertEqual(expected_data, data)
         requests.get = self.requests_original_get
 
+    def test_repr(self):
+        print(HttpClient('apikey', DEFAULT_CONFIG, 'anyurl.com'))
+
 
 class TestHttpRequestBuilder(unittest.TestCase):
 
