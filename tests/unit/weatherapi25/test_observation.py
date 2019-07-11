@@ -10,7 +10,6 @@ from pyowm.weatherapi25.observation import Observation
 from pyowm.utils.formatting import UTC
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
-from tests.unit.weatherapi25.json_test_dumps import OBSERVATION_JSON_DUMP
 from tests.unit.weatherapi25.json_test_responses import (
      OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, OBSERVATION_MALFORMED_JSON)
 from tests.unit.weatherapi25.json_test_responses import (
@@ -39,6 +38,23 @@ class TestObservation(unittest.TestCase):
     __bad_json_2 = '{"message": "test", "cod": "500"}'
     __no_items_json = '{"cod": "200", "count": "0" }'
     __404_json = '{"cod": "404" }'
+
+    OBSERVATION_JSON_DUMP = '{"reception_time": 1234567, "location": ' \
+                            '{"country": "UK", "name": "test", "coordinates": ' \
+                            '{"lat": 43.7, "lon": 12.3}, "ID": 987}, "weather": ' \
+                            '{"status": "Clouds", "visibility_distance": 1000, ' \
+                            '"humidity": 57, "clouds": 67, "temperature": ' \
+                            '{"temp_kf": -1.899, "temp_max": 296.098, ' \
+                            '"temp": 294.199, "temp_min": 294.199}, ' \
+                            '"dewpoint": 300.0, "snow": {"all": 0}, ' \
+                            '"detailed_status": "Overcast clouds", ' \
+                            '"reference_time": 1378459200, "weather_code": 804, ' \
+                            '"humidex": 298.0, "rain": {"all": 20}, ' \
+                            '"sunset_time": 1378496400, "pressure": ' \
+                            '{"press": 1030.119, "sea_level": 1038.589}, ' \
+                            '"sunrise_time": 1378449600, "heat_index": 296.0, ' \
+                            '"weather_icon_name": "04d", "wind": ' \
+                            '{"speed": 1.1, "deg": 252.002}}}'
 
     def test_init_fails_when_reception_time_is_negative(self):
         self.assertRaises(ValueError, Observation, -1234567, \
@@ -88,7 +104,7 @@ class TestObservation(unittest.TestCase):
         self.assertTrue(result is None)
 
     def test_to_dict(self):
-        expected = json.loads(OBSERVATION_JSON_DUMP)
+        expected = json.loads(self.OBSERVATION_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
 
@@ -131,3 +147,6 @@ class TestObservation(unittest.TestCase):
     def test_from_dict_of_lists_when_server_error(self):
         with self.assertRaises(APIResponseError):
             Observation.from_dict_of_lists(json.loads(INTERNAL_SERVER_ERROR_JSON))
+
+    def test__repr(self):
+        print(self.__test_instance)

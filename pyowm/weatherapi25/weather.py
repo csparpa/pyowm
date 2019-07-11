@@ -191,7 +191,7 @@ class Weather:
         return ICONS_BASE_URI % self.weather_icon_name
 
     def __repr__(self):
-        return "<%s.%s - reference time=%s, status=%s, detailed status=%s>" % (
+        return "<%s.%s - reference_time=%s, status=%s, detailed_status=%s>" % (
             __name__, self.__class__.__name__, self.reference_time('iso'), self.status.lower(), self.detailed_status.lower())
 
     @classmethod

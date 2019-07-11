@@ -8,7 +8,6 @@ from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.utils.formatting import UTC
 from pyowm.weatherapi25.uris import ICONS_BASE_URI
 from pyowm.weatherapi25.weather import Weather
-from tests.unit.weatherapi25.json_test_dumps import WEATHER_JSON_DUMP
 from tests.unit.weatherapi25.json_test_responses import (CITY_WEATHER_HISTORY_JSON, CITY_WEATHER_HISTORY_NO_RESULTS_JSON,
                                                          CITY_WEATHER_HISTORY_NOT_FOUND_JSON, INTERNAL_SERVER_ERROR_JSON)
 from datetime import datetime
@@ -61,6 +60,18 @@ class TestWeather(unittest.TestCase):
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __bad_json_2 = '{"list": [{"test":"fake"}] }'
     __no_items_json = '{"cnt": "0"}'
+
+    WEATHER_JSON_DUMP = '{"status": "Clouds", "visibility_distance": 1000, ' \
+                        '"clouds": 67, "temperature": {"temp_kf": -1.899, ' \
+                        '"temp_min": 294.199, "temp": 294.199, "temp_max": 296.098},' \
+                        ' "dewpoint": 300.0, "humidex": 298.0, "detailed_status": ' \
+                        '"Overcast clouds", "reference_time": 1378459200, ' \
+                        '"weather_code": 804, "sunset_time": 1378496400, "rain": ' \
+                        '{"all": 20}, "snow": {"all": 0}, "pressure": ' \
+                        '{"press": 1030.119, "sea_level": 1038.589}, ' \
+                        '"sunrise_time": 1378449600, "heat_index": 40.0, ' \
+                        '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
+                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}}'
 
     def test_init_fails_when_negative_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
@@ -302,7 +313,7 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(0, len(result2.wind()))
 
     def test_to_dict(self):
-        expected = json.loads(WEATHER_JSON_DUMP)
+        expected = json.loads(self.WEATHER_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
 
@@ -403,3 +414,6 @@ class TestWeather(unittest.TestCase):
         expected = ICONS_BASE_URI % self.__test_instance.weather_icon_name
         result = self.__test_instance.weather_icon_url()
         self.assertEqual(expected, result)
+
+    def test_repr(self):
+        print(self.__test_instance)

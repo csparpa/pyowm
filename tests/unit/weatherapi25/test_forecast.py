@@ -7,7 +7,6 @@ from pyowm.weatherapi25.forecast import Forecast
 from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from pyowm.utils.formatting import UTC
-from tests.unit.weatherapi25.json_test_dumps import FORECAST_JSON_DUMP
 from tests.unit.weatherapi25.json_test_responses import (
      THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
      INTERNAL_SERVER_ERROR_JSON, FORECAST_MALFORMED_JSON)
@@ -45,6 +44,32 @@ class TestForecast(unittest.TestCase):
     __no_items_found_json = '{"count": "0", "city": {"id": 2643743,' \
         '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
         '"GB","population": 1000000} }'
+
+    FORECAST_JSON_DUMP = '{"reception_time": 1234567, "interval": "daily", ' \
+                         '"location": {"country": "IT", "name": "test", ' \
+                         '"coordinates": {"lat": 43.7, "lon": 12.3}, "ID": 987}, ' \
+                         '"weathers": [{"status": "Clouds", ' \
+                         '"visibility_distance": 1000, "humidity": 57, "clouds": 67,' \
+                         ' "temperature": {"temp_kf": -1.899, "temp_max": 296.098, ' \
+                         '"temp": 294.199, "temp_min": 294.199}, "dewpoint": 300.0,' \
+                         ' "snow": {"all": 0}, "detailed_status": "Overcast clouds",' \
+                         ' "reference_time": 1378459200, "weather_code": 804, ' \
+                         '"humidex": 298.0, "rain": {"all": 20}, ' \
+                         '"sunset_time": 1378496400, "pressure": {"press": 1030.119,' \
+                         ' "sea_level": 1038.589}, "sunrise_time": 1378449600, ' \
+                         '"heat_index": 296.0, "weather_icon_name": "04d", "wind": ' \
+                         '{"speed": 1.1, "deg": 252.002}}, {"status": "Clear", ' \
+                         '"visibility_distance": 1000, "humidity": 12, ' \
+                         '"clouds": 23, "temperature": {"temp_kf": -1.899, ' \
+                         '"temp_max": 299.0, "temp": 297.199, "temp_min": 295.6}, ' \
+                         '"dewpoint": 300.0, "snow": {"all": 0}, "detailed_status": ' \
+                         '"Sky is clear", "reference_time": 1378459690, ' \
+                         '"weather_code": 804, "humidex": 298.0, "rain": {"all": 10},' \
+                         ' "sunset_time": 1378496480, "pressure": ' \
+                         '{"press": 1070.119, "sea_level": 1078.589}, ' \
+                         '"sunrise_time": 1378449510, "heat_index": 296.0, ' \
+                         '"weather_icon_name": "02d", "wind": {"speed": 4.2, ' \
+                         '"deg": 103.4}}]}'
 
     def test_actualize(self):
         weathers = [Weather(1378459200, 1378496400, 1378449600, 67,
@@ -155,6 +180,9 @@ class TestForecast(unittest.TestCase):
             Forecast.from_dict(json.loads(INTERNAL_SERVER_ERROR_JSON))
 
     def test_to_dict(self):
-        expected = json.loads(FORECAST_JSON_DUMP)
+        expected = json.loads(self.FORECAST_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
+
+    def test__repr(self):
+        print(self.__test_instance)

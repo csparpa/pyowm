@@ -8,7 +8,6 @@ from pyowm.exceptions.parse_response_error import ParseResponseError
 from pyowm.exceptions.api_response_error import APIResponseError
 from pyowm.utils.formatting import UTC
 from pyowm.weatherapi25.stationhistory import StationHistory
-from tests.unit.weatherapi25.json_test_dumps import STATIONHISTORY_JSON_DUMP
 from tests.unit.weatherapi25.json_test_responses import (
      STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_NOT_FOUND_JSON,
      INTERNAL_SERVER_ERROR_JSON)
@@ -44,6 +43,12 @@ class TestStationHistory(unittest.TestCase):
                                      __test_measurements)
 
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
+
+    STATIONHISTORY_JSON_DUMP = '{"reception_time": 1378684800, "interval": ' \
+                               + '"tick", "measurements": {"1362934043": {"wind": 4.7, "pressure": ' \
+                               + '1010.09, "temperature": 266.85, "rain": null, "humidity": 27.7}, ' \
+                               + '"1362933983": {"wind": 4.7, "pressure": 1010.02, "temperature": ' \
+                               + '266.25, "rain": null, "humidity": 27.3}}, "station_ID": 2865}'
 
     def test_init_fails_when_negative_reception_time(self):
         self.assertRaises(ValueError, StationHistory, 1234, 'tick', -1234567,
@@ -89,6 +94,9 @@ class TestStationHistory(unittest.TestCase):
         self.assertRaises(APIResponseError, StationHistory.from_dict, json.loads(INTERNAL_SERVER_ERROR_JSON))
 
     def test_to_dict(self):
-        expected = json.loads(STATIONHISTORY_JSON_DUMP)
+        expected = json.loads(self.STATIONHISTORY_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
+
+    def test__repr(self):
+        print(self.__test_instance)

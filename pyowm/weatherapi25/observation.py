@@ -101,7 +101,7 @@ class Observation:
                 "weather": self.weather.to_dict()}
 
     def __repr__(self):
-        return "<%s.%s - reception time=%s>" % (__name__, self.__class__.__name__,
+        return "<%s.%s - reception_time=%s>" % (__name__, self.__class__.__name__,
                                                 self.reception_time('iso'))
 
     @classmethod

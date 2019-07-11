@@ -151,6 +151,6 @@ class Forecast:
         return (w for w in self.weathers)
 
     def __repr__(self):
-        return "<%s.%s - reception time=%s, interval=%s>" % (__name__, \
+        return "<%s.%s - reception_time=%s, interval=%s>" % (__name__, \
               self.__class__.__name__, self.reception_time('iso'),
               self.interval)

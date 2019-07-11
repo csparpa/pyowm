@@ -323,3 +323,6 @@ class TestForecaster(unittest.TestCase):
         fcstr = Forecaster(Forecast("daily", 1379089800, self.__test_location,
                                    [self.__test_none_values]))
         self.assertFalse(fcstr.most_windy())
+
+    def test__repr(self):
+        print(self.__test_instance)

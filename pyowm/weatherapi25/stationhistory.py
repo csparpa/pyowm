@@ -130,3 +130,6 @@ class StationHistory:
                 "interval": self.interval,
                 "reception_time": self.rec_time,
                 "measurements": self.measurements}
+
+    def __repr__(self):
+        return "<%s.%s - station_id=%s, interval=%s>" % (__name__, self.__class__.__name__, self.station_id, self.interval)

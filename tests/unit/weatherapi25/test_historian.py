@@ -235,8 +235,12 @@ class TestHistorian(unittest.TestCase):
         expected = [("a", 1), ("b", 2), ("e", 5)]
         self.assertEqual(set(expected),
                          set(self.__instance._purge_none_samples(input_list)))
+
     def test_average(self):
         input_list = [("a", 1.0), ("b", 2.0), ("c", 3.0), ("d", 4.0)]
         expected = 10.0/len(input_list)
         self.assertEqual(expected,
                          self.__instance._average(input_list))
+
+    def test__repr(self):
+        print(self.__instance)

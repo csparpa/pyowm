@@ -5,7 +5,6 @@ import unittest
 import json
 from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
-from tests.unit.weatherapi25.json_test_dumps import LOCATION_JSON_DUMP
 
 
 class TestLocation(unittest.TestCase):
@@ -15,8 +14,10 @@ class TestLocation(unittest.TestCase):
     __test_lat = 43.7
     __test_ID = 1234
     __test_country = 'UK'
-    __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID,
-                               __test_country)
+    __test_instance = Location(__test_name, __test_lon, __test_lat, __test_ID, __test_country)
+
+    LOCATION_JSON_DUMP = '{"country": "UK", "name": "London", "coordinates": ' \
+                         + '{"lat": 43.7, "lon": 12.3}, "ID": 1234}'
 
     def test_init_fails_when_lat_or_lon_are_none(self):
         self.assertRaises(ValueError, Location, 'London', None, 43.7, 1234)
@@ -79,7 +80,7 @@ class TestLocation(unittest.TestCase):
         self.assertTrue(result2.id is None)
 
     def test_to_dict(self):
-        expected = json.loads(LOCATION_JSON_DUMP)
+        expected = json.loads(self.LOCATION_JSON_DUMP)
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
 
@@ -101,3 +102,5 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(sorted(expected_geojson),
                          sorted(result.geojson()))
 
+    def test__repr(self):
+        print(self.__test_instance)
