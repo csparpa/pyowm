@@ -45,7 +45,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         result_list = self._instance.locations_for('dongen')
         self.assertEqual(1, len(result_list))
         result = result_list[0]
-        self.assertEqual(result.get_name(), expected.name)
+        self.assertEqual(result.name, expected.name)
         self.assertEqual(result.country, expected.country)
         self.assertEqual(result.id, expected.id)
         self.assertEqual(result.lat, expected.lat)

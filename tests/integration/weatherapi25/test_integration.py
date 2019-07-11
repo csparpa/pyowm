@@ -276,7 +276,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         fc1 = self.__owm.daily_forecast("London,uk")
         fc2 = self.__owm.daily_forecast('Kiev')
         self.assertTrue(fc1)
-        f1 = fc1.get_forecast()
+        f1 = fc1.forecast
+        f1 = fc1.forecast
         self.assertTrue(f1 is not None)
         self.assertTrue(f1.reception_time() is not None)
         loc = f1.location

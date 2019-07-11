@@ -17,8 +17,8 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         """
         u = self.__owm.uvindex_around_coords(45, 9)
         self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_value())
-        self.assertIsNotNone(u.get_reception_time())
+        self.assertIsNotNone(u.value)
+        self.assertIsNotNone(u.reception_time())
         self.assertIsNotNone(u.location)
 
     def test_uvindex_forecast_around_coords(self):
@@ -28,8 +28,8 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         uv_list = self.__owm.uvindex_forecast_around_coords(45, 9)
         self.assertIsInstance(uv_list, list)
         for item in uv_list:
-            self.assertIsNotNone(item.get_value())
-            self.assertIsNotNone(item.get_reception_time())
+            self.assertIsNotNone(item.value)
+            self.assertIsNotNone(item.reception_time())
             self.assertIsNotNone(item.location)
 
     def test_uvindex_history_around_coords(self):
@@ -43,8 +43,8 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
                                                            end=end)
         self.assertIsInstance(uv_list, list)
         for item in uv_list:
-            self.assertIsNotNone(item.get_value())
-            self.assertIsNotNone(item.get_reception_time())
+            self.assertIsNotNone(item.value)
+            self.assertIsNotNone(item.reception_time())
             self.assertIsNotNone(item.location)
 
 
