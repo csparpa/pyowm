@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from logging import WARNING
 from pyowm.commons.enums import SubscriptionTypeEnum
 from pyowm.config import DEFAULT_CONFIG
 
@@ -43,8 +42,4 @@ class TesDefaultConfig(unittest.TestCase):
 
         self.assertTrue('http' in  proxies)
         self.assertTrue('https' in  proxies)
-
-        # min default logging severity
-        self.assertTrue('logging_severity' in DEFAULT_CONFIG)
-        self.assertEqual(WARNING, DEFAULT_CONFIG['logging_severity'])
 
