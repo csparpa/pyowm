@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import importlib
+
 
 def obfuscate_API_key(API_key):
     """
@@ -24,3 +26,20 @@ def version_tuple_to_str(version_tuple, separator='.'):
     """
     str_version_tuple = [str(v) for v in version_tuple]
     return separator.join(str_version_tuple)
+
+
+def class_from_dotted_path(dotted_path):
+    """
+    Loads a Python class from the supplied Python dot-separated class path.
+    The class must be visible according to the PYTHONPATH variable contents.
+    Eg: "package.subpackage.module.MyClass" --> MyClass
+
+    :param dotted_path: the dot-separated path of the class
+    :type dotted_path: str
+    :return: a `type` object
+    """
+    assert isinstance(dotted_path, str), 'A string must be provided'
+    tokens = dotted_path.split('.')
+    modpath, class_name = '.'.join(tokens[:-1]), tokens[-1]
+    klass = getattr(importlib.import_module(modpath), class_name)
+    return klass

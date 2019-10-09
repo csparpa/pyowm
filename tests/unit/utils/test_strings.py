@@ -5,6 +5,10 @@ import unittest
 from pyowm.utils import strings
 
 
+class Placeholder:
+    pass  # don't move!
+
+
 class TestStringUtils(unittest.TestCase):
 
     def test_obfuscate_API_key(self):
@@ -24,3 +28,8 @@ class TestStringUtils(unittest.TestCase):
         expected = '1;4;6;9'
         result = strings.version_tuple_to_str(version_tuple, separator=separator)
         self.assertEqual(expected, result)
+
+    def test_class_from_dotted_path(self):
+        path = 'tests.unit.utils.test_strings.Placeholder'
+        result = strings.class_from_dotted_path(path)
+        assert result == Placeholder
