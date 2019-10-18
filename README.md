@@ -126,7 +126,7 @@ See the [the official documentation website](https://pyowm.readthedocs.io/) for 
 ## Community
 Join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [here](http://pyowm-slackin.herokuapp.com/)
 
-Here are [some cool projects](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM) that use PyOWM
+Here are [some cool projects](https://github.com/csparpa/pyowm/wiki/Projects-using-PyOWM) that use PyOWM
 
 ## References
 * [OpenWeatherMap website](http://openweathermap.org/)
