@@ -1,34 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import gzip
-from pkg_resources import resource_filename
+import bz2
+import pygtrie
 from pyowm.weatherapi25.location import Location
 
-
-CITY_ID_FILES_PATH = 'cityids/%03d-%03d.txt.gz'
+CITY_ID_ARCHIVE_PATH = 'cityids/city-ids.bz2'
 
 
 class CityIDRegistry:
 
-    MATCHINGS = {
-        'exact': lambda city_name, toponym: city_name == toponym,
-        'nocase': lambda city_name, toponym: city_name.lower() == toponym.lower(),
-        'like': lambda city_name, toponym: city_name.lower() in toponym.lower()
-    }
-
-    def __init__(self, filepath_regex):
+    def __init__(self, city_archive_path):
         """
         Initialise a registry that can be used to lookup info about cities.
 
-        :param filepath_regex: Python format string that gives the path of the files
-               that store the city IDs information.
-               Eg: ``folder1/folder2/%02d-%02d.txt``
-        :type filepath_regex: str
+        :param city_archive_path: path of the compressed Bz2 CSV file sourcing city data 
+        :type city_archive_path: str
         :returns: a *CityIDRegistry* instance
 
         """
-        self._filepath_regex = filepath_regex
+        self._city_archive_path = city_archive_path
+		self._trie = self._build_trie(city_archive_path) # create trie
 
     @classmethod
     def get_instance(cls):
@@ -36,183 +28,124 @@ class CityIDRegistry:
         Factory method returning the default city ID registry
         :return: a `CityIDRegistry` instance
         """
-        return CityIDRegistry(CITY_ID_FILES_PATH)
+        return CityIDRegistry(CITY_ID_ARCHIVE_PATH)
 
-    def ids_for(self, city_name, country=None, matching='nocase'):
+	def _build_trie(self, ):
+		with bz2.BZ2File('city_archive_path', 'rb') as fh:
+			try:
+				lines = fh.readlines()
+				if type(lines[0]) is bytes:
+					lines = map(lambda l: l.decode("utf-8"), lines)
+				
+				trie = pygtrie.CharTrie()
+				for line in lines:
+					name, id, lat, lon, country = line.split(";")
+					if trie.has_key(name):
+						trie[name].append((long(id), float(lat), float(lon), country))
+					else:
+						trie[name] = [(long(id), float(lat), float(lon), country)]
+				return trie
+			except Exception:
+				print("Something went wrong")  # should rise a custom exception
+				return None	
+		
+		
+    def ids_for(self, city_name, country_code=None):
         """
-        Returns a list of tuples in the form (long, str, str) corresponding to
-        the int IDs and relative toponyms and 2-chars country of the cities
-        matching the provided city name.
-        The rule for identifying matchings is according to the provided
-        `matching` parameter value.
-        If `country` is provided, the search is restricted to the cities of
-        the specified country.
-        :param country: two character str representing the country where to
+        Searches cities having the specified name and returns a list of tuples 
+		in the form (id, city_name, country), one for each city that has been found.
+		Cities will be searched based on case-sensitive literal matching.
+        If `country` is provided, the search is further restricted to the cities in
+		the specified 2-chars country code.
+
+        :param city_name: city name to be searched. 
+		:type city_name: str
+        :param country_code: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
-        :raises ValueError if the value for `matching` is unknown
-        :return: list of tuples
-        """
-        if not city_name:
-            return []
-        if matching not in self.MATCHINGS:
-            raise ValueError("Unknown type of matching: "
-                             "allowed values are %s" % ", ".join(self.MATCHINGS))
-        if country is not None and len(country) != 2:
-            raise ValueError("Country must be a 2-char string")
-        splits = self._filter_matching_lines(city_name, country, matching)
-        return [(int(item[1]), item[0], item[4]) for item in splits]
+		:type country_code: str
+        :raises ValueError when parameters are not strings or country code 
+		is not 2-char long
+        :return: list of `tuple` objects, in the form (id, city_name, country)
+		"""
+        if not isinstance(string, city_name):
+            raise ValueError("City name must be a string")
+        if country_code is not None:
+			if not isinstance(str, country_code):
+				raise ValueError("Country code must be a string")
+			if len(country_code) != 2:
+				raise ValueError("Country code must be 2 chars long")
+        
+		matching = self._trie.get(city_name, ())
+		result = [(item[0], city_name, item[3]) for item in matching]
+		
+		# narrow down search in case country code is provided
+		if country_code is not None:
+			result = list(filter(lambda _tuple: _tuple[2].lower() != country_code.lower(), result))
+			
+		return result
 
-    def locations_for(self, city_name, country=None, matching='nocase'):
+		
+    def locations_for(self, city_name, country_code=None):
         """
-        Returns a list of Location objects corresponding to
-        the int IDs and relative toponyms and 2-chars country of the cities
-        matching the provided city name.
-        The rule for identifying matchings is according to the provided
-        `matching` parameter value.
-        If `country` is provided, the search is restricted to the cities of
-        the specified country.
-        :param country: two character str representing the country where to
+        Searches cities having the specified name and returns a list of 
+		`weatherapi25.location.Location` objects, one for each city that has been found.
+		Cities will be searched based on case-sensitive literal matching.
+        If `country` is provided, the search is further restricted to the cities in
+		the specified 2-chars country code.
+
+        :param city_name: city name to be searched. 
+		:type city_name: str
+        :param country_code: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
-        :raises ValueError if the value for `matching` is unknown
+		:type country_code: str
+        :raises ValueError when parameters are not strings or country code 
+		is not 2-char long
         :return: list of `weatherapi25.location.Location` objects
         """
-        if not city_name:
-            return []
-        if matching not in self.MATCHINGS:
-            raise ValueError("Unknown type of matching: "
-                             "allowed values are %s" % ", ".join(self.MATCHINGS))
-        if country is not None and len(country) != 2:
-            raise ValueError("Country must be a 2-char string")
-        splits = self._filter_matching_lines(city_name, country, matching)
-        return [Location(item[0], float(item[3]), float(item[2]),
-                         int(item[1]), item[4]) for item in splits]
+        if not isinstance(string, city_name):
+            raise ValueError("City name must be a string")
+        if country_code is not None:
+			if not isinstance(str, country_code):
+				raise ValueError("Country code must be a string")
+			if len(country_code) != 2:
+				raise ValueError("Country code must be 2 chars long")
+        
+		matching = self._trie.get(city_name, ())
+		result = [(item[0], city_name, item[3], item[1], item[2]) for item in matching]
+		
+		# narrow down search in case country code is provided
+		if country_code is not None:
+			result = list(filter(lambda _tuple: _tuple[2].lower() != country_code.lower(), result))
+			
+		return [Location(t[1], t[3], t[2], t[0], country=t[4]) for t in result]
 
-    def geopoints_for(self, city_name, country=None, matching='nocase'):
+
+    def geopoints_for(self, city_name, country_code=None):
         """
         Returns a list of ``pyowm.utils.geo.Point`` objects corresponding to
-        the int IDs and relative toponyms and 2-chars country of the cities
-        matching the provided city name.
-        The rule for identifying matchings is according to the provided
-        `matching` parameter value.
-        If `country` is provided, the search is restricted to the cities of
-        the specified country.
-        :param country: two character str representing the country where to
+        the cities matching the provided city name.
+
+		Cities will be searched based on case-sensitive literal matching.
+        If `country` is provided, the search is further restricted to the cities in
+		the specified 2-chars country code.
+
+        :param city_name: city name to be searched. 
+		:type city_name: str
+        :param country_code: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
-        :raises ValueError if the value for `matching` is unknown
+		:type country_code: str
+        :raises ValueError when parameters are not strings or country code 
+		is not 2-char long
         :return: list of `pyowm.utils.geo.Point` objects
         """
-        locations = self.locations_for(city_name, country, matching=matching)
+        locations = self.locations_for(city_name, country_code)
         return [loc.to_geopoint() for loc in locations]
 
-    # helper functions
-
-    def _filter_matching_lines(self, city_name, country, matching):
-        """
-        Returns an iterable whose items are the lists of split tokens of every
-        text line matched against the city ID files according to the provided
-        combination of city_name, country and matching style
-        :param city_name: str
-        :param country: str or `None`
-        :param matching: str
-        :return: list of lists
-        """
-        result = list()
-
-        # find the right file to scan and extract its lines. Upon "like"
-        # matchings, just read all files
-        if matching == 'like':
-            lines = [l.strip() for l in self._get_all_lines()]
-        else:
-            filename = self._assess_subfile_from(city_name)
-            lines = [l.strip() for l in self._get_lines(filename)]
-
-        # look for toponyms matching the specified city_name and according to
-        # the specified matching style
-        for line in lines:
-            tokens = line.split(",")
-            # sometimes city names have an inner comma...
-            if len(tokens) == 6:
-                tokens = [tokens[0]+','+tokens[1], tokens[2], tokens[3],
-                          tokens[4], tokens[5]]
-            # check country
-            if country is not None:
-                if tokens[4] != country:
-                    continue
-
-            # check city_name
-            if self._city_name_matches(city_name, tokens[0], matching):
-                result.append(tokens)
-
-        return result
-
-    def _city_name_matches(self, city_name, toponym, matching):
-        comparison_function = self.MATCHINGS[matching]
-        return comparison_function(city_name, toponym)
-
-    def _lookup_line_by_city_name(self, city_name):
-        filename = self._assess_subfile_from(city_name)
-        lines = self._get_lines(filename)
-        return self._match_line(city_name, lines)
-
-    def _assess_subfile_from(self, city_name):
-        c = ord(city_name.lower()[0])
-        if c < 97:  # not a letter
-            raise ValueError('Error: city name must start with a letter')
-        elif c in range(97, 103):  # from a to f
-            return self._filepath_regex % (97, 102)
-        elif c in range(103, 109):  # from g to l
-            return self._filepath_regex % (103, 108)
-        elif c in range(109, 115):  # from m to r
-            return self._filepath_regex % (109, 114)
-        elif c in range(115, 123):  # from s to z
-            return self._filepath_regex % (115, 122)
-        else:
-            raise ValueError('Error: city name must start with a letter')
-
-    def _get_lines(self, filename):
-        res_name = resource_filename(__name__, filename)
-        with gzip.open(res_name, mode='r') as fh:
-            lines = fh.readlines()
-            if type(lines[0]) is bytes:
-                lines = map(lambda l: l.decode("utf-8"), lines)
-            return lines
-
-    def _get_all_lines(self):
-        all_lines = list()
-        for city_name in ['a', 'g', 'm', 's']:  # all available city ID files
-            filename = self._assess_subfile_from(city_name)
-            all_lines.extend(self._get_lines(filename))
-        return all_lines
-
-    def _match_line(self, city_name, lines):
-        """
-        The lookup is case insensitive and returns the first matching line,
-        stripped.
-        :param city_name: str
-        :param lines: list of str
-        :return: str
-        """
-        for line in lines:
-            toponym = line.split(',')[0]
-            if toponym.lower() == city_name.lower():
-                return line.strip()
-        return None
-
+	
+		
     def __repr__(self):
-        return "<%s.%s - filepath_regex=%s>" % (__name__, \
-          self.__class__.__name__, self._filepath_regex)
+        return "<%s.%s - city_archive_path=%s>" % (__name__, \
+          self.__class__.__name__, self.city_archive_path)
