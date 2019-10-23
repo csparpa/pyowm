@@ -50,14 +50,6 @@ pyowm.weatherapi25.observation module
     :undoc-members:
     :show-inheritance:
 
-pyowm.weatherapi25.owm25 module
--------------------------------
-
-.. automodule:: pyowm.weatherapi25.owm25
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.weatherapi25.stationhistory module
 ----------------------------------------
 

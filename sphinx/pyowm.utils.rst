@@ -30,10 +30,10 @@ pyowm.utils.geo module
     :show-inheritance:
 
 
-pyowm.utils.temperature module
+pyowm.utils.measurables module
 ------------------------------
 
-.. automodule:: pyowm.utils.temperature
+.. automodule:: pyowm.utils.measurables
     :members:
     :undoc-members:
     :show-inheritance:

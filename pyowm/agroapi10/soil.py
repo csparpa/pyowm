@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.utils import formatting, temperature
+from pyowm.utils import formatting, measurables
 
 
 class Soil:
@@ -68,9 +68,9 @@ class Soil:
         if unit == 'kelvin':
             return self._surface_temp
         if unit == 'celsius':
-            return temperature.kelvin_to_celsius(self._surface_temp)
+            return measurables.kelvin_to_celsius(self._surface_temp)
         if unit == 'fahrenheit':
-            return temperature.kelvin_to_fahrenheit(self._surface_temp)
+            return measurables.kelvin_to_fahrenheit(self._surface_temp)
         else:
             raise ValueError('Wrong temperature unit')
 
@@ -87,9 +87,9 @@ class Soil:
         if unit == 'kelvin':
             return self._ten_cm_temp
         if unit == 'celsius':
-            return temperature.kelvin_to_celsius(self._ten_cm_temp)
+            return measurables.kelvin_to_celsius(self._ten_cm_temp)
         if unit == 'fahrenheit':
-            return temperature.kelvin_to_fahrenheit(self._ten_cm_temp)
+            return measurables.kelvin_to_fahrenheit(self._ten_cm_temp)
         else:
             raise ValueError('Wrong temperature unit')
 

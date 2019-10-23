@@ -4,7 +4,7 @@
 import unittest
 from pyowm.weatherapi25.stationhistory import StationHistory
 from pyowm.weatherapi25.historian import Historian
-from pyowm.utils import temperature
+from pyowm.utils import measurables
 
 
 class TestHistorian(unittest.TestCase):
@@ -141,8 +141,8 @@ class TestHistorian(unittest.TestCase):
     def test_average_temperature_with_different_temperature_units(self):
         avg = (266.85 + 266.25)/2.0
         expected_kelvin = avg
-        expected_celsius = temperature.kelvin_to_celsius(avg)
-        expected_fahrenheit = temperature.kelvin_to_fahrenheit(avg)
+        expected_celsius = measurables.kelvin_to_celsius(avg)
+        expected_fahrenheit = measurables.kelvin_to_fahrenheit(avg)
         self.assertEqual(expected_kelvin,
                          self.__instance.average_temperature(unit='kelvin'))
         self.assertEqual(expected_celsius,

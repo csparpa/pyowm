@@ -3,7 +3,7 @@
 
 import json
 from pyowm.exceptions import parse_response_error, api_response_error
-from pyowm.utils import formatting, temperature
+from pyowm.utils import formatting, measurables
 from pyowm.weatherapi25.uris import ICONS_BASE_URI
 
 
@@ -151,11 +151,11 @@ class Weather:
         elif unit == 'miles_hour':
             wind_dict = {k: self.wnd[k]
                          for k in self.wnd if self.wnd[k] is not None}
-            return temperature.metric_wind_dict_to_imperial(wind_dict)
+            return measurables.metric_wind_dict_to_imperial(wind_dict)
         elif unit == 'km_hour':
             wind_dict = {k: self.wnd[k]
                          for k in self.wnd if self.wnd[k] is not None}
-            return temperature.metric_wind_dict_to_km_h(wind_dict)
+            return measurables.metric_wind_dict_to_km_h(wind_dict)
         else:
             raise ValueError("Invalid value for target wind conversion unit")
 
@@ -178,7 +178,7 @@ class Weather:
                 not_to_be_converted[label] = temp
             else:
                 to_be_converted[label] = temp
-        converted = temperature.kelvin_dict_to(to_be_converted, unit)
+        converted = measurables.kelvin_dict_to(to_be_converted, unit)
         return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
 

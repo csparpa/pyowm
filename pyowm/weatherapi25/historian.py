@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from operator import itemgetter
-from pyowm.utils import temperature
+from pyowm.utils import measurables
 
 
 class Historian:
@@ -40,9 +40,9 @@ class Historian:
             if unit == 'kelvin':
                 temp = t
             elif unit == 'celsius':
-                temp = temperature.kelvin_to_celsius(t)
+                temp = measurables.kelvin_to_celsius(t)
             elif unit == 'fahrenheit':
-                temp = temperature.kelvin_to_fahrenheit(t)
+                temp = measurables.kelvin_to_fahrenheit(t)
             else:
                 raise ValueError("Unknown temperature unit")
             result.append((tstamp, temp))
@@ -110,9 +110,9 @@ class Historian:
         if unit == 'kelvin':
             return maximum
         elif unit == 'celsius':
-            return (maximum[0], temperature.kelvin_to_celsius(maximum[1]))
+            return (maximum[0], measurables.kelvin_to_celsius(maximum[1]))
         elif unit == 'fahrenheit':
-            return (maximum[0], temperature.kelvin_to_fahrenheit(maximum[1]))
+            return (maximum[0], measurables.kelvin_to_fahrenheit(maximum[1]))
         else:
             raise ValueError("Unknown temperature unit")
         
@@ -134,9 +134,9 @@ class Historian:
         if unit == 'kelvin':
             return minimum
         elif unit == 'celsius':
-            return (minimum[0], temperature.kelvin_to_celsius(minimum[1]))
+            return (minimum[0], measurables.kelvin_to_celsius(minimum[1]))
         elif unit == 'fahrenheit':
-            return (minimum[0], temperature.kelvin_to_fahrenheit(minimum[1]))
+            return (minimum[0], measurables.kelvin_to_fahrenheit(minimum[1]))
         else:
             raise ValueError("Unknown temperature unit")
         
@@ -157,9 +157,9 @@ class Historian:
         if unit == 'kelvin':
             return average
         elif unit == 'celsius':
-            return temperature.kelvin_to_celsius(average)
+            return measurables.kelvin_to_celsius(average)
         elif unit == 'fahrenheit':
-            return temperature.kelvin_to_fahrenheit(average)
+            return measurables.kelvin_to_fahrenheit(average)
         else:
             raise ValueError("Unknown temperature unit")
     
