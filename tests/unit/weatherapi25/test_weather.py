@@ -71,7 +71,7 @@ class TestWeather(unittest.TestCase):
                         '{"press": 1030.119, "sea_level": 1038.589}, ' \
                         '"sunrise_time": 1378449600, "heat_index": 40.0, ' \
                         '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
-                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}}'
+                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null}'
 
     def test_init_fails_when_negative_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
@@ -239,10 +239,8 @@ class TestWeather(unittest.TestCase):
         }
         result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
-        self.assertTrue(all(v is not None for v in result1.__dict__.values()))
         result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
-        self.assertFalse(all(v is not None for v in result2.__dict__.values()))
         result3 = Weather.from_dict(dict3)
         self.assertTrue(isinstance(result3, Weather))
 

@@ -58,7 +58,7 @@ class TestForecast(unittest.TestCase):
                          '"sunset_time": 1378496400, "pressure": {"press": 1030.119,' \
                          ' "sea_level": 1038.589}, "sunrise_time": 1378449600, ' \
                          '"heat_index": 296.0, "weather_icon_name": "04d", "wind": ' \
-                         '{"speed": 1.1, "deg": 252.002}}, {"status": "Clear", ' \
+                         '{"speed": 1.1, "deg": 252.002}, "utc_offset": null}, {"status": "Clear", ' \
                          '"visibility_distance": 1000, "humidity": 12, ' \
                          '"clouds": 23, "temperature": {"temp_kf": -1.899, ' \
                          '"temp_max": 299.0, "temp": 297.199, "temp_min": 295.6}, ' \
@@ -69,7 +69,7 @@ class TestForecast(unittest.TestCase):
                          '{"press": 1070.119, "sea_level": 1078.589}, ' \
                          '"sunrise_time": 1378449510, "heat_index": 296.0, ' \
                          '"weather_icon_name": "02d", "wind": {"speed": 4.2, ' \
-                         '"deg": 103.4}}]}'
+                         '"deg": 103.4}, "utc_offset": null}]}'
 
     def test_actualize(self):
         weathers = [Weather(1378459200, 1378496400, 1378449600, 67,

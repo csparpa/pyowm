@@ -40,7 +40,7 @@ class Weather:
     :param weather_code: OWM weather condition code
     :type weather_code: int
     :param weather_icon_name: weather-related icon name
-    :type weather_icon_name: Unicode
+    :type weather_icon_name: str
     :param visibility_distance: visibility distance
     :type visibility_distance: float
     :param dewpoint: dewpoint
@@ -49,15 +49,18 @@ class Weather:
     :type humidex: float
     :param heat_index: heat index
     :type heat_index: float
+    :param utc_offset: offset with UTC time zone in seconds
+    :type utc_offset: int or None
     :returns:  a *Weather* instance
-    :raises: *ValueError* when negative values are provided
+    :raises: *ValueError* when negative values are provided for non-negative quantities
 
     """
 
     def __init__(self, reference_time, sunset_time, sunrise_time, clouds, rain,
                  snow, wind, humidity, pressure, temperature, status,
                  detailed_status, weather_code, weather_icon_name,
-                 visibility_distance, dewpoint, humidex, heat_index):
+                 visibility_distance, dewpoint, humidex, heat_index,
+                 utc_offset=None):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self.ref_time = reference_time
@@ -92,6 +95,9 @@ class Weather:
         if heat_index is not None and heat_index < 0:
             raise ValueError("'heat index' must be grater than 0")
         self.heat_index = heat_index
+        if utc_offset is not None and utc_offset < 0:
+            raise ValueError("utc_offset must be greater than 0")
+        self.utc_offset = utc_offset
 
     def reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
@@ -382,11 +388,17 @@ class Weather:
             detailed_status = ''
             weather_code = 0
             weather_icon_name = ''
+        # -- timezone
+        if 'timezone' in the_dict:
+            utc_offset = the_dict['timezone']
+        else:
+            utc_offset = None
 
         return Weather(reference_time, sunset_time, sunrise_time, clouds,
                        rain, snow, wind, humidity, pressure, temperature,
                        status, detailed_status, weather_code, weather_icon_name,
-                       visibility_distance, dewpoint, humidex, heat_index)
+                       visibility_distance, dewpoint, humidex, heat_index,
+                       utc_offset=utc_offset)
 
     @classmethod
     def from_dict_of_lists(cls, the_dict):
@@ -453,4 +465,5 @@ class Weather:
                 'visibility_distance': self.visibility_distance,
                 'dewpoint': self.dewpoint,
                 'humidex': self.humidex,
-                'heat_index': self.heat_index}
+                'heat_index': self.heat_index,
+                'utc_offset': self.utc_offset}
