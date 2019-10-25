@@ -46,8 +46,8 @@ The documentation of OWM APIs can be found on the OWM Website_
 .. _Website: https://openweathermap.org/api
 
 
-Maintenance Streams Timeline
-----------------------------
+Important note
+--------------
 
 PyOWM v3 is a brand new branch of the library and therefore differs from PyOWM v2 branch.
 This means that **v3 offers no retrocompatibility with v2: this might result in your code breaking** if
@@ -55,7 +55,7 @@ it uses PyOWM v2 and you uncarefully update!
 
 Moreover, PyOWM v3 only runs on Python 2 while PyOWM v2 supports both Python 2 and 3 (until January, 1st 2020)
 
-Please take a look here:
+Please take a look here, you can get full detail and migration guidelines
 
 Maintenance Streams Timeline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,6 +63,7 @@ Maintenance Streams Timeline
    :maxdepth: 1
 
    v3/maintenance-streams-timelines
+   v3/migration-guide-pyowm-v2-to-v3
 
 
 Supported environments and Python versions
