@@ -5,6 +5,7 @@ import os
 import json
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.exceptions import config_error
+from pyowm.commons.enums import SubscriptionTypeEnum
 
 
 def get_config_from(path_to_file):
@@ -23,7 +24,10 @@ def get_config_from(path_to_file):
             'Configuration file not found: {}'.format(path_to_file))
     with open(path_to_file, 'r') as cf:
         try:
-            return json.load(cf)
+            config_data = json.load(cf)
+            config_data['subscription_type'] = SubscriptionTypeEnum.lookup_by_name(
+                config_data['subscription_type'])
+            return config_data
         except Exception:
             raise config_error.ConfigurationParseError()
 
