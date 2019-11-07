@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from calendar import timegm
-from datetime import datetime, timedelta, tzinfo
+from datetime import datetime, timedelta, timezone, tzinfo
 
 ZERO = timedelta(0)
 
@@ -63,7 +63,7 @@ def to_date(timeobject):
     if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
-        return datetime.utcfromtimestamp(timeobject).replace(tzinfo=UTC())
+        return datetime.fromtimestamp(timeobject, tz=timezone.utc)
     elif isinstance(timeobject, datetime):
         return timeobject.replace(tzinfo=UTC())
     elif isinstance(timeobject, str):
@@ -93,8 +93,7 @@ def to_ISO8601(timeobject):
     if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
-        return datetime.utcfromtimestamp(timeobject). \
-            strftime('%Y-%m-%d %H:%M:%S+00')
+        return datetime.fromtimestamp(timeobject, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S+00')
     elif isinstance(timeobject, datetime):
         return timeobject.strftime('%Y-%m-%d %H:%M:%S+00')
     elif isinstance(timeobject, str):
