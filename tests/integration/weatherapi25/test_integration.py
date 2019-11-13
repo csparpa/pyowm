@@ -16,7 +16,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get currently observed weather at specific location
         """
-        o1 = self.__owm.weather_at_place('London,uk')
+        o1 = self.__owm.weather_at_place('London,GB')
         o2 = self.__owm.weather_at_place('Kiev')
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.reception_time() is not None)
@@ -182,12 +182,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             weat = item.weather
             self.assertTrue(weat is not None)
 
-    def test_three_hours_forecast(self):
+    def test_forecast_at_place_on_3h(self):
         """
         Test feature: get 3 hours forecast for a specific location
         """
-        fc1 = self.__owm.three_hours_forecast("London,uk")
-        fc2 = self.__owm.three_hours_forecast('Kiev')
+        fc1 = self.__owm.forecast_at_place("London,GB", "3h")
+        fc2 = self.__owm.forecast_at_place('Kiev', "3h")
         self.assertTrue(fc1)
         f1 = fc1.forecast
         self.assertTrue(f1 is not None)
@@ -269,12 +269,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         except api_response_error.NotFoundError:
             pass # ok
 
-    def test_daily_forecast(self):
+    def forecast_at_place_daily(self):
         """
         Test feature: get daily forecast for a specific location
         """
-        fc1 = self.__owm.daily_forecast("London,uk")
-        fc2 = self.__owm.daily_forecast('Kiev')
+        fc1 = self.__owm.forecast_at_place("London,GB", "daily")
+        fc2 = self.__owm.forecast_at_place('Kiev', "daily")
         self.assertTrue(fc1)
         f1 = fc1.forecast
         f1 = fc1.forecast

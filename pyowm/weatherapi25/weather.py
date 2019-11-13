@@ -95,8 +95,8 @@ class Weather:
         if heat_index is not None and heat_index < 0:
             raise ValueError("'heat index' must be grater than 0")
         self.heat_index = heat_index
-        if utc_offset is not None and utc_offset < 0:
-            raise ValueError("utc_offset must be greater than 0")
+        if utc_offset is not None:
+            assert isinstance(utc_offset, int), "utc_offset must be an integer"
         self.utc_offset = utc_offset
 
     def reference_time(self, timeformat='unix'):

@@ -58,9 +58,9 @@ The _OWM25_ class extends the _OWM_ abstract base class and provides a method fo
 
     # WEATHER FORECAST QUERYING
     * find 3 hours weather forecast at a specific
-      location --------------------------------------> eg: owm.three_hours_forecast('Venice,IT')
+      location --------------------------------------> eg: owm.forecast_at_place('Venice,IT', '3h')
     * find daily weather forecast at a specific
-      location --------------------------------------> eg: owm.daily_forecast('San Francisco,US')
+      location --------------------------------------> eg: owm.forecast_at_place('San Francisco,US', 'daily')
 
     # WEATHER HISTORY QUERYING
     * find weather history for a specific location --> eg: owm.weather_history_at_place('Kiev,UA')
@@ -136,8 +136,8 @@ from the forecast, you can do:
 ### The Forecaster class
 Instances of this class are returned by weather forecast queries such as:
 
-    f = owm.three_hours_forecast('London')
-    f = owm.daily_forecast('Buenos Aires',limit=6)
+    f = owm.forecast_at_place('London,GB', '3h')
+    f = owm.forecast_at_place('Buenos Aires,AR', 'daily', limit=6)
 
 A _Forecaster_ object wraps a _Forecast_ object and provides convenience methods that makes it possible to perform complex weather forecast data queries, which could not otherwise be possible using only the _Forecast_ class interface. A central concept with this regard is the "time coverage" of the forecast, that is to say the temporal length of the forecast.
 

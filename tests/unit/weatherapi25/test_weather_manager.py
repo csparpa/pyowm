@@ -238,11 +238,21 @@ class TestWeatherManager(unittest.TestCase):
     def test_weather_around_coords_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.weather_around_coords, self.__test_instance, 43.7, 20.0, -3)
 
-    def test_three_hours_forecast(self):
+    def test_forecast_at_place_fails_with_wrong_params(self):
+        self.assertRaises(AssertionError, WeatherManager.forecast_at_place,
+                          self.__test_instance, None, "daily", 3)
+        self.assertRaises(AssertionError, WeatherManager.forecast_at_place,
+                          self.__test_instance, "London,uk", None, -3)
+        self.assertRaises(ValueError, WeatherManager.forecast_at_place,
+                          self.__test_instance, "London,uk", "wrong", 3)
+        self.assertRaises(ValueError, WeatherManager.forecast_at_place,
+                          self.__test_instance, "London,uk", "daily", -3)
+
+    def test_forecast_at_place_on_3h(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_3h_forecast
-        result = self.__test_instance.three_hours_forecast("London,uk")
+        result = self.__test_instance.forecast_at_place("London,uk", "3h")
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.forecast
@@ -254,11 +264,11 @@ class TestWeatherManager(unittest.TestCase):
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
 
-    def test_three_hours_forecast_when_forecast_not_found(self):
+    def test_forecast_at_place_on_3h_when_forecast_not_found(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_empty_3h_forecast
-        result = self.__test_instance.three_hours_forecast("London,uk")
+        result = self.__test_instance.forecast_at_place("London,uk", "3h")
         HttpClient.get_json = original_func
         self.assertIsNone(result)
 
@@ -326,11 +336,11 @@ class TestWeatherManager(unittest.TestCase):
         self.assertRaises(ValueError, WeatherManager.three_hours_forecast_at_id,
                           self.__test_instance, -1234)
 
-    def test_daily_forecast(self):
+    def test_forecast_at_place_daily(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_daily_forecast
-        result = self.__test_instance.daily_forecast("London,uk", 2)
+        result = self.__test_instance.forecast_at_place("London,uk", "daily", 2)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, Forecaster))
         forecast = result.forecast
@@ -342,17 +352,11 @@ class TestWeatherManager(unittest.TestCase):
         for weather in forecast:
             self.assertTrue(isinstance(weather, Weather))
 
-    def test_daily_forecast_fails_with_wrong_params(self):
-        self.assertRaises(AssertionError, WeatherManager.daily_forecast,
-                          self.__test_instance, 2, 3)
-        self.assertRaises(ValueError, WeatherManager.daily_forecast,
-                          self.__test_instance, "London,uk", -3)
-
-    def test_daily_forecast_when_forecast_not_found(self):
+    def test_forecast_at_place_daily_when_forecast_not_found(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_empty_daily_forecast
-        result = self.__test_instance.daily_forecast('London,uk')
+        result = self.__test_instance.forecast_at_place('London,uk', "daily")
         HttpClient.get_json = original_func
         self.assertIsNone(result)
 

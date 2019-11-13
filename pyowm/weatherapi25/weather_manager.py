@@ -251,16 +251,20 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(FIND_OBSERVATIONS_URI, params=params)
         return observation.Observation.from_dict_of_lists(json_data)
 
-    def three_hours_forecast(self, name):
+    def forecast_at_place(self, name, interval, limit=None):
         """
-        Queries the OWM Weather API for three hours weather forecast for the
-        specified location (eg: "London,uk"). A *Forecaster* object is
-        returned, containing a *Forecast* instance covering a global streak of
-        five days: this instance encapsulates *Weather* objects, with a time
-        interval of three hours one from each other
+        Queries the OWM Weather API for weather forecast for the
+        specified location (eg: "London,uk") with the given time granularity.
+        A *Forecaster* object is returned, containing a *Forecast*: this instance
+        encapsulates *Weather* objects corresponding to the provided granularity.
 
         :param name: the location's toponym
         :type name: str
+        :param interval: the granularity of the forecast, among `3h` and 'daily'
+        :type interval: str among `3h` and 'daily'
+        :param limit: the maximum number of *Weather* items to be retrieved
+            (default is ``None``, which stands for any number of items)
+        :type limit: int or ``None``
         :returns: a *Forecaster* instance or ``None`` if forecast data is not
             available for the specified location
         :raises: *ParseResponseException* when OWM Weather API responses' data
@@ -268,12 +272,24 @@ class WeatherManager:
             reached
         """
         assert isinstance(name, str), "Value must be a string"
-        encoded_name = name
-        params = {'q': encoded_name}
-        _, json_data = self.http_client.get_json(THREE_HOURS_FORECAST_URI, params=params)
+        assert isinstance(interval, str), "Interval must be a string"
+        if limit is not None:
+            assert isinstance(limit, int), "'limit' must be an int or None"
+            if limit < 1:
+                raise ValueError("'limit' must be None or greater than zero")
+        params = {'q': name}
+        if limit is not None:
+            params['cnt'] = limit
+        if interval == '3h':
+            uri = THREE_HOURS_FORECAST_URI
+        elif interval == 'daily':
+            uri = DAILY_FORECAST_URI
+        else:
+            raise ValueError("Unsupported time interval for forecast")
+        _, json_data = self.http_client.get_json(uri, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.interval = "3h"
+            fc.interval = interval
             return forecaster.Forecaster(fc)
         else:
             return None
@@ -332,42 +348,6 @@ class WeatherManager:
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
             fc.interval = "3h"
-            return forecaster.Forecaster(fc)
-        else:
-            return None
-
-    def daily_forecast(self, name, limit=None):
-        """
-        Queries the OWM Weather API for daily weather forecast for the specified
-        location (eg: "London,uk"). A *Forecaster* object is returned,
-        containing a *Forecast* instance covering a global streak of fourteen
-        days by default: this instance encapsulates *Weather* objects, with a
-        time interval of one day one from each other
-
-        :param name: the location's toponym
-        :type name: str
-        :param limit: the maximum number of daily *Weather* items to be
-            retrieved (default is ``None``, which stands for any number of
-            items)
-        :type limit: int or ``None``
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached, *ValueError* if negative values are supplied for limit
-        """
-        assert isinstance(name, str), "Value must be a string"
-        if limit is not None:
-            assert isinstance(limit, int), "'limit' must be an int or None"
-            if limit < 1:
-                raise ValueError("'limit' must be None or greater than zero")
-        params = {'q': name}
-        if limit is not None:
-            params['cnt'] = limit
-        _, json_data = self.http_client.get_json(DAILY_FORECAST_URI, params=params)
-        fc = forecast.Forecast.from_dict(json_data)
-        if fc is not None:
-            fc.interval= "daily"
             return forecaster.Forecaster(fc)
         else:
             return None

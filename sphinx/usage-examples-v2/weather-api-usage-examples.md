@@ -218,7 +218,7 @@ The 3h forecasts are provided for a streak of 5 days since the request time and 
 You can query for 3h forecasts for a location using:
 
     # Query for 3 hours weather forecast for the next 5 days over London
-    >>> fc = owm.three_hours_forecast('London,uk')
+    >>> fc = owm.forecast_at_place('London,GB', '3h')
 
 You can query for daily forecasts using:
 

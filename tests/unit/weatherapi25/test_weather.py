@@ -73,7 +73,7 @@ class TestWeather(unittest.TestCase):
                         '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
                         '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null}'
 
-    def test_init_fails_when_negative_data_provided(self):
+    def test_init_fails_when_wrong_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
               self.__test_sunset_time, self.__test_sunrise_time, self.__test_clouds,
               self.__test_rain, self.__test_snow, self.__test_wind,
@@ -168,6 +168,18 @@ class TestWeather(unittest.TestCase):
                           self.__test_visibility_distance, self.__test_dewpoint,
                           self.__test_humidex, self.__test_heat_index)
         self.assertIsNone(instance.sunrise_time())
+
+    def test_init_fails_with_non_integer_utc_offset(self):
+        self.assertRaises(AssertionError, Weather, self.__test_reference_time,
+              self.__test_sunset_time, self.__test_sunrise_time,
+              self.__test_clouds, self.__test_rain, self.__test_snow,
+              self.__test_wind, self.__test_humidity,
+              self.__test_pressure, self.__test_temperature,
+              self.__test_status, self.__test_detailed_status,
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index,
+              'non_string_utc_offset')
 
     def test_from_dict(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
