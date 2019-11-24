@@ -207,14 +207,14 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f2:
             self.assertTrue(weather is not None)
 
-    def test_three_hours_forecast_at_coords(self):
+    def test_forecast_at_coords_on_3h(self):
         """
         Test feature: get 3 hours forecast at a specific geographic coordinate
         """
         # London,uk
-        fc1 = self.__owm.three_hours_forecast_at_coords(51.5073509, -0.1277583)
+        fc1 = self.__owm.forecast_at_coords(51.5073509, -0.1277583, "3h")
         # Kiev
-        fc2 = self.__owm.three_hours_forecast_at_coords(50.4501, 30.5234)
+        fc2 = self.__owm.forecast_at_coords(50.4501, 30.5234, "3h")
         self.assertTrue(fc1)
         f1 = fc1.forecast
         self.assertTrue(f1 is not None)
@@ -234,7 +234,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f2:
             self.assertTrue(weather is not None)
         with self.assertRaises(ValueError):
-            self.__owm.three_hours_forecast_at_coords(199, 199)
+            self.__owm.forecast_at_coords(199, 199, '3h')
 
     def test_three_hours_forecast_at_id(self):
         """
@@ -295,11 +295,11 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f2:
             self.assertTrue(weather is not None)
 
-    def test_daily_forecast_at_coords(self):
+    def test_forecast_at_coords_daily(self):
         """
         Test feature: get daily forecast at a specific geographic coordinate
         """
-        fc1 = self.__owm.daily_forecast_at_coords(51.5073509, -0.1277583) # London,uk
+        fc1 = self.__owm.forecast_at_coords(51.5073509, -0.1277583, 'daily') # London,uk
         self.assertTrue(fc1)
         f1 = fc1.forecast
         self.assertTrue(f1 is not None)
@@ -310,7 +310,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         for weather in f1:
             self.assertTrue(weather is not None)
         with self.assertRaises(ValueError):
-            self.__owm.daily_forecast_at_coords(199, 199)
+            self.__owm.forecast_at_coords(199, 199, 'daily')
 
     def test_daily_forecast_at_id(self):
         """
