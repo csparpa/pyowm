@@ -340,17 +340,20 @@ class WeatherManager:
         else:
             return None
 
-
-    def three_hours_forecast_at_id(self, id):
+    def forecast_at_id(self, id, interval, limit=None):
         """
-        Queries the OWM Weather API for three hours weather forecast for the
-        specified city ID (eg: 5128581). A *Forecaster* object is returned,
-        containing a *Forecast* instance covering a global streak of
-        five days: this instance encapsulates *Weather* objects, with a time
-        interval of three hours one from each other
+        Queries the OWM Weather API for weather forecast for the
+        specified city ID (eg: 5128581) with the given time granularity.
+        A *Forecaster* object is returned, containing a *Forecast*: this instance
+        encapsulates *Weather* objects corresponding to the provided granularity.
 
         :param id: the location's city ID
         :type id: int
+        :param interval: the granularity of the forecast, among `3h` and 'daily'
+        :type interval: str among `3h` and 'daily'
+        :param limit: the maximum number of *Weather* items to be retrieved
+            (default is ``None``, which stands for any number of items)
+        :type limit: int or ``None``
         :returns: a *Forecaster* instance or ``None`` if forecast data is not
             available for the specified location
         :raises: *ParseResponseException* when OWM Weather API responses' data
@@ -360,50 +363,24 @@ class WeatherManager:
         assert type(id) is int, "'id' must be an int"
         if id < 0:
             raise ValueError("'id' value must be greater than 0")
-        params = {'id': id}
-        _, json_data = self.http_client.get_json(THREE_HOURS_FORECAST_URI, params=params)
-        fc = forecast.Forecast.from_dict(json_data)
-        if fc is not None:
-            fc.interval = "3h"
-            return forecaster.Forecaster(fc)
-        else:
-            return None
-
-    def daily_forecast_at_id(self, id, limit=None):
-        """
-        Queries the OWM Weather API for daily weather forecast for the specified
-        city ID (eg: 5128581). A *Forecaster* object is returned, containing
-        a *Forecast* instance covering a global streak of fourteen days by
-        default: this instance encapsulates *Weather* objects, with a time
-        interval of one day one from each other
-
-        :param id: the location's city ID
-        :type id: int
-        :param limit: the maximum number of daily *Weather* items to be
-            retrieved (default is ``None``, which stands for any number of
-            items)
-        :type limit: int or ``None``
-        :returns: a *Forecaster* instance or ``None`` if forecast data is not
-            available for the specified location
-        :raises: *ParseResponseException* when OWM Weather API responses' data
-            cannot be parsed, *APICallException* when OWM Weather API can not be
-            reached, *ValueError* if negative values are supplied for limit
-        """
-        assert type(id) is int, "'id' must be an int"
-        if id < 0:
-            raise ValueError("'id' value must be greater than 0")
+        assert isinstance(interval, str), "Interval must be a string"
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
             if limit < 1:
                 raise ValueError("'limit' must be None or greater than zero")
-
         params = {'id': id}
         if limit is not None:
             params['cnt'] = limit
-        _, json_data = self.http_client.get_json(DAILY_FORECAST_URI, params=params)
+        if interval == '3h':
+            uri = THREE_HOURS_FORECAST_URI
+        elif interval == 'daily':
+            uri = DAILY_FORECAST_URI
+        else:
+            raise ValueError("Unsupported time interval for forecast")
+        _, json_data = self.http_client.get_json(uri, params=params)
         fc = forecast.Forecast.from_dict(json_data)
         if fc is not None:
-            fc.interval = "daily"
+            fc.interval = interval
             return forecaster.Forecaster(fc)
         else:
             return None

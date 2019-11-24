@@ -220,15 +220,15 @@ You can query for 3h forecasts for a location using:
     # Query for 3 hours weather forecast for the next 5 days over London
     >>> fc = owm.forecast_at_place('London,GB', '3h')
 
-You can query for daily forecasts using:
+Same way you can query for daily forecasts using:
 
-    # Query for daily weather forecast for the next 14 days over London
-    >>> fc = owm.daily_forecast('London,uk')
+    # Query for daily weather forecast for the next days over London
+    >>> fc = owm.forecast_at_place('London,uk', 'daily')
 
-and in this case you can limit the amount of days the weather forecast streak will contain by using the ``limit`` parameter:
+And you can limit the amount of days the weather forecast streak will contain by using the ``limit`` parameter:
 
     # Daily weather forecast just for the next 6 days over London
-    >>> fc = owm.daily_forecast('London,uk', limit=6)
+    >>> fc = owm.forecast_at_place('London,uk', 'daily', limit=6)
 
 Both of the above calls return a ``Forecaster`` object. ``Forecaster`` objects contain a ``Forecast`` object, which has all the information about your weather forecast. If you need to manipulate the latter, just go with:
 

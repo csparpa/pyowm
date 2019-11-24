@@ -236,14 +236,14 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.__owm.forecast_at_coords(199, 199, '3h')
 
-    def test_three_hours_forecast_at_id(self):
+    def test_forecast_at_id_on_3h(self):
         """
         Test feature: get 3 hours forecast for city ID
         """
         # London,uk
-        fc1 = self.__owm.three_hours_forecast_at_id(2643743)
+        fc1 = self.__owm.forecast_at_id(2643743, '3h')
         # Kiev
-        fc2 = self.__owm.three_hours_forecast_at_id(703448)
+        fc2 = self.__owm.forecast_at_id(703448, '3h')
         self.assertTrue(fc1)
         f1 = fc1.forecast
         self.assertTrue(f1 is not None)
@@ -264,7 +264,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(weather is not None)
         # Unexistent
         try:
-            fc3 = self.__owm.three_hours_forecast_at_id(99999999999999)
+            fc3 = self.__owm.forecast_at_id(99999999999999, '3h')
             self.fail()
         except api_response_error.NotFoundError:
             pass # ok
@@ -312,16 +312,16 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.__owm.forecast_at_coords(199, 199, 'daily')
 
-    def test_daily_forecast_at_id(self):
+    def test_forecast_at_id_daily(self):
         """
         Test feature: get daily forecast for a specific city ID
         """
         # London,uk
-        fc1 = self.__owm.daily_forecast_at_id(2643743)
+        fc1 = self.__owm.forecast_at_id(2643743, 'daily')
         # Kiev
-        fc2 = self.__owm.daily_forecast_at_id(703448)
+        fc2 = self.__owm.forecast_at_id(703448, 'daily')
         try:
-            fc3 = self.__owm.daily_forecast_at_id(99999999)
+            fc3 = self.__owm.forecast_at_id(99999999, 'daily')
             raise AssertionError("APICallError was expected here")
         except api_response_error.NotFoundError:
             pass  # Ok!
