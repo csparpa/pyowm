@@ -147,7 +147,8 @@ class Weather:
         """Returns a dict containing wind info
 
         :param unit: the unit of measure for the wind values. May be:
-            '*meters_sec*' (default), '*miles_hour*  or '*kilometers_hour*'
+            '*meters_sec*' (default), '*miles_hour*, '*kilometers_hour*',
+            '*knots*' or '*beaufort*'
         :type unit: str
         :returns: a dict containing wind info
 
@@ -162,6 +163,14 @@ class Weather:
             wind_dict = {k: self.wnd[k]
                          for k in self.wnd if self.wnd[k] is not None}
             return measurables.metric_wind_dict_to_km_h(wind_dict)
+        elif unit == 'knots':
+            wind_dict = {k: self.wnd[k]
+                         for k in self.wnd if self.wnd[k] is not None}
+            return measurables.metric_wind_dict_to_knots(wind_dict)
+        elif unit == 'beaufort':
+            wind_dict = {k: self.wnd[k]
+                         for k in self.wnd if self.wnd[k] is not None}
+            return measurables.metric_wind_dict_to_beaufort(wind_dict)
         else:
             raise ValueError("Invalid value for target wind conversion unit")
 

@@ -28,6 +28,8 @@ class TestWeather(unittest.TestCase):
     __test_snow = {"all": 0}
     __test_wind = {"deg": 252.002, "speed": 1.100, "gust": 2.09}
     __test_imperial_wind = {"deg": 252.002, "speed": 2.460634, "gust": 4.6752046}
+    __test_knots_wind = {'deg': 252.002, 'speed': 2.138224, 'gust': 4.0626256}
+    __test_beaufort_wind = {"deg": 252.002, "speed": 1, "gust": 2}
     __test_humidity = 57
     __test_pressure = {"press": 1030.119, "sea_level": 1038.589}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
@@ -409,6 +411,8 @@ class TestWeather(unittest.TestCase):
     def test_returning_different_units_for_wind_values(self):
         result_imperial = self.__test_instance.wind(unit='miles_hour')
         result_metric = self.__test_instance.wind(unit='meters_sec')
+        result_knots = self.__test_instance.wind(unit='knots')
+        result_beaufort = self.__test_instance.wind(unit='beaufort')
         result_unspecified = self.__test_instance.wind()
         self.assertEqual(result_unspecified, result_metric)
         for item in self.__test_wind:
@@ -416,6 +420,10 @@ class TestWeather(unittest.TestCase):
                              self.__test_wind[item])
             self.assertEqual(result_imperial[item],
                              self.__test_imperial_wind[item])
+            self.assertEqual(result_knots[item],
+                             self.__test_knots_wind[item])
+            self.assertEqual(result_beaufort[item],
+                             self.__test_beaufort_wind[item])
 
     def test_get_wind_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.wind, self.__test_instance, 'xyz')

@@ -75,3 +75,60 @@ class TestMeasurablesUtils(unittest.TestCase):
         }
         result = measurables.metric_wind_dict_to_km_h(input)
         self.assertEqual(expected, result)
+
+    def test_metric_wind_dict_to_knots(self):
+        input = {
+            'speed': 2,
+            'gust': 3,
+            'deg': 7.89
+        }
+        expected = {'speed': 3.88768, 'gust': 5.83152, 'deg': 7.89}
+        result = measurables.metric_wind_dict_to_knots(input)
+        self.assertEqual(expected, result)
+
+    def test_metric_wind_dict_to_beaufort(self):
+        corner_values = {
+            'lower': 0.01,
+            'a': 0.2,
+            'b': 1.5,
+            'c': 3.3,
+            'd': 5.4,
+            'e': 7.9,
+            'f': 10.7,
+            'g': 13.8,
+            'h': 17.1,
+            'i': 20.7,
+            'j': 24.4,
+            'k': 28.4,
+            'l': 32.6,
+            'upper': 345,
+            'deg': 7.89
+        }
+        expected_corner_values_beaufort = {
+            'lower': 0,
+            'a': 0,
+            'b': 1,
+            'c': 2,
+            'd': 3,
+            'e': 4,
+            'f': 5,
+            'g': 6,
+            'h': 7,
+            'i': 8,
+            'j': 9,
+            'k': 10,
+            'l': 11,
+            'upper': 12,
+            'deg': 7.89
+        }
+        result_corner_values = measurables.metric_wind_dict_to_beaufort(corner_values)
+        self.assertEqual(result_corner_values, expected_corner_values_beaufort)
+
+        input = {
+            'speed': 17.9,
+            'gust': 2.89,
+            'deg': 7.89
+        }
+        expected = {'speed': 8, 'gust': 2, 'deg': 7.89}
+        result = measurables.metric_wind_dict_to_beaufort(input)
+        self.assertEqual(expected, result)
