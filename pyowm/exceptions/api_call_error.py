@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-from pyowm.exceptions import OWMError
+from pyowm.exceptions import PyOWMError
 
 
-class APICallError(OWMError):
+class APICallError(PyOWMError):
     """
     Error class that represents network/infrastructural failures when invoking OWM Weather API, in
     example due to network errors.

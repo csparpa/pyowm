@@ -1,7 +1,6 @@
-"""
-Module containing the OWMError class as base for all other OWM errors
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 
-class OWMError(Exception):
+class PyOWMError(Exception):
     pass

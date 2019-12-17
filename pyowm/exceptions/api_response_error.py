@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-from pyowm.exceptions import OWMError
+from pyowm.exceptions import PyOWMError
 
 
-class APIResponseError(OWMError):
+class APIResponseError(PyOWMError):
     """
     Error class that represents HTTP error status codes in OWM Weather API
     responses.

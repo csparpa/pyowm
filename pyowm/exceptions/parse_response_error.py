@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-from pyowm.exceptions import OWMError
+from pyowm.exceptions import PyOWMError
 
 
-class ParseResponseError(OWMError):
+class ParseResponseError(PyOWMError):
     """
     Error class that represents failures when parsing payload data in HTTP
     responses sent by the OWM Weather API.
