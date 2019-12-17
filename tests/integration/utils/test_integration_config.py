@@ -3,6 +3,8 @@
 
 import pathlib
 import unittest
+
+import pyowm.commons.exceptions
 from pyowm.utils import config
 from pyowm.exceptions import config_error
 
@@ -16,7 +18,7 @@ class TesIntegrationConfig(unittest.TestCase):
         self.assertIsInstance(result, dict)
 
         path = 'non_json'
-        self.assertRaises(config_error.ConfigurationParseError, config.get_config_from, path)
+        self.assertRaises(pyowm.commons.exceptions.ConfigurationParseError, config.get_config_from, path)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pyowm.exceptions import parse_response_error
+import pyowm.commons.exceptions
 from pyowm.stationsapi30.station import Station
 
 
@@ -119,7 +119,7 @@ class TestStation(unittest.TestCase):
         self.assertEqual(self._test_instance.alt, result.alt)
         self.assertEqual(self._test_instance.rank, result.rank)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Station.from_dict(None)
 
     def test_to_dict(self):

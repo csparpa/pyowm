@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.exceptions import parse_response_error, api_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
@@ -59,12 +59,12 @@ class Observation:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: an *Observation* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('JSON data is None')
+            raise exceptions.ParseAPIResponseError('JSON data is None')
 
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API 2.5. This mechanism is
@@ -75,17 +75,17 @@ class Observation:
                 print("OWM API: observation data not available")
                 return None
             else:
-                raise api_response_error.APIResponseError(
+                raise exceptions.APIResponseError(
                                       "OWM API: error - response payload", the_dict['cod'])
         try:
             place = location.Location.from_dict(the_dict)
         except KeyError:
-            raise parse_response_error.ParseResponseError(
+            raise exceptions.ParseAPIResponseError(
                                       ''.join([__name__, ': impossible to read location info from JSON data']))
         try:
             w = weather.Weather.from_dict(the_dict)
         except KeyError:
-            raise parse_response_error.ParseResponseError(
+            raise exceptions.ParseAPIResponseError(
                                       ''.join([__name__, ': impossible to read weather info from JSON data']))
         current_time = int(round(time()))
         return Observation(current_time, place, w)
@@ -113,12 +113,12 @@ class Observation:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a `list` of *Observation* instances or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the OWM API returns an HTTP status error
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('JSON data is None')
+            raise exceptions.ParseAPIResponseError('JSON data is None')
         if 'cod' in the_dict:
             # Check if server returned errors: this check overcomes the lack of use
             # of HTTP error status codes by the OWM API 2.5. This mechanism is
@@ -131,7 +131,7 @@ class Observation:
                     print("OWM API: data not found")
                     return None
                 else:
-                    raise api_response_error.APIResponseError("OWM API: error - response payload", the_dict['cod'])
+                    raise exceptions.APIResponseError("OWM API: error - response payload", the_dict['cod'])
 
         # Handle the case when no results are found
         if 'count' in the_dict and the_dict['count'] == "0":
@@ -142,4 +142,4 @@ class Observation:
             return [Observation.from_dict(item) for item in the_dict['list']]
 
         # no way out..
-        raise parse_response_error.ParseResponseError(''.join([__name__, ': impossible to read JSON data']))
+        raise exceptions.ParseAPIResponseError(''.join([__name__, ': impossible to read JSON data']))

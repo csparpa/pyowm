@@ -3,8 +3,9 @@
 
 import json
 import requests
+
+from pyowm.commons import exceptions
 from pyowm.commons.enums import ImageTypeEnum
-from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
 
 
 class HttpRequestBuilder:
@@ -134,16 +135,16 @@ class HttpClient:
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.ConnectionError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise api_call_error.APICallTimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.json()
         except:
-            raise parse_response_error.ParseResponseError('Impossible to parse API response data')
+            raise exceptions.ParseAPIResponseError('Impossible to parse API response data')
 
     def get_png(self, path, params=None, headers=None):
         builder = HttpRequestBuilder(self.root_uri, self.api_key, self.config, has_subdomains=self.admits_subdomains)\
@@ -159,16 +160,16 @@ class HttpClient:
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.ConnectionError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise api_call_error.APICallTimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.content
         except:
-            raise parse_response_error.ParseResponseError('Impossible to parse'
+            raise exceptions.ParseAPIResponseError('Impossible to parse'
                                                           'API response data')
 
     def get_geotiff(self, path, params=None, headers=None):
@@ -185,16 +186,16 @@ class HttpClient:
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.ConnectionError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise api_call_error.APICallTimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.content
         except:
-            raise parse_response_error.ParseResponseError('Impossible to parse'
+            raise exceptions.ParseAPIResponseError('Impossible to parse'
                                                           'API response data')
 
     def post(self, path, params=None, data=None, headers=None):
@@ -210,11 +211,11 @@ class HttpClient:
                                  timeout=self.config['connection']['timeout_secs'],
                                  verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.ConnectionError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise api_call_error.APICallTimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses containing an empty body!
         try:
@@ -236,11 +237,11 @@ class HttpClient:
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.ConnectionError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise api_call_error.APICallTimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses containing an empty body!
         try:
@@ -262,11 +263,11 @@ class HttpClient:
                                    timeout=self.config['connection']['timeout_secs'],
                                    verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.ConnectionError as e:
-            raise api_call_error.APIInvalidSSLCertificateError(str(e))
+            raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise api_call_error.APICallTimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timeouted')
         HttpClient.check_status_code(resp.status_code, resp.text)
         # this is a defense against OWM API responses containing an empty body!
         try:
@@ -280,15 +281,15 @@ class HttpClient:
         if status_code < 400:
             return
         if status_code == 400:
-            raise api_call_error.APICallError(payload)
+            raise exceptions.APIRequestError(payload)
         elif status_code == 401:
-            raise api_response_error.UnauthorizedError('Invalid API Key provided')
+            raise exceptions.UnauthorizedError('Invalid API Key provided')
         elif status_code == 404:
-            raise api_response_error.NotFoundError('Unable to find the resource')
+            raise exceptions.NotFoundError('Unable to find the resource')
         elif status_code == 502:
-            raise api_call_error.BadGatewayError('Unable to contact the upstream server')
+            raise exceptions.BadGatewayError('Unable to contact the upstream server')
         else:
-            raise api_call_error.APICallError(payload)
+            raise exceptions.APIRequestError(payload)
 
     def __repr__(self):
         return "<%s.%s - root: %s>" % (__name__, self.__class__.__name__, self.root_uri)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 from pyowm.weatherapi25 import location
 from pyowm.utils import formatting, timestamps
 
@@ -92,11 +92,11 @@ class SO2Index:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *SO2Index* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
             t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
@@ -114,7 +114,7 @@ class SO2Index:
             so2_samples = the_dict['data']
 
         except KeyError:
-            raise parse_response_error.ParseResponseError(
+            raise exceptions.ParseAPIResponseError(
                       ''.join([__name__, ': impossible to parse COIndex']))
 
         return SO2Index(reference_time, place, None, so2_samples, reception_time)

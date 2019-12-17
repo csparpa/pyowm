@@ -5,7 +5,7 @@ import json
 import unittest
 from datetime import datetime
 from pyowm.airpollutionapi30.so2index import SO2Index
-from pyowm.exceptions.parse_response_error import ParseResponseError
+from pyowm.commons.exceptions import ParseAPIResponseError
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 from pyowm.weatherapi25.location import Location
 
@@ -118,10 +118,10 @@ class TestSO2Index(unittest.TestCase):
         self.assertNotEqual(0, len(result.so2_samples))
 
     def test_parse_JSON_fails_when_JSON_data_is_None(self):
-        self.assertRaises(ParseResponseError, SO2Index.from_dict, None)
+        self.assertRaises(ParseAPIResponseError, SO2Index.from_dict, None)
 
     def test_parse_JSON_fails_with_malformed_JSON_data(self):
-        self.assertRaises(ParseResponseError, SO2Index.from_dict, json.loads(SO2INDEX_MALFORMED_JSON))
+        self.assertRaises(ParseAPIResponseError, SO2Index.from_dict, json.loads(SO2INDEX_MALFORMED_JSON))
 
     def test_to_dict(self):
         expected = json.loads(SO2INDEX_JSON_DUMP)

@@ -30,6 +30,14 @@ pyowm.commons.enums module
     :undoc-members:
     :show-inheritance:
 
+pyowm.commons.exceptions module
+-------------------------------
+
+.. automodule:: pyowm.commons.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.commons.http_client module
 -----------------------------------
 

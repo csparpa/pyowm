@@ -4,7 +4,7 @@
 import json
 import unittest
 from datetime import datetime
-from pyowm.exceptions import parse_response_error
+import pyowm.commons.exceptions
 from pyowm.utils.formatting import UTC
 from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
 from pyowm.weatherapi25.location import Location
@@ -113,10 +113,10 @@ class TestUVIndex(unittest.TestCase):
         self.assertIsNotNone(result.value)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
-        self.assertRaises(parse_response_error.ParseResponseError, UVIndex.from_dict, None)
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, UVIndex.from_dict, None)
 
     def test_from_dict_fails_with_malformed_JSON_data(self):
-        self.assertRaises(parse_response_error.ParseResponseError, UVIndex.from_dict, json.loads(UVINDEX_MALFORMED_JSON))
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, UVIndex.from_dict, json.loads(UVINDEX_MALFORMED_JSON))
 
     def test_repr(self):
         print(self.__test_instance)

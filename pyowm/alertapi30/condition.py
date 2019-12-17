@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 
 
 class Condition:
@@ -40,7 +40,7 @@ class Condition:
     @classmethod
     def from_dict(cls, the_dict):
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         try:
             weather_param = the_dict['name']
             operator = the_dict['expression']
@@ -48,7 +48,7 @@ class Condition:
             the_id = the_dict.get('_id', None)
             return Condition(weather_param, operator, amount, id=the_id)
         except KeyError as e:
-            raise parse_response_error.ParseResponseError('Impossible to parse data: %s' % e)
+            raise exceptions.ParseAPIResponseError('Impossible to parse data: %s' % e)
 
     def to_dict(self):
         return {

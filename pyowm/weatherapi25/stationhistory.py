@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from pyowm.exceptions import parse_response_error, api_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting
 
 
@@ -60,12 +60,12 @@ class StationHistory:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *StationHistory* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
         """
         if d is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API but it's supposed to be
         # deprecated as soon as the API implements a correct HTTP mechanism for
@@ -76,7 +76,7 @@ class StationHistory:
         try:
             if 'cod' in d:
                 if d['cod'] != "200":
-                    raise api_response_error.APIResponseError(
+                    raise exceptions.APIResponseError(
                                               "OWM API: error - response payload: " + str(d), d['cod'])
             if str(d['cnt']) == "0":
                 return None
@@ -116,7 +116,7 @@ class StationHistory:
                                                 "rain": rain,
                                                 "wind": wind}
         except KeyError:
-            raise parse_response_error.ParseResponseError(__name__ + ': impossible to read input data')
+            raise exceptions.ParseAPIResponseError(__name__ + ': impossible to read input data')
         current_time = round(time.time())
         return StationHistory(None, None, current_time, measurements)
 

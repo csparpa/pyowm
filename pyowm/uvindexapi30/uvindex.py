@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting, timestamps
 from pyowm.weatherapi25 import location
 
@@ -100,12 +100,12 @@ class UVIndex:
         :param the_dict: the input dict
         :type the_dict: dict
         :returns: an *UVIndex* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         try:
             # -- reference time
             reference_time = the_dict['date']
@@ -121,7 +121,7 @@ class UVIndex:
             # -- UV intensity
             uv_intensity = float(the_dict['value'])
         except KeyError:
-            raise parse_response_error.ParseResponseError(''.join([__name__, ': impossible to parse UV Index']))
+            raise exceptions.ParseAPIResponseError(''.join([__name__, ': impossible to parse UV Index']))
         return UVIndex(reference_time, place, uv_intensity, reception_time)
 
     def to_dict(self):

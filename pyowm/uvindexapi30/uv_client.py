@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.commons import http_client
 from pyowm.uvindexapi30.uris import UV_INDEX_URL, UV_INDEX_FORECAST_URL, \
     UV_INDEX_HISTORY_URL
 
@@ -45,7 +44,7 @@ class UltraVioletHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -62,7 +61,7 @@ class UltraVioletHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -79,7 +78,7 @@ class UltraVioletHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])

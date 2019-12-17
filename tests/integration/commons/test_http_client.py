@@ -3,6 +3,8 @@
 
 import os
 import unittest
+
+import pyowm.commons.exceptions
 from pyowm.exceptions import parse_response_error, api_call_error
 from pyowm.commons.http_client import HttpClient
 from pyowm.config import DEFAULT_CONFIG
@@ -22,7 +24,7 @@ class TestHTTPClient(unittest.TestCase):
         # http://httpbin.org/status/400
         expected_status = 400
 
-        self.assertRaises(api_call_error.APICallError, HttpClient.get_json,
+        self.assertRaises(pyowm.commons.exceptions.APIRequestError, HttpClient.get_json,
                           self.instance, 'status/{}'.format(str(expected_status)))
 
     def test_get_json_against_httpbin_parse_error(self):
@@ -30,7 +32,7 @@ class TestHTTPClient(unittest.TestCase):
         try:
             status, data = self.instance.get_json('xml')
             self.fail()
-        except parse_response_error.ParseResponseError:
+        except pyowm.commons.exceptions.ParseAPIResponseError:
             pass
 
     def test_put_against_httpbin(self):
@@ -55,7 +57,7 @@ class TestHTTPClient(unittest.TestCase):
         config['connection']['use_ssl'] = True
         config['connection']['verify_ssl_certs'] = True
         instance = HttpClient('fakeapikey', config, 'wrong.host.badssl.com', admits_subdomains=False)
-        self.assertRaises(api_call_error.APIInvalidSSLCertificateError, HttpClient.get_json, instance, '')
+        self.assertRaises(pyowm.commons.exceptions.InvalidSSLCertificateError, HttpClient.get_json, instance, '')
 
     def test_get_png(self):
         # http://httpbin.org/image/png

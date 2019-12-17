@@ -3,9 +3,9 @@
 
 import unittest
 import pathlib
+import pyowm.commons.exceptions
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.utils import config
-from pyowm.exceptions import config_error
 
 
 class TestConfig(unittest.TestCase):
@@ -16,5 +16,5 @@ class TestConfig(unittest.TestCase):
 
     def test_get_config_from_failing(self):
         self.assertRaises(AssertionError, config.get_config_from, None)
-        self.assertRaises(config_error.ConfigurationNotFoundError, config.get_config_from,
+        self.assertRaises(pyowm.commons.exceptions.ConfigurationNotFoundError, config.get_config_from,
                           str(pathlib.Path('.').absolute()))

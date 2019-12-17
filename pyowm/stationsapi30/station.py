@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime as dt
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting
 
 
@@ -124,11 +124,11 @@ class Station:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *Station* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         try:
             id = the_dict.get('ID', None) or the_dict.get('id', None)
             external_id = the_dict.get('external_id', None)
@@ -136,7 +136,7 @@ class Station:
             lat = the_dict.get('latitude', None)
             alt = the_dict.get('altitude', None)
         except KeyError as e:
-            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
         name = the_dict.get('name', None)
         rank = the_dict.get('rank', None)
         created_at = the_dict.get('created_at', None)

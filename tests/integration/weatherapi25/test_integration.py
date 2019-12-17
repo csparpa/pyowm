@@ -4,6 +4,8 @@
 import unittest
 import os
 from datetime import datetime
+
+import pyowm.commons.exceptions
 from pyowm import owm
 from pyowm.exceptions import api_response_error
 
@@ -266,7 +268,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         try:
             fc3 = self.__owm.forecast_at_id(99999999999999, '3h')
             self.fail()
-        except api_response_error.NotFoundError:
+        except pyowm.commons.exceptions.NotFoundError:
             pass # ok
 
     def forecast_at_place_daily(self):
@@ -322,8 +324,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         fc2 = self.__owm.forecast_at_id(703448, 'daily')
         try:
             fc3 = self.__owm.forecast_at_id(99999999, 'daily')
-            raise AssertionError("APICallError was expected here")
-        except api_response_error.NotFoundError:
+            raise AssertionError("APIRequestError was expected here")
+        except pyowm.commons.exceptions.NotFoundError:
             pass  # Ok!
         self.assertTrue(fc1)
         f1 = fc1.forecast
@@ -366,7 +368,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(len(data2) > 2)
                 h3 = self.__owm.station_tick_history(987654)  # Shall be None
                 self.assertFalse(h3 is not None)
-        except api_response_error.UnauthorizedError:
+        except pyowm.commons.exceptions.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_hour_history(self):
@@ -384,7 +386,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertFalse(0, len(data1))
                 h2 = self.__owm.station_hour_history(987654)  # Shall be None
                 self.assertFalse(h2 is not None)
-        except api_response_error.UnauthorizedError:
+        except pyowm.commons.exceptions.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_station_day_history(self):
@@ -408,7 +410,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
                 self.assertTrue(data2 is not None)
                 h3 = self.__owm.station_day_history(987654)  # Shall be None
                 self.assertFalse(h3 is not None)
-        except api_response_error.UnauthorizedError:
+        except pyowm.commons.exceptions.UnauthorizedError:
             pass  # it's a paid-level API feature
 
     def test_weather_at_places_in_bbox(self):

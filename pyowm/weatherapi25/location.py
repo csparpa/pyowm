@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import geo
 
 
@@ -61,11 +61,11 @@ class Location:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *Location* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         country = None
         if 'sys' in the_dict and 'country' in the_dict['sys']:
             country = the_dict['sys']['country']

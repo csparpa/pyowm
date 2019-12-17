@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyowm.alertapi30.condition import Condition
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting
 
 
@@ -74,11 +74,11 @@ class Alert:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *Alert* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         try:
             alert_id = the_dict['_id']
             t = the_dict['last_update'].split('.')[0].replace('T', ' ') + '+00'
@@ -91,9 +91,9 @@ class Alert:
             alert_coords = the_dict['coordinates']
             return Alert(alert_id, alert_trigger_id, alert_met_conds, alert_coords, last_update=alert_last_update)
         except ValueError as e:
-            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
         except KeyError as e:
-            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
 
     def to_dict(self):
         """Dumps object to a dictionary

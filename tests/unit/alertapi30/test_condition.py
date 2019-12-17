@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+
+import pyowm.commons.exceptions
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum
-from pyowm.exceptions import parse_response_error
 
 
 class TestCondition(unittest.TestCase):
@@ -33,10 +34,10 @@ class TestCondition(unittest.TestCase):
         self.assertEqual(expected.amount, result.amount)
         self.assertEqual(expected.id, result.id)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Condition.from_dict(None)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Condition.from_dict(dict(nonexistent='key'))
 
     def test_to_dict(self):

@@ -3,8 +3,9 @@
 
 import os
 import json
+
+from pyowm.commons import exceptions
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.exceptions import config_error
 from pyowm.commons.enums import SubscriptionTypeEnum
 
 
@@ -20,7 +21,7 @@ def get_config_from(path_to_file):
     """
     assert path_to_file is not None
     if not os.path.isfile(path_to_file):
-        raise config_error.ConfigurationNotFoundError(
+        raise exceptions.ConfigurationNotFoundError(
             'Configuration file not found: {}'.format(path_to_file))
     with open(path_to_file, 'r') as cf:
         try:
@@ -29,7 +30,7 @@ def get_config_from(path_to_file):
                 config_data['subscription_type'])
             return config_data
         except Exception:
-            raise config_error.ConfigurationParseError()
+            raise exceptions.ConfigurationParseError()
 
 
 def get_default_config():

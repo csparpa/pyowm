@@ -8,8 +8,7 @@ from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.observation import Observation
 from pyowm.utils.formatting import UTC
-from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
+from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from tests.unit.weatherapi25.json_test_responses import (
      OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, OBSERVATION_MALFORMED_JSON)
 from tests.unit.weatherapi25.json_test_responses import (
@@ -88,15 +87,15 @@ class TestObservation(unittest.TestCase):
         self.assertFalse(weat is None)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Observation.from_dict(None)
 
     def test_from_dict_fails_with_malformed_JSON_data(self):
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Observation.from_dict(json.loads(self.__bad_json))
         with self.assertRaises(APIResponseError):
             Observation.from_dict(json.loads(self.__bad_json_2))
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Observation.from_dict(json.loads(OBSERVATION_MALFORMED_JSON))
 
     def test_from_dict_when_server_error(self):
@@ -122,15 +121,15 @@ class TestObservation(unittest.TestCase):
             self.assertFalse(weat is None)
 
     def test_from_dict_of_lists_fails_when_JSON_data_is_None(self):
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Observation.from_dict_of_lists(None)
 
     def test_from_dict_of_lists_with_malformed_JSON_data(self):
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Observation.from_dict_of_lists(json.loads(self.__bad_json))
         with self.assertRaises(APIResponseError):
             Observation.from_dict_of_lists(json.loads(self.__bad_json_2))
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Observation.from_dict_of_lists(json.loads(OBSERVATION_MALFORMED_JSON))
 
     def test_from_dict_of_lists_when_no_items_returned(self):

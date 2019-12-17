@@ -4,8 +4,7 @@ from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.forecast import Forecast
-from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
+from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from pyowm.utils.formatting import UTC
 from tests.unit.weatherapi25.json_test_responses import (
      THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
@@ -157,15 +156,15 @@ class TestForecast(unittest.TestCase):
             self.assertTrue(weather is not None)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Forecast.from_dict(None)
 
     def test_from_dict_with_malformed_JSON_data(self):
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Forecast.from_dict(json.loads(self.__bad_json))
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Forecast.from_dict(json.loads(self.__bad_json_2))
-        with self.assertRaises(ParseResponseError):
+        with self.assertRaises(ParseAPIResponseError):
             Forecast.from_dict(json.loads(FORECAST_MALFORMED_JSON))
 
     def test_from_dict_when_no_results(self):

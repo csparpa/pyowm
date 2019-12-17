@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from pyowm.exceptions import parse_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting
 
 
@@ -74,11 +74,11 @@ class AggregatedMeasurement:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: an *AggregatedMeasurement* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         station_id = the_dict.get('station_id', None)
         ts = the_dict.get('date', None)
         if ts is not None:

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from pyowm.exceptions import parse_response_error, api_response_error
+
+from pyowm.commons import  exceptions
 from pyowm.utils import timestamps, formatting
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
@@ -91,12 +92,12 @@ class Forecast:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *Forecast* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the input dictionary embeds an HTTP status error
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('JSON data is None')
+            raise exceptions.ParseAPIResponseError('JSON data is None')
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API 2.5. This mechanism is
         # supposed to be deprecated as soon as the API fully adopts HTTP for
@@ -106,11 +107,11 @@ class Forecast:
                 print("OWM API: data not found - response payload", the_dict['cod'])
                 return None
             elif the_dict['cod'] != "200":
-                raise api_response_error.APIResponseError("OWM API: error - response payload", the_dict['cod'])
+                raise exceptions.APIResponseError("OWM API: error - response payload", the_dict['cod'])
         try:
             place = location.Location.from_dict(the_dict)
         except KeyError:
-            raise parse_response_error.ParseResponseError(''.join([__name__,
+            raise exceptions.ParseAPIResponseError(''.join([__name__,
                                                                ': impossible to read location info from JSON data']))
         # Handle the case when no results are found
         if 'count' in the_dict and the_dict['count'] == "0":
@@ -123,11 +124,11 @@ class Forecast:
                     weathers = [weather.Weather.from_dict(item) \
                                 for item in the_dict['list']]
                 except KeyError:
-                    raise parse_response_error.ParseResponseError(
+                    raise exceptions.ParseAPIResponseError(
                           ''.join([__name__, ': impossible to read weather info from JSON data'])
                                   )
             else:
-                raise parse_response_error.ParseResponseError(
+                raise exceptions.ParseAPIResponseError(
                           ''.join([__name__, ': impossible to read weather list from JSON data'])
                           )
         current_time = int(round(time.time()))

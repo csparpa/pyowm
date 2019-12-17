@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from pyowm.exceptions import parse_response_error, api_response_error
+from pyowm.commons import exceptions
 from pyowm.utils import formatting, measurables
 from pyowm.weatherapi25.uris import ICONS_BASE_URI
 
@@ -218,12 +218,12 @@ class Weather:
         :param the_dict: the input dictionary
         :type the_dict: `dict`
         :returns: a *Weather* instance or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
             data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         # -- times
         if 'dt' in the_dict:
             reference_time = the_dict['dt']
@@ -418,12 +418,12 @@ class Weather:
         :param the_dict: the input dict
         :type the_dict: dict
         :returns: a list of *Weather* instances or ``None`` if no data is available
-        :raises: *ParseResponseError* if it is impossible to find or parse the data needed to build the result,
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result,
             *APIResponseError* if the input dict an HTTP status error
 
         """
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise exceptions.ParseAPIResponseError('Data is None')
         # Check if server returned errors: this check overcomes the lack of use
         # of HTTP error status codes by the OWM API 2.5. This mechanism is
         # supposed to be deprecated as soon as the API fully adopts HTTP for
@@ -434,7 +434,7 @@ class Weather:
                       json.dumps(the_dict))
                 return None
             elif the_dict['cod'] != "200":
-                raise api_response_error.APIResponseError(
+                raise exceptions.APIResponseError(
                                       "OWM API: error - response payload: " + json.dumps(the_dict), the_dict['cod'])
         # Handle the case when no results are found
         if 'cnt' in the_dict and the_dict['cnt'] == "0":
@@ -444,11 +444,11 @@ class Weather:
                 try:
                     return [Weather.from_dict(item) for item in the_dict['list']]
                 except KeyError:
-                    raise parse_response_error.ParseResponseError(
+                    raise exceptions.ParseAPIResponseError(
                               ''.join([__name__, ': impossible to read weather info from input data'])
                           )
             else:
-                raise parse_response_error.ParseResponseError(
+                raise exceptions.ParseAPIResponseError(
                               ''.join([__name__, ': impossible to read weather list from input data']))
 
     def to_dict(self):

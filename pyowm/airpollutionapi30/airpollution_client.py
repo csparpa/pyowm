@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.commons import http_client
 from pyowm.airpollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL
 from pyowm.utils import formatting
 
@@ -45,7 +44,7 @@ class AirPollutionHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -72,7 +71,7 @@ class AirPollutionHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -101,7 +100,7 @@ class AirPollutionHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -130,7 +129,7 @@ class AirPollutionHttpClient:
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])

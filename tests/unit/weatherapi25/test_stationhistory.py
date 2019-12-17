@@ -4,8 +4,7 @@
 import json
 import unittest
 from datetime import datetime
-from pyowm.exceptions.parse_response_error import ParseResponseError
-from pyowm.exceptions.api_response_error import APIResponseError
+from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from pyowm.utils.formatting import UTC
 from pyowm.weatherapi25.stationhistory import StationHistory
 from tests.unit.weatherapi25.json_test_responses import (
@@ -72,10 +71,10 @@ class TestStationHistory(unittest.TestCase):
         self.assertTrue(result.measurements)
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
-        self.assertRaises(ParseResponseError, StationHistory.from_dict, None)
+        self.assertRaises(ParseAPIResponseError, StationHistory.from_dict, None)
 
     def test_from_dict_with_malformed_JSON_data(self):
-        self.assertRaises(ParseResponseError, StationHistory.from_dict, json.loads(self.__bad_json))
+        self.assertRaises(ParseAPIResponseError, StationHistory.from_dict, json.loads(self.__bad_json))
 
     def test_from_dict_with_empty_data(self):
         json_data = '{"message": "","cod": "200","type": "hour","station_id": ' \

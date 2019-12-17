@@ -9,7 +9,6 @@ Subpackages
     pyowm.agroapi10
     pyowm.alertapi30
     pyowm.commons
-    pyowm.exceptions
     pyowm.airpollutionapi30
     pyowm.stationsapi30
     pyowm.tiles

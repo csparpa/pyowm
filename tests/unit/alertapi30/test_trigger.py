@@ -3,11 +3,12 @@
 
 import json
 import unittest
+
+import pyowm.commons.exceptions
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.trigger import Trigger
 from pyowm.alertapi30.enums import AlertChannelsEnum
 from pyowm.alertapi30.alert import Alert
-from pyowm.exceptions import parse_response_error
 from pyowm.utils import geo
 
 
@@ -191,13 +192,13 @@ class TestTrigger(unittest.TestCase):
         self.assertTrue(isinstance(result.alert_channels, list))
         self.assertEqual('5852816a9aaacb00153134a3', result.id)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Trigger.from_dict(None)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Trigger.from_dict(dict(nonexistent='key'))
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Trigger.from_dict(json.loads('''{"_id":"5852816a9aaacb00153134a3","__v":0,"alerts":{"8b48b2cd21c23d2894466caccba1ed1f":{"conditions":[
         {"current_value":{"min":263.576,"max":263.576},"condition":{"name":"temp","expression":"$lt","amount":273,
         "_id":"5852816a9aaacb00153134a5"}}],"last_update":1481802090232,"date":1482181200000,"coordinates":{"lon":37,

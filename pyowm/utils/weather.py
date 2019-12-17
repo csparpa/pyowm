@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.exceptions import api_response_error
+from pyowm.commons import exceptions
 
 
 def status_is(weather, status, weather_code_registry):
@@ -108,7 +108,7 @@ def find_closest_weather(weathers_list, unixtime):
     if not weathers_list:
         return None
     if not is_in_coverage(unixtime, weathers_list):
-        raise api_response_error.NotFoundError('Error: the specified time is ' + \
+        raise exceptions.NotFoundError('Error: the specified time is ' + \
                                 'not included in the weather coverage range')
     closest_weather = weathers_list[0]
     time_distance = abs(closest_weather.reference_time() - unixtime)

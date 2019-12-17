@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+
+import pyowm.commons.exceptions
 from pyowm.alertapi30.alert import Alert, AlertChannel
 from pyowm.alertapi30.condition import Condition
-from pyowm.exceptions import parse_response_error
 
 
 class TestAlert(unittest.TestCase):
@@ -44,10 +45,10 @@ class TestAlert(unittest.TestCase):
         result = Alert.from_dict(the_dict)
         self.assertIsInstance(result, Alert)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Alert.from_dict(None)
 
-        with self.assertRaises(parse_response_error.ParseResponseError):
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Alert.from_dict(dict(nonexistent='key'))
 
     def test_to_dict(self):

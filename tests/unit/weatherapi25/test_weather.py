@@ -3,8 +3,7 @@
 
 import json
 import unittest
-from pyowm.exceptions.api_response_error import APIResponseError
-from pyowm.exceptions.parse_response_error import ParseResponseError
+from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from pyowm.utils.formatting import UTC
 from pyowm.weatherapi25.uris import ICONS_BASE_URI
 from pyowm.weatherapi25.weather import Weather
@@ -337,11 +336,11 @@ class TestWeather(unittest.TestCase):
             self.assertTrue(weather is not None)
 
     def test_from_dict_of_lists_fails_when_JSON_data_is_None(self):
-        self.assertRaises(ParseResponseError, Weather.from_dict_of_lists, None)
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict_of_lists, None)
 
     def test_from_dict_of_lists_with_malformed_JSON_data(self):
-        self.assertRaises(ParseResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json))
-        self.assertRaises(ParseResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json_2))
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json))
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json_2))
 
     def test_from_dict_of_lists_when_no_results(self):
         result = Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_NO_RESULTS_JSON))

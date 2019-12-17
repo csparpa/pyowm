@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pyowm.commons.exceptions
 from pyowm.alertapi30.alert import Alert
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.enums import AlertChannelsEnum
-from pyowm.exceptions import parse_response_error
 from pyowm.utils import formatting
 from pyowm.utils.geo import GeometryBuilder
 
@@ -116,7 +116,7 @@ class Trigger:
     @classmethod
     def from_dict(cls, the_dict):
         if the_dict is None:
-            raise parse_response_error.ParseResponseError('Data is None')
+            raise pyowm.commons.exceptions.ParseAPIResponseError('Data is None')
         try:
             # trigger id
             trigger_id = the_dict.get('_id', None)
@@ -161,9 +161,9 @@ class Trigger:
             alert_channels = None  # defaulting
 
         except ValueError as e:
-            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+            raise pyowm.commons.exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
         except KeyError as e:
-            raise parse_response_error.ParseResponseError('Impossible to parse JSON: %s' % e)
+            raise pyowm.commons.exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
 
         return Trigger(start, end, conditions, area=area, alerts=alerts, alert_channels=alert_channels, id=trigger_id)
 

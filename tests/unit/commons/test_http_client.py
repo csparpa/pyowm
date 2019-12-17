@@ -4,8 +4,8 @@
 import unittest
 import requests
 import json
+import pyowm.commons.exceptions
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.exceptions import api_call_error, api_response_error, parse_response_error
 from pyowm.commons.enums import SubscriptionTypeEnum
 from pyowm.commons.http_client import HttpClient, HttpRequestBuilder
 
@@ -62,7 +62,7 @@ class TestHTTPClient(unittest.TestCase):
             return MockResponse(200, 123846237647236)
 
         requests.get = monkey_patched_get
-        self.assertRaises(parse_response_error.ParseResponseError,
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError,
                           HttpClient('apikey', DEFAULT_CONFIG, 'anyurl.com').get_json, '/resource', params=dict(a=1, b=2))
         requests.get = self.requests_original_get
 
@@ -112,15 +112,15 @@ class TestHTTPClient(unittest.TestCase):
     def test_check_status_code(self):
         msg = 'Generic error'
         HttpClient.check_status_code(200, msg)
-        with self.assertRaises(api_call_error.APICallError):
+        with self.assertRaises(pyowm.commons.exceptions.APIRequestError):
             HttpClient.check_status_code(400, msg)
-        with self.assertRaises(api_response_error.UnauthorizedError):
+        with self.assertRaises(pyowm.commons.exceptions.UnauthorizedError):
             HttpClient.check_status_code(401, msg)
-        with self.assertRaises(api_response_error.NotFoundError):
+        with self.assertRaises(pyowm.commons.exceptions.NotFoundError):
             HttpClient.check_status_code(404, msg)
-        with self.assertRaises(api_call_error.BadGatewayError):
+        with self.assertRaises(pyowm.commons.exceptions.BadGatewayError):
             HttpClient.check_status_code(502, msg)
-        with self.assertRaises(api_call_error.APICallError):
+        with self.assertRaises(pyowm.commons.exceptions.APIRequestError):
             HttpClient.check_status_code(555, msg)
 
     def test_timeouts(self):
@@ -135,7 +135,7 @@ class TestHTTPClient(unittest.TestCase):
         try:
             status, data = HttpClient('apikey', config, 'anyurl.com').get_json('/resource')
             self.fail()
-        except api_call_error.APICallTimeoutError:
+        except pyowm.commons.exceptions.TimeoutError:
             requests.get = self.requests_original_get
 
     def test_get_png(self):

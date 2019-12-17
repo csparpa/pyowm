@@ -4,7 +4,7 @@
 import unittest
 import json
 from datetime import datetime
-from pyowm.exceptions import parse_response_error
+import pyowm.commons.exceptions
 from pyowm.weatherapi25.location import Location
 from pyowm.airpollutionapi30.coindex import COIndex
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
@@ -135,10 +135,10 @@ class TestCOIndex(unittest.TestCase):
         self.assertNotEqual(0, len(result.co_samples))
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
-        self.assertRaises(parse_response_error.ParseResponseError, COIndex.from_dict, None)
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, COIndex.from_dict, None)
 
     def test_from_dict_fails_with_malformed_JSON_data(self):
-        self.assertRaises(parse_response_error.ParseResponseError, COIndex.from_dict, json.loads(COINDEX_MALFORMED_JSON))
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, COIndex.from_dict, json.loads(COINDEX_MALFORMED_JSON))
 
     def test_to_dict(self):
         expected = json.loads(COINDEX_JSON_DUMP)
