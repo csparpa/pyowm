@@ -408,11 +408,15 @@ def weather_from_dictionary(d):
         reference_time = d['dt']
     elif 'dt' in d['last']:
         reference_time = d['last']['dt']
-    if 'sys' in d and 'sunset' in d['sys']:
+    if 'sunset' in d:
+        sunset_time = d['sunset']
+    elif 'sys' in d and 'sunset' in d['sys']:
         sunset_time = d['sys']['sunset']
     else:
         sunset_time = 0
-    if 'sys' in d and 'sunrise' in d['sys']:
+    if 'sunrise' in d:
+        sunrise_time = d['sunrise']
+    elif 'sys' in d and 'sunrise' in d['sys']:
         sunrise_time = d['sys']['sunrise']
     else:
         sunrise_time = 0
