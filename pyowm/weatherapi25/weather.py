@@ -229,11 +229,15 @@ class Weather:
             reference_time = the_dict['dt']
         elif 'dt' in the_dict['last']:
             reference_time = the_dict['last']['dt']
-        if 'sys' in the_dict and 'sunset' in the_dict['sys']:
+        if 'sunset' in the_dict:
+            sunset_time = the_dict['sunset']
+        elif 'sys' in the_dict and 'sunset' in the_dict['sys']:
             sunset_time = the_dict['sys']['sunset']
         else:
             sunset_time = 0
-        if 'sys' in the_dict and 'sunrise' in the_dict['sys']:
+        if 'sunrise' in the_dict:
+            sunrise_time = the_dict['sunrise']
+        elif 'sys' in the_dict and 'sunrise' in the_dict['sys']:
             sunrise_time = the_dict['sys']['sunrise']
         else:
             sunrise_time = 0
