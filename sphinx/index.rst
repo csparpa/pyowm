@@ -71,11 +71,7 @@ Supported environments and Python versions
 
 PyOWM runs on Windows, Linux and MacOS.
 
-PyOWM runs on Python 3.5+
-
-PyOWM also integrates with Django_ 1.10+ models, but that integration might have issues (contributions are welcome)
-
-.. _Django: https://github.com/csparpa/pyowm/wiki/Django-support
+PyOWM runs on Python 3.7+
 
 
 Installation
@@ -140,6 +136,14 @@ On OpenSuse you can use with YaST/Zypper package manager, run:
 .. code::
 
    zypper install python-pyowm
+
+Quick code recipes
+------------------
+.. toctree::
+   :maxdepth: 1
+
+   v3/code-recipes
+
 
 Legacy PyOWM v2 usage documentation
 -----------------------------------
