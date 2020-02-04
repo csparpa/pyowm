@@ -34,6 +34,16 @@ class OWM:
             self.config = config
 
     @property
+    def configuration(self):
+        """
+        Returns the configuration dict for the PyOWM
+
+        :returns: `dict`
+
+        """
+        return self.config
+
+    @property
     def version(self):
         """
         Returns the current version of the PyOWM library

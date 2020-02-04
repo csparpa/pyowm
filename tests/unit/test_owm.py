@@ -16,10 +16,19 @@ class TestOWM(unittest.TestCase):
     __test_instance = OWM('fake-api-key')
 
     def test_instantiation(self):
+        with self.assertRaises(TypeError):
+            OWM()
         with self.assertRaises(AssertionError):
             OWM(None)
         with self.assertRaises(AssertionError):
             OWM('fake-api-key', 123456)
+
+    def test_properties(self):
+        version = self.__test_instance.version
+        self.assertIsInstance(version, tuple)
+
+        config = self.__test_instance.configuration
+        self.assertIsInstance(config, dict)
 
     def test_repr(self):
         print(self.__test_instance)

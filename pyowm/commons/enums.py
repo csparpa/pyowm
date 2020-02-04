@@ -20,7 +20,7 @@ class SubscriptionTypeEnum:
         for i in SubscriptionTypeEnum.items():
             if i.name == name:
                 return i
-        return None
+        raise ValueError('Subscription type not allowed')
 
     @classmethod
     def items(cls):

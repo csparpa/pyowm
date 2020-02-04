@@ -26,8 +26,7 @@ def get_config_from(path_to_file):
     with open(path_to_file, 'r') as cf:
         try:
             config_data = json.load(cf)
-            config_data['subscription_type'] = SubscriptionTypeEnum.lookup_by_name(
-                config_data['subscription_type'])
+            config_data['subscription_type'] = SubscriptionTypeEnum.lookup_by_name(config_data['subscription_type'])
             return config_data
         except Exception:
             raise exceptions.ConfigurationParseError()
@@ -40,3 +39,36 @@ def get_default_config():
 
     """
     return DEFAULT_CONFIG
+
+
+def get_default_config_for_subscription_type(name):
+    """Returns the PyOWM configuration for a specific OWM API Plan subscription type
+
+    :param name: name of the subscription type
+    :type name: str
+    :returns: the configuration `dict`
+
+    """
+    assert isinstance(name, str)
+    config = get_default_config()
+    config['subscription_type'] = SubscriptionTypeEnum.lookup_by_name(name)
+    return config
+
+
+def get_default_config_for_proxy(http_url, https_url):
+    """Returns the PyOWM configuration to be used behind a proxy server
+
+    :param http_url: URL connection string for HTTP protocol
+    :type http_url: str
+    :param https_url: URL connection string for HTTPS protocol
+    :type https_url: str
+    :returns: the configuration `dict`
+
+    """
+    assert isinstance(http_url, str)
+    assert isinstance(https_url, str)
+    config = get_default_config()
+    config['connection']['use_proxy'] = True
+    config['proxies']['http'] = http_url
+    config['proxies']['https'] = https_url
+    return config
