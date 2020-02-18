@@ -131,7 +131,7 @@ class Forecast:
                 raise exceptions.ParseAPIResponseError(
                           ''.join([__name__, ': impossible to read weather list from JSON data'])
                           )
-        current_time = int(round(time.time()))
+        current_time = int(time.time())
         return Forecast(None, current_time, place, weathers)
 
     def to_dict(self):

@@ -117,7 +117,7 @@ class StationHistory:
                                                 "wind": wind}
         except KeyError:
             raise exceptions.ParseAPIResponseError(__name__ + ': impossible to read input data')
-        current_time = round(time.time())
+        current_time = int(time.time())
         return StationHistory(None, None, current_time, measurements)
 
     def to_dict(self):

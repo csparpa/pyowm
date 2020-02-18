@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import time
 from pyowm.commons import exceptions
 from pyowm.utils import formatting
 from pyowm.weatherapi25 import location
 from pyowm.weatherapi25 import weather
-from time import time
 
 
 class Observation:
@@ -87,7 +87,7 @@ class Observation:
         except KeyError:
             raise exceptions.ParseAPIResponseError(
                                       ''.join([__name__, ': impossible to read weather info from JSON data']))
-        current_time = int(round(time()))
+        current_time = int(time.time())
         return Observation(current_time, place, w)
 
     def to_dict(self):
