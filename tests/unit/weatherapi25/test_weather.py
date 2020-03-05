@@ -20,8 +20,12 @@ class TestWeather(unittest.TestCase):
                                    '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_sunset_time = 1378496400
     __test_iso_sunset_time = "2013-09-06 19:40:00+00"
+    __test_date_sunset_time = datetime.strptime(__test_iso_sunset_time,
+                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_sunrise_time = 1378449600
     __test_iso_sunrise_time = "2013-09-06 06:40:00+00"
+    __test_date_sunrise_time = datetime.strptime(__test_iso_sunrise_time,
+                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_clouds = 67
     __test_rain = {"all": 20}
     __test_snow = {"all": 0}
@@ -369,12 +373,16 @@ class TestWeather(unittest.TestCase):
                          self.__test_iso_sunset_time)
         self.assertEqual(self.__test_instance.sunset_time(timeformat='unix'),
                          self.__test_sunset_time)
+        self.assertEqual(self.__test_instance.sunset_time(timeformat='date'),
+                         self.__test_date_sunset_time)
 
     def test_sunrise_time_returning_different_formats(self):
         self.assertEqual(self.__test_instance.sunrise_time(timeformat='iso'),
                          self.__test_iso_sunrise_time)
         self.assertEqual(self.__test_instance.sunrise_time(timeformat='unix'),
                          self.__test_sunrise_time)
+        self.assertEqual(self.__test_instance.sunrise_time(timeformat='date'),
+                         self.__test_date_sunrise_time)
 
     def test_get_reference_time_fails_with_unknown_timeformat(self):
         self.assertRaises(ValueError, Weather.reference_time,

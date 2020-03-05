@@ -107,20 +107,21 @@ class Weather:
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
             '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
-        :returns: an int or a str
+        :returns: an int or a str or a `datetime.datetime` object
         :raises: ValueError when negative values are provided
 
         """
         return formatting.timeformat(self.ref_time, timeformat)
 
     def sunset_time(self, timeformat='unix'):
-        """Returns the GMT time of sunset
+        """Returns the GMT time of sunset. Can be `None` in case of polar days.
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
-        :returns: an int or a str or None
+        :returns: 'None`, an int, a str or a `datetime.datetime` object
         :raises: ValueError
 
         """
@@ -129,13 +130,14 @@ class Weather:
         return formatting.timeformat(self.sset_time, timeformat)
 
     def sunrise_time(self, timeformat='unix'):
-        """Returns the GMT time of sunrise
+        """Returns the GMT time of sunrise. Can be `None` in case of polar nights.
 
         :param timeformat: the format for the time value. May be:
-            '*unix*' (default) for UNIX time or '*iso*' for ISO8601-formatted
-            string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*unix*' (default) for UNIX time
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
-        :returns: an int or a str or None
+        :returns: 'None`, an int, a str or a `datetime.datetime` object
         :raises: ValueError
 
         """
