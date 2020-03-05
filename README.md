@@ -13,7 +13,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/csparpa/pyowm/badge.svg?branch=master)](https://coveralls.io/github/csparpa/pyowm?branch=master)
 <br>
 <a href="https://www.buymeacoffee.com/LmAl1n9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa%40gmail.com)
 
 ##  What is it?
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs.
