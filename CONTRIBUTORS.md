@@ -16,6 +16,7 @@ Code
   * [titilambert] (https://github.com/titilambert)
   * [txemi] (https://github.com/txemi)
   * [camponez] (https://github.com/camponez)
+  * [dev-iks] (https://github.com/dev-iks)
 
 Docs
 ----

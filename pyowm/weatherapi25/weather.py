@@ -562,10 +562,15 @@ def weather_from_dictionary(d):
             temp_min = d['main']['temp_min']
         else:
             temp_min = None
+        if 'feels_like' in d['main']:
+            feels_like = d['main']['feels_like']
+        else:
+            feels_like = None
         temperature = {'temp': temp,
                        'temp_kf': temp_kf,
                        'temp_max': temp_max,
-                       'temp_min': temp_min
+                       'temp_min': temp_min,
+                       'feels_like': feels_like
                        }
     elif 'last' in d:
         if 'main' in d['last']:
