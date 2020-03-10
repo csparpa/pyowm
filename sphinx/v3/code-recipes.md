@@ -7,6 +7,7 @@ Table of contents:
   * [Library initialization](#library_init)
   * [Identifying cities and places](#identifying_places)
   * [Weather data](#weather_data)
+  * [Weather forecasts](#weather_forecasts)
   * [Geometries](#geometries)
 
 <div id="library_init"/>
@@ -220,6 +221,8 @@ owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 weather = mgr.weather_at_place('Tokyo,JP').weather
 temp_dict_kelvin = weather.temperature()   # a dict in Kelvin units (default when no temperature units provided)
+temp_dict_kelvin['temp_min']
+temp_dict_kelvin['temp_max']
 temp_dict_fahrenheit = weather.temperature('fahrenheit')  # a dict in Fahrenheit units
 temp_dict_celsius = weather.temperature('celsius')  # guess?
 ```
@@ -266,7 +269,6 @@ pressure_dict['press']
 pressure_dict['sea_level']
 ```
 
-
 ### Get today's sunrise and sunset times for a location
 You can get precise timestamps for sunrise and sunset times on a location.
 Sunrise can be `None` for locations in polar night, as well as sunset can be `None` in case of polar days
@@ -287,5 +289,173 @@ sunrset_date = weather.sunset_time(timeformat='date')
 ```
 
 
+### Get weather on geographic coordinataes
+TBD weather_at_coords
+
+### Get weather at city IDs
+TBD weather_at_id and weather_at_ids
+
+
+<div id="weather_forecasts"/>
+
+## Weather forecasts
+
+### Get forecast on a location
+Just like for observed weather info, you can fetch weather forecast info on a specific toponym.
+As usual, provide toponym + country code for better results.
+
+Forecast are provided for the next 5 days.
+
+A `Forecast` object contains a list of `Weather` objects, each one having a specific reference time in the future.
+The time interval among `Weather` objects can be 1 day (`daily` forecast) or 3 hours ('3h' forecast).
+
+Let's fetch forecast on Berlin (Germany):
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+daily_forecast = mgr.forecast_at_place('Berlin,DE', 'daily').forecast
+3h_forecast = mgr.forecast_at_place('Berlin,DE', '3h').forecast
+```
+Now that you got the `Forecast` object, you can either manipulate it directly or use PyOWM conveniences to quickly slice and dice the embedded `Weather` objects
+
+Let's take a look at the first option (see further on for the second one): a `Forecast` object is iterable on the weathers
+
+```python
+nr_of_weathers = len(daily_forecast)
+for weather in daily_forecast:
+    weather.get_reference_time('iso'), weather.get_status()  # ('2020-03-10 14:00:00+0','Clear')
+                                                             # ('2020-03-11 14:00:00+0','Clouds')
+                                                             # ('2020-03-12 14:00:00+0','Clouds')
+                                                             # ...
+```
+
+Something useful is forecast actualization, as you might want to remove from the `Forecast` all the embedded `Weather` objects that refer to a time in the past with respect to now.
+This is useful especially if store the fetched forecast for subsequent computations.
+
+```python
+# Say now is: 2020-03-10 18:30:00+0
+daily_forecast.actualize()
+for weather in daily_forecast:
+    weather.get_reference_time('iso'), weather.get_status()  # ('2020-03-11 14:00:00+0','Clouds')
+                                                             # ('2020-03-12 14:00:00+0','Clouds')
+                                                             # ...
+```
+
+### Know when a forecast weather streak starts and ends
+Say we get the 3h forecast on Berlin. You want to know when the forecasted weather streak starts and ends
+
+Use the `Forecaster` convenience class as follows.
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+forecaster = mgr.forecast_at_place('Berlin,DE', '3h')    # this gives you a Forecaster object
+forecaster.when_starts('iso')                            # 2020-03-10 14:00:00+00'
+forecaster.when_ends('iso')                              # 2020-03-16 14:00:00+00'
+```
+
+### Get forecasted weather for tomorrow
+Say you want to know the weather on Berlin, say, globally for tomorrow.
+Easily done with the `Forecaster` convenience class and PyOWM's `timestamps` utilities:
+
+```python
+from pyowm.utils import timestamps
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+daily_forecaster = mgr.forecast_at_place('Berlin,DE', 'daily')
+tomorrow = timestamps.tomorrow()                                   # datetime object for tomorrow
+weather = daily_forecaster.get_weather_at(tomorrow)                # the weather you're looking for
+```
+
+Then say you want to know weather for tomorrow on Berlin at 5 PM:
+
+```python
+from pyowm.utils import timestamps
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+tomorrow_at_five = timestamps.tomorrow(17, 0)                      # datetime object for tomorrow at 5 PM
+weather = 3h_forecaster.get_weather_at(tomorrow_at_five)           # the weather you're looking for
+```
+
+You are provided with the `Weather` object that lies closest to the time that you specified (5 PM)
+
+### Is it going to rain tomorrow?
+
+Say you want to know if you need to carry an umbrella around in Berlin tomorrow.
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+
+# Is it going to rain tomorrow?
+tomorrow = timestamps.tomorrow()                   # datetime object for tomorrow
+3h_forecaster.will_be_rainy_at(tomorrow)           # True
+```
+
+### Will it snow or be foggy in the next days?
+
+In Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+
+# Is it going to be snowy in the next 5 days ?
+3h_forecaster.will_have_snow()    # False
+
+# Is it going to be foggy in the next 5 days ?
+3h_forecaster.will_have_fog()    # True
+```
+
+### When will the weather be sunny in the next five days?
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+daily_forecaster = mgr.forecast_at_place('Berlin,DE', 'daily')
+
+list_of_weathers = daily_forecaster.when_clear()
+```
+
+This will give you the list of `Weather` objects in the 5 days forecast when it will be sunny. So if only 2 in the next 5 days will be sunny, you'll get 2 objects
+The list will be empty if none of the upcoming days will be sunny.
+
+### Which of the next 5 days will be the coldest? And which one the most rainy ?
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+daily_forecaster = mgr.forecast_at_place('Berlin,DE', 'daily')
+
+daily_forecaster.most_cold()     # this weather is of the coldest day
+daily_forecaster.most_rainy()    # this weather is of the most rainy day
+```
+
+### Get forecast on geographic coordinates
+TBD
+
+### Get forecast on city ID
+TBD
+
+### Get forecast on geographic coordinates
+TBD
+
 <div id="geometries"/>
+## Geometries
 TBD
