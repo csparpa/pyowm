@@ -36,14 +36,14 @@ class TestWeather(unittest.TestCase):
     __test_humidity = 57
     __test_pressure = {"press": 1030.119, "sea_level": 1038.589}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
-                          "temp_max": 296.098, "temp_min": 294.199
-                          }
+                          "temp_max": 296.098, "temp_min": 294.199,
+                          "feels_like": 298.0}
     __test_celsius_temperature = {"temp": 21.049, "temp_kf": -1.899,
-                                  "temp_max": 22.948, "temp_min": 21.049
-                                  }
+                                  "temp_max": 22.948, "temp_min": 21.049,
+                                  "feels_like": 24.85}
     __test_fahrenheit_temperature = {"temp": 69.888, "temp_kf": -1.899,
-                                     "temp_max": 73.306, "temp_min": 69.888
-                                     }
+                                     "temp_max": 73.306, "temp_min": 69.888,
+                                     "feels_like": 76.73}
     __test_status = "Clouds"
     __test_detailed_status = "Overcast clouds"
     __test_weather_code = 804
@@ -68,7 +68,7 @@ class TestWeather(unittest.TestCase):
 
     WEATHER_JSON_DUMP = '{"status": "Clouds", "visibility_distance": 1000, ' \
                         '"clouds": 67, "temperature": {"temp_kf": -1.899, ' \
-                        '"temp_min": 294.199, "temp": 294.199, "temp_max": 296.098},' \
+                        '"temp_min": 294.199, "temp": 294.199, "temp_max": 296.098, "feels_like": 298.0},' \
                         ' "dewpoint": 300.0, "humidex": 298.0, "detailed_status": ' \
                         '"Overcast clouds", "reference_time": 1378459200, ' \
                         '"weather_code": 804, "sunset_time": 1378496400, "rain": ' \

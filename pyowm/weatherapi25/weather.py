@@ -382,10 +382,15 @@ class Weather:
                 temp_min = the_dict['main']['temp_min']
             else:
                 temp_min = None
+            if 'feels_like' in the_dict['main']:
+                feels_like = the_dict['main']['feels_like']
+            else:
+                feels_like = None
             temperature = {'temp': temp,
                            'temp_kf': temp_kf,
                            'temp_max': temp_max,
-                           'temp_min': temp_min
+                           'temp_min': temp_min,
+                           'feels_like': feels_like
                            }
         elif 'last' in the_dict:
             if 'main' in the_dict['last']:
