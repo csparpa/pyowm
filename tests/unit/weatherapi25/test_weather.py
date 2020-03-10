@@ -34,7 +34,7 @@ class TestWeather(unittest.TestCase):
     __test_knots_wind = {'deg': 252.002, 'speed': 2.138224, 'gust': 4.0626256}
     __test_beaufort_wind = {"deg": 252.002, "speed": 1, "gust": 2}
     __test_humidity = 57
-    __test_pressure = {"press": 1030.119, "sea_level": 1038.589}
+    __test_pressure = {"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
                           "temp_max": 296.098, "temp_min": 294.199,
                           "feels_like": 298.0}
@@ -73,7 +73,7 @@ class TestWeather(unittest.TestCase):
                         '"Overcast clouds", "reference_time": 1378459200, ' \
                         '"weather_code": 804, "sunset_time": 1378496400, "rain": ' \
                         '{"all": 20}, "snow": {"all": 0}, "pressure": ' \
-                        '{"press": 1030.119, "sea_level": 1038.589}, ' \
+                        '{"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}, ' \
                         '"sunrise_time": 1378449600, "heat_index": 40.0, ' \
                         '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
                         '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null}'

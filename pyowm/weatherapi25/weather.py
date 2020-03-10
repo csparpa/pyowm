@@ -355,13 +355,19 @@ class Weather:
         elif 'last' in the_dict:
             if 'main' in the_dict['last']:
                 atm_press = the_dict['last']['main']['pressure']
+            else:
+                atm_press = None
         else:
             atm_press = None
         if 'main' in the_dict and 'sea_level' in the_dict['main']:
             sea_level_press = the_dict['main']['sea_level']
         else:
             sea_level_press = None
-        pressure = {'press': atm_press, 'sea_level': sea_level_press}
+        if 'main' in the_dict and 'grnd_level' in the_dict['main']:
+            ground_level_press = the_dict['main']['grnd_level']
+        else:
+            ground_level_press = None
+        pressure = {'press': atm_press, 'sea_level': sea_level_press, 'grnd_level': ground_level_press}
         # -- temperature
         if 'temp' in the_dict:
             if the_dict['temp'] is not None:
