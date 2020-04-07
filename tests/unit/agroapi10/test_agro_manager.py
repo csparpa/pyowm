@@ -392,6 +392,11 @@ class TestAgroManager(unittest.TestCase):
         self.assertEqual(3, len(results))
         self.assertTrue(all([i.preset == PresetEnum.EVI for i in results]))
 
+        results = instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG,
+                                                    None, 10, 20, SatelliteEnum.SENTINEL_2.symbol, 0,
+                                                    10, 90, 100)
+        self.assertEqual(8, len(results))
+
     def test_repr(self):
         instance = AgroManager('APIKey')
         repr(instance)
