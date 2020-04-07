@@ -111,6 +111,3 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertEqual(1, len(result))
         result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, PresetEnum.FALSE_COLOR)
         self.assertEqual(1, len(result))
-
-    def test_repr(self):
-        print(self.test_instance)
