@@ -182,6 +182,10 @@ class TestAgroManager(unittest.TestCase):
         result = instance.create_polygon(self.geopolygon, 'test name')
         self.assertIsInstance(result, Polygon)
 
+        Polygon.name = None
+        result = instance.create_polygon(self.geopolygon)
+        self.assertIsInstance(result, Polygon)
+
     def test_create_polygons_fails_with_wrong_inputs(self):
         instance = self.factory(MockHttpClientOnePolygon)
         with self.assertRaises(AssertionError):
