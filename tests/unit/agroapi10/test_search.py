@@ -50,7 +50,7 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertRaises(AssertionError, SatelliteImagerySearchResultSet, 'my_polygon', [], None)
 
     def test_instantiation(self):
-        self.assertEqual(12, len(self.test_instance.metaimages))
+        self.assertEqual(12, self.test_instance.__len__())
         self.assertTrue(all([mi.stats_url is not None for mi in self.test_instance.metaimages if mi.preset in
                              [PresetEnum.EVI, PresetEnum.NDVI]]))
 
