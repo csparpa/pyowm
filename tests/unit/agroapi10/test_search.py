@@ -47,7 +47,7 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertRaises(AssertionError, SatelliteImagerySearchResultSet, 'my_polygon', [], None)
 
     def test_instantiation(self):
-        self.assertEqual(12, len(self.test_instance.metaimages))
+        self.assertEqual(12, self.test_instance.__len__())
         self.assertTrue(all([mi.stats_url is not None for mi in self.test_instance.metaimages if mi.preset in
                              [PresetEnum.EVI, PresetEnum.NDVI]]))
 
@@ -108,3 +108,8 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertEqual(1, len(result))
         result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, PresetEnum.FALSE_COLOR)
         self.assertEqual(1, len(result))
+
+    def test_repr(self):
+        self.assertEqual('<pyowm.agroapi10.search.SatelliteImagerySearchResultSet'
+                         ' - 12 results for query issued on polygon_id=my_polygon at 2013-09-06 09:20:00+00>',
+                         self.test_instance.__repr__())
