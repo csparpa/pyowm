@@ -208,7 +208,7 @@ class TestAgroManager(unittest.TestCase):
 
     def test_delete_polygon(self):
         instance = self.factory(MockHttpClientOnePolygon)
-        result = instance.update_polygon(self.polygon)
+        result = instance.delete_polygon(self.polygon)
         self.assertIsNone(result)
         p = copy.deepcopy(self.polygon)
         p.id = None
