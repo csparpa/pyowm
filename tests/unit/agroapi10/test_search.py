@@ -120,6 +120,4 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertEqual(1, len(result))
 
     def test_repr(self):
-        self.assertEqual('<pyowm.agroapi10.search.SatelliteImagerySearchResultSet'
-                         ' - 12 results for query issued on polygon_id=my_polygon at 2013-09-06 09:20:00+00>',
-                         self.test_instance.__repr__())
+        repr(self.test_instance)
