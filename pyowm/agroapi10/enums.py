@@ -38,7 +38,7 @@ class SatelliteEnum:
     def items(cls):
         """
         All values for this enum
-        :return: list of str
+        :return: list of Satellite databoxes
 
         """
         return [
