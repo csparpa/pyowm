@@ -1,3 +1,4 @@
+import copy
 import unittest
 from pyowm.alertapi30.parsers import TriggerParser, AlertParser
 from pyowm.alertapi30.trigger import Trigger
@@ -21,6 +22,17 @@ class TestStationsParser(unittest.TestCase):
         [{"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}],"time_period":{"end":{
         "amount":432000000,"expression":"exact"},"start":{"amount":132000000,"expression":"before"}}}'''
 
+    test_trigger_start_expression_is_not_after = copy.deepcopy(test_trigger_json)
+    test_trigger_start_expression_is_not_after = test_trigger_start_expression_is_not_after.replace('after', 'asd', 1)
+
+    test_trigger_end_expression_is_not_after = copy.deepcopy(test_trigger_json)
+    test_trigger_end_expression_is_not_after = test_trigger_end_expression_is_not_after.replace(
+        '"expression":"after"}}}',
+        '"expression":"asd"}}}')
+
+    test_trigger_key_error = copy.deepcopy(test_trigger_json)
+    test_trigger_key_error = test_trigger_key_error.replace('time_period', 'missing_time_period')
+
     def test_parse_JSON_fails_with_none_input(self):
         instance = TriggerParser()
         with self.assertRaises(parse_response_error.ParseResponseError):
@@ -36,6 +48,18 @@ class TestStationsParser(unittest.TestCase):
         with self.assertRaises(parse_response_error.ParseResponseError):
             instance.parse_JSON(self.test_trigger_wrong_operator_json)
 
+    def test_parse_json_exception_handling(self):
+        instance = TriggerParser()
+
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            instance.parse_JSON(self.test_trigger_start_expression_is_not_after)
+
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            instance.parse_JSON(self.test_trigger_end_expression_is_not_after)
+
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            instance.parse_JSON(self.test_trigger_key_error)
+
 
 class TestAlertParser(unittest.TestCase):
 
@@ -43,6 +67,11 @@ class TestAlertParser(unittest.TestCase):
     "2016-12-16T11:19:46.352Z","triggerId": "5852816a9aaacb00153134a3","__v": 0,"conditions": [{"current_value": 
     {"max": 258.62,"min": 258.62},"_id": "5853dbe27416a400011b1b78","condition": {"amount": 273,"expression": 
     "$lt","name": "temp"}}],"coordinates": {"lat": "53","lon": "37"}}'''
+
+    test_alert_json_key_error = copy.deepcopy(test_alert_json).replace('_id', 'missing_id')
+
+    test_alert_json_value_error = copy.deepcopy(test_alert_json).replace('2016-12-16T11:19:46.352Z',
+                                                                         'not_valid_timestamp')
 
     def test_parse_JSON_fails_with_none_input(self):
         instance = AlertParser()
@@ -53,3 +82,12 @@ class TestAlertParser(unittest.TestCase):
         instance = AlertParser()
         result = instance.parse_JSON(self.test_alert_json)
         self.assertTrue(isinstance(result, Alert))
+
+    def test_parse_json_exception_handling(self):
+        instance = AlertParser()
+
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            instance.parse_JSON(self.test_alert_json_key_error)
+
+        with self.assertRaises(parse_response_error.ParseResponseError):
+            instance.parse_JSON(self.test_alert_json_value_error)
