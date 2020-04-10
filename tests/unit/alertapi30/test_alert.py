@@ -1,5 +1,6 @@
 import unittest
 from pyowm.alertapi30.alert import Alert
+from pyowm.alertapi30.condition import Condition
 
 
 class TestAlert(unittest.TestCase):
@@ -25,3 +26,10 @@ class TestAlert(unittest.TestCase):
 
         self.assertRaises(AssertionError, Alert, 'alert1', 'trigger', [dict(a=1, b=2), dict(c=3, d=4)],
                           dict(lon=53, lat=45), 'wrong-value')
+
+    def test_alert_last_updated_is_none(self):
+        alert = Alert('alert1', 'trigger1', [{
+            "current_value": 263.576,
+            "condition": Condition('humidity', 'LESS_THAN', 10)}],
+                      {"lon": 37, "lat": 53})
+        self.assertIsNone(alert.last_update)
