@@ -91,3 +91,10 @@ class TestAlertChannel(unittest.TestCase):
 
     def test_repr(self):
         print(AlertChannel('foobaz'))
+
+    def test_alert_last_updated_is_none(self):
+        alert = Alert('alert1', 'trigger1', [{
+            "current_value": 263.576,
+            "condition": Condition('humidity', 'LESS_THAN', 10)}],
+                      {"lon": 37, "lat": 53})
+        self.assertIsNone(alert.last_update)
