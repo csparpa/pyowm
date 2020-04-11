@@ -47,9 +47,19 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertRaises(AssertionError, SatelliteImagerySearchResultSet, 'my_polygon', [], None)
 
     def test_instantiation(self):
-        self.assertEqual(12, len(self.test_instance.metaimages))
+        self.assertEqual(12, self.test_instance.__len__())
         self.assertTrue(all([mi.stats_url is not None for mi in self.test_instance.metaimages if mi.preset in
                              [PresetEnum.EVI, PresetEnum.NDVI]]))
+
+    def test_empty_metaimages_init(self):
+        test_data = self.test_data[0]
+        for dictionary in ['image', 'stats', 'tile', 'data']:
+            for key in test_data[dictionary].keys():
+                test_data[dictionary][key] = None
+
+        test_data = [test_data]
+        test_instance = SatelliteImagerySearchResultSet('my_polygon', test_data, self.test_issuing_time)
+        self.assertFalse(len(test_instance.metaimages))
 
     def test_issued_on_returning_different_formats(self):
         self.assertEqual(self.test_instance.issued_on(timeformat='unix'),

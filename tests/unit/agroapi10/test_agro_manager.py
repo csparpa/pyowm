@@ -182,6 +182,10 @@ class TestAgroManager(unittest.TestCase):
         result = instance.create_polygon(self.geopolygon, 'test name')
         self.assertIsInstance(result, Polygon)
 
+        Polygon.name = None
+        result = instance.create_polygon(self.geopolygon)
+        self.assertIsInstance(result, Polygon)
+
     def test_create_polygons_fails_with_wrong_inputs(self):
         instance = self.factory(MockHttpClientOnePolygon)
         with self.assertRaises(AssertionError):
@@ -201,7 +205,7 @@ class TestAgroManager(unittest.TestCase):
 
     def test_delete_polygon(self):
         instance = self.factory(MockHttpClientOnePolygon)
-        result = instance.update_polygon(self.polygon)
+        result = instance.delete_polygon(self.polygon)
         self.assertIsNone(result)
         p = copy.deepcopy(self.polygon)
         p.id = None
@@ -391,6 +395,11 @@ class TestAgroManager(unittest.TestCase):
                                                     10, 90, 100)
         self.assertEqual(3, len(results))
         self.assertTrue(all([i.preset == PresetEnum.EVI for i in results]))
+
+        results = instance.search_satellite_imagery('test_pol', 1480699083, 1480782083, ImageTypeEnum.PNG,
+                                                    None, 10, 20, SatelliteEnum.SENTINEL_2.symbol, 0,
+                                                    10, 90, 100)
+        self.assertEqual(8, len(results))
 
     def test_repr(self):
         instance = AgroManager('APIKey')
