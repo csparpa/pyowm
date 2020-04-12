@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import datetime
 import unittest
 import pyowm.commons.exceptions
 from pyowm.stationsapi30.station import Station
@@ -14,6 +15,10 @@ class TestStation(unittest.TestCase):
                              "SF_TEST001",
                              "San Francisco Test Station",
                              -122.43, 37.76, 150, 0)
+
+    _test_instance_none_values = Station("583436dd9643a9000196b8d6", None, None, "SF_TEST001",
+                                         "San Francisco Test Station",
+                                         -122.43, 37.76, None, 0)
 
     def test_format_micros(self):
         # micros are present and must be padded
@@ -93,6 +98,11 @@ class TestStation(unittest.TestCase):
                     "San Francisco Test Station",
                     -122.43, 37.76, -56.9, 0)
 
+    def test_init_with_none_values(self):
+        self.assertIsNone(self._test_instance_none_values.alt)
+        self.assertIsNone(self._test_instance_none_values.created_at)
+        self.assertIsNone(self._test_instance_none_values.updated_at)
+
     def test_repr(self):
         print(self._test_instance)
 
@@ -135,3 +145,35 @@ class TestStation(unittest.TestCase):
             'updated_at': '2016-11-22 12:15:25+00'}
         result = self._test_instance.to_dict()
         self.assertEqual(expected, result)
+
+    def test_creation_time(self):
+        default_creation_time = self._test_instance.creation_time()
+        self.assertIsInstance(default_creation_time, int)
+
+        unix_creation_time = self._test_instance.creation_time('unix')
+        self.assertIsInstance(unix_creation_time, int)
+
+        iso_creation_time = self._test_instance.creation_time('iso')
+        self.assertIsInstance(iso_creation_time, str)
+
+        date_creation_time = self._test_instance.creation_time('date')
+        self.assertIsInstance(date_creation_time, datetime.datetime)
+
+        creation_time_is_none = self._test_instance_none_values.creation_time()
+        self.assertIsNone(creation_time_is_none)
+
+    def test_last_update_time(self):
+        default_last_updated_time = self._test_instance.last_update_time()
+        self.assertIsInstance(default_last_updated_time, int)
+
+        unix_last_updated_time = self._test_instance.last_update_time('unix')
+        self.assertIsInstance(unix_last_updated_time, int)
+
+        iso_last_updated_time = self._test_instance.last_update_time('iso')
+        self.assertIsInstance(iso_last_updated_time, str)
+
+        date_last_updated_time = self._test_instance.last_update_time('date')
+        self.assertIsInstance(date_last_updated_time, datetime.datetime)
+
+        updated_at_is_none = self._test_instance_none_values.last_update_time()
+        self.assertIsNone(updated_at_is_none)
