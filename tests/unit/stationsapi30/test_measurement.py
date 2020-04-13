@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import copy
 import json
 import unittest
 from datetime import datetime as dt
@@ -58,6 +59,10 @@ class TestAggregatedMeasurement(unittest.TestCase):
         self.assertEqual(self.date_ts, result)
         with self.assertRaises(ValueError):
             self._test_instance.creation_time(timeformat='unknown')
+
+        test_instance_none_timestamp = copy.deepcopy(self._test_instance)
+        test_instance_none_timestamp.timestamp = None
+        self.assertIsNone(test_instance_none_timestamp.creation_time())
 
     def test_from_dict(self):
         the_dict = {
@@ -139,6 +144,10 @@ class TestMeasurement(unittest.TestCase):
         self.assertEqual(self.date_ts, result)
         with self.assertRaises(ValueError):
             self._test_instance.creation_time(timeformat='unknown')
+
+        test_instance_none_timestamp = copy.deepcopy(self._test_instance)
+        test_instance_none_timestamp.timestamp = None
+        self.assertIsNone(test_instance_none_timestamp.creation_time())
 
     def test_from_dict(self):
         _the_dict = dict(station_id='mytest', timestamp=1378459200,
