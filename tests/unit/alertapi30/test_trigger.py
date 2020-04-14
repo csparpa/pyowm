@@ -219,6 +219,12 @@ class TestTrigger(unittest.TestCase):
         [{"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}],"time_period":{"end":{
         "amount":432000000,"expression":"exact"},"start":{"amount":132000000,"expression":"before"}}}'''))
 
+        # ValueError check
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
+            the_dict['time_period']['end']['expression'] = 'before'
+            Trigger.from_dict(the_dict)
+
+
     def test_to_dict(self):
         cond = Condition('humidity', 'LESS_THAN', 10)
         instance = Trigger(1526809375, 1527809375, [cond], [geo.Point(13.6, 46.9)], alerts=[], alert_channels=None, id='myid')

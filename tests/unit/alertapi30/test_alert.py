@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import copy
 import unittest
 
 import pyowm.commons.exceptions
@@ -57,6 +57,11 @@ class TestAlert(unittest.TestCase):
 
         with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Alert.from_dict(dict(nonexistent='key'))
+
+        value_error_dict = copy.deepcopy(the_dict)
+        value_error_dict['last_update'] = 'not_valid_timestamp'
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
+            Alert.from_dict(value_error_dict)
 
     def test_to_dict(self):
         condition = Condition('humidity', 'LESS_THAN', 10)
