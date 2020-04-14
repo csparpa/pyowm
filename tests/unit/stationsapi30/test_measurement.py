@@ -97,6 +97,11 @@ class TestAggregatedMeasurement(unittest.TestCase):
         with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             AggregatedMeasurement.from_dict(None)
 
+        with self.assertRaises(AssertionError):
+            none_timestamp = copy.deepcopy(the_dict)
+            none_timestamp['date'] = None
+            AggregatedMeasurement.from_dict(none_timestamp)
+
     def test_to_dict(self):
         expected_dict = {
             "station_id": "mytest",
