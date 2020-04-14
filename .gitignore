@@ -12,6 +12,7 @@ sphinx/_build/*
 .tox/*
 .coverage
 tests/integration/.tox/*
+tests/proxy/.tox/*
 .cache
 .eggs/
 htmlcov/*
