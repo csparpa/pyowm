@@ -26,6 +26,7 @@ Testing
 -------
   * [Samuel Yap] (https://github.com/samuelyap)
   * [Patrick Casbon] (https://github.com/patcas)
+  * [Tamas Magyar] (https://github.com/tamasmagyar)
 
 Packaging and Distribution
 --------------------------
