@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+import geojson
 import json
 import math
-import geojson
 
 
 EARTH_RADIUS_KM = 6378.1
@@ -54,7 +56,7 @@ class Geometry:
         """
         raise NotImplementedError()
 
-    def as_dict(self):
+    def to_dict(self):
         """
         Returns a dict representation of this geotype
         :return: dict
@@ -145,11 +147,11 @@ class Point(Geometry):
     def geojson(self):
         return geojson.dumps(self._geom)
 
-    def as_dict(self):
+    def to_dict(self):
         return json.loads(self.geojson())
 
     @classmethod
-    def from_dict(self, the_dict):
+    def from_dict(cls, the_dict):
         """
         Builds a Point instance out of a geoJSON compliant dict
         :param the_dict: the geoJSON dict
@@ -210,11 +212,11 @@ class MultiPoint(Geometry):
     def geojson(self):
         return geojson.dumps(self._geom)
 
-    def as_dict(self):
+    def to_dict(self):
         return json.loads(self.geojson())
 
     @classmethod
-    def from_dict(self, the_dict):
+    def from_dict(cls, the_dict):
         """
         Builds a MultiPoint instance out of a geoJSON compliant dict
         :param the_dict: the geoJSON dict
@@ -233,7 +235,7 @@ class Polygon(Geometry):
     As said, Polygons can be also made up by multiple lines (therefore, Polygons with "holes" are allowed)
     :param list_of_lists: list of lists, each sublist being a line and being composed by tuples - each one being the
     decimal (lon, lat) couple of a geopoint. The last point specified MUST coincide with the first one specified
-    :type list_of_tuples: list
+    :type list_of_lists: list
     :returns:  a *MultiPoint* instance
     :raises: *ValueError* when last point and fist point do not coincide or when no points are specified at all
 
@@ -253,7 +255,7 @@ class Polygon(Geometry):
     def geojson(self):
         return geojson.dumps(self._geom)
 
-    def as_dict(self):
+    def to_dict(self):
         return json.loads(self.geojson())
 
     @property
@@ -267,7 +269,7 @@ class Polygon(Geometry):
         return [Point(p[0], p[1]) for p in points_coords]
 
     @classmethod
-    def from_dict(self, the_dict):
+    def from_dict(cls, the_dict):
         """
         Builds a Polygon instance out of a geoJSON compliant dict
         :param the_dict: the geoJSON dict
@@ -319,11 +321,11 @@ class MultiPolygon(Geometry):
     def geojson(self):
         return geojson.dumps(self._geom)
 
-    def as_dict(self):
+    def to_dict(self):
         return json.loads(self.geojson())
 
     @classmethod
-    def from_dict(self, the_dict):
+    def from_dict(cls, the_dict):
         """
         Builds a MultiPolygoninstance out of a geoJSON compliant dict
         :param the_dict: the geoJSON dict
@@ -346,7 +348,7 @@ class MultiPolygon(Geometry):
         :returns:  a *MultiPolygon* instance
 
         """
-        return MultiPolygon([polygon.as_dict()['coordinates'] for polygon in iterable_of_polygons])
+        return MultiPolygon([polygon.to_dict()['coordinates'] for polygon in iterable_of_polygons])
 
 
 class GeometryBuilder:

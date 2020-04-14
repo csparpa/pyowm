@@ -218,17 +218,17 @@ The 3h forecasts are provided for a streak of 5 days since the request time and 
 You can query for 3h forecasts for a location using:
 
     # Query for 3 hours weather forecast for the next 5 days over London
-    >>> fc = owm.three_hours_forecast('London,uk')
+    >>> fc = owm.forecast_at_place('London,GB', '3h')
 
-You can query for daily forecasts using:
+Same way you can query for daily forecasts using:
 
-    # Query for daily weather forecast for the next 14 days over London
-    >>> fc = owm.daily_forecast('London,uk')
+    # Query for daily weather forecast for the next days over London
+    >>> fc = owm.forecast_at_place('London,uk', 'daily')
 
-and in this case you can limit the amount of days the weather forecast streak will contain by using the ``limit`` parameter:
+And you can limit the amount of days the weather forecast streak will contain by using the ``limit`` parameter:
 
     # Daily weather forecast just for the next 6 days over London
-    >>> fc = owm.daily_forecast('London,uk', limit=6)
+    >>> fc = owm.forecast_at_place('London,uk', 'daily', limit=6)
 
 Both of the above calls return a ``Forecaster`` object. ``Forecaster`` objects contain a ``Forecast`` object, which has all the information about your weather forecast. If you need to manipulate the latter, just go with:
 
@@ -324,7 +324,7 @@ Other useful convenicence methods in class ``Forecaster`` are:
     # Will it rain, be sunny, foggy or snow during the covered period?
     >>> fc.will_have_rain()
     True
-    >>> fc.will_have_sun()
+    >>> fc.will_have_clear()
     True
     >>> fc.will_have_fog()
     False
@@ -337,7 +337,7 @@ Other useful convenicence methods in class ``Forecaster`` are:
     time = "2013-09-19 12:00+00"
     >>> fc.will_be_rainy_at(time)
     False
-    >>> fc.will_be_sunny_at(time)
+    >>> fc.will_be_clear_at(time)
     True
     >>> fc.will_be_foggy_at(time)
     False
@@ -345,7 +345,7 @@ Other useful convenicence methods in class ``Forecaster`` are:
     False
     >>> fc.will_be_snowy_at(time)
     False
-    >>> fc.will_be_sunny_at(0L)           # Out of weather forecast coverage
+    >>> fc.will_be_clear_at(0L)           # Out of weather forecast coverage
     pyowm.exceptions.not_found_error.NotFoundError: The searched item was not found.
     Reason: Error: the specified time is not included in the weather coverage range
 
@@ -353,7 +353,7 @@ Other useful convenicence methods in class ``Forecaster`` are:
     # rain, sun, fog and snow
     >>> fc.when_rain()
     [<weather.Weather at 0x00DB22F7>,<weather.Weather at 0x00DB2317>]
-    >>> fc.when_sun()
+    >>> fc.when_clear()
     [<weather.Weather at 0x00DB62F7>]
     >> fc.when_clouds()
     [<weather.Weather at 0x00DE22F7>]

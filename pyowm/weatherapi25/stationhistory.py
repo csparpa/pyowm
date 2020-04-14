@@ -1,16 +1,12 @@
-"""
-Module containing classes and datastructures related to meteostation history
-data
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-import json
-import xml.etree.ElementTree as ET
-from pyowm.weatherapi25.xsd.xmlnsconfig import (
-    STATION_HISTORY_XMLNS_PREFIX, STATION_HISTORY_XMLNS_URL)
-from pyowm.utils import timeformatutils, xmlutils
+import time
+from pyowm.commons import exceptions
+from pyowm.utils import formatting
 
 
-class StationHistory(object):
+class StationHistory:
 
     """
     A class representing historic weather measurements collected by a
@@ -18,8 +14,8 @@ class StationHistory(object):
     the OWM Weather API: ticks (one data chunk per minute) data, hourly and daily
     data.
 
-    :param station_ID: the numeric ID of the meteostation
-    :type station_ID: int
+    :param station_id: the numeric ID of the meteostation
+    :type station_id: int
     :param interval: the time granularity of the meteostation data history
     :type interval: str
     :param reception_time: GMT UNIXtime of the data reception from the OWM web
@@ -32,68 +28,15 @@ class StationHistory(object):
         negative
     """
 
-    def __init__(self, station_ID, interval, reception_time, measurements):
-        self._station_ID = station_ID
-        self._interval = interval
+    def __init__(self, station_id, interval, reception_time, measurements):
+        self.station_id = station_id
+        self.interval = interval
         if reception_time < 0:
             raise ValueError("'reception_time' must be greater than 0")
-        self._reception_time = reception_time
-        self._measurements = measurements
+        self.rec_time = reception_time
+        self.measurements = measurements
 
-    def get_station_ID(self):
-        """
-        Returns the ID of the meteostation
-
-        :returns: the int station ID
-
-        """
-        return self._station_ID
-
-    def set_station_ID(self, station_ID):
-        """
-        Sets the numeric ID of the meteostation
-
-        :param station_ID: the numeric ID of the meteostation
-        :type station_ID: int
-
-        """
-        self._station_ID = station_ID
-
-    def get_interval(self):
-        """
-        Returns the interval of the meteostation history data
-
-        :returns: the int interval
-
-        """
-        return self._interval
-
-    def set_interval(self, interval):
-        """
-        Sets the interval of the meteostation history data
-
-        :param interval: the time granularity of the meteostation history data,
-            may be among "tick","hour" and "day"
-        :type interval: string
-
-        """
-        self._interval = interval
-
-    def get_measurements(self):
-        """
-        Returns the measurements of the meteostation as a dict. The dictionary
-        keys are UNIX timestamps and for each one the value is a dict
-        containing the keys 'temperature','humidity','pressure','rain','wind'
-        along with their corresponding numeric values.
-        Eg: ``{1362933983: { "temperature": 266.25, "humidity": 27.3,
-        "pressure": 1010.02, "rain": None, "wind": 4.7}, ... }``
-
-        :returns: the dict containing the meteostation's measurements
-
-        """
-        return self._measurements
-
-    def get_reception_time(self, timeformat='unix'):
+    def reception_time(self, timeformat='unix'):
         """Returns the GMT time telling when the meteostation history data was
            received from the OWM Weather API
 
@@ -106,72 +49,87 @@ class StationHistory(object):
         :raises: ValueError
 
         """
-        return timeformatutils.timeformat(self._reception_time, timeformat)
+        return formatting.timeformat(self.rec_time, timeformat)
 
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
+    @classmethod
+    def from_dict(cls, d):
+        """
+        Parses a *StationHistory* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
 
-        :returns: the JSON string
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *StationHistory* instance or ``None`` if no data is available
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
+            data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
 
         """
-        return json.dumps({"station_ID": self._station_ID,
-                            "interval": self._interval,
-                            "reception_time": self._reception_time,
-                            "measurements": self._measurements
-                           })
+        if d is None:
+            raise exceptions.ParseAPIResponseError('Data is None')
+        # Check if server returned errors: this check overcomes the lack of use
+        # of HTTP error status codes by the OWM API but it's supposed to be
+        # deprecated as soon as the API implements a correct HTTP mechanism for
+        # communicating errors to the clients. In addition, in this specific
+        # case the OWM API responses are the very same either when no results
+        # are found for a station and when the station does not exist!
+        measurements = {}
+        try:
+            if 'cod' in d:
+                if d['cod'] != "200":
+                    raise exceptions.APIResponseError(
+                                              "OWM API: error - response payload: " + str(d), d['cod'])
+            if str(d['cnt']) == "0":
+                return None
+            else:
+                for item in d['list']:
+                    if 'temp' not in item:
+                        temp = None
+                    elif isinstance(item['temp'], dict):
+                        temp = item['temp']['v']
+                    else:
+                        temp = item['temp']
+                    if 'humidity' not in item:
+                        hum = None
+                    elif isinstance(item['humidity'], dict):
+                        hum = item['humidity']['v']
+                    else:
+                        hum = item['humidity']
+                    if 'pressure' not in item:
+                        pres = None
+                    elif isinstance(item['pressure'], dict):
+                        pres = item['pressure']['v']
+                    else:
+                        pres = item['pressure']
+                    if 'rain' in item and isinstance(item['rain']['today'],
+                                                     dict):
+                        rain = item['rain']['today']['v']
+                    else:
+                        rain = None
+                    if 'wind' in item and isinstance(item['wind']['speed'],
+                                                     dict):
+                        wind = item['wind']['speed']['v']
+                    else:
+                        wind = None
+                    measurements[item['dt']] = {"temperature": temp,
+                                                "humidity": hum,
+                                                "pressure": pres,
+                                                "rain": rain,
+                                                "wind": wind}
+        except KeyError:
+            raise exceptions.ParseAPIResponseError(__name__ + ': impossible to read input data')
+        current_time = int(time.time())
+        return StationHistory(None, None, current_time, measurements)
 
-    def to_XML(self, xml_declaration=True, xmlns=True):
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
         """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
-
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
-
-        """
-        root_node = self._to_DOM()
-        if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         STATION_HISTORY_XMLNS_PREFIX,
-                                         STATION_HISTORY_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element("station_history")
-        station_id_node = ET.SubElement(root_node, "station_id")
-        station_id_node.text = str(self._station_ID)
-        interval_node = ET.SubElement(root_node, "interval")
-        interval_node.text = self._interval
-        reception_time_node = ET.SubElement(root_node, "reception_time")
-        reception_time_node.text = str(self._reception_time)
-        measurements_node = ET.SubElement(root_node, "measurements")
-        for m in self._measurements:
-            d = self._measurements[m].copy()
-            d['reference_time'] = m
-            xmlutils.create_DOM_node_from_dict(d, "measurement",
-                                               measurements_node)
-        return root_node
-
-    def __len__(self):
-        return len(self._measurements)
+        return {"station_ID": self.station_id,
+                "interval": self.interval,
+                "reception_time": self.rec_time,
+                "measurements": self.measurements}
 
     def __repr__(self):
-        return '<%s.%s - station ID=%s, reception time=%s, interval=%s, ' \
-               'measurements:%s>' % (__name__, self.__class__.__name__,
-                                     self._station_ID,
-                                     self.get_reception_time('iso'),
-                                     self._interval, str(len(self))
-                                     )
+        return "<%s.%s - station_id=%s, interval=%s>" % (__name__, self.__class__.__name__, self.station_id, self.interval)

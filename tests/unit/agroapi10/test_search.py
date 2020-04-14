@@ -1,10 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from datetime import datetime
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
 from pyowm.agroapi10.enums import PresetEnum
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestSatelliteImagerySearchResultSet(unittest.TestCase):
@@ -108,3 +111,6 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertEqual(1, len(result))
         result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, PresetEnum.FALSE_COLOR)
         self.assertEqual(1, len(result))
+
+    def test_repr(self):
+        print(self.test_instance)

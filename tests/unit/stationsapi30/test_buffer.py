@@ -1,10 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from copy import deepcopy
 from datetime import datetime as dt
 from pyowm.stationsapi30.measurement import Measurement
 from pyowm.stationsapi30.buffer import Buffer
-from pyowm.utils.timeformatutils import UTC, to_date, to_ISO8601
+from pyowm.utils.formatting import UTC, to_date, to_ISO8601
 
 
 class TestBuffer(unittest.TestCase):

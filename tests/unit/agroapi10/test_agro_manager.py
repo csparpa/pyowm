@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 import copy
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.constants import AGRO_API_VERSION
 from pyowm.commons.http_client import HttpClient
 from pyowm.commons.enums import ImageTypeEnum
@@ -150,15 +154,18 @@ class TestAgroManager(unittest.TestCase):
     polygon = Polygon('test-id', 'test-name', geopolygon, center=center, area=789.4, user_id='a-user')
 
     def factory(self, _kls):
-        sm = AgroManager('APIKey')
-        sm.http_client = _kls()
+        sm = AgroManager('APIKey', DEFAULT_CONFIG)
+        sm.http_client = _kls('APIKey', DEFAULT_CONFIG, 'fake-root.com')
         return sm
 
-    def test_instantiation_fails_without_api_key(self):
-        self.assertRaises(AssertionError, AgroManager, None)
+    def test_instantiation_with_wrong_params(self):
+        with self.assertRaises(AssertionError):
+            AgroManager(None, dict())
+        with self.assertRaises(AssertionError):
+            AgroManager('apikey', None)
 
     def test_get_agro_api_version(self):
-        instance = AgroManager('APIKey')
+        instance = AgroManager('APIKey', DEFAULT_CONFIG)
         result = instance.agro_api_version()
         self.assertIsInstance(result, tuple)
         self.assertEqual(result, AGRO_API_VERSION)
@@ -393,5 +400,4 @@ class TestAgroManager(unittest.TestCase):
         self.assertTrue(all([i.preset == PresetEnum.EVI for i in results]))
 
     def test_repr(self):
-        instance = AgroManager('APIKey')
-        repr(instance)
+        print(AgroManager('APIKey', DEFAULT_CONFIG))

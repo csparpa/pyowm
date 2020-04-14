@@ -1,4 +1,5 @@
 import unittest
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.commons.http_client import HttpClient
 from pyowm.tiles.tile_manager import TileManager
 from pyowm.commons.tile import Tile
@@ -15,15 +16,18 @@ class MockHttpClientReturningTile(HttpClient):
 
 class TestTileManager(unittest.TestCase):
 
-    def test_instantiation_fails_with_wrong_arguments(self):
-        self.assertRaises(AssertionError, TileManager, None, MapLayerEnum.PRESSURE)
-        self.assertRaises(AssertionError, TileManager, 'apikey', None)
-        self.assertRaises(AssertionError, TileManager, 'apikey', 1234)
+    def test_instantiation_with_wrong_params(self):
+        self.assertRaises(AssertionError, TileManager, None, MapLayerEnum.PRESSURE, dict())
+        self.assertRaises(AssertionError, TileManager, 'apikey', None, dict())
+        self.assertRaises(AssertionError, TileManager, 'apikey', MapLayerEnum.PRESSURE, None)
 
     def test_get_tile(self):
-        mocked = MockHttpClientReturningTile()
-        instance = TileManager('Api_key', 'a_layer')
+        mocked = MockHttpClientReturningTile('apikey', DEFAULT_CONFIG, 'anyurl.com')
+        instance = TileManager('apikey', 'a_layer', DEFAULT_CONFIG)
         instance.http_client = mocked
         result = instance.get_tile(1, 2, 3)
         self.assertIsInstance(result, Tile)
         self.assertEqual(mocked.d, result.image.data)
+
+    def test_repr(self):
+        print(TileManager('apikey', 'a_layer', DEFAULT_CONFIG))

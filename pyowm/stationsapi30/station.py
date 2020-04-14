@@ -1,9 +1,9 @@
-import json
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from datetime import datetime as dt
-import xml.etree.ElementTree as ET
-from pyowm.stationsapi30.xsd.xmlnsconfig import (
-    STATION_XMLNS_PREFIX, STATION_XMLNS_URL)
-from pyowm.utils import xmlutils, timeformatutils
+from pyowm.commons import exceptions
+from pyowm.utils import formatting
 
 
 class Station:
@@ -52,15 +52,15 @@ class Station:
             padded_created_at = self._format_micros(created_at)
             t = dt.strptime(padded_created_at,
                             '%Y-%m-%dT%H:%M:%S.%fZ').replace(
-                                tzinfo=timeformatutils.UTC())
-            self.created_at = timeformatutils.timeformat(t, 'unix')
+                                tzinfo=formatting.UTC())
+            self.created_at = formatting.timeformat(t, 'unix')
         self.updated_at = updated_at
         if self.updated_at is not None:
             padded_updated_at = self._format_micros(updated_at)
             t = dt.strptime(padded_updated_at,
                             '%Y-%m-%dT%H:%M:%S.%fZ').replace(
-                                tzinfo=timeformatutils.UTC())
-            self.updated_at = timeformatutils.timeformat(t, 'unix')
+                                tzinfo=formatting.UTC())
+            self.updated_at = formatting.timeformat(t, 'unix')
         self.external_id = external_id
         self.name = name
         self.lon = lon
@@ -75,7 +75,6 @@ class Station:
                 return datestring[:-1] + '.000000Z'
             else:
                 return datestring + '.000000Z'
-            return datestring
         else:
             if len(parts[-1]) > 6:
                 micros = parts[-1][:6]
@@ -98,7 +97,7 @@ class Station:
         """
         if self.created_at is None:
             return None
-        return timeformatutils.timeformat(self.created_at, timeformat)
+        return formatting.timeformat(self.created_at, timeformat)
 
     def last_update_time(self, timeformat='unix'):
         """Returns the UTC time of the last update on this station's metadata
@@ -114,77 +113,52 @@ class Station:
         """
         if self.updated_at is None:
             return None
-        return timeformatutils.timeformat(self.updated_at, timeformat)
+        return formatting.timeformat(self.updated_at, timeformat)
 
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *Station* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
 
-        :returns: the JSON string
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *Station* instance or ``None`` if no data is available
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
-        return json.dumps({'id': self.id,
-                           'external_id': self.external_id,
-                           'name': self.name,
-                           'created_at': timeformatutils.to_ISO8601(self.created_at),
-                           'updated_at': timeformatutils.to_ISO8601(self.updated_at),
-                           'lat': self.lat,
-                           'lon': self.lon,
-                           'alt': self.alt if self.alt is not None else 'None',
-                           'rank': self.rank})
+        if the_dict is None:
+            raise exceptions.ParseAPIResponseError('Data is None')
+        try:
+            id = the_dict.get('ID', None) or the_dict.get('id', None)
+            external_id = the_dict.get('external_id', None)
+            lon = the_dict.get('longitude', None)
+            lat = the_dict.get('latitude', None)
+            alt = the_dict.get('altitude', None)
+        except KeyError as e:
+            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
+        name = the_dict.get('name', None)
+        rank = the_dict.get('rank', None)
+        created_at = the_dict.get('created_at', None)
+        updated_at = the_dict.get('updated_at', None)
+        return Station(id, created_at, updated_at, external_id, name, lon, lat, alt, rank)
 
-    def to_XML(self, xml_declaration=True, xmlns=True):
-        """
-        Dumps object fields to an XML-formatted string. The 'xml_declaration'
-        switch  enables printing of a leading standard XML line containing XML
-        version and encoding. The 'xmlns' switch enables printing of qualified
-        XMLNS prefixes.
+    def to_dict(self):
+        """Dumps object to a dictionary
 
-        :param XML_declaration: if ``True`` (default) prints a leading XML
-            declaration line
-        :type XML_declaration: bool
-        :param xmlns: if ``True`` (default) prints full XMLNS prefixes
-        :type xmlns: bool
-        :returns: an XML-formatted string
+        :returns: a `dict`
 
         """
-        root_node = self._to_DOM()
-        if xmlns:
-            xmlutils.annotate_with_XMLNS(root_node,
-                                         STATION_XMLNS_PREFIX,
-                                         STATION_XMLNS_URL)
-        return xmlutils.DOM_node_to_XML(root_node, xml_declaration)
-
-    def _to_DOM(self):
-        """
-        Dumps object data to a fully traversable DOM representation of the
-        object.
-
-        :returns: a ``xml.etree.Element`` object
-
-        """
-        root_node = ET.Element('station')
-        created_at_node = ET.SubElement(root_node, "created_at")
-        created_at_node.text = \
-            timeformatutils.to_ISO8601(self.created_at)if self.created_at is not None else 'null'
-        updated_at_node = ET.SubElement(root_node, "updated_at")
-        updated_at_node.text = \
-            timeformatutils.to_ISO8601(self.updated_at)if self.updated_at is not None else 'null'
-        station_id_node = ET.SubElement(root_node, 'id')
-        station_id_node.text = str(self.id)
-        station_id_node = ET.SubElement(root_node, 'external_id')
-        station_id_node.text = str(self.external_id)
-        station_name_node = ET.SubElement(root_node, 'name')
-        station_name_node.text = str(self.name) if self.name is not None else 'null'
-        lat_node = ET.SubElement(root_node, 'lat')
-        lat_node.text = str(self.lat)
-        lon_node = ET.SubElement(root_node, 'lon')
-        lon_node.text = str(self.lon)
-        alt_node = ET.SubElement(root_node, 'alt')
-        alt_node.text = str(self.alt) if self.alt is not None else 'null'
-        rank_node = ET.SubElement(root_node, 'rank')
-        rank_node.text = str(self.rank) if self.rank is not None else 'null'
-
-        return root_node
+        return {
+            'id': self.id,
+            'external_id': self.external_id,
+            'name': self.name,
+            'created_at': formatting.to_ISO8601(self.created_at),
+            'updated_at': formatting.to_ISO8601(self.updated_at),
+            'latitude': self.lat,
+            'longitude': self.lon,
+            'altitude': self.alt if self.alt is not None else 'None',
+            'rank': self.rank}
 
     def __repr__(self):
         return '<%s.%s - id=%s, external_id=%s, name=%s>' \

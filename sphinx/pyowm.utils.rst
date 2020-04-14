@@ -4,6 +4,23 @@ pyowm.utils package
 Submodules
 ----------
 
+pyowm.utils.config module
+-------------------------
+
+.. automodule:: pyowm.utils.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.utils.decorators module
+-----------------------------
+
+.. automodule:: pyowm.utils.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 pyowm.utils.geo module
 ----------------------
 
@@ -13,44 +30,35 @@ pyowm.utils.geo module
     :show-inheritance:
 
 
-pyowm.utils.temputils module
-----------------------------
+pyowm.utils.measurables module
+------------------------------
 
-.. automodule:: pyowm.utils.temputils
+.. automodule:: pyowm.utils.measurables
     :members:
     :undoc-members:
     :show-inheritance:
 
-pyowm.utils.timeformatutils module
-----------------------------------
+pyowm.utils.formatting module
+-----------------------------
 
-.. automodule:: pyowm.utils.timeformatutils
+.. automodule:: pyowm.utils.formatting
     :members:
     :undoc-members:
     :show-inheritance:
 
-pyowm.utils.timeutils module
-----------------------------
+pyowm.utils.timestamps module
+-----------------------------
 
-.. automodule:: pyowm.utils.timeutils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-pyowm.utils.weatherutils module
--------------------------------
-
-.. automodule:: pyowm.utils.weatherutils
+.. automodule:: pyowm.utils.timestamps
     :members:
     :undoc-members:
     :show-inheritance:
 
 
-pyowm.utils.xmlutils module
----------------------------
+pyowm.utils.weather module
+--------------------------
 
-.. automodule:: pyowm.utils.xmlutils
+.. automodule:: pyowm.utils.weather
     :members:
     :undoc-members:
     :show-inheritance:

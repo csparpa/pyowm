@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+class {{ entity_name }}:
+    """
+    A class representing metadata for a satellite-acquired image
+
+    :param ex: example
+    :type ex: str
+    :returns: something
+    """
+
+    def __init__(self, ex=None):
+        raise NotImplementedError()
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        raise NotImplementedError()
+
+    def to_dict(self):
+        raise NotImplementedError()
+    {% if is_iterable %}
+    def __len__(self):
+        raise NotImplementedError()
+
+    def __contains__(self, item):
+        raise NotImplementedError()
+
+    def __iter__(self):
+        raise NotImplementedError()
+    {% endif %}
+    def __repr__(self):
+        return '<{}.{}>'.format(__name__, self.__class__.__name__)

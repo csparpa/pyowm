@@ -1,0 +1,15 @@
+{
+    "api_key": "b1b15e88fa797225412429c1c50c122a",
+    "subscription_type": "free",
+    "language": "en",
+    "connection": {
+        "use_ssl": true,
+        "verify_ssl_certs": false,
+        "use_proxy": true,
+        "timeout_secs": 5
+    },
+    "proxies": {
+        "http": "socks5://127.0.0.1:8899",
+        "https": "socks5://127.0.0.1:8899"
+    }
+}

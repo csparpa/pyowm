@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import requests, sys, os, codecs, json, gzip, collections, csv
+import requests, sys, os, codecs, json, gzip, bz2, collections, csv
 
 
 city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
@@ -141,26 +141,26 @@ def write_subsets_to_files(ssets, outdir):
     print('... done')
 
 
-def gzip_csv_compress(plaintext_csv, target_gzip):
-    print('G-zipping: %s -> %s ...' % (plaintext_csv, target_gzip))
+def bz2_csv_compress(plaintext_csv, target_bz2):
+    print('Compressing Bz2: %s -> %s ...' % (plaintext_csv, target_bz2))
     with open(plaintext_csv, 'r') as source:
         source_rows = csv.reader(source)
-        with gzip.open(target_gzip, "wt") as file:
+        with bz2.open(target_bz2, "wt") as file:
             writer = csv.writer(file)
             for row in source_rows:
                 writer.writerow(row)
     print( '... done')
 
 
-def gzip_all(outdir):
-    gzip_csv_compress('%s%s097-102.txt' % (outdir, os.sep),
-                      '%s%s097-102.txt.gz' % (outdir, os.sep))
-    gzip_csv_compress('%s%s103-108.txt' % (outdir, os.sep),
-                      '%s%s103-108.txt.gz' % (outdir, os.sep))
-    gzip_csv_compress('%s%s109-114.txt' % (outdir, os.sep),
-                      '%s%s109-114.txt.gz' % (outdir, os.sep))
-    gzip_csv_compress('%s%s115-122.txt' % (outdir, os.sep),
-                      '%s%s115-122.txt.gz' % (outdir, os.sep))
+def bz2_all(outdir):
+    bz2_csv_compress('%s%s097-102.txt' % (outdir, os.sep),
+                      '%s%s097-102.txt.bz2' % (outdir, os.sep))
+    bz2_csv_compress('%s%s103-108.txt' % (outdir, os.sep),
+                      '%s%s103-108.txt.bz2' % (outdir, os.sep))
+    bz2_csv_compress('%s%s109-114.txt' % (outdir, os.sep),
+                      '%s%s109-114.txt.bz2' % (outdir, os.sep))
+    bz2_csv_compress('%s%s115-122.txt' % (outdir, os.sep),
+                      '%s%s115-122.txt.bz2' % (outdir, os.sep))
 
 
 if __name__ == '__main__':
@@ -172,6 +172,6 @@ if __name__ == '__main__':
     ordered_cities = order_dict_by_city_id(cities)
     ssets = split_keyset(ordered_cities)
     write_subsets_to_files(ssets, target_folder)
-    gzip_all(target_folder)
+    bz2_all(target_folder)
     print('Job finished')
 

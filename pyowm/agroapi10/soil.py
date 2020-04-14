@@ -1,4 +1,7 @@
-from pyowm.utils import timeformatutils, temputils
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from pyowm.utils import formatting, measurables
 
 
 class Soil:
@@ -50,7 +53,7 @@ class Soil:
         :returns: an int or a str
 
         """
-        return timeformatutils.timeformat(self._reference_time, timeformat)
+        return formatting.timeformat(self._reference_time, timeformat)
 
     def surface_temp(self, unit='kelvin'):
         """Returns the soil surface temperature
@@ -65,9 +68,9 @@ class Soil:
         if unit == 'kelvin':
             return self._surface_temp
         if unit == 'celsius':
-            return temputils.kelvin_to_celsius(self._surface_temp)
+            return measurables.kelvin_to_celsius(self._surface_temp)
         if unit == 'fahrenheit':
-            return temputils.kelvin_to_fahrenheit(self._surface_temp)
+            return measurables.kelvin_to_fahrenheit(self._surface_temp)
         else:
             raise ValueError('Wrong temperature unit')
 
@@ -84,9 +87,9 @@ class Soil:
         if unit == 'kelvin':
             return self._ten_cm_temp
         if unit == 'celsius':
-            return temputils.kelvin_to_celsius(self._ten_cm_temp)
+            return measurables.kelvin_to_celsius(self._ten_cm_temp)
         if unit == 'fahrenheit':
-            return temputils.kelvin_to_fahrenheit(self._ten_cm_temp)
+            return measurables.kelvin_to_fahrenheit(self._ten_cm_temp)
         else:
             raise ValueError('Wrong temperature unit')
 
@@ -99,6 +102,13 @@ class Soil:
         moisture = the_dict['moisture']
         polygon_id = the_dict.get('polygon_id', None)
         return Soil(reference_time, surface_temp, ten_cm_temp, moisture, polygon_id)
+
+    def to_dict(self):
+        return {'reference_time': self._reference_time,
+                'surface_temp': self._surface_temp,
+                'ten_cm_temp': self._ten_cm_temp,
+                'moisture': self.moisture,
+                'polygon_id': self.polygon_id}
 
     def __repr__(self):
         return "<%s.%s - polygon_id=%s,reference time=%s,>" % (__name__, self.__class__.__name__,

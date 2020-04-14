@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from pyowm.utils import geo
@@ -32,13 +35,13 @@ class TestGeo(unittest.TestCase):
         self.assertEqual(sorted(json.dumps(expected)),
                          sorted(point.geojson()))
 
-    def test_point_as_dict(self):
+    def test_point_to_dict(self):
         expected = {
             "coordinates": [34, -56.3],
             "type": "Point"
         }
         point = geo.Point(34, -56.3)
-        self.assertEqual(expected, point.as_dict())
+        self.assertEqual(expected, point.to_dict())
 
     def test_point_properties(self):
         lon = -56.3
@@ -103,11 +106,11 @@ class TestGeo(unittest.TestCase):
         self.assertEqual(sorted(json.dumps(expected)),
                          sorted(mp.geojson()))
 
-    def test_multipoint_as_dict(self):
+    def test_multipoint_to_dict(self):
         expected = {"coordinates": [[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]],
                     "type": "MultiPoint"}
         mp = geo.MultiPoint([[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]])
-        self.assertEqual(expected, mp.as_dict())
+        self.assertEqual(expected, mp.to_dict())
 
     def test_multipoint_properties(self):
         expected_longitudes = [-155.5, -156.2, -157.9]
@@ -124,7 +127,7 @@ class TestGeo(unittest.TestCase):
             geo.Point(36, 12)]
         result = geo.MultiPoint.from_points(list_of_points)
         self.assertIsInstance(result, geo.MultiPoint)
-        self.assertEqual(expected.as_dict(), result.as_dict())
+        self.assertEqual(expected.to_dict(), result.to_dict())
 
     def test_multipoint_from_dict(self):
         the_dict = {"coordinates": [[-155.5, 19.6], [-156.2, 20.7], [-157.9, 21.4]],
@@ -160,11 +163,11 @@ class TestGeo(unittest.TestCase):
         self.assertEqual(sorted(json.dumps(expected)),
                          sorted(polygon.geojson()))
 
-    def test_polygon_as_dict(self):
+    def test_polygon_to_dict(self):
         expected = {"coordinates": [[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]],
                     "type": "Polygon"}
         p = geo.Polygon([[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]])
-        self.assertEqual(expected, p.as_dict())
+        self.assertEqual(expected, p.to_dict())
 
     def test_polygon_points(self):
         p = geo.Polygon([[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]])
@@ -183,7 +186,7 @@ class TestGeo(unittest.TestCase):
         ]
         result = geo.Polygon.from_points(list_of_lists)
         self.assertIsInstance(result, geo.Polygon)
-        self.assertEqual(expected.as_dict(), result.as_dict())
+        self.assertEqual(expected.to_dict(), result.to_dict())
 
     def test_polygon_from_dict(self):
         the_dict = {"coordinates": [
@@ -215,7 +218,7 @@ class TestGeo(unittest.TestCase):
         self.assertEqual(sorted(json.dumps(expected)),
                          sorted(mp.geojson()))
 
-    def test_multipolygon_as_dict(self):
+    def test_multipolygon_to_dict(self):
         expected = {"coordinates": [
             [[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]],
             [[[6.3, 77.32], [13.19, -30.2], [-110.4, 17.15], [6.3, 77.32]]]
@@ -224,7 +227,7 @@ class TestGeo(unittest.TestCase):
             [[[2.3, 57.32], [23.19, -20.2], [-120.4, 19.15], [2.3, 57.32]]],
             [[[6.3, 77.32], [13.19, -30.2], [-110.4, 17.15], [6.3, 77.32]]]
         ])
-        self.assertEqual(expected, mp.as_dict())
+        self.assertEqual(expected, mp.to_dict())
 
     def test_multipolygon_from_dict(self):
         the_dict = {"coordinates": [
@@ -245,7 +248,7 @@ class TestGeo(unittest.TestCase):
         ]
         result = geo.MultiPolygon.from_polygons(iterable_of_polygons)
         self.assertIsInstance(result, geo.MultiPolygon)
-        self.assertEqual(expected.as_dict(), result.as_dict())
+        self.assertEqual(expected.to_dict(), result.to_dict())
 
 
 class TestGeometryBuilder(unittest.TestCase):

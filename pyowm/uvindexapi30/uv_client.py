@@ -1,9 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.uvindexapi30.uris import UV_INDEX_URL, UV_INDEX_FORECAST_URL, \
     UV_INDEX_HISTORY_URL
-from pyowm.commons import http_client
 
 
-class UltraVioletHttpClient(object):
+class UltraVioletHttpClient:
 
     """
     An HTTP client class for the OWM UV web API, which is a subset of the
@@ -42,7 +44,7 @@ class UltraVioletHttpClient(object):
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -50,8 +52,7 @@ class UltraVioletHttpClient(object):
         params = dict(lat=lat, lon=lon)
 
         # build request URL
-        uri = http_client.HttpClient.to_url(UV_INDEX_URL, self._API_key, None)
-        _, json_data = self._client.cacheable_get_json(uri, params=params)
+        _, json_data = self._client.get_json(UV_INDEX_URL, params=params)
         return json_data
 
     def get_uvi_forecast(self, params_dict):
@@ -60,7 +61,7 @@ class UltraVioletHttpClient(object):
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -68,10 +69,7 @@ class UltraVioletHttpClient(object):
         params = dict(lat=lat, lon=lon)
 
         # build request URL
-        uri = http_client.HttpClient.to_url(UV_INDEX_FORECAST_URL,
-                                            self._API_key,
-                                            None)
-        _, json_data = self._client.cacheable_get_json(uri, params=params)
+        _, json_data = self._client.get_json(UV_INDEX_FORECAST_URL, params=params)
         return json_data
 
     def get_uvi_history(self, params_dict):
@@ -80,7 +78,7 @@ class UltraVioletHttpClient(object):
 
         :param params_dict: dict of parameters
         :returns: a string containing raw JSON data
-        :raises: *ValueError*, *APICallError*
+        :raises: *ValueError*, *APIRequestError*
 
         """
         lat = str(params_dict['lat'])
@@ -90,10 +88,7 @@ class UltraVioletHttpClient(object):
         params = dict(lat=lat, lon=lon, start=start, end=end)
 
         # build request URL
-        uri = http_client.HttpClient.to_url(UV_INDEX_HISTORY_URL,
-                                            self._API_key,
-                                            None)
-        _, json_data = self._client.cacheable_get_json(uri, params=params)
+        _, json_data = self._client.get_json(UV_INDEX_HISTORY_URL, params=params)
         return json_data
 
     def __repr__(self):

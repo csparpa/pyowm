@@ -1,23 +1,19 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Test cases for uv_client.py
-"""
 
 import unittest
 from pyowm.uvindexapi30.uv_client import UltraVioletHttpClient
 from pyowm.commons.http_client import HttpClient
-from pyowm.caches.nullcache import NullCache
-from pyowm.utils import timeformatutils
+from pyowm.config import DEFAULT_CONFIG
+from pyowm.utils import formatting
 
 
-class TestOWMHttpUVClient(unittest.TestCase):
+class TestUVClient(unittest.TestCase):
 
-    __test_cache = NullCache()
-    __instance = UltraVioletHttpClient('xyz', HttpClient(cache=__test_cache))
+    __instance = UltraVioletHttpClient('xyz', HttpClient('apikey', DEFAULT_CONFIG, 'anyurl.com'))
 
     def test_trim_to(self):
-        ts = timeformatutils.to_date(1463041620)  # 2016-05-12T08:27:00Z
+        ts = formatting.to_date(1463041620)  # 2016-05-12T08:27:00Z
         self.assertEqual(self.__instance._trim_to(ts, 'minute'),
                           '2016-05-12T08:27Z')
         self.assertEqual(self.__instance._trim_to(ts, 'hour'),
@@ -39,10 +35,10 @@ class TestOWMHttpUVClient(unittest.TestCase):
         def mock_func(uri, params=None, headers=None):
             return 200, (uri, params)
 
-        self.__instance._client.cacheable_get_json = mock_func
+        self.__instance._client.get_json = mock_func
 
         result = self.__instance.get_uvi(params)
-        self.assertEqual('http://api.openweathermap.org/data/2.5/uvi?APPID=xyz',
+        self.assertEqual('uvi',
                          result[0])
         self.assertEqual(expected, result[1])
 
@@ -53,10 +49,10 @@ class TestOWMHttpUVClient(unittest.TestCase):
         def mock_func(uri, params=None, headers=None):
             return 200, (uri, params)
 
-        self.__instance._client.cacheable_get_json = mock_func
+        self.__instance._client.get_json = mock_func
 
         result = self.__instance.get_uvi_forecast(params)
-        self.assertEqual('http://api.openweathermap.org/data/2.5/uvi/forecast?APPID=xyz',
+        self.assertEqual('uvi/forecast',
                          result[0])
         self.assertEqual(expected, result[1])
 
@@ -68,9 +64,12 @@ class TestOWMHttpUVClient(unittest.TestCase):
         def mock_func(uri, params=None, headers=None):
             return 200, (uri, params)
 
-        self.__instance._client.cacheable_get_json = mock_func
+        self.__instance._client.get_json = mock_func
 
         result = self.__instance.get_uvi_history(params)
-        self.assertEqual('http://api.openweathermap.org/data/2.5/uvi/history?APPID=xyz',
+        self.assertEqual('uvi/history',
                          result[0])
         self.assertEqual(expected, result[1])
+
+    def test_repr(self):
+        print(self.__instance)

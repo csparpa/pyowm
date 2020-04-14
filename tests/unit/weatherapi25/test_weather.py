@@ -1,11 +1,14 @@
-"""
-Test case for weather.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+import json
 import unittest
-from pyowm.weatherapi25.weather import Weather, weather_from_dictionary
-from pyowm.utils.timeformatutils import UTC
-from tests.unit.weatherapi25.json_test_dumps import WEATHER_JSON_DUMP
+from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
+from pyowm.utils.formatting import UTC
+from pyowm.weatherapi25.uris import ICONS_BASE_URI
+from pyowm.weatherapi25.weather import Weather
+from tests.unit.weatherapi25.json_test_responses import (CITY_WEATHER_HISTORY_JSON, CITY_WEATHER_HISTORY_NO_RESULTS_JSON,
+                                                         CITY_WEATHER_HISTORY_NOT_FOUND_JSON, INTERNAL_SERVER_ERROR_JSON)
 from datetime import datetime
 
 
@@ -17,24 +20,30 @@ class TestWeather(unittest.TestCase):
                                    '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_sunset_time = 1378496400
     __test_iso_sunset_time = "2013-09-06 19:40:00+00"
+    __test_date_sunset_time = datetime.strptime(__test_iso_sunset_time,
+                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_sunrise_time = 1378449600
     __test_iso_sunrise_time = "2013-09-06 06:40:00+00"
+    __test_date_sunrise_time = datetime.strptime(__test_iso_sunrise_time,
+                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_clouds = 67
     __test_rain = {"all": 20}
     __test_snow = {"all": 0}
     __test_wind = {"deg": 252.002, "speed": 1.100, "gust": 2.09}
     __test_imperial_wind = {"deg": 252.002, "speed": 2.460634, "gust": 4.6752046}
+    __test_knots_wind = {'deg': 252.002, 'speed': 2.138224, 'gust': 4.0626256}
+    __test_beaufort_wind = {"deg": 252.002, "speed": 1, "gust": 2}
     __test_humidity = 57
-    __test_pressure = {"press": 1030.119, "sea_level": 1038.589}
+    __test_pressure = {"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
-                          "temp_max": 296.098, "temp_min": 294.199
-                          }
+                          "temp_max": 296.098, "temp_min": 294.199,
+                          "feels_like": 298.0}
     __test_celsius_temperature = {"temp": 21.049, "temp_kf": -1.899,
-                                  "temp_max": 22.948, "temp_min": 21.049
-                                  }
+                                  "temp_max": 22.948, "temp_min": 21.049,
+                                  "feels_like": 24.85}
     __test_fahrenheit_temperature = {"temp": 69.888, "temp_kf": -1.899,
-                                     "temp_max": 73.306, "temp_min": 69.888
-                                     }
+                                     "temp_max": 73.306, "temp_min": 69.888,
+                                     "feels_like": 76.73}
     __test_status = "Clouds"
     __test_detailed_status = "Overcast clouds"
     __test_weather_code = 804
@@ -53,7 +62,23 @@ class TestWeather(unittest.TestCase):
                               __test_visibility_distance, __test_dewpoint,
                               __test_humidex, __test_heat_index)
 
-    def test_init_fails_when_negative_data_provided(self):
+    __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
+    __bad_json_2 = '{"list": [{"test":"fake"}] }'
+    __no_items_json = '{"cnt": "0"}'
+
+    WEATHER_JSON_DUMP = '{"status": "Clouds", "visibility_distance": 1000, ' \
+                        '"clouds": 67, "temperature": {"temp_kf": -1.899, ' \
+                        '"temp_min": 294.199, "temp": 294.199, "temp_max": 296.098, "feels_like": 298.0},' \
+                        ' "dewpoint": 300.0, "humidex": 298.0, "detailed_status": ' \
+                        '"Overcast clouds", "reference_time": 1378459200, ' \
+                        '"weather_code": 804, "sunset_time": 1378496400, "rain": ' \
+                        '{"all": 20}, "snow": {"all": 0}, "pressure": ' \
+                        '{"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}, ' \
+                        '"sunrise_time": 1378449600, "heat_index": 40.0, ' \
+                        '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
+                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null}'
+
+    def test_init_fails_when_wrong_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
               self.__test_sunset_time, self.__test_sunrise_time, self.__test_clouds,
               self.__test_rain, self.__test_snow, self.__test_wind,
@@ -121,7 +146,7 @@ class TestWeather(unittest.TestCase):
                            self.__test_dewpoint,
                            self.__test_humidex, self.__test_heat_index)
 
-        self.assertIsNone(instance.get_wind())
+        self.assertIsNone(instance.wind())
 
     def test_init_stores_negative_sunset_time_as_none(self):
         instance = Weather(self.__test_reference_time,
@@ -135,7 +160,7 @@ class TestWeather(unittest.TestCase):
                           self.__test_weather_icon_name,
                           self.__test_visibility_distance, self.__test_dewpoint,
                           self.__test_humidex, self.__test_heat_index)
-        self.assertIsNone(instance.get_sunset_time())
+        self.assertIsNone(instance.sunset_time())
 
     def test_init_stores_negative_sunrise_time_as_none(self):
         instance = Weather(self.__test_reference_time,
@@ -147,9 +172,21 @@ class TestWeather(unittest.TestCase):
                           self.__test_weather_code, self.__test_weather_icon_name,
                           self.__test_visibility_distance, self.__test_dewpoint,
                           self.__test_humidex, self.__test_heat_index)
-        self.assertIsNone(instance.get_sunrise_time())
+        self.assertIsNone(instance.sunrise_time())
 
-    def test_from_dictionary(self):
+    def test_init_fails_with_non_integer_utc_offset(self):
+        self.assertRaises(AssertionError, Weather, self.__test_reference_time,
+              self.__test_sunset_time, self.__test_sunrise_time,
+              self.__test_clouds, self.__test_rain, self.__test_snow,
+              self.__test_wind, self.__test_humidity,
+              self.__test_pressure, self.__test_temperature,
+              self.__test_status, self.__test_detailed_status,
+              self.__test_weather_code, self.__test_weather_icon_name,
+              self.__test_visibility_distance, self.__test_dewpoint,
+              self.__test_humidex, self.__test_heat_index,
+              'non_string_utc_offset')
+
+    def test_from_dict(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
                  'coord': {'lat': 51.50853, 'lon': -0.12574},
                  'sys': {'country': 'GB', 'sunset': 1378923812,
@@ -217,16 +254,14 @@ class TestWeather(unittest.TestCase):
                 },
                 "params":["temp","pressure","wind","visibility"]
         }
-        result1 = weather_from_dictionary(dict1)
+        result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
-        self.assertTrue(all(v is not None for v in result1.__dict__.values()))
-        result2 = weather_from_dictionary(dict2)
+        result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
-        self.assertFalse(all(v is not None for v in result2.__dict__.values()))
-        result3 = weather_from_dictionary(dict3)
+        result3 = Weather.from_dict(dict3)
         self.assertTrue(isinstance(result3, Weather))
 
-    def test_from_dictionary_when_data_fields_are_none(self):
+    def test_from_dict_when_data_fields_are_none(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
                  'coord': {'lat': 51.50853, 'lon': -0.12574},
                  'sys': {'country': 'GB', 'sunset': 1378923812,
@@ -255,11 +290,11 @@ class TestWeather(unittest.TestCase):
                  'rain': None,
                  'snow': None
         }
-        result1 = weather_from_dictionary(dict1)
+        result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
-        self.assertEquals(0, len(result1.get_wind()))
-        self.assertEquals(0, len(result1.get_rain()))
-        self.assertEquals(0, len(result1.get_snow()))
+        self.assertEqual(0, len(result1.wind()))
+        self.assertEqual(0, len(result1.rain))
+        self.assertEqual(0, len(result1.snow))
 
         dict2 = {"station":{
                     "name":"KPPQ",
@@ -288,84 +323,83 @@ class TestWeather(unittest.TestCase):
                 },
                 "params":["temp","pressure","wind","visibility"]
         }
-        result2 = weather_from_dictionary(dict2)
+        result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
-        self.assertEquals(0, len(result2.get_wind()))
+        self.assertEqual(0, len(result2.wind()))
 
-    def test_getters_return_expected_data(self):
-        self.assertEqual(self.__test_instance.get_reference_time(),
-                         self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_sunset_time(),
-                         self.__test_sunset_time)
-        self.assertEqual(self.__test_instance.get_sunrise_time(),
-                         self.__test_sunrise_time)
-        self.assertEqual(self.__test_instance.get_clouds(),
-                         self.__test_clouds)
-        self.assertEqual(self.__test_instance.get_rain(),
-                         self.__test_rain)
-        self.assertEqual(self.__test_instance.get_snow(),
-                         self.__test_snow)
-        self.assertEqual(self.__test_instance.get_wind(),
-                         self.__test_wind)
-        self.assertEqual(self.__test_instance.get_humidity(),
-                         self.__test_humidity)
-        self.assertEqual(self.__test_instance.get_pressure(),
-                         self.__test_pressure)
-        self.assertEqual(self.__test_instance.get_temperature(),
-                         self.__test_temperature)
-        self.assertEqual(self.__test_instance.get_status(),
-                         self.__test_status)
-        self.assertEqual(self.__test_instance.get_detailed_status(),
-                         self.__test_detailed_status)
-        self.assertEqual(self.__test_instance.get_weather_code(),
-                         self.__test_weather_code)
-        self.assertEqual(self.__test_instance.get_weather_icon_name(),
-                         self.__test_weather_icon_name)
-        self.assertEqual(self.__test_instance.get_visibility_distance(),
-                         self.__test_visibility_distance)
-        self.assertEqual(self.__test_instance.get_dewpoint(),
-                         self.__test_dewpoint)
-        self.assertEqual(self.__test_instance.get_humidex(),
-                         self.__test_humidex)
-        self.assertEqual(self.__test_instance.get_heat_index(),
-                         self.__test_heat_index)
+    def test_to_dict(self):
+        expected = json.loads(self.WEATHER_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)
 
-    def test_get_reference_time_returning_different_formats(self):
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='iso'),
+    def test_from_dict_of_lists(self):
+        result = Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_JSON))
+        self.assertTrue(result)
+        self.assertTrue(isinstance(result, list))
+        for weather in result:
+            self.assertTrue(weather is not None)
+
+    def test_from_dict_of_lists_fails_when_JSON_data_is_None(self):
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict_of_lists, None)
+
+    def test_from_dict_of_lists_with_malformed_JSON_data(self):
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json))
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict_of_lists, json.loads(self.__bad_json_2))
+
+    def test_from_dict_of_lists_when_no_results(self):
+        result = Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_NO_RESULTS_JSON))
+        self.assertTrue(isinstance(result, list))
+        self.assertEqual(0, len(result))
+        result = Weather.from_dict_of_lists(json.loads(self.__no_items_json))
+        self.assertTrue(isinstance(result, list))
+        self.assertEqual(0, len(result))
+
+    def test_parse_JSON_when_location_not_found(self):
+        self.assertFalse(Weather.from_dict_of_lists(json.loads(CITY_WEATHER_HISTORY_NOT_FOUND_JSON)))
+
+    def test_parse_JSON_when_server_error(self):
+        self.assertRaises(APIResponseError, Weather.from_dict_of_lists, json.loads(INTERNAL_SERVER_ERROR_JSON))
+
+    def test_reference_time_returning_different_formats(self):
+        self.assertEqual(self.__test_instance.reference_time(timeformat='iso'),
                          self.__test_iso_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='unix'),
+        self.assertEqual(self.__test_instance.reference_time(timeformat='unix'),
                          self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='date'),
+        self.assertEqual(self.__test_instance.reference_time(timeformat='date'),
                          self.__test_date_reference_time)
 
-    def test_get_sunset_time_returning_different_formats(self):
-        self.assertEqual(self.__test_instance.get_sunset_time(timeformat='iso'),
+    def test_sunset_time_returning_different_formats(self):
+        self.assertEqual(self.__test_instance.sunset_time(timeformat='iso'),
                          self.__test_iso_sunset_time)
-        self.assertEqual(self.__test_instance.get_sunset_time(timeformat='unix'),
+        self.assertEqual(self.__test_instance.sunset_time(timeformat='unix'),
                          self.__test_sunset_time)
+        self.assertEqual(self.__test_instance.sunset_time(timeformat='date'),
+                         self.__test_date_sunset_time)
 
-    def test_get_sunrise_time_returning_different_formats(self):
-        self.assertEqual(self.__test_instance.get_sunrise_time(timeformat='iso'),
+    def test_sunrise_time_returning_different_formats(self):
+        self.assertEqual(self.__test_instance.sunrise_time(timeformat='iso'),
                          self.__test_iso_sunrise_time)
-        self.assertEqual(self.__test_instance.get_sunrise_time(timeformat='unix'),
+        self.assertEqual(self.__test_instance.sunrise_time(timeformat='unix'),
                          self.__test_sunrise_time)
+        self.assertEqual(self.__test_instance.sunrise_time(timeformat='date'),
+                         self.__test_date_sunrise_time)
 
     def test_get_reference_time_fails_with_unknown_timeformat(self):
-        self.assertRaises(ValueError, Weather.get_reference_time,
+        self.assertRaises(ValueError, Weather.reference_time,
                           self.__test_instance, 'xyz')
 
-    def test_get_sunset_time_fails_with_unknown_timeformat(self):
-        self.assertRaises(ValueError, Weather.get_sunset_time,
+    def test_sunset_time_fails_with_unknown_timeformat(self):
+        self.assertRaises(ValueError, Weather.sunset_time,
                           self.__test_instance, 'xyz')
 
-    def test_get_sunrise_time_fails_with_unknown_timeformat(self):
-        self.assertRaises(ValueError, Weather.get_sunrise_time,
+    def test_sunrise_time_fails_with_unknown_timeformat(self):
+        self.assertRaises(ValueError, Weather.sunrise_time,
                           self.__test_instance, 'xyz')
 
     def test_returning_different_units_for_temperatures(self):
-        result_kelvin = self.__test_instance.get_temperature(unit='kelvin')
-        result_celsius = self.__test_instance.get_temperature(unit='celsius')
-        result_fahrenheit = self.__test_instance.get_temperature(
+        result_kelvin = self.__test_instance.temperature(unit='kelvin')
+        result_celsius = self.__test_instance.temperature(unit='celsius')
+        result_fahrenheit = self.__test_instance.temperature(
                                                              unit='fahrenheit')
         for item in self.__test_temperature:
             self.assertAlmostEqual(result_kelvin[item],
@@ -378,35 +412,33 @@ class TestWeather(unittest.TestCase):
                                    delta=0.1)
 
     def test_get_temperature_fails_with_unknown_units(self):
-        self.assertRaises(ValueError, Weather.get_temperature,
+        self.assertRaises(ValueError, Weather.temperature,
                           self.__test_instance, 'xyz')
 
     def test_returning_different_units_for_wind_values(self):
-        result_imperial = self.__test_instance.get_wind(unit='miles_hour')
-        result_metric = self.__test_instance.get_wind(unit='meters_sec')
-        result_unspecified = self.__test_instance.get_wind()
+        result_imperial = self.__test_instance.wind(unit='miles_hour')
+        result_metric = self.__test_instance.wind(unit='meters_sec')
+        result_knots = self.__test_instance.wind(unit='knots')
+        result_beaufort = self.__test_instance.wind(unit='beaufort')
+        result_unspecified = self.__test_instance.wind()
         self.assertEqual(result_unspecified, result_metric)
         for item in self.__test_wind:
             self.assertEqual(result_metric[item],
                              self.__test_wind[item])
             self.assertEqual(result_imperial[item],
                              self.__test_imperial_wind[item])
+            self.assertEqual(result_knots[item],
+                             self.__test_knots_wind[item])
+            self.assertEqual(result_beaufort[item],
+                             self.__test_beaufort_wind[item])
 
     def test_get_wind_fails_with_unknown_units(self):
-        self.assertRaises(ValueError, Weather.get_wind,
-                          self.__test_instance, 'xyz')
+        self.assertRaises(ValueError, Weather.wind, self.__test_instance, 'xyz')
 
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
+    def test_weather_icon_url(self):
+        expected = ICONS_BASE_URI % self.__test_instance.weather_icon_name
+        result = self.__test_instance.weather_icon_url()
+        self.assertEqual(expected, result)
 
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(WEATHER_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
-
-    '''
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(WEATHER_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
-    '''
+    def test_repr(self):
+        print(self.__test_instance)

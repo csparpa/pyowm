@@ -13,7 +13,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/csparpa/pyowm/badge.svg?branch=master)](https://coveralls.io/github/csparpa/pyowm?branch=master)
 <br>
 <a href="https://www.buymeacoffee.com/LmAl1n9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa%40gmail.com)
 
 ##  What is it?
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs.
@@ -33,7 +33,7 @@ With PyOWM you can integrate into your code any of the following OpenWeatherMap 
  - **[Weather Alerts API v3.0](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/alerts-api-usage-examples.html)**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
  - **[Image tiles](https://pyowm.readthedocs.io/en/latest/usage-examples-v2/map-tiles-client-examples.html)** for several map layers provided by OWM
 
-PyOWM runs on Python 2.7 and Python 3.4+ (but watch out! Python 2.x will eventually be dropped - [check details out](https://github.com/csparpa/pyowm/wiki/Timeline-for-dropping-Python-2.x-support))
+PyOWM runs on Python 3.5+
 
 PyOWM also integrates with [Django 1.10+ models](https://github.com/csparpa/pyowm/wiki/Django-support).
 
@@ -83,14 +83,14 @@ owm = pyowm.OWM('your-API-key')  # You MUST provide a valid API key
 
 # Search for current weather in London (Great Britain)
 observation = owm.weather_at_place('London,GB')
-w = observation.get_weather()
+w = observation.weather
 print(w)                      # <Weather - reference time=2013-12-18 09:20,
                               # status=Clouds>
 
 # Weather details
-w.get_wind()                  # {'speed': 4.6, 'deg': 330}
-w.get_humidity()              # 87
-w.get_temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
+w.wind()                  # {'speed': 4.6, 'deg': 330}
+w.humidity()              # 87
+w.temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 
 # Search current weather observations in the surroundings of
 # lat=22.57W, lon=43.12S (Rio de Janeiro, BR)

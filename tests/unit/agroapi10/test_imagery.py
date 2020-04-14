@@ -1,9 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from datetime import datetime
 from pyowm.commons.image import Image, ImageTypeEnum
 from pyowm.agroapi10.enums import PresetEnum, SatelliteEnum
 from pyowm.agroapi10.imagery import MetaImage, SatelliteImage
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestMetaImage(unittest.TestCase):

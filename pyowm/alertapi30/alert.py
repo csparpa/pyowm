@@ -1,4 +1,9 @@
-from pyowm.utils import timeformatutils, stringutils
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from pyowm.alertapi30.condition import Condition
+from pyowm.commons import exceptions
+from pyowm.utils import formatting
 
 
 class AlertChannel:
@@ -13,6 +18,12 @@ class AlertChannel:
     """
     def __init__(self, name):
         self.name = name
+
+    def to_dict(self):
+        return dict(name=self.name)
+
+    def __repr__(self):
+        return '<%s.%s - name: %s>' % (__name__, self.__class__.__name__, self.name)
 
 
 class Alert:
@@ -54,10 +65,53 @@ class Alert:
             assert isinstance(last_update, int)
         self.last_update = last_update
 
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses a *Alert* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *Alert* instance or ``None`` if no data is available
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
+
+        """
+        if the_dict is None:
+            raise exceptions.ParseAPIResponseError('Data is None')
+        try:
+            alert_id = the_dict['_id']
+            t = the_dict['last_update'].split('.')[0].replace('T', ' ') + '+00'
+            alert_last_update = formatting.ISO8601_to_UNIXtime(t)
+            alert_trigger_id = the_dict['triggerId']
+            alert_met_conds = [
+                dict(current_value=c['current_value']['min'], condition=Condition.from_dict(c['condition']))
+                    for c in the_dict['conditions']
+            ]
+            alert_coords = the_dict['coordinates']
+            return Alert(alert_id, alert_trigger_id, alert_met_conds, alert_coords, last_update=alert_last_update)
+        except ValueError as e:
+            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
+        except KeyError as e:
+            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
+
+    def to_dict(self):
+        """Dumps object to a dictionary
+
+        :returns: a `dict`
+
+        """
+        return {
+            'id': self.id,
+            'trigger_id': self.trigger_id,
+            'met_conditions': self.met_conditions,
+            'coordinates': self.coordinates,
+            'last_update': self.last_update}
+
     def __repr__(self):
         return "<%s.%s - id=%s, trigger id=%s, last update=%s>" % (
-                    __name__,
-                    self.__class__.__name__,
-                    self.id,
-                    self.trigger_id,
-                    timeformatutils.to_ISO8601(self.last_update))
+            __name__,
+            self.__class__.__name__,
+            self.id,
+            self.trigger_id,
+            formatting.to_ISO8601(self.last_update))

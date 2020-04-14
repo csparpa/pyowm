@@ -1,8 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import json
 import unittest
 from datetime import datetime
-from pyowm.weatherapi25.location import Location
+import pyowm.commons.exceptions
+from pyowm.utils.formatting import UTC
 from pyowm.uvindexapi30.uvindex import UVIndex, uv_intensity_to_exposure_risk
-from pyowm.utils.timeformatutils import UTC
+from pyowm.weatherapi25.location import Location
+
 
 UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
@@ -11,6 +17,21 @@ UVINDEX_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", '
 
 UVINDEX_XML_DUMP = """<?xml version='1.0' encoding='utf8'?>
 <uvindex xmlns:u="http://github.com/csparpa/pyowm/tree/master/pyowm/uvindexapi30/xsd/uvindex.xsd"><u:reception_time>1234567</u:reception_time><u:reference_time>1475283600</u:reference_time><u:value>6.8</u:value><u:location><u:name>test</u:name><u:coordinates><u:lon>12.3</u:lon><u:lat>43.7</u:lat></u:coordinates><u:ID>987</u:ID><u:country>UK</u:country></u:location></uvindex>"""
+
+UVINDEX_JSON = '{"lat":43.75,"lon":8.25,"date_iso":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"value":4.58}'
+UVINDEX_MALFORMED_JSON = '{"lat":43.75,"lon":8.25,"zzz":"2016-09-27T12:00:00Z",' \
+               '"date":1474977600,"test":4.58}'
+
+
+UVINDEX_LIST_JSON = '[{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-22T12:00:00Z",' \
+                    '"date":1498132800,"value":9.92},{"lat":37.75,"lon":-122.37,' \
+                    '"date_iso":"2017-06-23T12:00:00Z","date":1498219200,' \
+                    '"value":10.09},{"lat":37.75,"lon":-122.37,"date_iso":' \
+                    '"2017-06-24T12:00:00Z","date":1498305600,"value":10.95},' \
+                    '{"lat":37.75,"lon":-122.37,"date_iso":"2017-06-25T12:00:00Z",' \
+                    '"date":1498392000,"value":11.03},{"lat":37.75,"lon":-122.37,' \
+                    '"date_iso":"2017-06-26T12:00:00Z","date":1498478400,"value":10.06}]'
 
 
 class TestUVIndex(unittest.TestCase):
@@ -50,32 +71,20 @@ class TestUVIndex(unittest.TestCase):
                           self.__test_location, -8.9,
                           self.__test_reception_time)
 
-    def test_getters_return_expected_data(self):
-        self.assertEqual(self.__test_instance.get_reception_time(),
-                         self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reference_time(),
-                         self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_location(),
-                         self.__test_location)
-        self.assertEqual(self.__test_instance.get_value(),
-                         self.__test_uv_intensity)
-        self.assertEqual(self.__test_instance.get_exposure_risk(),
-                         self.__test_exposure_risk)
-
     def test_returning_different_formats_for_reception_time(self):
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='iso'), \
                          self.__test_iso_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='unix'), \
                          self.__test_reception_time)
-        self.assertEqual(self.__test_instance.get_reception_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reception_time(timeformat='date'), \
                          self.__test_date_reception_time)
 
     def test_returning_different_formats_for_reference_time(self):
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='iso'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='iso'), \
                          self.__test_iso_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='unix'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='unix'), \
                          self.__test_reference_time)
-        self.assertEqual(self.__test_instance.get_reference_time(timeformat='date'), \
+        self.assertEqual(self.__test_instance.reference_time(timeformat='date'), \
                          self.__test_date_reference_time)
 
     def test_uv_intensity_to_exposure_risk(self):
@@ -85,15 +94,29 @@ class TestUVIndex(unittest.TestCase):
         self.assertEqual(uv_intensity_to_exposure_risk(8.5), 'very high')
         self.assertEqual(uv_intensity_to_exposure_risk(30.5), 'extreme')
 
-    # Test JSON and XML comparisons by ordering strings (this overcomes
-    # interpeter-dependant serialization of XML/JSON objects)
+    def test_to_dict(self):
+        expected = json.loads(UVINDEX_JSON_DUMP)
+        result = self.__test_instance.to_dict()
+        self.assertEqual(expected, result)
 
-    def test_to_JSON(self):
-        ordered_base_json = ''.join(sorted(UVINDEX_JSON_DUMP))
-        ordered_actual_json = ''.join(sorted(self.__test_instance.to_JSON()))
-        self.assertEqual(ordered_base_json, ordered_actual_json)
+    def test_from_dict(self):
+        result = UVIndex.from_dict(json.loads(UVINDEX_JSON))
+        self.assertIsNotNone(result)
+        self.assertIsNotNone(result.reference_time())
+        self.assertIsNotNone(result.reception_time())
+        loc = result.location
+        self.assertIsNotNone(loc)
+        self.assertIsNone(loc.name)
+        self.assertIsNone(loc.id)
+        self.assertIsNotNone(loc.lon)
+        self.assertIsNotNone(loc.lat)
+        self.assertIsNotNone(result.value)
 
-    def test_to_XML(self):
-        ordered_base_xml = ''.join(sorted(UVINDEX_XML_DUMP))
-        ordered_actual_xml = ''.join(sorted(self.__test_instance.to_XML()))
-        self.assertEqual(ordered_base_xml, ordered_actual_xml)
+    def test_from_dict_fails_when_JSON_data_is_None(self):
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, UVIndex.from_dict, None)
+
+    def test_from_dict_fails_with_malformed_JSON_data(self):
+        self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, UVIndex.from_dict, json.loads(UVINDEX_MALFORMED_JSON))
+
+    def test_repr(self):
+        print(self.__test_instance)

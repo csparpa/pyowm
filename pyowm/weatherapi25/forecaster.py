@@ -1,13 +1,11 @@
-"""
-Module containing weather forecast abstraction classes and data structures.
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from pyowm.utils import timeformatutils, weatherutils
-from pyowm.weatherapi25.configuration25 import weather_code_registry
-from pyowm.abstractions.decorators import deprecated
+from pyowm.utils import formatting, weather
+from pyowm.weatherapi25 import weathercoderegistry
 
 
-class Forecaster(object):
+class Forecaster:
 
     """
     A class providing convenience methods for manipulating weather forecast
@@ -22,15 +20,8 @@ class Forecaster(object):
     """
 
     def __init__(self, forecast):
-        self._forecast = forecast
-
-    def get_forecast(self):
-        """
-        Returns the *Forecast* instance
-
-        :returns: the *Forecast* instance
-        """
-        return self._forecast
+        self.forecast = forecast
+        self._wc_registry = weathercoderegistry.WeatherCodeRegistry.get_instance()
 
     def when_starts(self, timeformat='unix'):
         """
@@ -46,9 +37,9 @@ class Forecaster(object):
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        start_coverage = min([item.get_reference_time() \
-                              for item in self._forecast])
-        return timeformatutils.timeformat(start_coverage, timeformat)
+        start_coverage = min([item.reference_time() \
+                              for item in self.forecast])
+        return formatting.timeformat(start_coverage, timeformat)
 
     def when_ends(self, timeformat='unix'):
         """
@@ -64,9 +55,9 @@ class Forecaster(object):
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        end_coverage = max([item.get_reference_time() \
-                            for item in self._forecast])
-        return timeformatutils.timeformat(end_coverage, timeformat)
+        end_coverage = max([item.reference_time()
+                            for item in self.forecast])
+        return formatting.timeformat(end_coverage, timeformat)
 
     def will_have_rain(self):
         """
@@ -76,20 +67,7 @@ class Forecaster(object):
         :returns: boolean
 
         """        
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "rain",
-                                          weather_code_registry)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def will_have_sun(self):
-        """
-        Tells if into the forecast coverage exist one or more *Weather* items
-        related to sun conditions
-
-        :returns: boolean
-
-        """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "sun",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "rain", self._wc_registry)
 
     def will_have_clear(self):
         """
@@ -99,8 +77,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "sun",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "sun", self._wc_registry)
 
     def will_have_fog(self):
         """
@@ -110,8 +87,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "fog",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "fog", self._wc_registry)
 
     def will_have_clouds(self):
         """
@@ -121,9 +97,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(),
-                                          "clouds",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "clouds", self._wc_registry)
 
     def will_have_snow(self):
         """
@@ -133,8 +107,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "snow",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "snow", self._wc_registry)
 
     def will_have_storm(self):
         """
@@ -144,8 +117,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "storm",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "storm", self._wc_registry)
 
     def will_have_tornado(self):
         """
@@ -155,8 +127,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "tornado",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "tornado", self._wc_registry)
 
     def will_have_hurricane(self):
         """
@@ -166,8 +137,7 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        return weatherutils.any_status_is(self._forecast.get_weathers(), "hurricane",
-                                          weather_code_registry)
+        return weather.any_status_is(self.forecast.weathers, "hurricane", self._wc_registry)
 
     def when_rain(self):
         """
@@ -176,21 +146,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "rain",
-                                             weather_code_registry)
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def when_sun(self):
-        """
-        Returns a sublist of the *Weather* list in the forecast, containing
-        only items having sun as weather condition.
-
-        :returns: a list of *Weather* objects
-        """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "sun",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "rain", self._wc_registry)
 
     def when_clear(self):
         """
@@ -199,9 +155,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "sun",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "sun", self._wc_registry)
 
 
     def when_fog(self):
@@ -211,9 +165,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "fog",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "fog", self._wc_registry)
 
     def when_clouds(self):
         """
@@ -222,9 +174,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "clouds",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "clouds", self._wc_registry)
 
     def when_snow(self):
         """
@@ -233,9 +183,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "snow",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "snow", self._wc_registry)
 
     def when_storm(self):
         """
@@ -244,9 +192,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "storm",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "storm", self._wc_registry)
 
     def when_tornado(self):
         """
@@ -255,9 +201,8 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "tornado",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "tornado", self._wc_registry)
+
     def when_hurricane(self):
         """
         Returns a sublist of the *Weather* list in the forecast, containing
@@ -265,9 +210,7 @@ class Forecaster(object):
 
         :returns: a list of *Weather* objects
         """
-        return weatherutils.filter_by_status(self._forecast.get_weathers(),
-                                             "hurricane",
-                                             weather_code_registry)
+        return weather.filter_by_status(self.forecast.weathers, "hurricane", self._wc_registry)
 
     def _will_be(self, timeobject, weather_condition):
         """
@@ -284,12 +227,11 @@ class Forecaster(object):
         :returns: boolean
 
         """
-        time_value = timeformatutils.to_UNIXtime(timeobject)
-        closest_weather = weatherutils.find_closest_weather(
-                                        self._forecast.get_weathers(),
+        time_value = formatting.to_UNIXtime(timeobject)
+        closest_weather = weather.find_closest_weather(
+                                        self.forecast.weathers,
                                         time_value)
-        return weatherutils.status_is(closest_weather, weather_condition,
-                                      weather_code_registry)
+        return weather.status_is(closest_weather, weather_condition, self._wc_registry)
 
     def will_be_rainy_at(self, timeobject):
         """
@@ -305,22 +247,6 @@ class Forecaster(object):
 
         """
         return self._will_be(timeobject, "rain")
-
-    @deprecated(will_be='removed', on_version=(3, 0, 0))
-    def will_be_sunny_at(self, timeobject):
-        """
-        Tells if at the specified time the condition is sun. The check is
-        performed on the *Weather* item of the forecast which is closest to the
-        time value conveyed by the parameter
-
-        :param timeobject: may be a UNIX time, a ``datetime.datetime`` object
-            or an ISO8601-formatted string in the format
-            ``YYYY-MM-DD HH:MM:SS+00``
-        :type timeobject: long/int, ``datetime.datetime`` or str)
-        :returns: boolean
-
-        """
-        return self._will_be(timeobject, "sun")
 
     def will_be_clear_at(self, timeobject):
         """
@@ -439,15 +365,14 @@ class Forecaster(object):
         :returns: a *Weather* object
 
         """
-        return weatherutils. \
-            find_closest_weather(self._forecast.get_weathers(),
-                                 timeformatutils.to_UNIXtime(timeobject))
+        return weather. \
+            find_closest_weather(self.forecast.weathers,
+                                 formatting.to_UNIXtime(timeobject))
 
     def most_hot(self):
         """
         Returns the *Weather* object in the forecast having the highest max
-        temperature. The temperature is retrieved using the
-        ``get_temperature['temp_max']`` call; was 'temp_max' key missing for
+        temperature. Was 'temp_max' key missing for
         every *Weather* instance in the forecast, ``None`` would be returned.
 
         :returns: a *Weather* object or ``None`` if no item in the forecast is
@@ -455,8 +380,8 @@ class Forecaster(object):
         """
         maxtemp = -270.0  # No one would survive that...
         hottest = None
-        for weather in self._forecast.get_weathers():
-            d = weather.get_temperature()
+        for weather in self.forecast.weathers:
+            d = weather.temperature()
             if 'temp_max' in d:
                 if d['temp_max'] > maxtemp:
                     maxtemp = d['temp_max']
@@ -466,8 +391,7 @@ class Forecaster(object):
     def most_cold(self):
         """
         Returns the *Weather* object in the forecast having the lowest min
-        temperature. The temperature is retrieved using the
-        ``get_temperature['temp_min']`` call; was 'temp_min' key missing for
+        temperature. Was 'temp_min' key missing for
         every *Weather* instance in the forecast, ``None`` would be returned.
 
         :returns: a *Weather* object or ``None`` if no item in the forecast is
@@ -475,8 +399,8 @@ class Forecaster(object):
         """
         mintemp = 1000.0  # No one would survive that...
         coldest = None
-        for weather in self._forecast.get_weathers():
-            d = weather.get_temperature()
+        for weather in self.forecast.weathers:
+            d = weather.temperature()
             if 'temp_min' in d:
                 if d['temp_min'] < mintemp:
                     mintemp = d['temp_min']
@@ -493,8 +417,8 @@ class Forecaster(object):
         """
         max_humidity = 0
         most_humid = None
-        for weather in self._forecast.get_weathers():
-            h = weather.get_humidity()
+        for weather in self.forecast.weathers:
+            h = weather.humidity
             if h > max_humidity:
                 max_humidity = h
                 most_humid = weather
@@ -503,8 +427,7 @@ class Forecaster(object):
     def most_rainy(self):
         """
         Returns the *Weather* object in the forecast having the highest
-        precipitation volume. The rain amount is retrieved via the
-        ``get_rain['all']`` call; was the 'all' key missing for every *Weather*
+        precipitation volume. Was the 'all' key missing for every *Weather*
         instance in the forecast,``None`` would be returned.
 
         :returns: a *Weather* object or ``None`` if no item in the forecast is
@@ -512,8 +435,8 @@ class Forecaster(object):
         """
         max_rain = 0
         most_rainy = None
-        for weather in self._forecast.get_weathers():
-            d = weather.get_rain()
+        for weather in self.forecast.weathers:
+            d = weather.rain
             if 'all' in d:
                 if d['all'] > max_rain:
                     max_rain = d['all']
@@ -523,8 +446,7 @@ class Forecaster(object):
     def most_snowy(self):
         """
         Returns the *Weather* object in the forecast having the highest
-        snow volume. The snow amount is retrieved via the ``get_snow['all']``
-        call; was the 'all' key missing for every *Weather* instance in the
+        snow volume. Was the 'all' key missing for every *Weather* instance in the
         forecast, ``None`` would be returned.
 
         :returns: a *Weather* object or ``None`` if no item in the forecast is
@@ -532,8 +454,8 @@ class Forecaster(object):
         """
         max_snow = 0
         most_snowy = None
-        for weather in self._forecast.get_weathers():
-            d = weather.get_snow()
+        for weather in self.forecast.weathers:
+            d = weather.snow
             if 'all' in d:
                 if d['all'] > max_snow:
                     max_snow = d['all']
@@ -543,8 +465,7 @@ class Forecaster(object):
     def most_windy(self):
         """
         Returns the *Weather* object in the forecast having the highest
-        wind speed. The snow amount is retrieved via the ``get_wind['speed']``
-        call; was the 'speed' key missing for every *Weather* instance in the
+        wind speed. Was the 'speed' key missing for every *Weather* instance in the
         forecast, ``None`` would be returned.
 
         :returns: a *Weather* object or ``None`` if no item in the forecast is
@@ -552,8 +473,8 @@ class Forecaster(object):
         """
         max_wind_speed = 0
         most_windy = None
-        for weather in self._forecast.get_weathers():
-            d = weather.get_wind()
+        for weather in self.forecast.weathers:
+            d = weather.wind()
             if 'speed' in d:
                 if d['speed'] > max_wind_speed:
                     max_wind_speed = d['speed']

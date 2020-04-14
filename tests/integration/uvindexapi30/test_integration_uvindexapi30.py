@@ -1,16 +1,15 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import unittest
 import os
 from datetime import datetime
-from pyowm.constants import DEFAULT_API_KEY
-from pyowm.weatherapi25.configuration25 import parsers
-from pyowm.weatherapi25.owm25 import OWM25
+from pyowm import owm
 
 
 class IntegrationTestsUVIndexAPI30(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None)).uvindex_manager()
 
     def test_uvindex_around_coords(self):
         """
@@ -18,9 +17,9 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         """
         u = self.__owm.uvindex_around_coords(45, 9)
         self.assertIsNotNone(u)
-        self.assertIsNotNone(u.get_value())
-        self.assertIsNotNone(u.get_reception_time())
-        self.assertIsNotNone(u.get_location())
+        self.assertIsNotNone(u.value)
+        self.assertIsNotNone(u.reception_time())
+        self.assertIsNotNone(u.location)
 
     def test_uvindex_forecast_around_coords(self):
         """
@@ -29,9 +28,9 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
         uv_list = self.__owm.uvindex_forecast_around_coords(45, 9)
         self.assertIsInstance(uv_list, list)
         for item in uv_list:
-            self.assertIsNotNone(item.get_value())
-            self.assertIsNotNone(item.get_reception_time())
-            self.assertIsNotNone(item.get_location())
+            self.assertIsNotNone(item.value)
+            self.assertIsNotNone(item.reception_time())
+            self.assertIsNotNone(item.location)
 
     def test_uvindex_history_around_coords(self):
         """
@@ -44,9 +43,9 @@ class IntegrationTestsUVIndexAPI30(unittest.TestCase):
                                                            end=end)
         self.assertIsInstance(uv_list, list)
         for item in uv_list:
-            self.assertIsNotNone(item.get_value())
-            self.assertIsNotNone(item.get_reception_time())
-            self.assertIsNotNone(item.get_location())
+            self.assertIsNotNone(item.value)
+            self.assertIsNotNone(item.reception_time())
+            self.assertIsNotNone(item.location)
 
 
 if __name__ == "__main__":
