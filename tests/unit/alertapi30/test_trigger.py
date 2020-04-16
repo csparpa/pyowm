@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import copy
 import unittest
 
 import pyowm.commons.exceptions
@@ -52,6 +53,12 @@ class TestTrigger(unittest.TestCase):
         self.assertEqual(1, len(instance.alert_channels))
         self.assertEqual(instance.alert_channels[0], AlertChannelsEnum.OWM_API_POLLING)
 
+    def test_init(self):
+        alert_channels = [AlertChannelsEnum.items()]
+        instance = Trigger(1526809375, 1527809375, [Condition('humidity', 'LESS_THAN', 10)],
+                           [geo.Point(13.6, 46.9)], alerts=None, alert_channels=alert_channels)
+        self.assertEqual(instance.alert_channels, alert_channels)
+
     def test_get_alert(self):
         cond = Condition('humidity', 'LESS_THAN', 10)
         alert = Alert('alert1', 'trigger1', [{
@@ -60,10 +67,16 @@ class TestTrigger(unittest.TestCase):
             }],
             {"lon": 37, "lat": 53}, 1481802090232
         )
-        alerts = [alert]
+        alert_two = copy.deepcopy(alert)
+        alert_two.id = 'alert_two'
+        alerts = [alert_two, alert]     # Second alert has to be 1st element to have full coverage
         instance = Trigger(1526809375, 1527809375, [cond],
                            [geo.Point(13.6, 46.9)], alerts=alerts, alert_channels=None)
         self.assertEqual(alert, instance.get_alert('alert1'))
+
+        # Trigger without alerts
+        instance.alerts = []
+        self.assertIsNone(instance.get_alert(alert_id='alert1'))
 
     def test_get_alerts(self):
         cond = Condition('humidity', 'LESS_THAN', 10)
@@ -205,6 +218,12 @@ class TestTrigger(unittest.TestCase):
         "lat":53}}},"area":[{"type":"Point","_id":"5852816a9aaacb00153134a4","coordinates":[37,53]}],"conditions":
         [{"name":"temp","expression":"$lt","amount":273,"_id":"5852816a9aaacb00153134a5"}],"time_period":{"end":{
         "amount":432000000,"expression":"exact"},"start":{"amount":132000000,"expression":"before"}}}'''))
+
+        # ValueError check
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
+            the_dict['time_period']['end']['expression'] = 'before'
+            Trigger.from_dict(the_dict)
+
 
     def test_to_dict(self):
         cond = Condition('humidity', 'LESS_THAN', 10)

@@ -129,14 +129,11 @@ class Station:
         """
         if the_dict is None:
             raise exceptions.ParseAPIResponseError('Data is None')
-        try:
-            id = the_dict.get('ID', None) or the_dict.get('id', None)
-            external_id = the_dict.get('external_id', None)
-            lon = the_dict.get('longitude', None)
-            lat = the_dict.get('latitude', None)
-            alt = the_dict.get('altitude', None)
-        except KeyError as e:
-            raise exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
+        id = the_dict.get('ID', None) or the_dict.get('id', None)
+        external_id = the_dict.get('external_id', None)
+        lon = the_dict.get('longitude', None)
+        lat = the_dict.get('latitude', None)
+        alt = the_dict.get('altitude', None)
         name = the_dict.get('name', None)
         rank = the_dict.get('rank', None)
         created_at = the_dict.get('created_at', None)

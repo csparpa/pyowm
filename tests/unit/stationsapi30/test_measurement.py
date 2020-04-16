@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import copy
 import json
 import unittest
 from datetime import datetime as dt
@@ -59,6 +60,10 @@ class TestAggregatedMeasurement(unittest.TestCase):
         with self.assertRaises(ValueError):
             self._test_instance.creation_time(timeformat='unknown')
 
+        test_instance_none_timestamp = copy.deepcopy(self._test_instance)
+        test_instance_none_timestamp.timestamp = None
+        self.assertIsNone(test_instance_none_timestamp.creation_time())
+
     def test_from_dict(self):
         the_dict = {
             "station_id": "mytest",
@@ -91,6 +96,11 @@ class TestAggregatedMeasurement(unittest.TestCase):
 
         with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             AggregatedMeasurement.from_dict(None)
+
+        with self.assertRaises(AssertionError):
+            none_timestamp = copy.deepcopy(the_dict)
+            none_timestamp['date'] = None
+            AggregatedMeasurement.from_dict(none_timestamp)
 
     def test_to_dict(self):
         expected_dict = {
@@ -139,6 +149,10 @@ class TestMeasurement(unittest.TestCase):
         self.assertEqual(self.date_ts, result)
         with self.assertRaises(ValueError):
             self._test_instance.creation_time(timeformat='unknown')
+
+        test_instance_none_timestamp = copy.deepcopy(self._test_instance)
+        test_instance_none_timestamp.timestamp = None
+        self.assertIsNone(test_instance_none_timestamp.creation_time())
 
     def test_from_dict(self):
         _the_dict = dict(station_id='mytest', timestamp=1378459200,

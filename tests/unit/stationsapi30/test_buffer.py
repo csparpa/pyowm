@@ -39,6 +39,9 @@ class TestBuffer(unittest.TestCase):
         with self.assertRaises(ValueError):
             buf.creation_time(timeformat='unknown')
 
+        buf.created_at = None
+        self.assertIsNone(buf.creation_time())
+
     def test_append(self):
         buf = Buffer(self.station_id)
         self.assertEqual(0, len(buf))

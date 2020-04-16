@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import copy
 import unittest
 
 import pyowm.commons.exceptions
@@ -32,6 +32,13 @@ class TestAlert(unittest.TestCase):
         self.assertRaises(AssertionError, Alert, 'alert1', 'trigger', [dict(a=1, b=2), dict(c=3, d=4)],
                           dict(lon=53, lat=45), 'wrong-value')
 
+    def test_alert_last_updated_is_none(self):
+        alert = Alert('alert1', 'trigger1', [{
+            "current_value": 263.576,
+            "condition": Condition('humidity', 'LESS_THAN', 10)}],
+                      {"lon": 37, "lat": 53})
+        self.assertIsNone(alert.last_update)
+
     def test_from_dict(self):
         the_dict = {
          '_id': '5853dbe27416a400011b1b77',
@@ -50,6 +57,11 @@ class TestAlert(unittest.TestCase):
 
         with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
             Alert.from_dict(dict(nonexistent='key'))
+
+        value_error_dict = copy.deepcopy(the_dict)
+        value_error_dict['last_update'] = 'not_valid_timestamp'
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
+            Alert.from_dict(value_error_dict)
 
     def test_to_dict(self):
         condition = Condition('humidity', 'LESS_THAN', 10)
@@ -91,3 +103,10 @@ class TestAlertChannel(unittest.TestCase):
 
     def test_repr(self):
         print(AlertChannel('foobaz'))
+
+    def test_alert_last_updated_is_none(self):
+        alert = Alert('alert1', 'trigger1', [{
+            "current_value": 263.576,
+            "condition": Condition('humidity', 'LESS_THAN', 10)}],
+                      {"lon": 37, "lat": 53})
+        self.assertIsNone(alert.last_update)
