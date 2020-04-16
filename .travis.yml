@@ -2,7 +2,7 @@ dist: xenial
 language: python
 python:
   - "3.7"
-  - "3.8-dev"
+  - "3.8"
 script: tox
 after_success:
   - coveralls
