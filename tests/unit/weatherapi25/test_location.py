@@ -3,6 +3,7 @@
 
 import unittest
 import json
+from pyowm.commons import exceptions
 from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
 
@@ -32,7 +33,12 @@ class TestLocation(unittest.TestCase):
         self.assertRaises(ValueError, Location, 'London', 12.3, -100.0, 1234)
         self.assertRaises(ValueError, Location, 'London', 12.3, 100.0, 1234)
 
-    def test_from_dictionary(self):
+    def test_from_dict(self):
+        try:
+            Location.from_dict(None)
+            self.fail()
+        except exceptions.ParseAPIResponseError:
+            pass
         dict1 = {"coord": {"lon": -0.12574, "lat": 51.50853}, "id": 2643743,
                  "name": "London", "cnt": 9}
         dict2 = {"city": {"coord": {"lat": 51.50853, "lon": -0.125739},
@@ -61,7 +67,7 @@ class TestLocation(unittest.TestCase):
         self.assertTrue(result3.name is None)
         self.assertTrue(result3.id is None)
 
-    def test_from_dictionary_holds_the_lack_of_geocoords(self):
+    def test_from_dict_holds_the_lack_of_geocoords(self):
         dict1 = {"station":{"coord":{}}}
         dict2 = {"coord":{}}
         result1 = Location.from_dict(dict1)
@@ -84,16 +90,16 @@ class TestLocation(unittest.TestCase):
         result = self.__test_instance.to_dict()
         self.assertEqual(expected, result)
 
-    def to_geopoint(self):
-        loc_1 = Location(self.__test_name, None, self.__test_lat,
+    def test_to_geopoint(self):
+        loc_1 = Location(self.__test_name, self.__test_lon, self.__test_lat,
                          self.__test_ID, self.__test_country)
-        loc_2 = Location(self.__test_name, self.__test_lon, None,
-                         self.__test_ID, self.__test_country)
-        loc_3 = Location(self.__test_name, self.__test_lon, self.__test_lat,
-                         self.__test_ID, self.__test_country)
+        loc_1.lat = None
         self.assertIsNone(loc_1.to_geopoint())
-        self.assertIsNone(loc_2.to_geopoint())
-        result = loc_3.to_geopoint()
+        loc_1.lon = None
+        self.assertIsNone(loc_1.to_geopoint())
+        loc_2 = Location(self.__test_name, self.__test_lon, self.__test_lat,
+                         self.__test_ID, self.__test_country)
+        result = loc_2.to_geopoint()
         self.assertTrue(isinstance(result, Point))
         expected_geojson = json.dumps({
             "coordinates": [12.3, 43.7],

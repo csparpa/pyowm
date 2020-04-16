@@ -3,6 +3,7 @@
 
 import unittest
 from io import StringIO
+from itertools import chain
 from pyowm.commons.cityidregistry import CityIDRegistry
 from pyowm.weatherapi25.location import Location
 from pyowm.utils.geo import Point
@@ -54,11 +55,11 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         return StringIO(self._test_file_contents_with_commas_in_names).readlines()
 
     def _assertLocationsEqual(self, loc1, loc2):
-        self.assertEquals(loc1.id, loc2.id)
-        self.assertEquals(loc1.name, loc2.name)
-        self.assertEquals(loc1.lat, loc2.lat)
-        self.assertEquals(loc1.lon, loc2.lon)
-        self.assertEquals(loc1.country, loc2.country)
+        self.assertEqual(loc1.id, loc2.id)
+        self.assertEqual(loc1.name, loc2.name)
+        self.assertEqual(loc1.lat, loc2.lat)
+        self.assertEqual(loc1.lon, loc2.lon)
+        self.assertEqual(loc1.country, loc2.country)
 
     def _assertGeopointsEqual(self, point1, point2):
         self.assertIsInstance(point1, Point)
@@ -113,6 +114,17 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
 
     # tests for IDs retrieval
 
+    def test_get_lines(self):
+        instance = CityIDRegistry.get_instance()
+        result = instance._get_lines('cityids/097-102.txt.bz2')
+        self.assertIsInstance(result, map)
+        self.assertTrue(all(map(lambda s: isinstance(s, str), result)))
+
+    def test_get_all_lines(self):
+        instance = CityIDRegistry.get_instance()
+        result = instance._get_all_lines()
+        self.assertIsInstance(result, list)
+
     def test_match_line(self):
         instance = CityIDRegistry('test')
 
@@ -130,16 +142,16 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         # single match with different casing
         result1 = instance._match_line('LONDOKO', self.test_filelines)
         result2 = instance._match_line('londoko', self.test_filelines)
-        self.assertEquals(result1, result2)
+        self.assertEqual(result1, result2)
         self.assertEqual('Londoko,2020707,49.033329,131.983337,RU', result1)
         result3 = instance._match_line('London borough of harrow', self.test_filelines)
         result4 = instance._match_line('london BOROUGH of Harrow', self.test_filelines)
-        self.assertEquals(result3, result4)
-        self.assertEquals('London Borough of Harrow,7535661,51.566669,-0.33333,GB',
+        self.assertEqual(result3, result4)
+        self.assertEqual('London Borough of Harrow,7535661,51.566669,-0.33333,GB',
                           result3)
         # homonymies
         result = instance._match_line('London', self.test_filelines)
-        self.assertEquals('London,2643743,51.50853,-0.12574,GB', result)
+        self.assertEqual('London,2643743,51.50853,-0.12574,GB', result)
 
     def test_ids_for(self):
         ref_to_original = CityIDRegistry._get_lines
@@ -147,16 +159,16 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
 
         # No matches
         result = self._instance.ids_for('aaaaaaaaaa')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         # One match
         result = self._instance.ids_for("Bologna")
-        self.assertEquals(1, len(result))
-        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
+        self.assertEqual(1, len(result))
+        self.assertEqual((2829449, 'Bologna', 'IT'), result[0])
 
         # Multiple matches
         result = self._instance.ids_for("Abbans-Dessus")
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
         self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
@@ -178,33 +190,33 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
 
         # look for an empty name
         result = self._instance.ids_for("")
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         # case sensitive
         result = self._instance.ids_for("bologna", matching='exact')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         result = self._instance.ids_for("Bologna", matching='exact')
-        self.assertEquals(1, len(result))
-        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
+        self.assertEqual(1, len(result))
+        self.assertEqual((2829449, 'Bologna', 'IT'), result[0])
 
         # case insensitive
         result = self._instance.ids_for("bologna", matching='nocase')
-        self.assertEquals(1, len(result))
-        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
+        self.assertEqual(1, len(result))
+        self.assertEqual((2829449, 'Bologna', 'IT'), result[0])
 
         result = self._instance.ids_for("Bologna", matching='nocase')
-        self.assertEquals(1, len(result))
-        self.assertEquals((2829449, 'Bologna', 'IT'), result[0])
+        self.assertEqual(1, len(result))
+        self.assertEqual((2829449, 'Bologna', 'IT'), result[0])
 
         # like
         result = self._instance.ids_for("abbans", matching='like')
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
         self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
         result = self._instance.ids_for("Dessus", matching='like')
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
         self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
@@ -216,17 +228,17 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
 
         result = self._instance.ids_for("Abbeville", country='JP')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         result = self._instance.ids_for("Abbeville", country='US')
-        self.assertEquals(4, len(result))
+        self.assertEqual(4, len(result))
         self.assertTrue((4178992, 'Abbeville', 'US') in result)
         self.assertTrue((4314295, 'Abbeville', 'US') in result)
         self.assertTrue((4568985, 'Abbeville', 'US') in result)
         self.assertTrue((4829449, 'Abbeville', 'US') in result)
 
         result = self._instance.ids_for("Abbeville", country='FR')
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self.assertTrue((3038789, 'Abbeville', 'FR') in result)
 
         CityIDRegistry._get_lines = ref_to_original
@@ -236,7 +248,7 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
 
         result = self._instance.ids_for("Thale, Stadt")
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self.assertTrue((6550950, 'Thale, Stadt', 'DE') in result)
 
         CityIDRegistry._get_lines = ref_to_original
@@ -249,19 +261,19 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
 
         # No matches
         result = self._instance.locations_for('aaaaaaaaaa')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         # One match
         expected = Location('Bologna', -83.250488, 30.57184, 2829449, 'IT')
         result = self._instance.locations_for("Bologna")
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self._assertLocationsEqual(expected, result[0])
 
         # Multiple matches
         expected1 = Location('Abbans-Dessus', 5.88188, 47.120548, 3038800, 'FR')
         expected2 = Location('Abbans-Dessus', 5.88333, 47.116669, 6452202, 'FR')
         result = self._instance.locations_for("Abbans-Dessus")
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self._assertLocationsEqual(expected1, result[0])
         self._assertLocationsEqual(expected2, result[1])
 
@@ -275,25 +287,33 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
 
         # look for an empty name
         result = self._instance.locations_for("")
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
+
+        # country string is too long
+        with self.assertRaises(ValueError):
+            self._instance.locations_for("place", country="a_country", matching="nocase")
+
+        # unknown matching type
+        with self.assertRaises(ValueError):
+            self._instance.locations_for("place", country="IT", matching="impossible")
 
         expected = Location('Bologna', -83.250488, 30.57184, 2829449, 'IT')
 
         # case sensitive
         result = self._instance.locations_for("bologna", matching='exact')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         result = self._instance.locations_for("Bologna", matching='exact')
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self._assertLocationsEqual(expected, result[0])
 
         # case insensitive
         result = self._instance.locations_for("bologna", matching='nocase')
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self._assertLocationsEqual(expected, result[0])
 
         result = self._instance.locations_for("Bologna", matching='nocase')
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self._assertLocationsEqual(expected, result[0])
 
         # like
@@ -301,12 +321,12 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         expected2 = Location('Abbans-Dessus', 5.88333, 47.116669, 6452202, 'FR')
 
         result = self._instance.locations_for("abbans", matching='like')
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self._assertLocationsEqual(expected1, result[0])
         self._assertLocationsEqual(expected2, result[1])
 
         result = self._instance.locations_for("Dessus", matching='like')
-        self.assertEquals(2, len(result))
+        self.assertEqual(2, len(result))
         self._assertLocationsEqual(expected1, result[0])
         self._assertLocationsEqual(expected2, result[1])
 
@@ -318,10 +338,10 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         CityIDRegistry._get_lines = self._mock_get_lines_with_homonymies
 
         result = self._instance.locations_for("Abbeville", country='JP')
-        self.assertEquals(0, len(result))
+        self.assertEqual(0, len(result))
 
         result = self._instance.locations_for("Abbeville", country='US')
-        self.assertEquals(4, len(result))
+        self.assertEqual(4, len(result))
         self._assertLocationsEqual(
             Location('Abbeville', -83.306824, 31.992121, 4178992, 'US'),
             result[0])
@@ -336,7 +356,7 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
             result[3])
 
         result = self._instance.locations_for("Abbeville", country='FR')
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self._assertLocationsEqual(
             Location("Abbeville", 1.83333, 50.099998, 3038789, 'FR'),
             result[0])
@@ -348,7 +368,7 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
 
         result = self._instance.locations_for("Thale, Stadt")
-        self.assertEquals(1, len(result))
+        self.assertEqual(1, len(result))
         self._assertLocationsEqual(
             Location('Thale, Stadt', 11.058, 51.7528, 6550950, 'DE'),
             result[0])
