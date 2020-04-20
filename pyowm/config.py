@@ -7,7 +7,7 @@ DEFAULT_CONFIG = {
     'subscription_type': SubscriptionTypeEnum.FREE,
     'language': 'en',
     'connection': {
-        'use_ssl': False,
+        'use_ssl': True,
         'verify_ssl_certs': True,
         'use_proxy': False,
         'timeout_secs': 5
