@@ -24,7 +24,7 @@ class TesDefaultConfig(unittest.TestCase):
         self.assertIsInstance(connection, dict)
 
         self.assertTrue('use_ssl' in connection)
-        self.assertFalse(connection['use_ssl'])
+        self.assertTrue(connection['use_ssl'])
 
         self.assertTrue('verify_ssl_certs' in connection)
         self.assertTrue(connection['verify_ssl_certs'])

@@ -48,11 +48,11 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
                                                   ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 24)
+        self.assertEqual(len(result_set), 22)
 
         # just keep the non-tile images
         non_tile_pngs = [mimg for mimg in result_set if isinstance(mimg, MetaPNGImage)]
-        self.assertEqual(len(non_tile_pngs), 12)
+        self.assertEqual(len(non_tile_pngs), 11)
 
         # download one
         result = mgr.download_satellite_image(non_tile_pngs[0])
@@ -72,7 +72,7 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
                                                   ImageTypeEnum.GEOTIFF, PresetEnum.EVI, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 12)
+        self.assertEqual(len(result_set), 11)
 
         # download one
         result = mgr.download_satellite_image(result_set[0], palette=PaletteEnum.CONTRAST_SHIFTED)
@@ -92,11 +92,11 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
                                                   ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 24)
+        self.assertEqual(len(result_set), 22)
 
         # just keep the tiles
         tile_pngs = [mimg for mimg in result_set if isinstance(mimg, MetaTile)]
-        self.assertEqual(len(tile_pngs), 12)
+        self.assertEqual(len(tile_pngs), 11)
 
         # try to download one without specifying x, y and zoom
         with self.assertRaises(AssertionError):

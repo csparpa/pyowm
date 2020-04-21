@@ -6,7 +6,6 @@ import unittest
 
 import pyowm.commons.exceptions
 from pyowm.utils import config
-from pyowm.exceptions import config_error
 
 
 class TesIntegrationConfig(unittest.TestCase):

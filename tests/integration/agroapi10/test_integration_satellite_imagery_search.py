@@ -44,7 +44,7 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         # search all images in the specified time frame
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 372)
+        self.assertEqual(len(result_set), 360)
         self.assertTrue(all([isinstance(i, MetaImage) for i in result_set]))
 
     def test_search_for_one_satellite(self):
@@ -54,7 +54,7 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, None,
                                                   None, None, None, SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 144)
+        self.assertEqual(len(result_set), 132)
         self.assertTrue(all([isinstance(i, MetaImage) and i.satellite_name == SatelliteEnum.LANDSAT_8.name for i in result_set]))
 
     def test_search_for_geotiff_type_only(self):
@@ -64,7 +64,7 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
                                                   ImageTypeEnum.GEOTIFF, None, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 124)
+        self.assertEqual(len(result_set), 120)
         self.assertTrue(all([isinstance(i, MetaImage) and i.image_type == ImageTypeEnum.GEOTIFF for i in result_set]))
 
     def test_search_for_ndvi_preset_only(self):
@@ -74,7 +74,7 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to,
                                                   None, PresetEnum.NDVI, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 93)
+        self.assertEqual(len(result_set), 90)
         self.assertTrue(all([isinstance(i, MetaImage) and i.preset == PresetEnum.NDVI for i in result_set]))
 
     def test_search_for_falsecolor_png_only(self):
@@ -84,7 +84,7 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
         result_set = mgr.search_satellite_imagery(self.__polygon.id, self.__acquired_from, self.__acquired_to, ImageTypeEnum.PNG,
                                                   PresetEnum.FALSE_COLOR, None, None, None, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 62)
+        self.assertEqual(len(result_set), 60)
         self.assertTrue(all([isinstance(i, MetaImage) and i.preset == PresetEnum.FALSE_COLOR and
                              i.image_type == ImageTypeEnum.PNG for i in result_set]))
 

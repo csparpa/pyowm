@@ -5,7 +5,6 @@ import os
 import unittest
 
 import pyowm.commons.exceptions
-from pyowm.exceptions import parse_response_error, api_call_error
 from pyowm.commons.http_client import HttpClient
 from pyowm.config import DEFAULT_CONFIG
 

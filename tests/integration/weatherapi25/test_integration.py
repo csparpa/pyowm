@@ -3,11 +3,8 @@
 
 import unittest
 import os
-from datetime import datetime
-
 import pyowm.commons.exceptions
 from pyowm import owm
-from pyowm.exceptions import api_response_error
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
