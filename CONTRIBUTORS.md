@@ -8,6 +8,7 @@ Code
   * [alechewitt] (https://github.com/alechewitt)
   * [dphildebrandt] (https://github.com/dphildebrandt)
   * [dstmar] (https://github.com/dstmar)
+  * [edenhaus] (https://github.com/edenhaus)
   * [ggstuart] (https://github.com/ggstuart)
   * [lardconcepts] (https://github.com/lardconcepts)
   * [liato] (https://github.com/liato)
