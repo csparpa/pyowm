@@ -21,6 +21,7 @@ cache: pip
 stages:
   - test
   - "Local Installation Test"
+  - "Coverage"
   - "Build docs"
   - "Deploy to PyPI"
   - "PyPI Installation Test"
@@ -32,7 +33,14 @@ jobs:
       python: "3.7"
       script: bash tests/local_installation_test.sh
     - <<: *local_installation_test
-      python: "3.8-dev"
+      python: "3.8"
+
+    - &coverage
+      stage: "Coverage"
+      python: "3.7"
+      script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+    - <<: *coverage
+      python: "3.8"
 
     - stage: "Build docs"
       script: cd sphinx && make clean && make html
@@ -42,7 +50,7 @@ jobs:
       python: "3.7"
       script: bash deploy/deploy_to_pypi.sh
     - <<: *deploy_to_pypi
-      python: "3.8-dev"
+      python: "3.8"
 
     - &pypi_installation_test
       stage: "PyPI Installation Test"
@@ -50,4 +58,4 @@ jobs:
       if: branch = master
       script: bash tests/pypi_installation_test.sh
     - <<: *pypi_installation_test
-      python: "3.8-dev"
+      python: "3.8"
