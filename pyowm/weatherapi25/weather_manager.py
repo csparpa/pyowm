@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from datetime import datetime, timedelta, timezone
 from typing import Union
 
 from pyowm.commons.http_client import HttpClient
@@ -498,7 +499,7 @@ class WeatherManager:
             sh.interval = interval
         return sh
 
-    def one_call(self, lat: Union[int, float], lon: Union[int, float], historical: bool = False) -> one_call.OneCall:
+    def one_call(self, lat: Union[int, float], lon: Union[int, float]) -> one_call.OneCall:
         """
         Queries the OWM Weather API with one call for current weather information and forecast for the
         specified geographic coordinates.
@@ -513,8 +514,6 @@ class WeatherManager:
         :type lat: int/float
         :param lon: location's longitude, must be between -180.0 and 180.0
         :type lon: int/float
-        :param historical: if set, retrieve historical data. Default=false
-        :type historical: bool
         :returns: a *OneCall* instance or ``None`` if the data is not
             available for the specified location
         :raises: *ParseResponseException* when OWM Weather API responses' data
@@ -525,11 +524,39 @@ class WeatherManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
 
-        uri = ONE_CALL_URI
-        if historical:
-            uri = ONE_CALL_HISTORICAL_URI
+        _, json_data = self.http_client.get_json(ONE_CALL_URI, params=params)
+        return one_call.OneCall.from_dict(json_data)
 
-        _, json_data = self.http_client.get_json(uri, params=params)
+    def one_call_historical(self, lat: Union[int, float], lon: Union[int, float], dt: int = None):
+        """
+        Queries the OWM Weather API with one call for historical weather information for the
+        specified geographic coordinates.
+
+        A *OneCall* object is returned with the current data and the two forecasts.
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param dt: timestamp from when the historical data starts. Cannot be less then now - 5 days.
+                    Default = None means now - 5 days
+        :type dt: int
+        :returns: a *OneCall* instance or ``None`` if the data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM Weather API responses' data
+            cannot be parsed, *APICallException* when OWM Weather API can not be
+            reached
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        if dt is None:
+            dt = int((datetime.now() - timedelta(days=5)).replace(tzinfo=timezone.utc).timestamp())
+        elif not isinstance(dt, int):
+            raise ValueError("dt must be of type int")
+
+        params = {'lon': lon, 'lat': lat, 'dt': dt}
+
+        _, json_data = self.http_client.get_json(ONE_CALL_HISTORICAL_URI, params=params)
         return one_call.OneCall.from_dict(json_data)
 
     def __repr__(self):

@@ -492,6 +492,8 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(9.63, result1.uvi)
         self.assertEqual(501, result1.weather_code)
         self.assertEqual(1.02, result1.rain["1h"])
+        self.assertEqual(280.15, result1.temperature()["temp"])
+        self.assertEqual(277.75, result1.temperature()["feels_like"])
 
         current2 = {
             "dt": 1587678355,
@@ -523,9 +525,11 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(800, result2.weather_code)
         self.assertEqual(170, result2.wind()["deg"])
         self.assertEqual(0, len(result2.rain))
+        self.assertEqual(281.78, result2.temperature()["temp"])
+        self.assertEqual(277.4, result2.temperature()["feels_like"])
 
     def test_one_call_hourly_from_dic(self):
-        current1 = {
+        hourly1 = {
             "dt": 1587675600,
             "temp": 294.16,
             "feels_like": 292.47,
@@ -548,13 +552,15 @@ class TestWeather(unittest.TestCase):
             }
         }
 
-        result1 = Weather.from_dict(current1)
+        result1 = Weather.from_dict(hourly1)
         self.assertTrue(isinstance(result1, Weather))
         self.assertEqual(292.47, result1.temperature()["feels_like"])
         self.assertEqual(501, result1.weather_code)
         self.assertEqual(2.28, result1.rain["1h"])
+        self.assertEqual(294.16, result1.temperature()["temp"])
+        self.assertEqual(292.47, result1.temperature()["feels_like"])
 
-        current2 = {
+        hourly2 = {
             "dt": 1587682800,
             "temp": 279.64,
             "feels_like": 276.77,
@@ -574,9 +580,121 @@ class TestWeather(unittest.TestCase):
             ]
         }
 
-        result2 = Weather.from_dict(current2)
+        result2 = Weather.from_dict(hourly2)
         self.assertTrue(isinstance(result2, Weather))
         self.assertEqual(3, result2.clouds)
         self.assertEqual(800, result2.weather_code)
         self.assertEqual(119, result2.wind()["deg"])
         self.assertEqual(0, len(result2.rain))
+        self.assertEqual(279.64, result2.temperature()["temp"])
+        self.assertEqual(276.77, result2.temperature()["feels_like"])
+
+    def test_one_call_daily_from_dic(self):
+        daily1 = {
+            "dt": 1587747600,
+            "sunrise": 1587725080,
+            "sunset": 1587772792,
+            "temp": {
+                "day": 300.75,
+                "min": 290.76,
+                "max": 300.75,
+                "night": 290.76,
+                "eve": 295.22,
+                "morn": 291.44
+            },
+            "feels_like": {
+                "day": 300.69,
+                "night": 291.63,
+                "eve": 296.8,
+                "morn": 292.73
+            },
+            "pressure": 1009,
+            "humidity": 55,
+            "dew_point": 291.24,
+            "wind_speed": 3.91,
+            "wind_deg": 262,
+            "weather": [
+                {
+                    "id": 500,
+                    "main": "Rain",
+                    "description": "light rain",
+                    "icon": "10d"
+                }
+            ],
+            "clouds": 95,
+            "rain": 0.82,
+            "uvi": 9.46
+        }
+
+        result1 = Weather.from_dict(daily1)
+        self.assertTrue(isinstance(result1, Weather))
+        self.assertEqual(9.46, result1.uvi)
+        self.assertEqual(500, result1.weather_code)
+        self.assertEqual(262, result1.wind()["deg"])
+        self.assertEqual(0.82, result1.rain["all"])
+        self.assertRaises(KeyError, lambda: result1.temperature()["temp"])
+        self.assertRaises(KeyError, lambda: result1.temperature()["feels_like"])
+        self.assertEqual(300.75, result1.temperature()["day"])
+        self.assertEqual(290.76, result1.temperature()["min"])
+        self.assertEqual(300.75, result1.temperature()["max"])
+        self.assertEqual(290.76, result1.temperature()["night"])
+        self.assertEqual(295.22, result1.temperature()["eve"])
+        self.assertEqual(291.44, result1.temperature()["morn"])
+        self.assertEqual(300.69, result1.temperature()["feels_like_day"])
+        self.assertEqual(291.63, result1.temperature()["feels_like_night"])
+        self.assertEqual(296.8, result1.temperature()["feels_like_eve"])
+        self.assertEqual(292.73, result1.temperature()["feels_like_morn"])
+
+        daily2 = {
+            "dt": 1587639600,
+            "sunrise": 1587615127,
+            "sunset": 1587665513,
+            "temp": {
+                "day": 281.78,
+                "min": 279.88,
+                "max": 281.78,
+                "night": 279.88,
+                "eve": 281.78,
+                "morn": 281.78
+            },
+            "feels_like": {
+                "day": 278.55,
+                "night": 276.84,
+                "eve": 278.55,
+                "morn": 278.55
+            },
+            "pressure": 1017,
+            "humidity": 39,
+            "dew_point": 269.13,
+            "wind_speed": 0.96,
+            "wind_deg": 116,
+            "weather": [
+                {
+                    "id": 800,
+                    "main": "Clear",
+                    "description": "clear sky",
+                    "icon": "01n"
+                }
+            ],
+            "clouds": 2,
+            "uvi": 7.52
+        }
+
+        result2 = Weather.from_dict(daily2)
+        self.assertTrue(isinstance(result2, Weather))
+        self.assertEqual(7.52, result2.uvi)
+        self.assertEqual(800, result2.weather_code)
+        self.assertEqual(116, result2.wind()["deg"])
+        self.assertEqual(0, len(result2.rain))
+        self.assertRaises(KeyError, lambda: result2.temperature()["temp"])
+        self.assertRaises(KeyError, lambda: result2.temperature()["feels_like"])
+        self.assertEqual(281.78, result2.temperature()["day"])
+        self.assertEqual(279.88, result2.temperature()["min"])
+        self.assertEqual(281.78, result2.temperature()["max"])
+        self.assertEqual(279.88, result2.temperature()["night"])
+        self.assertEqual(281.78, result2.temperature()["eve"])
+        self.assertEqual(281.78, result2.temperature()["morn"])
+        self.assertEqual(278.55, result2.temperature()["feels_like_day"])
+        self.assertEqual(276.84, result2.temperature()["feels_like_night"])
+        self.assertEqual(278.55, result2.temperature()["feels_like_eve"])
+        self.assertEqual(278.55, result2.temperature()["feels_like_morn"])

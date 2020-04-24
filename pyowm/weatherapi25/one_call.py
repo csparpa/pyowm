@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 from pyowm.commons import exceptions
 from pyowm.utils import geo
@@ -12,7 +12,8 @@ class OneCall:
                  lon: Union[int, float],
                  timezone: str,
                  current: Weather,
-                 forecast_hourly: [Weather]
+                 forecast_hourly: [Weather],
+                 forecast_daily: Optional[Weather] = None
                  ) -> None:
         geo.assert_is_lat(lat)
         self.lat = lat
@@ -27,6 +28,7 @@ class OneCall:
         self.current = current
 
         self.forecast_hourly = forecast_hourly
+        self.forecast_daily = forecast_daily
 
     def __repr__(self):
         return "<%s.%s - lat=%s, lon=%s, retrieval_time=%s>" % (
@@ -66,9 +68,9 @@ class OneCall:
         try:
             current = Weather.from_dict(the_dict["current"])
             hourly = [Weather.from_dict(item) for item in the_dict["hourly"]]
-            if 'daily' in the_dict:
-                # TODO daily
-                pass
+            daily = None
+            if "daily" in the_dict:
+                daily = [Weather.from_dict(item) for item in the_dict["daily"]]
 
         except KeyError:
             raise exceptions.ParseAPIResponseError(f"{__name__}: impossible to read weather info from input data")
@@ -79,4 +81,5 @@ class OneCall:
             timezone=the_dict.get("timezone", None),
             current=current,
             forecast_hourly=hourly,
+            forecast_daily=daily
         )
