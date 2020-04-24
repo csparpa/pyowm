@@ -3,6 +3,7 @@
 
 import unittest
 
+from pyowm.commons.exceptions import ParseAPIResponseError, APIResponseError
 from pyowm.weatherapi25.one_call import OneCall
 from pyowm.weatherapi25.weather import Weather
 
@@ -45,6 +46,35 @@ class TestWeather(unittest.TestCase):
             self.assertEqual(dt_hourly, weather.reference_time())
             dt_hourly += 3600
         self.assertIsNone(result.forecast_daily)
+
+    def test_one_call_current_none(self):
+        self.assertRaises(ValueError, lambda: OneCall(46.49, 11.33, None, None, None, None))
+
+    def test_one_call_from_dic_none(self):
+        self.assertRaises(ParseAPIResponseError, lambda: OneCall.from_dict(None))
+
+    def test_one_call_from_dict_error_400(self):
+        data = {
+            "cod": "400",
+            "message": "Nothing to geocode"
+        }
+        self.assertRaises(APIResponseError, lambda: OneCall.from_dict(data))
+
+    def test_one_call_from_dict_error_404(self):
+        data = {
+            "cod": "404",
+            "message": "Not found"
+        }
+        self.assertIsNone(OneCall.from_dict(data))
+
+    def test_one_call_from_dict_error_429(self):
+        data = {
+            "cod": 429,
+            "message": "Your account is temporary blocked due to exceeding of requests limitation "
+                       "of your subscription type. Please choose the proper subscription "
+                       "http://openweathermap.org/price"
+        }
+        self.assertRaises(APIResponseError, lambda: OneCall.from_dict(data))
 
     __test_data_bozen = {
         "lat": 46.49,
