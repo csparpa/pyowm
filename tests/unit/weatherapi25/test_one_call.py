@@ -83,7 +83,7 @@ class TestWeather(unittest.TestCase):
         "lon": 11.33,
         "timezone": "Europe/Rome"
         }
-        self.assertRaises(KeyError, lambda: OneCall.from_dict(data))
+        self.assertRaises(ParseAPIResponseError, lambda: OneCall.from_dict(data))
 
     __test_data_bozen = {
         "lat": 46.49,
