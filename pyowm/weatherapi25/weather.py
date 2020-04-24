@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+
 from pyowm.commons import exceptions
 from pyowm.utils import formatting, measurables
 from pyowm.weatherapi25.uris import ICONS_BASE_URI
@@ -51,6 +52,8 @@ class Weather:
     :type heat_index: float
     :param utc_offset: offset with UTC time zone in seconds
     :type utc_offset: int or None
+    :param uvi: UV index
+    :type uvi: int, float or None
     :returns:  a *Weather* instance
     :raises: *ValueError* when negative values are provided for non-negative quantities
 
@@ -60,44 +63,59 @@ class Weather:
                  snow, wind, humidity, pressure, temperature, status,
                  detailed_status, weather_code, weather_icon_name,
                  visibility_distance, dewpoint, humidex, heat_index,
-                 utc_offset=None):
+                 utc_offset=None, uvi=None):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self.ref_time = reference_time
-        if sunset_time < 0:
+
+        if sunrise_time is not None and sunset_time < 0:
             sunset_time = None
         self.sset_time = sunset_time
-        if sunrise_time < 0:
+
+        if sunrise_time is not None and sunrise_time < 0:
             sunrise_time = None
         self.srise_time = sunrise_time
+
         if clouds < 0:
             raise ValueError("'clouds' must be greater than 0")
         self.clouds = clouds
+
         self.rain = rain
         self.snow = snow
         self.wnd = wind
+
         if humidity < 0:
             raise ValueError("'humidity' must be greatear than 0")
         self.humidity = humidity
+
         self.pressure = pressure
         self.temp = temperature
         self.status = status
         self.detailed_status = detailed_status
         self.weather_code = weather_code
         self.weather_icon_name = weather_icon_name
+
         if visibility_distance is not None and visibility_distance < 0:
             raise ValueError("'visibility_distance' must be greater than 0")
         self.visibility_distance = visibility_distance
+
         self.dewpoint = dewpoint
+
         if humidex is not None and humidex < 0:
             raise ValueError("'humidex' must be greater than 0")
         self.humidex = humidex
+
         if heat_index is not None and heat_index < 0:
             raise ValueError("'heat index' must be grater than 0")
         self.heat_index = heat_index
+
         if utc_offset is not None:
             assert isinstance(utc_offset, int), "utc_offset must be an integer"
         self.utc_offset = utc_offset
+
+        if uvi is not None and uvi < 0:
+            raise ValueError("'uvi' must be grater than or equal to 0")
+        self.uvi = uvi
 
     def reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
@@ -209,7 +227,8 @@ class Weather:
 
     def __repr__(self):
         return "<%s.%s - reference_time=%s, status=%s, detailed_status=%s>" % (
-            __name__, self.__class__.__name__, self.reference_time('iso'), self.status.lower(), self.detailed_status.lower())
+            __name__, self.__class__.__name__, self.reference_time('iso'), self.status.lower(),
+            self.detailed_status.lower())
 
     @classmethod
     def from_dict(cls, the_dict):
@@ -231,102 +250,100 @@ class Weather:
             reference_time = the_dict['dt']
         elif 'dt' in the_dict['last']:
             reference_time = the_dict['last']['dt']
+
         if 'sunset' in the_dict:
             sunset_time = the_dict['sunset']
         elif 'sys' in the_dict and 'sunset' in the_dict['sys']:
             sunset_time = the_dict['sys']['sunset']
         else:
-            sunset_time = 0
+            sunset_time = None
+
         if 'sunrise' in the_dict:
             sunrise_time = the_dict['sunrise']
         elif 'sys' in the_dict and 'sunrise' in the_dict['sys']:
             sunrise_time = the_dict['sys']['sunrise']
         else:
-            sunrise_time = 0
+            sunrise_time = None
+
         # -- calc
+        dewpoint = None
+        humidex = None
+        heat_index = None
         if 'calc' in the_dict:
             if 'dewpoint' in the_dict['calc']:
                 dewpoint = the_dict['calc']['dewpoint']
-            else:
-                dewpoint = None
+
             if 'humidex' in the_dict['calc']:
                 humidex = the_dict['calc']['humidex']
-            else:
-                humidex = None
+
             if 'heatindex' in the_dict['calc']:
                 heat_index = the_dict['calc']['heatindex']
-            else:
-                heat_index = None
+
         elif 'last' in the_dict:
             if 'calc' in the_dict['last']:
                 if 'dewpoint' in the_dict['last']['calc']:
                     dewpoint = the_dict['last']['calc']['dewpoint']
-                else:
-                    dewpoint = None
+
                 if 'humidex' in the_dict['last']['calc']:
                     humidex = the_dict['last']['calc']['humidex']
-                else:
-                    humidex = None
+
                 if 'heatindex' in the_dict['last']['calc']:
                     heat_index = the_dict['last']['calc']['heatindex']
-                else:
-                    heat_index = None
-        else:
-            dewpoint = None
-            humidex = None
-            heat_index = None
+
+        if 'dew_point' in the_dict and dewpoint is None:
+            dewpoint = the_dict.get('dew_point', None)
+
         # -- visibility
+        visibility_distance = None
         if 'visibility' in the_dict:
             if isinstance(the_dict['visibility'], int):
                 visibility_distance = the_dict['visibility']
             elif 'distance' in the_dict['visibility']:
                 visibility_distance = the_dict['visibility']['distance']
-            else:
-                visibility_distance = None
         elif 'last' in the_dict and 'visibility' in the_dict['last']:
             if isinstance(the_dict['last']['visibility'], int):
                 visibility_distance = the_dict['last']['visibility']
             elif 'distance' in the_dict['last']['visibility']:
                 visibility_distance = the_dict['last']['visibility']['distance']
-            else:
-                visibility_distance = None
-        else:
-            visibility_distance = None
+
         # -- clouds
+        clouds = 0
         if 'clouds' in the_dict:
             if isinstance(the_dict['clouds'], int) or isinstance(the_dict['clouds'], float):
                 clouds = the_dict['clouds']
             elif 'all' in the_dict['clouds']:
                 clouds = the_dict['clouds']['all']
-            else:
-                clouds = 0
-        else:
-            clouds = 0
+
         # -- rain
+        rain = dict()
         if 'rain' in the_dict:
             if isinstance(the_dict['rain'], int) or isinstance(the_dict['rain'], float):
                 rain = {'all': the_dict['rain']}
             else:
                 if the_dict['rain'] is not None:
                     rain = the_dict['rain'].copy()
-                else:
-                    rain = dict()
-        else:
-            rain = dict()
+
         # -- wind
+        wind = dict()
         if 'wind' in the_dict and the_dict['wind'] is not None:
             wind = the_dict['wind'].copy()
         elif 'last' in the_dict:
             if 'wind' in the_dict['last'] and the_dict['last']['wind'] is not None:
                 wind = the_dict['last']['wind'].copy()
-            else:
-                wind = dict()
         else:
-            wind = dict()
             if 'speed' in the_dict:
                 wind['speed'] = the_dict['speed']
+            elif 'wind_speed' in the_dict:
+                wind['speed'] = the_dict.get('wind_speed', 0)
+
             if 'deg' in the_dict:
                 wind['deg'] = the_dict['deg']
+            elif 'wind_deg' in the_dict:
+                wind['deg'] = the_dict.get('wind_deg', 0)
+
+            if 'wind_gust' in the_dict:
+                wind['gust'] = the_dict.get('wind_gust', 0)
+
         # -- humidity
         if 'humidity' in the_dict:
             humidity = the_dict['humidity']
@@ -336,18 +353,18 @@ class Weather:
             humidity = the_dict['last']['main']['humidity']
         else:
             humidity = 0
+
         # -- snow
+        snow = dict()
         if 'snow' in the_dict:
             if isinstance(the_dict['snow'], int) or isinstance(the_dict['snow'], float):
                 snow = {'all': the_dict['snow']}
             else:
                 if the_dict['snow'] is not None:
                     snow = the_dict['snow'].copy()
-                else:
-                    snow = dict()
-        else:
-            snow = dict()
+
         # -- pressure
+        atm_press = None
         if 'pressure' in the_dict:
             atm_press = the_dict['pressure']
         elif 'main' in the_dict and 'pressure' in the_dict['main']:
@@ -355,19 +372,18 @@ class Weather:
         elif 'last' in the_dict:
             if 'main' in the_dict['last']:
                 atm_press = the_dict['last']['main']['pressure']
-        else:
-            atm_press = None
+
+        sea_level_press = None
         if 'main' in the_dict and 'sea_level' in the_dict['main']:
             sea_level_press = the_dict['main']['sea_level']
-        else:
-            sea_level_press = None
+
         pressure = {'press': atm_press, 'sea_level': sea_level_press}
+
         # -- temperature
+        temperature = dict()
         if 'temp' in the_dict:
             if the_dict['temp'] is not None:
                 temperature = the_dict['temp'].copy()
-            else:
-                temperature = dict()
         elif 'main' in the_dict and 'temp' in the_dict['main']:
             temp = the_dict['main']['temp']
             if 'temp_kf' in the_dict['main']:
@@ -395,8 +411,7 @@ class Weather:
         elif 'last' in the_dict:
             if 'main' in the_dict['last']:
                 temperature = dict(temp=the_dict['last']['main']['temp'])
-        else:
-            temperature = dict()
+
         # -- weather status info
         if 'weather' in the_dict:
             status = the_dict['weather'][0]['main']
@@ -408,17 +423,21 @@ class Weather:
             detailed_status = ''
             weather_code = 0
             weather_icon_name = ''
+
         # -- timezone
         if 'timezone' in the_dict:
             utc_offset = the_dict['timezone']
         else:
             utc_offset = None
 
+        # -- UV index
+        uvi = the_dict.get('uvi', None)
+
         return Weather(reference_time, sunset_time, sunrise_time, clouds,
                        rain, snow, wind, humidity, pressure, temperature,
                        status, detailed_status, weather_code, weather_icon_name,
                        visibility_distance, dewpoint, humidex, heat_index,
-                       utc_offset=utc_offset)
+                       utc_offset=utc_offset, uvi=uvi)
 
     @classmethod
     def from_dict_of_lists(cls, the_dict):
@@ -446,7 +465,7 @@ class Weather:
                 return None
             elif the_dict['cod'] != "200":
                 raise exceptions.APIResponseError(
-                                      "OWM API: error - response payload: " + json.dumps(the_dict), the_dict['cod'])
+                    "OWM API: error - response payload: " + json.dumps(the_dict), the_dict['cod'])
         # Handle the case when no results are found
         if 'cnt' in the_dict and the_dict['cnt'] == "0":
             return []
@@ -456,11 +475,11 @@ class Weather:
                     return [Weather.from_dict(item) for item in the_dict['list']]
                 except KeyError:
                     raise exceptions.ParseAPIResponseError(
-                              ''.join([__name__, ': impossible to read weather info from input data'])
-                          )
+                        ''.join([__name__, ': impossible to read weather info from input data'])
+                    )
             else:
                 raise exceptions.ParseAPIResponseError(
-                              ''.join([__name__, ': impossible to read weather list from input data']))
+                    ''.join([__name__, ': impossible to read weather list from input data']))
 
     def to_dict(self):
         """Dumps object to a dictionary
@@ -486,4 +505,5 @@ class Weather:
                 'dewpoint': self.dewpoint,
                 'humidex': self.humidex,
                 'heat_index': self.heat_index,
-                'utc_offset': self.utc_offset}
+                'utc_offset': self.utc_offset,
+                'uvi': self.uvi}

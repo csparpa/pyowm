@@ -1,0 +1,82 @@
+from typing import Union
+
+from pyowm.commons import exceptions
+from pyowm.utils import geo
+from pyowm.weatherapi25.weather import Weather
+
+
+class OneCall:
+
+    def __init__(self,
+                 lat: Union[int, float],
+                 lon: Union[int, float],
+                 timezone: str,
+                 current: Weather,
+                 forecast_hourly: [Weather]
+                 ) -> None:
+        geo.assert_is_lat(lat)
+        self.lat = lat
+
+        geo.assert_is_lon(lon)
+        self.lon = lon
+
+        self.timezone = timezone
+
+        if current is None:
+            raise ValueError("'current' must be set")
+        self.current = current
+
+        self.forecast_hourly = forecast_hourly
+
+    def __repr__(self):
+        return "<%s.%s - lat=%s, lon=%s, retrieval_time=%s>" % (
+            __name__, self.__class__.__name__, self.lat, self.lon,
+            self.current.reference_time() if self.current else None)
+
+    @classmethod
+    def from_dict(cls, the_dict: dict):
+        """
+        Parses a *OneCall* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: a *OneCall* instance or ``None`` if no data is available
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the
+            data needed to build the result, *APIResponseError* if the input dict embeds an HTTP status error
+
+        """
+
+        if the_dict is None:
+            raise exceptions.ParseAPIResponseError('Data is None')
+
+        # Check if server returned errors: this check overcomes the lack of use
+        # of HTTP error status codes by the OWM API 2.5. This mechanism is
+        # supposed to be deprecated as soon as the API fully adopts HTTP for
+        # conveying errors to the clients
+        if 'message' in the_dict and 'cod' in the_dict:
+            if the_dict['cod'] == "404":
+                print("OWM API: data not found - response payload", the_dict['cod'])
+                return None
+            elif the_dict['cod'] == "429":
+                raise exceptions.APIResponseError("OWM API: error - Exceeded call limit", the_dict['cod'])
+            elif the_dict['cod'] != "200":
+                raise exceptions.APIResponseError("OWM API: error - response payload", the_dict['cod'])
+
+        try:
+            current = Weather.from_dict(the_dict["current"])
+            hourly = [Weather.from_dict(item) for item in the_dict["hourly"]]
+            if 'daily' in the_dict:
+                # TODO daily
+                pass
+
+        except KeyError:
+            raise exceptions.ParseAPIResponseError(f"{__name__}: impossible to read weather info from input data")
+
+        return OneCall(
+            lat=the_dict.get("lat", None),
+            lon=the_dict.get("lon", None),
+            timezone=the_dict.get("timezone", None),
+            current=current,
+            forecast_hourly=hourly,
+        )

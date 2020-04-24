@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from typing import Union
 
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import WEATHER_API_VERSION
-from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory
-from pyowm.weatherapi25.uris import ROOT_WEATHER_API, OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, \
-    BBOX_CITY_URI, THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, STATION_WEATHER_HISTORY_URI
 from pyowm.utils import geo
+from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory, one_call
+from pyowm.weatherapi25.uris import ROOT_WEATHER_API, OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, \
+    BBOX_CITY_URI, THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, STATION_WEATHER_HISTORY_URI, ONE_CALL_URI, \
+    ONE_CALL_HISTORICAL_URI
 
 
 class WeatherManager:
-
     """
     A manager objects that provides a full interface to OWM Weather API.
 
@@ -496,6 +497,40 @@ class WeatherManager:
             sh.station_id = station_ID
             sh.interval = interval
         return sh
+
+    def one_call(self, lat: Union[int, float], lon: Union[int, float], historical: bool = False) -> one_call.OneCall:
+        """
+        Queries the OWM Weather API with one call for current weather information and forecast for the
+        specified geographic coordinates.
+        One Call API provides the following weather data for any geographical coordinate:
+        - Current weather
+        - Hourly forecast for 48 hours
+        - Daily forecast for 7 days
+
+        A *OneCall* object is returned with the current data and the two forecasts.
+
+        :param lat: location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param historical: if set, retrieve historical data. Default=false
+        :type historical: bool
+        :returns: a *OneCall* instance or ``None`` if the data is not
+            available for the specified location
+        :raises: *ParseResponseException* when OWM Weather API responses' data
+            cannot be parsed, *APICallException* when OWM Weather API can not be
+            reached
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        params = {'lon': lon, 'lat': lat}
+
+        uri = ONE_CALL_URI
+        if historical:
+            uri = ONE_CALL_HISTORICAL_URI
+
+        _, json_data = self.http_client.get_json(uri, params=params)
+        return one_call.OneCall.from_dict(json_data)
 
     def __repr__(self):
         return '<%s.%s>' % (__name__, self.__class__.__name__)
