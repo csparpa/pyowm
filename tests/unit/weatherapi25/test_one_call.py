@@ -69,12 +69,21 @@ class TestWeather(unittest.TestCase):
 
     def test_one_call_from_dict_error_429(self):
         data = {
-            "cod": 429,
+            "cod": "429",
             "message": "Your account is temporary blocked due to exceeding of requests limitation "
                        "of your subscription type. Please choose the proper subscription "
                        "http://openweathermap.org/price"
         }
         self.assertRaises(APIResponseError, lambda: OneCall.from_dict(data))
+
+
+    def test_one_call_from_dict_current_missing(self):
+        data={
+        "lat": 46.49,
+        "lon": 11.33,
+        "timezone": "Europe/Rome"
+        }
+        self.assertRaises(KeyError, lambda: OneCall.from_dict(data))
 
     __test_data_bozen = {
         "lat": 46.49,
