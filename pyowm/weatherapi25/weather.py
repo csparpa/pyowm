@@ -382,35 +382,33 @@ class Weather:
         # -- temperature
         temperature = dict()
         if 'temp' in the_dict:
-            if the_dict['temp'] is not None:
+            if isinstance(the_dict['temp'], int) or isinstance(the_dict['temp'], float):
+                temperature = {
+                    'temp': the_dict.get('temp', None)
+                }
+            elif the_dict['temp'] is not None:
                 temperature = the_dict['temp'].copy()
         elif 'main' in the_dict and 'temp' in the_dict['main']:
-            temp = the_dict['main']['temp']
-            if 'temp_kf' in the_dict['main']:
-                temp_kf = the_dict['main']['temp_kf']
-            else:
-                temp_kf = None
-            if 'temp_max' in the_dict['main']:
-                temp_max = the_dict['main']['temp_max']
-            else:
-                temp_max = None
-            if 'temp_min' in the_dict['main']:
-                temp_min = the_dict['main']['temp_min']
-            else:
-                temp_min = None
-            if 'feels_like' in the_dict['main']:
-                feels_like = the_dict['main']['feels_like']
-            else:
-                feels_like = None
-            temperature = {'temp': temp,
-                           'temp_kf': temp_kf,
-                           'temp_max': temp_max,
-                           'temp_min': temp_min,
-                           'feels_like': feels_like
+            temp_dic = the_dict['main']
+
+            temperature = {'temp': temp_dic['temp'],
+                           'temp_kf': temp_dic.get('temp_kf', None),
+                           'temp_max': temp_dic.get('temp_max', None),
+                           'temp_min': temp_dic.get('temp_min', None),
+                           'feels_like': temp_dic.get('feels_like', None)
                            }
         elif 'last' in the_dict:
             if 'main' in the_dict['last']:
                 temperature = dict(temp=the_dict['last']['main']['temp'])
+
+        # add feels_like to temperature if present
+        if 'feels_like' in the_dict:
+            feels_like = the_dict['feels_like']
+            if isinstance(feels_like, int) or isinstance(feels_like, float):
+                temperature['feels_like'] = the_dict.get('feels_like', None)
+            elif isinstance(feels_like, dict):
+                for label, temp in feels_like.items():
+                    temperature[f'feels_like_{label}'] = temp
 
         # -- weather status info
         if 'weather' in the_dict:
