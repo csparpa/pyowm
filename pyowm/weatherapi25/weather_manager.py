@@ -527,7 +527,7 @@ class WeatherManager:
         _, json_data = self.http_client.get_json(ONE_CALL_URI, params=params)
         return one_call.OneCall.from_dict(json_data)
 
-    def one_call_historical(self, lat: Union[int, float], lon: Union[int, float], dt: int = None):
+    def one_call_history(self, lat: Union[int, float], lon: Union[int, float], dt: int = None):
         """
         Queries the OWM Weather API with one call for historical weather information for the
         specified geographic coordinates.
