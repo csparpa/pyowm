@@ -246,6 +246,7 @@ class Weather:
         if the_dict is None:
             raise exceptions.ParseAPIResponseError('Data is None')
         # -- times
+        reference_time = 0
         if 'dt' in the_dict:
             reference_time = the_dict['dt']
         elif 'dt' in the_dict['last']:

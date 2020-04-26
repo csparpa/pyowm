@@ -35,6 +35,18 @@ class OneCall:
             __name__, self.__class__.__name__, self.lat, self.lon,
             self.current.reference_time() if self.current else None)
 
+    def to_geopoint(self):
+        """
+        Returns the geoJSON compliant representation of the place for this One Call
+
+        :returns: a ``pyowm.utils.geo.Point`` instance
+
+        """
+        if self.lon is None or self.lat is None:
+            return None
+        return geo.Point(self.lon, self.lat)
+
+
     @classmethod
     def from_dict(cls, the_dict: dict):
         """

@@ -438,13 +438,12 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
 
     def test_one_call_historical(self):
-        result = self.__owm.one_call_historical(lat=46.49, lon=11.33)
+        result = self.__owm.one_call_history(lat=46.49, lon=11.33)
         self.assertTrue(isinstance(result, OneCall))
         self.assertEqual(46.49, result.lat)
         self.assertEqual(11.33, result.lon)
         self.assertEqual("Europe/Rome", result.timezone)
         self.assertTrue(isinstance(result.current, Weather))
-        self.assertEqual(48, len(result.forecast_hourly))
         for i, weather in enumerate(result.forecast_hourly):
             self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
         self.assertEqual(8, len(result.forecast_daily))

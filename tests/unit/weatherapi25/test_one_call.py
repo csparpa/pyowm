@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 import unittest
 
 from pyowm.commons.exceptions import ParseAPIResponseError, APIResponseError
+from pyowm.utils import geo
 from pyowm.weatherapi25.one_call import OneCall
 from pyowm.weatherapi25.weather import Weather
 
 
 class TestWeather(unittest.TestCase):
 
-    def test_one_call_from_dic(self):
+    def test_one_call_from_dict(self):
         result = OneCall.from_dict(self.__test_data_bozen)
         self.assertTrue(isinstance(result, OneCall))
         self.assertEqual(46.49, result.lat)
@@ -31,7 +33,7 @@ class TestWeather(unittest.TestCase):
             self.assertEqual(dt_daily, weather.reference_time())
             dt_daily += 86400
 
-    def test_one_call_historical_from_dic(self):
+    def test_one_call_historical_from_dict(self):
         result = OneCall.from_dict(self.__test_data_hostorical_bozen)
         self.assertTrue(isinstance(result, OneCall))
         self.assertEqual(46.49, result.lat)
@@ -50,7 +52,7 @@ class TestWeather(unittest.TestCase):
     def test_one_call_current_none(self):
         self.assertRaises(ValueError, lambda: OneCall(46.49, 11.33, None, None, None, None))
 
-    def test_one_call_from_dic_none(self):
+    def test_one_call_from_dict_none(self):
         self.assertRaises(ParseAPIResponseError, lambda: OneCall.from_dict(None))
 
     def test_one_call_from_dict_error_400(self):
@@ -76,7 +78,6 @@ class TestWeather(unittest.TestCase):
         }
         self.assertRaises(APIResponseError, lambda: OneCall.from_dict(data))
 
-
     def test_one_call_from_dict_current_missing(self):
         data={
         "lat": 46.49,
@@ -84,6 +85,23 @@ class TestWeather(unittest.TestCase):
         "timezone": "Europe/Rome"
         }
         self.assertRaises(ParseAPIResponseError, lambda: OneCall.from_dict(data))
+
+    def test_to_geopoint(self):
+        instance = OneCall.from_dict(self.__test_data_bozen)
+        result_1 = instance.to_geopoint()
+        self.assertTrue(isinstance(result_1, geo.Point))
+        expected_geojson = json.dumps({
+            "coordinates": [11.33, 46.49],
+            "type": "Point"
+        })
+        self.assertEqual(sorted(expected_geojson),
+                         sorted(result_1.geojson()))
+
+        instance.lat = None
+        self.assertIsNone(instance.to_geopoint())
+
+        instance.lon = None
+        self.assertIsNone(instance.to_geopoint())
 
     __test_data_bozen = {
         "lat": 46.49,
