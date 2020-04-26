@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import unittest
 import os
+import unittest
+
 import pyowm.commons.exceptions
 from pyowm import owm
+from pyowm.weatherapi25.one_call import OneCall
+from pyowm.weatherapi25.weather import Weather
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
-
     __owm = owm.OWM(os.getenv('OWM_API_KEY', None)).weather_manager()
 
     def test_weather_at_place(self):
@@ -67,8 +69,8 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertTrue(weat)
 
     def test_weather_at_id(self):
-        o1 = self.__owm.weather_at_id(5128581) # New York
-        o2 = self.__owm.weather_at_id(703448) # Kiev'
+        o1 = self.__owm.weather_at_id(5128581)  # New York
+        o2 = self.__owm.weather_at_id(703448)  # Kiev'
         self.assertTrue(o1 is not None)
         self.assertTrue(o1.reception_time() is not None)
         loc = o1.location
@@ -86,7 +88,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
 
     def test_weather_at_ids(self):
         # New York, Kiev
-        observations = self.__owm.weather_at_ids([5128581,703448])
+        observations = self.__owm.weather_at_ids([5128581, 703448])
         o1 = observations[0]
         o2 = observations[1]
         self.assertTrue(o1 is not None)
@@ -266,7 +268,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             fc3 = self.__owm.forecast_at_id(99999999999999, '3h')
             self.fail()
         except pyowm.commons.exceptions.NotFoundError:
-            pass # ok
+            pass  # ok
 
     def forecast_at_place_daily(self):
         """
@@ -298,7 +300,7 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         """
         Test feature: get daily forecast at a specific geographic coordinate
         """
-        fc1 = self.__owm.forecast_at_coords(51.5073509, -0.1277583, 'daily') # London,uk
+        fc1 = self.__owm.forecast_at_coords(51.5073509, -0.1277583, 'daily')  # London,uk
         self.assertTrue(fc1)
         f1 = fc1.forecast
         self.assertTrue(f1 is not None)
@@ -420,6 +422,33 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(loc is not None)
             weat = item.weather
             self.assertTrue(weat is not None)
+
+    def test_one_call(self):
+        result = self.__owm.one_call(lat=46.49, lon=11.33)
+        self.assertTrue(isinstance(result, OneCall))
+        self.assertEqual(46.49, result.lat)
+        self.assertEqual(11.33, result.lon)
+        self.assertEqual("Europe/Rome", result.timezone)
+        self.assertTrue(isinstance(result.current, Weather))
+        self.assertEqual(48, len(result.forecast_hourly))
+        for i, weather in enumerate(result.forecast_hourly):
+            self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
+        self.assertEqual(8, len(result.forecast_daily))
+        for i, weather in enumerate(result.forecast_daily):
+            self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
+
+    def test_one_call_historical(self):
+        result = self.__owm.one_call_history(lat=46.49, lon=11.33)
+        self.assertTrue(isinstance(result, OneCall))
+        self.assertEqual(46.49, result.lat)
+        self.assertEqual(11.33, result.lon)
+        self.assertEqual("Europe/Rome", result.timezone)
+        self.assertTrue(isinstance(result.current, Weather))
+        for i, weather in enumerate(result.forecast_hourly):
+            self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
+        self.assertEqual(8, len(result.forecast_daily))
+        for i, weather in enumerate(result.forecast_daily):
+            self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
 
 
 if __name__ == "__main__":

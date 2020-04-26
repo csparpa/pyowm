@@ -13,5 +13,6 @@ BBOX_CITY_URI = 'box/city'
 THREE_HOURS_FORECAST_URI = 'forecast'
 DAILY_FORECAST_URI = 'forecast/daily'
 STATION_WEATHER_HISTORY_URI = 'history/station'
-
+ONE_CALL_URI = 'onecall'
+ONE_CALL_HISTORICAL_URI = ONE_CALL_URI + '/timemachine'
 ICONS_BASE_URI = 'http://openweathermap.org/img/w/%s.png'
