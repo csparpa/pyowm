@@ -13,7 +13,7 @@ class TestImage(unittest.TestCase):
 
     def test_load(self):
         img_file_name = '256x256.png'
-        path = (pathlib.Path() / img_file_name).absolute()
+        path = (pathlib.Path(__file__).parent / img_file_name).absolute()
         i = Image.load(path)
         self.assertIsNotNone(i)
         self.assertEqual(i.image_type.mime_type, ImageTypeEnum.PNG.mime_type)

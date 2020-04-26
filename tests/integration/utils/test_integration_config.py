@@ -12,11 +12,12 @@ class TesIntegrationConfig(unittest.TestCase):
 
     def test_get_config_from(self):
         config_file_name = 'test_config.json'
-        path = (pathlib.Path() / config_file_name).absolute()
+        path = (pathlib.Path(__file__).parent / config_file_name).absolute()
         result = config.get_config_from(path)
         self.assertIsInstance(result, dict)
 
-        path = 'non_json'
+        config_file_name = 'non_json'
+        path = (pathlib.Path(__file__).parent / config_file_name).absolute()
         self.assertRaises(pyowm.commons.exceptions.ConfigurationParseError, config.get_config_from, path)
 
 

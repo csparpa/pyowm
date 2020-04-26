@@ -145,10 +145,14 @@ class Trigger:
                 alert_id = key
                 alert_data = alerts_dict[alert_id]
                 alert_last_update = alert_data['last_update']
-                alert_met_conds = [
-                    dict(current_value=c['current_value']['min'], condition=Condition.from_dict(c['condition']))
-                        for c in alert_data['conditions']
-                ]
+                alert_met_conds = list()
+                for c in alert_data['conditions']:
+                    if isinstance(c['current_value'], int):
+                        cv = c['current_value']
+                    else:
+                        cv = c['current_value']['min']
+                    item = dict(current_value=cv, condition=Condition.from_dict(c['condition']))
+                    alert_met_conds.append(item)
                 alert_coords = alert_data['coordinates']
                 alert = Alert(alert_id, trigger_id, alert_met_conds, alert_coords, last_update=alert_last_update)
                 alerts.append(alert)
