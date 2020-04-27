@@ -12,6 +12,7 @@ from pyowm.weatherapi25.forecast import Forecast
 from pyowm.weatherapi25.forecaster import Forecaster
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.observation import Observation
+from pyowm.weatherapi25.one_call import OneCall
 from pyowm.weatherapi25.stationhistory import StationHistory
 from pyowm.weatherapi25.weather import Weather
 from tests.unit.weatherapi25.json_test_responses import (
@@ -21,7 +22,7 @@ from tests.unit.weatherapi25.json_test_responses import (
     CITY_WEATHER_HISTORY_JSON, STATION_TICK_WEATHER_HISTORY_JSON,
     STATION_WEATHER_HISTORY_JSON, THREE_HOURS_FORECAST_NOT_FOUND_JSON,
     DAILY_FORECAST_NOT_FOUND_JSON, STATION_HISTORY_NO_ITEMS_JSON,
-    WEATHER_AT_PLACES_IN_BBOX_JSON)
+    WEATHER_AT_PLACES_IN_BBOX_JSON, ONE_CALL_JSON, ONE_CALL_HISTORY_JSON)
 
 
 class TestWeatherManager(unittest.TestCase):
@@ -83,6 +84,15 @@ class TestWeatherManager(unittest.TestCase):
 
     def mock_api_call_returning_weather_history_at_coords(self, uri, params=None, headers=None):
         return 200, json.loads(CITY_WEATHER_HISTORY_JSON)
+
+    def mock_api_call_returning_onecall_data(self, uri, params=None, headers=None):
+        return 200, json.loads(ONE_CALL_JSON)
+
+    def mock_api_call_returning_onecall_history_data(self, uri, params=None, headers=None):
+        return 200, json.loads(ONE_CALL_HISTORY_JSON)
+
+    def mock__retrieve_station_history(self, station_ID, limit, interval):
+        return None
 
     # -- TESTS --
 
@@ -188,7 +198,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertRaises(AssertionError, WeatherManager.weather_at_ids, self.__test_instance, "test")
         self.assertRaises(ValueError, WeatherManager.weather_at_ids, self.__test_instance, [-1, 2, 3])
 
-    def test_weather_at_places(self):
+    def test_weather_at_places_without_limits(self):
         original_func = HttpClient.get_json
         HttpClient.get_json= \
             self.mock_api_call_returning_multiple_obs
@@ -206,15 +216,49 @@ class TestWeatherManager(unittest.TestCase):
             weat = item.weather
             self.assertTrue(weat is not None)
 
+    def test_weather_at_places_with_limits(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json= \
+            self.mock_api_call_returning_multiple_obs
+        result = \
+            self.__test_instance.weather_at_places("London", "accurate", limit=2)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, list))
+        self.assertEqual(2, len(result))
+        for item in result:
+            self.assertTrue(item is not None)
+            self.assertTrue(item.reception_time())
+            loc = item.location
+            self.assertTrue(loc is not None)
+            self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+            weat = item.weather
+            self.assertTrue(weat is not None)
+
     def test_weather_at_places_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.weather_at_places, self.__test_instance, "London", "x")
         self.assertRaises(ValueError, WeatherManager.weather_at_places, self.__test_instance, "London", "accurate", -5)
 
-    def test_weather_around_coords(self):
+    def test_weather_around_coords_without_limits(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_multiple_obs
         result = self.__test_instance.weather_around_coords(57.0, -2.15)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, list))
+        for item in result:
+            self.assertTrue(item is not None)
+            self.assertTrue(item.reception_time() is not None)
+            loc = item.location
+            self.assertTrue(loc is not None)
+            self.assertTrue(all(v is not None for v in loc.__dict__.values()))
+            weat = item.weather
+            self.assertTrue(weat is not None)
+
+    def test_weather_around_coords_with_limits(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_api_call_returning_multiple_obs
+        result = self.__test_instance.weather_around_coords(57.0, -2.15, limit=2)
         HttpClient.get_json = original_func
         self.assertTrue(isinstance(result, list))
         for item in result:
@@ -330,7 +374,7 @@ class TestWeatherManager(unittest.TestCase):
         for weather in f:
             self.assertTrue(isinstance(weather, Weather))
 
-    def forecast_at_id_on_3h_when_forecast_not_found(self):
+    def test_forecast_at_id_on_3h_when_forecast_not_found(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_empty_3h_forecast
@@ -338,7 +382,7 @@ class TestWeatherManager(unittest.TestCase):
         HttpClient.get_json = original_func
         self.assertIsNone(result)
 
-    def forecast_at_id_fails_with_wrong_params(self):
+    def test_forecast_at_id_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.forecast_at_id, self.__test_instance, -1234, '3h', None)
         self.assertRaises(AssertionError, WeatherManager.forecast_at_id, self.__test_instance, 123, None, None)
         self.assertRaises(ValueError, WeatherManager.forecast_at_id, self.__test_instance, 123, 'unsupported', None)
@@ -456,7 +500,18 @@ class TestWeatherManager(unittest.TestCase):
             self.assertTrue(isinstance(result.location, Location))
             self.assertTrue(result.reception_time() is not None)
 
-    def test_station_tick_history(self):
+    def test_station_tick_history_without_limits(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_api_call_returning_station_tick_weather_history
+        result = self.__test_instance.station_tick_history(1234)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, Historian))
+        station_history = result.station_history
+        self.assertTrue(isinstance(station_history, StationHistory))
+        self.assertTrue(isinstance(station_history.measurements, dict))
+
+    def test_station_tick_history_with_limits(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_station_tick_weather_history
@@ -479,7 +534,18 @@ class TestWeatherManager(unittest.TestCase):
         HttpClient.get_json = original_func
         self.assertIsNone(result)
 
-    def test_station_hour_history(self):
+    def test_station_hour_history_without_limits(self):
+        original_call = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_api_call_returning_station_hour_weather_history
+        result = self.__test_instance.station_hour_history(1234)
+        HttpClient.get_json = original_call
+        self.assertTrue(isinstance(result, Historian))
+        station_history = result.station_history
+        self.assertTrue(isinstance(station_history, StationHistory))
+        self.assertTrue(isinstance(station_history.measurements, dict))
+
+    def test_station_hour_history_with_limits(self):
         original_call = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_api_call_returning_station_hour_weather_history
@@ -502,7 +568,7 @@ class TestWeatherManager(unittest.TestCase):
         HttpClient.get_json = original_call
         self.assertIsNone(result)
 
-    def test_station_day_history(self):
+    def test_station_day_history_with_limits(self):
         original_func = HttpClient.get_json
         HttpClient.get_json = \
             self.mock_call_api_returning_station_day_weather_history
@@ -513,5 +579,79 @@ class TestWeatherManager(unittest.TestCase):
         self.assertTrue(isinstance(station_history, StationHistory))
         self.assertTrue(isinstance(station_history.measurements, dict))
 
+    def test_station_day_history_without_limits(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_call_api_returning_station_day_weather_history
+        result = self.__test_instance.station_day_history(1234)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, Historian))
+        station_history = result.station_history
+        self.assertTrue(isinstance(station_history, StationHistory))
+        self.assertTrue(isinstance(station_history.measurements, dict))
+
+    def test_station_day_history_returning_none(self):
+        original_http_get = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_call_api_returning_station_day_weather_history
+        original_retrieve_station_history = self.__test_instance._retrieve_station_history
+        self.__test_instance._retrieve_station_history = self.mock__retrieve_station_history
+
+        result = self.__test_instance.station_day_history(1234, limit=4)
+
+        HttpClient.get_json = original_http_get
+        self.__test_instance._retrieve_station_history = original_retrieve_station_history
+
+        self.assertIsNone(result)
+
     def test_station_day_history_fails_with_wrong_params(self):
         self.assertRaises(ValueError, WeatherManager.station_day_history, self.__test_instance, 1234, -3)
+
+    def test_one_call(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_api_call_returning_onecall_data
+        result = self.__test_instance.one_call(46.23, 12.7)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, OneCall))
+        self.assertTrue(isinstance(result.current, Weather))
+        self.assertTrue(isinstance(result.forecast_hourly, list))
+        self.assertTrue(all(isinstance(v, Weather) for v in result.forecast_hourly))
+        if result.forecast_daily is not None:
+            self.assertTrue(all(isinstance(v, Weather) for v in result.forecast_daily))
+
+    def test_one_call_fails(self):
+        self.assertRaises(AssertionError, WeatherManager.one_call, self.__test_instance, None, 12.7)
+        self.assertRaises(AssertionError, WeatherManager.one_call, self.__test_instance, 46.23, 'test')
+
+    def test_one_call_history_without_time_range(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_api_call_returning_onecall_history_data
+        result = self.__test_instance.one_call_history(46.23, 12.7)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, OneCall))
+        self.assertTrue(isinstance(result.current, Weather))
+        self.assertTrue(isinstance(result.forecast_hourly, list))
+        self.assertTrue(all(isinstance(v, Weather) for v in result.forecast_hourly))
+        if result.forecast_daily is not None:
+            self.assertTrue(all(isinstance(v, Weather) for v in result.forecast_daily))
+
+    def test_one_call_history_with_time_range(self):
+        original_func = HttpClient.get_json
+        HttpClient.get_json = \
+            self.mock_api_call_returning_onecall_history_data
+        result = self.__test_instance.one_call_history(46.23, 12.7, dt=1577890800)
+        HttpClient.get_json = original_func
+        self.assertTrue(isinstance(result, OneCall))
+        self.assertTrue(isinstance(result.current, Weather))
+        self.assertTrue(isinstance(result.forecast_hourly, list))
+        self.assertTrue(all(isinstance(v, Weather) for v in result.forecast_hourly))
+        if result.forecast_daily is not None:
+            self.assertTrue(all(isinstance(v, Weather) for v in result.forecast_daily))
+
+    def test_one_call_history_fails(self):
+        self.assertRaises(AssertionError, WeatherManager.one_call_history, self.__test_instance, None, 12.7, 1234567)
+        self.assertRaises(AssertionError, WeatherManager.one_call_history, self.__test_instance, 46.23, 'test', 1234567)
+        self.assertRaises(ValueError, WeatherManager.one_call_history, self.__test_instance, 46.23, 12.7, 'test')
+        self.assertRaises(ValueError, WeatherManager.one_call_history, self.__test_instance, 46.23, 12.7, -987)

@@ -551,8 +551,11 @@ class WeatherManager:
         geo.assert_is_lat(lat)
         if dt is None:
             dt = int((datetime.now() - timedelta(days=5)).replace(tzinfo=timezone.utc).timestamp())
-        elif not isinstance(dt, int):
-            raise ValueError("dt must be of type int")
+        else:
+            if not isinstance(dt, int):
+                raise ValueError("dt must be of type int")
+            if dt < 0:
+                raise ValueError("dt must be positive")
 
         params = {'lon': lon, 'lat': lat, 'dt': dt}
 

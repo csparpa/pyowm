@@ -149,3 +149,21 @@ OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"c
 FORECAST_MALFORMED_JSON = '{ "city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
     '"GB","population": 1000000}, "list": [{"test": "fake"}]}'
+
+ONE_CALL_JSON = '''{"lat":60.99,"lon":30.9,"timezone":"America/Chicago","current":{"dt":1586001851,"sunrise":1586003020,
+"sunset":1586048382,"temp":280.15,"feels_like":277.75,"pressure":1017,"humidity":93,"uvi":9.63,"clouds":90,
+"visibility":6437,"wind_speed":2.1,"wind_deg":70,"weather":[{"id":501,"main":"Rain","description":"moderate rain",
+"icon":"10n"},{"id":701,"main":"Mist","description":"mist","icon":"50n"}],"rain":{"1h":1.02}},"hourly":[{"dt":1586001600,
+"temp":280.15,"feels_like":275.8,"pressure":1017,"humidity":93,"clouds":90,"wind_speed":4.88,"wind_deg":60,"weather":[
+{"id":501,"main":"Rain","description":"moderate rain","icon":"10n"}],"rain":{"1h":1.37}}],"daily":[{"dt":1586023200,
+"sunrise":1586003020,"sunset":1586048382,"temp":{"day":281.46,"min":279.92,"max":285.17,"night":283.74,"eve":285.17,
+"morn":280.15},"feels_like":{"day":276.63,"night":281.67,"eve":282.73,"morn":275.8},"pressure":1019,"humidity":69,
+"wind_speed":4.75,"wind_deg":54,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],
+"clouds":98,"rain":5.97,"uvi":9.63}]}'''
+
+ONE_CALL_HISTORY_JSON = '''{"lat":60.99,"lon":30.9,"timezone":"Europe/Moscow","current":{"dt":1586468027,"sunrise":1586487424,
+"sunset":1586538297,"temp":274.31,"feels_like":269.79,"pressure":1006,"humidity":72,"dew_point":270.21,"clouds":0,
+"visibility":10000,"wind_speed":3,"wind_deg":260,"weather":[{"id":800,"main":"Clear","description":"clear sky",
+"icon":"01n"}]},"hourly":[{"dt":1586390400,"temp":278.41,"feels_like":269.43,"pressure":1006,"humidity":65,
+"dew_point":272.46,"clouds":0,"wind_speed":9.83,"wind_deg":60,"wind_gust":15.65,"weather":[{"id":800,"main":"Clear",
+"description":"clear sky","icon":"01n"}]}]}'''

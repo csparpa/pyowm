@@ -34,7 +34,7 @@ class TestConfig(unittest.TestCase):
         with self.assertRaises(ValueError):
             config.get_default_config_for_subscription_type('non-existent')
 
-    def get_default_config_for_proxy(self):
+    def test_get_default_config_for_proxy(self):
         test_url_1 = 'abc'
         test_url_2 = 'def'
         result = config.get_default_config_for_proxy(test_url_1, test_url_2)
