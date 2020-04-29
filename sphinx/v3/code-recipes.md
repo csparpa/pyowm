@@ -130,7 +130,7 @@ id_of_london_city = list_of_tuples[0][0]
 The search here was by default case insensitive: you could have tried
 
 ```python
-list_of_tuples = london = reg.ids_for('london')                               # notice the lowercase
+list_of_tuples = london = reg.ids_for('london', country='GB')                 # notice the lowercase
 list_of_tuples = london = reg.ids_for('LoNdoN', country='GB')                 # notice the camelcase
 ```
 and would get the very same results as above.
