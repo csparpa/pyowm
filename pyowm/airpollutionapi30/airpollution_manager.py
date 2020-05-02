@@ -69,7 +69,7 @@ class AirPollutionManager:
         coi = coindex.COIndex.from_dict(json_data)
         if interval is None:
             interval = 'year'
-        coi._interval = interval
+        coi.interval = interval
         return coi
 
     def ozone_around_coords(self, lat, lon, start=None, interval=None):
@@ -107,7 +107,7 @@ class AirPollutionManager:
         oz = ozone.Ozone.from_dict(json_data)
         if interval is None:
             interval = 'year'
-            oz._interval = interval
+        oz.interval = interval
         return oz
 
     def no2index_around_coords(self, lat, lon, start=None, interval=None):
@@ -146,7 +146,7 @@ class AirPollutionManager:
         no2 = no2index.NO2Index.from_dict(json_data)
         if interval is None:
             interval = 'year'
-        no2._interval = interval
+        no2.interval = interval
         return no2
 
     def so2index_around_coords(self, lat, lon, start=None, interval=None):
@@ -185,7 +185,7 @@ class AirPollutionManager:
         so2 = so2index.SO2Index.from_dict(json_data)
         if interval is None:
             interval = 'year'
-            so2._interval = interval
+        so2.interval = interval
         return so2
 
     def __repr__(self):

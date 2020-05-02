@@ -19,7 +19,7 @@ class TestAirPollutionManager(unittest.TestCase):
     def mock_get_coi_returning_coindex_around_coords(self, params_dict):
         return json.loads(COINDEX_JSON)
 
-    def mock_get_o3_returning_coindex_around_coords(self, params_dict):
+    def mock_get_o3_returning_ozone_around_coords(self, params_dict):
         return json.loads(OZONE_JSON)
 
     def mock_get_no2_returning_no2index_around_coords(self, params_dict):
@@ -41,7 +41,7 @@ class TestAirPollutionManager(unittest.TestCase):
         ref_to_original = airpollution_client.AirPollutionHttpClient.get_coi
         airpollution_client.AirPollutionHttpClient.get_coi = \
             self.mock_get_coi_returning_coindex_around_coords
-        result = self.__test_instance.coindex_around_coords(45, 9)
+        result = self.__test_instance.coindex_around_coords(45, 9, interval='day')
         airpollution_client.AirPollutionHttpClient.coi = ref_to_original
         self.assertTrue(isinstance(result, coindex.COIndex))
         self.assertIsNotNone(result.reference_time)
@@ -51,6 +51,14 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(result.co_samples)
+
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_coi
+        airpollution_client.AirPollutionHttpClient.get_coi = \
+            self.mock_get_coi_returning_coindex_around_coords
+        result = self.__test_instance.coindex_around_coords(45, 9, interval=None)
+        airpollution_client.AirPollutionHttpClient.coi = ref_to_original
+        self.assertTrue(isinstance(result, coindex.COIndex))
+        self.assertEqual('year', result.interval)
 
     def test_coindex_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.coindex_around_coords, \
@@ -65,8 +73,8 @@ class TestAirPollutionManager(unittest.TestCase):
     def test_ozone_around_coords(self):
         ref_to_original = airpollution_client.AirPollutionHttpClient.get_o3
         airpollution_client.AirPollutionHttpClient.get_o3 = \
-            self.mock_get_o3_returning_coindex_around_coords
-        result = self.__test_instance.ozone_around_coords(45, 9)
+            self.mock_get_o3_returning_ozone_around_coords
+        result = self.__test_instance.ozone_around_coords(45, 9, interval='day')
         airpollution_client.AirPollutionHttpClient.o3 = ref_to_original
         self.assertTrue(isinstance(result, ozone.Ozone))
         self.assertIsNotNone(result.reference_time)
@@ -76,6 +84,14 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(result.du_value)
+
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_o3
+        airpollution_client.AirPollutionHttpClient.get_o3 = \
+            self.mock_get_o3_returning_ozone_around_coords
+        result = self.__test_instance.ozone_around_coords(45, 9, interval=None)
+        airpollution_client.AirPollutionHttpClient.o3 = ref_to_original
+        self.assertTrue(isinstance(result, ozone.Ozone))
+        self.assertEqual('year', result.interval)
 
     def test_ozone_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.ozone_around_coords, \
@@ -91,7 +107,7 @@ class TestAirPollutionManager(unittest.TestCase):
         ref_to_original = airpollution_client.AirPollutionHttpClient.get_no2
         airpollution_client.AirPollutionHttpClient.get_no2 = \
             self.mock_get_no2_returning_no2index_around_coords
-        result = self.__test_instance.no2index_around_coords(45, 9)
+        result = self.__test_instance.no2index_around_coords(45, 9, interval='day')
         airpollution_client.AirPollutionHttpClient.get_no2 = ref_to_original
         self.assertTrue(isinstance(result, no2index.NO2Index))
         self.assertIsNotNone(result.reference_time)
@@ -101,6 +117,14 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(result.no2_samples)
+
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_no2
+        airpollution_client.AirPollutionHttpClient.get_no2 = \
+            self.mock_get_no2_returning_no2index_around_coords
+        result = self.__test_instance.no2index_around_coords(45, 9, interval=None)
+        airpollution_client.AirPollutionHttpClient.get_no2 = ref_to_original
+        self.assertTrue(isinstance(result, no2index.NO2Index))
+        self.assertEqual('year', result.interval)
 
     def test_no2index_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.no2index_around_coords, \
@@ -116,7 +140,7 @@ class TestAirPollutionManager(unittest.TestCase):
         ref_to_original = airpollution_client.AirPollutionHttpClient.get_so2
         airpollution_client.AirPollutionHttpClient.get_so2 = \
             self.mock_get_so2_returning_so2index_around_coords
-        result = self.__test_instance.so2index_around_coords(45, 9)
+        result = self.__test_instance.so2index_around_coords(45, 9, interval='day')
         airpollution_client.AirPollutionHttpClient.get_so2 = ref_to_original
         self.assertTrue(isinstance(result, so2index.SO2Index))
         self.assertIsNotNone(result.reference_time())
@@ -126,7 +150,15 @@ class TestAirPollutionManager(unittest.TestCase):
         self.assertIsNotNone(loc.lat)
         self.assertIsNotNone(loc.lon)
         self.assertIsNotNone(result.so2_samples)
-        self.assertIsNotNone(result._interval)
+        self.assertIsNotNone(result.interval)
+
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_so2
+        airpollution_client.AirPollutionHttpClient.get_so2 = \
+            self.mock_get_so2_returning_so2index_around_coords
+        result = self.__test_instance.so2index_around_coords(45, 9, interval=None)
+        airpollution_client.AirPollutionHttpClient.get_so2 = ref_to_original
+        self.assertTrue(isinstance(result, so2index.SO2Index))
+        self.assertEqual('year', result.interval)
 
     def test_so2index_around_coords_fails_with_wrong_parameters(self):
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.so2index_around_coords, \
