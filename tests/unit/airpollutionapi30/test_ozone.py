@@ -10,6 +10,7 @@ from pyowm.airpollutionapi30.ozone import Ozone
 from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
 
 OZONE_JSON = '{"time":"2016-10-06T13:32:53Z","location":{"latitude":1.3841,"longitude":9.8633},"data":276.8447570800781}'
+OZONE_WITHOUT_DU_JSON = '{"time":"2016-10-06T13:32:53Z","location":{"latitude":1.3841,"longitude":9.8633},"data":null}'
 OZONE_MALFORMED_JSON = '{"time":"2016-10-06T13:32:53Z", "x": 1234}'
 OZONE_JSON_DUMP = '{"reference_time": 1234567, "location": {"country": "UK", ' \
                    '"name": "test", "coordinates": {"lat": 43.7, "lon": 12.3}, ' \
@@ -97,6 +98,9 @@ class TestOzone(unittest.TestCase):
         self.assertIsNotNone(loc.lat)
         self.assertIsNone(result.interval)
         self.assertIsNotNone(result.du_value)
+
+    def test_from_dict_fails_when_no_du_specified(self):
+        self.assertRaises(ValueError, Ozone.from_dict, json.loads(OZONE_WITHOUT_DU_JSON))
 
     def test_from_dict_fails_when_JSON_data_is_None(self):
         self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError, Ozone.from_dict, None)

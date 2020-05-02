@@ -64,24 +64,14 @@ class Forecast:
         """
         return formatting.timeformat(self.rec_time, timeformat)
 
-    def weathers(self):
-        """
-        Returns a copy of the *Weather* objects list composing the forecast
-
-        :returns: a list of *Weather* objects
-
-        """
-        return list(self.weathers)
-
     def actualize(self):
         """
         Removes from this forecast all the *Weather* objects having a reference
         timestamp in the past with respect to the current timestamp
         """
         current_time = timestamps.now(timeformat='unix')
-        for w in self.weathers:
-            if w.reference_time(timeformat='unix') < current_time:
-                self.weathers.remove(w)
+        actualized_weathers = filter(lambda x: x.reference_time(timeformat='unix') >= current_time, self.weathers)
+        self.weathers = list(actualized_weathers)
 
     @classmethod
     def from_dict(cls, the_dict):

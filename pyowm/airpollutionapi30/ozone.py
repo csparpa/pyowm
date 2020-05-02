@@ -111,10 +111,9 @@ class Ozone:
 
             # -- ozone Dobson Units value
             du = the_dict['data']
-            if du is not None:
-                du_value = float(du)
-            else:
+            if du is None:
                 raise ValueError('No information about Ozon Dobson Units')
+            du_value = float(du)
         except KeyError:
             raise exceptions.ParseAPIResponseError(
                       ''.join([__name__, ': impossible to parse UV Index']))
