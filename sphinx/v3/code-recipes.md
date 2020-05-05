@@ -8,7 +8,7 @@ Table of contents:
   * [Identifying cities and places](#identifying_places)
   * [Weather data](#weather_data)
   * [Weather forecasts](#weather_forecasts)
-  * [Geometries](#geometries)
+  * [OneCall data](#onecall)
 
 <div id="library_init"/>
 
@@ -179,8 +179,6 @@ owm = OWM('your-api-key')
 reg = owm.city_id_registry()
 list_of_geopoints = reg.geopoints_for('rome')
 ```
-
-You can do nice things using geometries: please take a look at the [Geometries](#geometries) docs section
 
 <div id="weather_data"/>
 
@@ -456,7 +454,9 @@ TBD
 ### Get forecast on geographic coordinates
 TBD
 
-## OneCall
+<div id="onecall"/>
+
+## OneCall data
 
 With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
 
@@ -502,8 +502,3 @@ one_call = mgr.one_call(lat=52.5244, lon=13.4105)
 
 one_call.one_call.current.humidity #Ex.: 81
 ```
-
-<div id="geometries"/>
-
-## Geometries
-TBD
