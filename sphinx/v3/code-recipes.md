@@ -456,6 +456,54 @@ TBD
 ### Get forecast on geographic coordinates
 TBD
 
+## OneCall
+
+With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
+
+Below some examples:
+
+### What is the feels like temperature (°C) tomorrow morning?
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.forecast_daily[0].temperature('celsius').get('feels_like_morn', None) #Ex.: 7.7
+```
+
+### What's the wind speed in three hours?
+
+__Attention: The first entry in forecast_hourly is the current hour.__
+If you send the request at 18:36 UTC then the first entry in forecast_hourly is from 18:00 UTC.
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.forecast_hourly[3].wind().get('speed', 0) #Ex.: 4.42
+```
+
+### What's the current humidity?
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.one_call.current.humidity #Ex.: 81
+```
+
 <div id="geometries"/>
+
 ## Geometries
 TBD
