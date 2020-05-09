@@ -46,9 +46,12 @@ class TestLocation(unittest.TestCase):
                  "population": 1000000}
                 }
         dict3 = {"station":{"coord":{"lon":-90.47,"lat":39.38}}}
+        dict4 = {"station": {"coord": {"lng": -90.47, "lat": 39.38}}}
+        dict5 = {"station":{}}
         result1 = Location.from_dict(dict1)
         result2 = Location.from_dict(dict2)
         result3 = Location.from_dict(dict3)
+        result4 = Location.from_dict(dict4)
         self.assertTrue(isinstance(result1, Location))
         self.assertTrue(isinstance(result2, Location))
         self.assertFalse(result1.country is not None)
@@ -66,6 +69,9 @@ class TestLocation(unittest.TestCase):
         self.assertTrue(result3.country is None)
         self.assertTrue(result3.name is None)
         self.assertTrue(result3.id is None)
+        self.assertIsInstance(result4, Location)
+
+        self.assertRaises(KeyError, Location.from_dict,  dict5)
 
     def test_from_dict_holds_the_lack_of_geocoords(self):
         dict1 = {"station":{"coord":{}}}

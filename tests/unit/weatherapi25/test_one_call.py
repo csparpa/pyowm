@@ -78,6 +78,13 @@ class TestWeather(unittest.TestCase):
         }
         self.assertRaises(APIResponseError, lambda: OneCall.from_dict(data))
 
+    def test_one_call_from_dict_when_other_errors(self):
+        data = {
+            "cod": "413",
+            "message": "entity too large"
+        }
+        self.assertRaises(APIResponseError, lambda: OneCall.from_dict(data))
+
     def test_one_call_from_dict_current_missing(self):
         data={
         "lat": 46.49,

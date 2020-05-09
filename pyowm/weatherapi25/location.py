@@ -84,7 +84,7 @@ class Location:
         if 'coord' in data:
             lon = data['coord'].get('lon', 0.0)
             lat = data['coord'].get('lat', 0.0)
-        elif 'coord' in data['station']:
+        elif 'station' in data and 'coord' in data['station']:
             if 'lon' in data['station']['coord']:
                 lon = data['station']['coord'].get('lon', 0.0)
             elif 'lng' in data['station']['coord']:

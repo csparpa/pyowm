@@ -70,11 +70,10 @@ class OneCall:
         # conveying errors to the clients
         if 'message' in the_dict and 'cod' in the_dict:
             if the_dict['cod'] == "404":
-                print("OWM API: data not found - response payload", the_dict['cod'])
                 return None
             elif the_dict['cod'] == "429":
                 raise exceptions.APIResponseError("OWM API: error - Exceeded call limit", the_dict['cod'])
-            elif the_dict['cod'] != "200":
+            else:
                 raise exceptions.APIResponseError("OWM API: error - response payload", the_dict['cod'])
 
         try:

@@ -12,8 +12,8 @@ from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from tests.unit.weatherapi25.json_test_responses import (
      OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, OBSERVATION_MALFORMED_JSON)
 from tests.unit.weatherapi25.json_test_responses import (
-    SEARCH_RESULTS_JSON, SEARCH_WITH_NO_RESULTS_JSON,
-    INTERNAL_SERVER_ERROR_JSON)
+    SEARCH_RESULTS_JSON, SEARCH_WITH_NO_RESULTS_1_JSON,
+    SEARCH_WITH_NO_RESULTS_2_JSON, INTERNAL_SERVER_ERROR_JSON)
 
 
 class TestObservation(unittest.TestCase):
@@ -140,7 +140,11 @@ class TestObservation(unittest.TestCase):
         self.assertIsNone(Observation.from_dict_of_lists(json.loads(self.__404_json)))
 
     def test_from_dict_of_lists_when_no_results(self):
-        result = Observation.from_dict_of_lists(json.loads(SEARCH_WITH_NO_RESULTS_JSON))
+        result = Observation.from_dict_of_lists(json.loads(SEARCH_WITH_NO_RESULTS_1_JSON))
+        self.assertTrue(isinstance(result, list))
+        self.assertEqual(0, len(result))
+
+        result = Observation.from_dict_of_lists(json.loads(SEARCH_WITH_NO_RESULTS_2_JSON))
         self.assertTrue(isinstance(result, list))
         self.assertEqual(0, len(result))
 

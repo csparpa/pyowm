@@ -41,10 +41,8 @@ class Historian:
                 temp = t
             elif unit == 'celsius':
                 temp = measurables.kelvin_to_celsius(t)
-            elif unit == 'fahrenheit':
-                temp = measurables.kelvin_to_fahrenheit(t)
             else:
-                raise ValueError("Unknown temperature unit")
+                temp = measurables.kelvin_to_fahrenheit(t)
             result.append((tstamp, temp))
         return result
 
@@ -111,10 +109,8 @@ class Historian:
             return maximum
         elif unit == 'celsius':
             return (maximum[0], measurables.kelvin_to_celsius(maximum[1]))
-        elif unit == 'fahrenheit':
-            return (maximum[0], measurables.kelvin_to_fahrenheit(maximum[1]))
         else:
-            raise ValueError("Unknown temperature unit")
+            return (maximum[0], measurables.kelvin_to_fahrenheit(maximum[1]))
         
     def min_temperature(self, unit='kelvin'):
         """Returns a tuple containing the min value in the temperature
@@ -135,10 +131,8 @@ class Historian:
             return minimum
         elif unit == 'celsius':
             return (minimum[0], measurables.kelvin_to_celsius(minimum[1]))
-        elif unit == 'fahrenheit':
-            return (minimum[0], measurables.kelvin_to_fahrenheit(minimum[1]))
         else:
-            raise ValueError("Unknown temperature unit")
+            return (minimum[0], measurables.kelvin_to_fahrenheit(minimum[1]))
         
     def average_temperature(self, unit='kelvin'):
         """Returns the average value in the temperature series
@@ -158,10 +152,8 @@ class Historian:
             return average
         elif unit == 'celsius':
             return measurables.kelvin_to_celsius(average)
-        elif unit == 'fahrenheit':
-            return measurables.kelvin_to_fahrenheit(average)
         else:
-            raise ValueError("Unknown temperature unit")
+            return measurables.kelvin_to_fahrenheit(average)
     
     def max_humidity(self):
         """Returns a tuple containing the max value in the humidity
