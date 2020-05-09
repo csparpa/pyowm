@@ -35,6 +35,7 @@ class TestWeather(unittest.TestCase):
     __test_imperial_wind = {"deg": 252.002, "speed": 2.460634, "gust": 4.6752046}
     __test_knots_wind = {'deg': 252.002, 'speed': 2.138224, 'gust': 4.0626256}
     __test_beaufort_wind = {"deg": 252.002, "speed": 1, "gust": 2}
+    __test_kmh_wind = {'deg': 252.002, 'speed': 3.9600000000000004, 'gust': 7.524}
     __test_humidity = 57
     __test_pressure = {"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
@@ -197,6 +198,9 @@ class TestWeather(unittest.TestCase):
                           self.__test_humidex, self.__test_heat_index,
                           'non_string_utc_offset')
 
+    def test_from_dict_fails_when_dict_is_none(self):
+        self.assertRaises(ParseAPIResponseError, Weather.from_dict, None)
+
     def test_from_dict(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
                  'coord': {'lat': 51.50853, 'lon': -0.12574},
@@ -223,7 +227,7 @@ class TestWeather(unittest.TestCase):
                      'humidex': 298.0,
                      'heatindex': 296.0
                  }
-                 }
+         }
         dict2 = {"dt": 1378897200,
                  "temp": {"day": 289.37, "min": 284.88, "max": 289.37,
                           "night": 284.88, "eve": 287.53, "morn": 289.37
@@ -255,7 +259,9 @@ class TestWeather(unittest.TestCase):
                     "prefix": 0
                 },
                 "calc": {
-                    "dewpoint": 273.15
+                    "dewpoint": 273.15,
+                    "humidex": 57.8,
+                    "heatindex": 1.2
                 },
                 "clouds": [
                     {"distance": 427,
@@ -263,14 +269,94 @@ class TestWeather(unittest.TestCase):
                 ],
                 "dt": 1417977300
             },
-            "params": ["temp", "pressure", "wind", "visibility"]
+            "params": ["temp", "pressure", "wind", "visibility"],
+            "timezone": 1234567
         }
+        dict4 = {'clouds': {'all': 92}, 'name': 'London',
+                 'coord': {'lat': 51.50853, 'lon': -0.12574},
+                 'sys': {'country': 'GB', 'sunset': 1378923812,
+                         'sunrise': 1378877413
+                         },
+                 'weather': [
+                     {'main': 'Clouds', 'id': 804, 'icon': '04d',
+                      'description': 'overcastclouds'}
+                 ],
+                 'cod': 200, 'base': 'gdpsstations',
+                 'main': {
+                     'pressure': 1022,
+                     'humidity': 75,
+                     'temp_max': 289.82,
+                     'temp': 288.44,
+                     'temp_min': 287.59
+                 },
+                 'id': 2643743,
+                 'wind': {'gust': 2.57, 'speed': 1.54, 'deg': 31},
+                 'calc': {},
+                 'last': {},
+                 'snow': {'tot': 76.3}
+         }
+        dict5 = {'clouds': {'all': 92}, 'name': 'London',
+                 'coord': {'lat': 51.50853, 'lon': -0.12574},
+                 'sys': {'country': 'GB', 'sunset': 1378923812,
+                         'sunrise': 1378877413
+                         },
+                 'weather': [
+                     {'main': 'Clouds', 'id': 804, 'icon': '04d',
+                      'description': 'overcastclouds'}
+                 ],
+                 'cod': 200, 'base': 'gdpsstations',
+                 'main': {
+                     'pressure': 1022,
+                     'humidity': 75,
+                     'temp_max': 289.82,
+                     'temp': 288.44,
+                     'temp_min': 287.59
+                 },
+                 'id': 2643743,
+                 'wind': {'gust': 2.57, 'speed': 1.54, 'deg': 31},
+                 'visibility': {'distance': 1000},
+                 "last": {}
+         }
+        dict6 = {'clouds': {'all': 92}, 'name': 'London',
+                 'coord': {'lat': 51.50853, 'lon': -0.12574},
+                 'sys': {'country': 'GB', 'sunset': 1378923812,
+                         'sunrise': 1378877413
+                         },
+                 'weather': [
+                     {'main': 'Clouds', 'id': 804, 'icon': '04d',
+                      'description': 'overcastclouds'}
+                 ],
+                 'cod': 200, 'base': 'gdpsstations', 'dt': 1378895177,
+                 'main': {
+                     'pressure': 1022,
+                     'temp_max': 289.82,
+                     'temp': 288.44,
+                     'temp_min': 287.59
+                 },
+                 'id': 2643743,
+                 'wind': {'gust': 2.57, 'speed': 1.54, 'deg': 31},
+                 'last': {
+                     "dt": 1417977300,
+                     "calc": {},
+                     'visibility': 2.34,
+                     'main': {
+                         "humidity": 77.2
+                     }
+                 },
+                 'snow': 66.1
+         }
         result1 = Weather.from_dict(dict1)
         self.assertTrue(isinstance(result1, Weather))
         result2 = Weather.from_dict(dict2)
         self.assertTrue(isinstance(result2, Weather))
         result3 = Weather.from_dict(dict3)
         self.assertTrue(isinstance(result3, Weather))
+        result4 = Weather.from_dict(dict4)
+        self.assertTrue(isinstance(result4, Weather))
+        result5 = Weather.from_dict(dict5)
+        self.assertTrue(isinstance(result5, Weather))
+        result6 = Weather.from_dict(dict6)
+        self.assertTrue(isinstance(result6, Weather))
 
     def test_from_dict_when_data_fields_are_none(self):
         dict1 = {'clouds': {'all': 92}, 'name': 'London',
@@ -428,13 +514,15 @@ class TestWeather(unittest.TestCase):
 
     def test_returning_different_units_for_wind_values(self):
         result_imperial = self.__test_instance.wind(unit='miles_hour')
-        result_metric = self.__test_instance.wind(unit='meters_sec')
+        result_metric_ms = self.__test_instance.wind(unit='meters_sec')
+        result_metric_kmh = self.__test_instance.wind(unit='km_hour')
         result_knots = self.__test_instance.wind(unit='knots')
         result_beaufort = self.__test_instance.wind(unit='beaufort')
         result_unspecified = self.__test_instance.wind()
-        self.assertEqual(result_unspecified, result_metric)
+        self.assertEqual(result_unspecified, result_metric_ms)
+        self.assertDictEqual(result_metric_kmh, self.__test_kmh_wind)
         for item in self.__test_wind:
-            self.assertEqual(result_metric[item],
+            self.assertEqual(result_metric_ms[item],
                              self.__test_wind[item])
             self.assertEqual(result_imperial[item],
                              self.__test_imperial_wind[item])

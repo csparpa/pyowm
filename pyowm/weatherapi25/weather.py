@@ -302,7 +302,7 @@ class Weather:
             elif 'distance' in the_dict['visibility']:
                 visibility_distance = the_dict['visibility']['distance']
         elif 'last' in the_dict and 'visibility' in the_dict['last']:
-            if isinstance(the_dict['last']['visibility'], int):
+            if isinstance(the_dict['last']['visibility'], int) or isinstance(the_dict['last']['visibility'], float):
                 visibility_distance = the_dict['last']['visibility']
             elif 'distance' in the_dict['last']['visibility']:
                 visibility_distance = the_dict['last']['visibility']['distance']
