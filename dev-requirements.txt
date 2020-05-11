@@ -1,6 +1,6 @@
 coverage
 coveralls
-pip>=18.0
+pip>=18.1
 pytest
 recommonmark
 Sphinx

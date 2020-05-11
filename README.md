@@ -1,5 +1,7 @@
 [![logo](logos/180x180.png)](https://github.com/csparpa)
 
+ver.18
+
 #  PyOWM  
 **A Python wrapper around OpenWeatherMap web APIs**
 
