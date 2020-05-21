@@ -77,10 +77,9 @@ just run:
 It is adviced that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/).
 
 ## Guidelines for code branching
-The project adopts @nvie's branching model:
+Simple ones:
 
 - the "develop" branch contains work-in-progress code 
-- new "feature"/"bugfix" branches can be opened by any contributor from the "develop" branch. Each feature branch adds a new feature/enhancement or bugfix
 - the "master" branch will contain only stable code and the "develop" branch will be merged back into it only when a milestone is completed or hotfixes need to be applied. Merging of "develop" into "master" will be done by @csparpa when releasing - so please **never apply your modifications to the master branch!!!**
 
 
@@ -89,8 +88,6 @@ Main principles:
 
   - Each software functionality should have a related unit test
   - Each bug should have at least one regression test associated
-  
-[Here is how to run tests](https://github.com/csparpa/pyowm/wiki/Notes-on-testing)
 
 
 # Contributing on PyOWM bundling/distributing
