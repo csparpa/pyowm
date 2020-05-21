@@ -22,7 +22,7 @@ from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum, AlertCh
 from pyowm.alertapi30.condition import Condition
 
 # obtain an AlertManager instance
-owm = OWM(API_Key='blablabla')
+owm = OWM('apikey')
 am = owm.alert_manager()
 
 # -- areas --

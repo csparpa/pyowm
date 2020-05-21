@@ -9,7 +9,10 @@ Please refer to the official API docs for [UV](http://openweathermap.org/api/uvi
 Getting the data is easy:
 
 ```python
-uvi = owm.uvindex_around_coords(lat, lon)
+from pyowm import OWM
+owm = OWM('apikey')
+mgr = owm.uvindex_manager()
+uvi = mgr.uvindex_around_coords(lat, lon)
 ```
 
 The query returns an UV Index value entity instance
@@ -20,7 +23,7 @@ The query returns an UV Index value entity instance
 As easy as:
 
 ```python
-uvi_list = owm.uvindex_forecast_around_coords(lat, lon)
+uvi_list = mgr.uvindex_forecast_around_coords(lat, lon)
 ```
 
 ### Querying UV index history
@@ -28,7 +31,7 @@ uvi_list = owm.uvindex_forecast_around_coords(lat, lon)
 As easy as: 
 
 ```python
-uvi_history_list = owm.uvindex_history_around_coords(
+uvi_history_list = mgr.uvindex_history_around_coords(
     lat, lon,
     datetime.datetime(2017, 8, 1, 0, 0),
     end=datetime.datetime(2018, 2, 15, 0, 0))

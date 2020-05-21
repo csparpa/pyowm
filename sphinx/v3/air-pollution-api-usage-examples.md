@@ -21,6 +21,9 @@ Please be aware that also data forecasts can be returned, depending on the searc
 
 Getting the data is easy:
 ```
+from pyowm import OWM
+owm = OWM('apikey')
+
 # Get latest CO Index on geocoordinates
 coi = owm.coindex_around_coords(lat, lon)
 
