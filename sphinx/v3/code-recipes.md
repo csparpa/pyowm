@@ -5,7 +5,7 @@ related to weather data.
 
 Table of contents:
   * [Library initialization](#library_init)
-  * [Identifying cities and places](#identifying_places)
+  * [Identifying cities and places via city IDs](#identifying_places)
   * [Weather data](#weather_data)
   * [Weather forecasts](#weather_forecasts)
   * [OneCall data](#onecall)
@@ -101,7 +101,7 @@ version_tuple = (major, minor, patch) = owm.version
 
 <div id="identifying_places"/>
 
-## City IDs
+## Identifying cities and places via city IDs
 
 ### Obtain the city ID registry
 Use the city ID registry to lookup the ID of a city given its name
@@ -233,14 +233,15 @@ Available measurement units for speed and gusts are: meters/sec (default), miles
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-wind_dict_in_meters_per_sec = mgr.weather_at_place('Tokyo,JP').wind()   # Default unit: 'meters_sec'
+observation = mgr.weather_at_place('Tokyo,JP')
+wind_dict_in_meters_per_sec = observation.weather.wind()   # Default unit: 'meters_sec'
 wind_dict_in_meters_per_sec['speed']
 wind_dict_in_meters_per_sec['deg']
 wind_dict_in_meters_per_sec['gust']
 wind_dict_in_miles_per_h = mgr.weather_at_place('Tokyo,JP').wind(unit='miles_hour')
 wind_dict_in_knots = mgr.weather_at_place('Tokyo,JP').wind(unit='knots')
 wind_dict_in_beaufort = mgr.weather_at_place('Tokyo,JP').wind(unit='beaufort')  # Beaufort is 0-12 scale
-
+```
 
 ### Get current rain amount on a location
 Also rain amount is a dict, with keys: `1h` an `3h`, containing the mms of rain fallen in the last 1 and 3 hours
@@ -249,7 +250,7 @@ Also rain amount is a dict, with keys: `1h` an `3h`, containing the mms of rain 
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-rain_dict = mgr.weather_at_place('Berlin,DE').rain
+rain_dict = mgr.weather_at_place('Berlin,DE').observation.rain
 rain_dict['1h']
 rain_dict['3h']
 ```
@@ -262,7 +263,7 @@ Pressure is similar to rain: you get a dict with keys: `press` (atmospheric pres
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-pressure_dict = mgr.weather_at_place('Berlin,DE').pressure
+pressure_dict = mgr.weather_at_place('Berlin,DE').observation.pressure
 pressure_dict['press']
 pressure_dict['sea_level']
 ```
@@ -277,7 +278,8 @@ Supported time units are: `unix` (default, UNIX time), `iso` (format `YYYY-MM-DD
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-weather = mgr.weather_at_place('Berlin,DE')
+observation = mgr.weather_at_place('Berlin,DE')
+weather = observation.weather
 sunrise_unix = weather.sunrise_time()  # default unit: 'unix'
 sunrise_iso = weather.sunrise_time(timeformat='iso')
 sunrise_date = weather.sunrise_time(timeformat='date')
@@ -287,11 +289,110 @@ sunrset_date = weather.sunset_time(timeformat='date')
 ```
 
 
-### Get weather on geographic coordinataes
-TBD weather_at_coords
+### Get weather on geographic coordinates
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+my_city_id = 12345
+moscow_lat = 55.75222
+moscow_lon = 37.615555
+weather_at_moscow = owm.weather_at_coords(moscow_lat, moscow_lon).weather 
+```
 
 ### Get weather at city IDs
-TBD weather_at_id and weather_at_ids
+
+You can enquire the observed weather on a city ID:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+my_city_id = 12345
+weather = owm.weather_at_id(my_city_id).weather 
+```
+
+or on a list of city IDs:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+my_list_of_city_ids = [12345, 67890, 54321]
+list_of_observations = owm.weather_at_ids(my_list_of_city_ids)
+corresponding_weathers_list = [ obs.weather for obs in list_of_observations ]
+```
+
+### Current weather search based on string similarity
+
+In one shot, you can query for currently observed weather:
+
+ * for all the places whose name equals the string you provide (use ``'accurate'``)
+ * for all the places whose name contains the string you provide (use ``'like'``)
+
+
+You can control how many items the returned list will contain by using the ``limit`` parameter
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+obs_list = mgr.weather_at_places('London', 'accurate')        # Find observed weather in all the "London"s in the world
+obs_list = mgr.weather_at_places('London', 'like', limit=5)   # Find observed weather for all the places whose name contains 
+                                                              # the word "London". Limit the results to 5 only
+```
+
+### Current weather radial search (circle) 
+
+In one shot, you can query for currently observed weather for all the cities whose lon/lat coordinates lie inside a circle
+whose center is the geocoords you provide. You can control how many cities you want to find by using the ``limit`` parameter.
+
+The radius of the search circle is automatically determined to include the number of cities that you want to obtain (default is: 10)
+
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+obs_list = mgr.weather_around_coords(57, -2.15, limit=8)  # Find observed weather for all the places in the 
+                                                          # surroundings of lat=57,lon=-2.15, limit results to 8 only
+```
+
+### Current weather search in bounding box
+In one shot, you can query for currently observed weather for all the cities whose lon/lat coordinates lie inside the
+specified rectangle (bounding box)
+
+A bounding box is determined by specifying:
+  * the north latitude boundary (`lat_top`)
+  * the south latitude boundary (`lat_bottom`)
+  * the west longitude boundary (`lon_left`)
+  * the east longitude boundary (`lon_right`)
+
+Also, an integer `zoom` level needs to be specified (defaults to 10): this works along with . The lower the zoom level,
+the "higher in the sky" OWM looks for cities inside the bounding box (think of it as the inverse of elevation)
+
+The `clustering` parameter is off by default. With `clustering=True` you ask for server-side clustering of cities: this 
+will result in fewer results when the bounding box shows high city density 
+
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+
+# This bounding box roughly encloses Cairo city (Egypt)
+lat_top = 30.223475116500158
+lat_bottom = 29.888280933159265
+lon_left = 31.0034179688
+lon_right = 31.5087890625
+
+# This which should give you around 5 results
+obs_list = mgr.weather_at_places_in_bbox(lon_left, lat_bottom, lon_right, lat_top, zoom=10)  
+
+# This only gives 1
+obs_list = mgr.weather_at_places_in_bbox(lon_left, lat_bottom, lon_right, lat_top, zoom=5)  
+```
+
 
 
 <div id="weather_forecasts"/>
@@ -487,7 +588,7 @@ owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 one_call = mgr.one_call(lat=52.5244, lon=13.4105)
 
-one_call.forecast_hourly[3].wind().get('speed', 0) #Ex.: 4.42
+one_call.forecast_hourly[3].wind().get('speed', 0) # Eg.: 4.42
 ```
 
 ### What's the current humidity?
@@ -500,5 +601,5 @@ owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 one_call = mgr.one_call(lat=52.5244, lon=13.4105)
 
-one_call.one_call.current.humidity #Ex.: 81
+one_call.current.humidity # Eg.: 81
 ```
