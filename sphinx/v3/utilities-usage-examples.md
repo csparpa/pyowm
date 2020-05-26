@@ -161,7 +161,7 @@ line = [point_1, point_2, point_3, point_1]  # last point equals the first point
 polygon = Polygon.from_points([line])
 ```
 
-# `MultiPolygon` class
+### `MultiPolygon` class
 
 A `MultiPolygon` object represent a set of `Polygon` objects
 Same philosophy here as for `MultiPoint` class, polygons can cross:

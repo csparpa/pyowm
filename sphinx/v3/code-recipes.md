@@ -8,6 +8,7 @@ Table of contents:
   * [Identifying cities and places via city IDs](#identifying_places)
   * [Weather data](#weather_data)
   * [Weather forecasts](#weather_forecasts)
+  * [Meteostation historic measurements](#station_measurements)
   * [OneCall data](#onecall)
 
 <div id="library_init"/>
@@ -554,6 +555,110 @@ TBD
 
 ### Get forecast on geographic coordinates
 TBD
+
+
+
+<div id="station_measurements"/>
+
+## Meteostation historic measurements
+
+_This is a legacy feature of the OWM Weather API_
+
+Weather data measurements history for a specific meteostation is available in three sampling intervals:
+ 
+ - ``'tick'`` (which stands for minutely)
+ - ``'hour'``
+ - ``'day'``
+
+The amount of datapoints returned can be limited. Queries can be made as follows: 
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+
+station_id = 39276
+
+# Get tick historic data for a meteostation
+historian = mgr.station_tick_history(station_id, limit=4)  # only 4 data items
+
+# Get hourly historic data for the same station, no limits
+historian = mgr.station_hour_history(station_id)
+
+# Get hourly historic data for the same station, no limits
+historian = mgr.station_day_history(station_id)
+```
+
+All of the above mentioned calls return a `Historian` object.
+Each measurement is composed by:
+   - a UNIX epoch timestamp
+   - a temperature sample
+   - a humidity sample
+   - a pressure sample
+   - a rain volume sample
+   - wind speed sample
+
+Use the convenience methods provided by `Historiam` to get time series for temperature, wind, etc..
+These convenience methods are especially useful if you need to chart the historic time series of the measured physical entities:
+
+```python
+
+# Get the temperature time series (in different units of measure)
+historian.temperature_series()                     # defaults to Kelvin, eg.  [(1381327200, 293.4), (1381327260, 293.6), ...]
+historian.temperature_series(unit="celsius")       # now in Celsius
+historian.temperature_series("fahrenheit")         # you get the gig  
+
+# Get the humidity time series
+historian.humidity_series()
+
+
+# Get the pressure time series
+historian.pressure_series()
+
+# Get the rain volume time series
+historian.rain_series()
+
+# Get the wind speed time series
+historian.wind_series()
+```
+
+Each of the above methods returns a list of tuples, each tuple being a couple in the form: `(UNIX epoch, measured value)`.
+Be aware that whenever measured values are missing `None` placeholders are put.
+
+You can also get minimum, maximum and average values of each series:
+
+```python
+# Get the minimum temperature value in the series
+historian.min_temperature(unit="celsius")  # eg. (1381327200, 20.25)
+
+# Get the maximum rain value in the series
+historian.max_rain()  # eg. (1381327200, 20.25)
+
+# Get the average wind value in the series
+historian.average_wind()  # eg. 4.816
+```
+
+### Get raw meteostation measurements data
+
+Make the proper call based on the sampling interval of interest and obtain the resulting `Historian` object:
+
+```python
+raw_measurements_dict = historian.station_history.measurements  # dict of raw measurement dicts, indexed by time of sampling:
+```
+
+The `raw_measurements_dict` contains multiple sub-dicts, each one being a a data item. Example:
+```
+{
+  1362933983: {
+    "temperature": 266.25,
+    "humidity": 27.3,
+    "pressure": 1010.02,
+    "rain": None,
+    "wind": 4.7
+  }
+  # [...]
+}
+``` 
 
 <div id="onecall"/>
 
