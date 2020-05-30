@@ -73,6 +73,18 @@ class TestHTTPClient(unittest.TestCase):
         self.assertIsNotNone(data)
         self.assertIsInstance(data, bytes)
 
+    def test_get_png(self):
+        # http://httpbin.org/image/png
+        status, data = self.instance.get_png('http://httpbin.org/image/png')
+        self.assertIsNotNone(data)
+        self.assertIsInstance(data, bytes)
+
+    def test_get_geotiff(self):
+        # https://download.osgeo.org/geotiff/samples/made_up/bogota.tif
+        status, data = self.instance.get_geotiff('https://download.osgeo.org/geotiff/samples/made_up/bogota.tif')
+        self.assertIsNotNone(data)
+        self.assertIsInstance(data, bytes)
+
 
 if __name__ == "__main__":
     unittest.main()

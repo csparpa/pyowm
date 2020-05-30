@@ -7,42 +7,41 @@ from pyowm.weatherapi25.forecast import Forecast
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from pyowm.utils.formatting import UTC
 from tests.unit.weatherapi25.json_test_responses import (
-     THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
-     INTERNAL_SERVER_ERROR_JSON, FORECAST_MALFORMED_JSON)
+    THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
+    INTERNAL_SERVER_ERROR_JSON, FORECAST_MALFORMED_JSON)
 
 
 class TestForecast(unittest.TestCase):
-
     __test_reception_time = 1234567
     __test_iso_reception_time = "1970-01-15 06:56:07+00"
     __test_date_reception_time = datetime.strptime(__test_iso_reception_time,
-                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+                                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
     __test_location = Location('test', 12.3, 43.7, 987, 'IT')
     __test_weathers = [Weather(1378459200, 1378496400, 1378449600, 67,
-            {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
-            {"press": 1030.119, "sea_level": 1038.589},
-            {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
-                "temp_min": 294.199
-            },
-            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
-           Weather(1378459690, 1378496480, 1378449510, 23, {"all": 10},
-            {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
-            {"press": 1070.119, "sea_level": 1078.589},
-            {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
-             "temp_min": 295.6
-             },
-            "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
-       ]
+                               {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
+                               {"press": 1030.119, "sea_level": 1038.589},
+                               {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
+                                "temp_min": 294.199
+                                },
+                               "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
+                       Weather(1378459690, 1378496480, 1378449510, 23, {"all": 10},
+                               {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
+                               {"press": 1070.119, "sea_level": 1078.589},
+                               {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
+                                "temp_min": 295.6
+                                },
+                               "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
+                       ]
     __test_n_weathers = len(__test_weathers)
     __test_instance = Forecast("daily", __test_reception_time, __test_location,
                                __test_weathers)
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __bad_json_2 = '{ "city": {"id": 2643743,' \
-        '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
-        '"GB","population": 1000000} }'
+                   '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
+                   '"GB","population": 1000000} }'
     __no_items_found_json = '{"count": "0", "city": {"id": 2643743,' \
-        '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
-        '"GB","population": 1000000} }'
+                            '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
+                            '"GB","population": 1000000} }'
 
     FORECAST_JSON_DUMP = '{"reception_time": 1234567, "interval": "daily", ' \
                          '"location": {"country": "IT", "name": "test", ' \
@@ -72,21 +71,21 @@ class TestForecast(unittest.TestCase):
 
     def test_actualize(self):
         weathers = [Weather(1378459200, 1378496400, 1378449600, 67,
-            {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
-            {"press": 1030.119, "sea_level": 1038.589},
-            {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
-                "temp_min": 294.199
-            },
-            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
-           # will this time ever be reached?
-           Weather(9999999999, 1378496480, 1378449510, 23, {"all": 10},
-            {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
-            {"press": 1070.119, "sea_level": 1078.589},
-            {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
-             "temp_min": 295.6
-             },
-            "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
-        ]
+                            {"all": 20}, {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
+                            {"press": 1030.119, "sea_level": 1038.589},
+                            {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
+                             "temp_min": 294.199
+                             },
+                            "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
+                    # will this time ever be reached?
+                    Weather(9999999999, 1378496480, 1378449510, 23, {"all": 10},
+                            {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
+                            {"press": 1070.119, "sea_level": 1078.589},
+                            {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
+                             "temp_min": 295.6
+                             },
+                            "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
+                    ]
         f = Forecast("daily", self.__test_reception_time, self.__test_location,
                      weathers)
         self.assertEqual(2, len(f))
@@ -107,7 +106,7 @@ class TestForecast(unittest.TestCase):
         Test either for "3h" forecast and "daily" ones
         """
         instance = Forecast("3h", self.__test_reception_time,
-                             self.__test_location, self.__test_weathers)
+                            self.__test_location, self.__test_weathers)
         self.assertEqual(instance.interval, "3h")
         self.assertEqual(instance.reception_time(),
                          self.__test_reception_time)
@@ -116,7 +115,7 @@ class TestForecast(unittest.TestCase):
 
     def test_getters_return_expected_daily_data(self):
         instance = Forecast("daily", self.__test_reception_time,
-                             self.__test_location, self.__test_weathers)
+                            self.__test_location, self.__test_weathers)
         self.assertEqual(instance.interval, "daily")
         self.assertEqual(instance.reception_time(),
                          self.__test_reception_time)
@@ -139,7 +138,7 @@ class TestForecast(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather))
             counter += 1
         self.assertEqual(len(instance.weathers), counter)
-        
+
     def test__len__(self):
         self.assertEqual(len(self.__test_instance), len(self.__test_weathers))
 

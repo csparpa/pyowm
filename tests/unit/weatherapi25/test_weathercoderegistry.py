@@ -36,4 +36,3 @@ class TestWeatherCodeRegistry(unittest.TestCase):
 
     def test_repr(self):
         print(self.__test_instance)
-
