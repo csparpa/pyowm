@@ -58,7 +58,7 @@ print(w)                  # <Weather - reference time=2013-12-18 09:20, status=C
 
 # Weather details
 w.wind()                  # {'speed': 4.6, 'deg': 330}
-w.humidity()              # 87
+w.humidity                # 87
 w.temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 
 # Search current weather observations in the surroundings of
@@ -77,7 +77,7 @@ owm = OWM('your-paid-api-key', config_dict)
 
 # Will it be clear tomorrow at this time in Milan (Italy) ?
 mgr = owm.weather_manager()
-forecast = mgr.daily_forecast("Milan,IT")
+forecast = mgr.forecast_at_place('Milan,IT', 'daily')
 forecast.will_be_clear_at(timestamps.tomorrow())  # The sun always shines on Italy, right? ;)
 ```
 
