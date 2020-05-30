@@ -1,9 +1,8 @@
+dist: xenial
 language: python
 python:
-  - "3.4"
-  - "3.5"
-  - "3.6"
-  - "3.7-dev"
+  - "3.7"
+  - "3.8"
 script: tox
 after_success:
   - coveralls
@@ -16,12 +15,13 @@ env:
       - TEST_PYPI_URL=https://test.pypi.org/legacy/
       - PYPI_URL=https://upload.pypi.org/legacy/
 install:
-  - pip install --upgrade pip && pip install -r dev-requirements.txt && pip install .
+  - pip install --upgrade pip && pip install -r requirements.txt && pip install --upgrade -r dev-requirements.txt && pip install .
 cache: pip
 
 stages:
   - test
   - "Local Installation Test"
+  - "Coverage"
   - "Build docs"
   - "Deploy to PyPI"
   - "PyPI Installation Test"
@@ -30,37 +30,32 @@ jobs:
   include:
     - &local_installation_test
       stage: "Local Installation Test"
-      python: 3.4
+      python: "3.7"
       script: bash tests/local_installation_test.sh
     - <<: *local_installation_test
-      python: 3.5
-    - <<: *local_installation_test
-      python: 3.6
-    - <<: *local_installation_test
-      python: "3.7-dev"
+      python: "3.8"
+
+    - &coverage
+      stage: "Coverage"
+      python: "3.7"
+      script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
+    - <<: *coverage
+      python: "3.8"
 
     - stage: "Build docs"
       script: cd sphinx && make clean && make html
 
     - &deploy_to_pypi
       stage: "Deploy to PyPI"
-      python: 3.4
+      python: "3.7"
       script: bash deploy/deploy_to_pypi.sh
     - <<: *deploy_to_pypi
-      python: 3.5
-    - <<: *deploy_to_pypi
-      python: 3.6
-    - <<: *deploy_to_pypi
-      python: "3.7-dev"
+      python: "3.8"
 
     - &pypi_installation_test
       stage: "PyPI Installation Test"
-      python: 3.4
+      python: "3.7"
       if: branch = master
       script: bash tests/pypi_installation_test.sh
     - <<: *pypi_installation_test
-      python: 3.5
-    - <<: *pypi_installation_test
-      python: 3.6
-    - <<: *pypi_installation_test
-      python: "3.7-dev"
+      python: "3.8"

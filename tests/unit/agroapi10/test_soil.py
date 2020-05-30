@@ -1,7 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from datetime import datetime
 from pyowm.agroapi10.soil import Soil
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestSoil(unittest.TestCase):
@@ -13,7 +16,9 @@ class TestSoil(unittest.TestCase):
     test_temperature = 294.199
     test_celsius_temperature = 21.049
     test_fahrenheit_temperature = 69.888
-    test_instance = Soil(test_reference_time, test_temperature, test_temperature, 45.6, 'my-polygon')
+    test_moisture = 45.6
+    test_polygon_id = 'my-polygon'
+    test_instance = Soil(test_reference_time, test_temperature, test_temperature, test_moisture, test_polygon_id)
 
     def test_soil_fails_with_wrong_parameters(self):
         self.assertRaises(AssertionError, Soil, None, 12.4, 11.8, 80.2, 'my-polygon')
@@ -59,6 +64,13 @@ class TestSoil(unittest.TestCase):
         self.assertEqual(expected.ten_cm_temp(), result.ten_cm_temp())
         self.assertEqual(expected.moisture, result.moisture)
         self.assertEqual(expected.polygon_id, result.polygon_id)
+
+    def test_to_dict(self):
+        expected = dict(reference_time=self.test_reference_time, surface_temp=self.test_temperature,
+                        ten_cm_temp=self.test_temperature, moisture=self.test_moisture,
+                        polygon_id=self.test_polygon_id)
+        result = self.test_instance.to_dict()
+        self.assertEqual(expected, result)
 
     def test_returning_different_units_for_temperatures(self):
         # Surface temp

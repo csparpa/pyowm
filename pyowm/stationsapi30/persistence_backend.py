@@ -1,8 +1,5 @@
-"""
-Module containing asbtract classes and a few convenience implementations
-of raw measurements I/O
-"""
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import json
@@ -10,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 from pyowm.stationsapi30.buffer import Buffer
 
 
-class PersistenceBackend:
+class PersistenceBackend:   # pragma: no cover
 
     """
     A global abstract class representing an I/O manager for buffer objects containing

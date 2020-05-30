@@ -1,12 +1,11 @@
-"""
-Module containing weather history abstraction classes and data structures.
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from pyowm.utils import temputils
 from operator import itemgetter
+from pyowm.utils import measurables
 
 
-class Historian(object):
+class Historian:
     """
     A class providing convenience methods for manipulating meteostation weather
     history data. The class encapsulates a *StationHistory* instance and
@@ -19,15 +18,7 @@ class Historian(object):
     """
 
     def __init__(self, station_history):
-        self._station_history = station_history
-
-    def get_station_history(self):
-        """
-        Returns the *StationHistory* instance
-
-        :returns: the *StationHistory* instance
-        """
-        return self._station_history
+        self.station_history = station_history
 
     def temperature_series(self, unit='kelvin'):
         """Returns the temperature time series relative to the meteostation, in
@@ -44,14 +35,14 @@ class Historian(object):
         if unit not in ('kelvin', 'celsius', 'fahrenheit'):
             raise ValueError("Invalid value for parameter 'unit'")
         result = []
-        for tstamp in self._station_history.get_measurements():
-            t = self._station_history.get_measurements()[tstamp]['temperature']
+        for tstamp in self.station_history.measurements:
+            t = self.station_history.measurements[tstamp]['temperature']
             if unit == 'kelvin':
                 temp = t
-            if unit == 'celsius':
-                temp = temputils.kelvin_to_celsius(t)
-            if unit == 'fahrenheit':
-                temp = temputils.kelvin_to_fahrenheit(t)
+            elif unit == 'celsius':
+                temp = measurables.kelvin_to_celsius(t)
+            else:
+                temp = measurables.kelvin_to_fahrenheit(t)
             result.append((tstamp, temp))
         return result
 
@@ -63,8 +54,8 @@ class Historian(object):
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self._station_history.get_measurements()[tstamp]['humidity']) \
-                for tstamp in self._station_history.get_measurements()]
+                self.station_history.measurements[tstamp]['humidity']) \
+                for tstamp in self.station_history.measurements]
 
     def pressure_series(self):
         """Returns the atmospheric pressure time series relative to the
@@ -74,8 +65,8 @@ class Historian(object):
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self._station_history.get_measurements()[tstamp]['pressure']) \
-                for tstamp in self._station_history.get_measurements()]
+                self.station_history.measurements[tstamp]['pressure']) \
+                for tstamp in self.station_history.measurements]
 
     def rain_series(self):
         """Returns the precipitation time series relative to the
@@ -85,8 +76,8 @@ class Historian(object):
         :returns: a list of tuples
         """
         return [(tstamp, \
-                self._station_history.get_measurements()[tstamp]['rain']) \
-                for tstamp in self._station_history.get_measurements()]
+                self.station_history.measurements[tstamp]['rain']) \
+                for tstamp in self.station_history.measurements]
 
     def wind_series(self):
         """Returns the wind speed time series relative to the
@@ -96,8 +87,8 @@ class Historian(object):
         :returns: a list of tuples
         """
         return [(timestamp, \
-                self._station_history.get_measurements()[timestamp]['wind']) \
-                for timestamp in self._station_history.get_measurements()]
+                self.station_history.measurements[timestamp]['wind']) \
+                for timestamp in self.station_history.measurements]
 
     def max_temperature(self,  unit='kelvin'):
         """Returns a tuple containing the max value in the temperature
@@ -115,12 +106,11 @@ class Historian(object):
         maximum = max(self._purge_none_samples(self.temperature_series()),
                    key=itemgetter(1))
         if unit == 'kelvin':
-            result = maximum
-        if unit == 'celsius':
-            result = (maximum[0], temputils.kelvin_to_celsius(maximum[1]))
-        if unit == 'fahrenheit':
-            result = (maximum[0], temputils.kelvin_to_fahrenheit(maximum[1]))
-        return result
+            return maximum
+        elif unit == 'celsius':
+            return (maximum[0], measurables.kelvin_to_celsius(maximum[1]))
+        else:
+            return (maximum[0], measurables.kelvin_to_fahrenheit(maximum[1]))
         
     def min_temperature(self, unit='kelvin'):
         """Returns a tuple containing the min value in the temperature
@@ -138,12 +128,11 @@ class Historian(object):
         minimum = min(self._purge_none_samples(self.temperature_series()),
                    key=itemgetter(1))
         if unit == 'kelvin':
-            result = minimum
-        if unit == 'celsius':
-            result = (minimum[0], temputils.kelvin_to_celsius(minimum[1]))
-        if unit == 'fahrenheit':
-            result = (minimum[0], temputils.kelvin_to_fahrenheit(minimum[1]))
-        return result
+            return minimum
+        elif unit == 'celsius':
+            return (minimum[0], measurables.kelvin_to_celsius(minimum[1]))
+        else:
+            return (minimum[0], measurables.kelvin_to_fahrenheit(minimum[1]))
         
     def average_temperature(self, unit='kelvin'):
         """Returns the average value in the temperature series
@@ -160,12 +149,11 @@ class Historian(object):
         average = self._average(self._purge_none_samples(
                                                   self.temperature_series()))
         if unit == 'kelvin':
-            result = average
-        if unit == 'celsius':
-            result = temputils.kelvin_to_celsius(average)
-        if unit == 'fahrenheit':
-            result = temputils.kelvin_to_fahrenheit(average)
-        return result
+            return average
+        elif unit == 'celsius':
+            return measurables.kelvin_to_celsius(average)
+        else:
+            return measurables.kelvin_to_fahrenheit(average)
     
     def max_humidity(self):
         """Returns a tuple containing the max value in the humidity

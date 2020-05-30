@@ -1,9 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import os
 import uuid
-from pyowm.constants import DEFAULT_API_KEY
-from pyowm.weatherapi25.owm25 import OWM25
-from pyowm.weatherapi25.configuration25 import parsers
+from pyowm import owm
 from pyowm.agroapi10.polygon import GeoPolygon
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.commons.image import Image
@@ -13,7 +14,7 @@ from pyowm.agroapi10.imagery import MetaPNGImage, MetaTile, MetaGeoTiffImage, Sa
 
 class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
     __polygon = None
     __acquired_from = 1500336000  # 18 July 2017
     __acquired_to = 1508976000  # 26 October 2017
@@ -47,11 +48,11 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
                                                   ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 14)
+        self.assertEqual(len(result_set), 22)
 
         # just keep the non-tile images
         non_tile_pngs = [mimg for mimg in result_set if isinstance(mimg, MetaPNGImage)]
-        self.assertEqual(len(non_tile_pngs), 7)
+        self.assertEqual(len(non_tile_pngs), 11)
 
         # download one
         result = mgr.download_satellite_image(non_tile_pngs[0])
@@ -71,7 +72,7 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
                                                   ImageTypeEnum.GEOTIFF, PresetEnum.EVI, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 7)
+        self.assertEqual(len(result_set), 11)
 
         # download one
         result = mgr.download_satellite_image(result_set[0], palette=PaletteEnum.CONTRAST_SHIFTED)
@@ -91,11 +92,11 @@ class IntegrationTestsSatelliteImageryDownload(unittest.TestCase):
                                                   ImageTypeEnum.PNG, PresetEnum.TRUE_COLOR, None, None,
                                                   SatelliteEnum.LANDSAT_8.symbol, None, None, None, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 14)
+        self.assertEqual(len(result_set), 22)
 
         # just keep the tiles
         tile_pngs = [mimg for mimg in result_set if isinstance(mimg, MetaTile)]
-        self.assertEqual(len(tile_pngs), 7)
+        self.assertEqual(len(tile_pngs), 11)
 
         # try to download one without specifying x, y and zoom
         with self.assertRaises(AssertionError):

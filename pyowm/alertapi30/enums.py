@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.alertapi30.alert import AlertChannel
 
 

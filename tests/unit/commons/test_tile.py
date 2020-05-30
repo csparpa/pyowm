@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from pyowm.commons.tile import Tile
 from pyowm.utils.geo import Polygon
@@ -17,4 +20,6 @@ class TestTile(unittest.TestCase):
         instance = Tile(0, 0, 18, 'temperature', Image(b'x/1'))
         result = instance.bounding_polygon()
         self.assertIsInstance(result, Polygon)
-        print(result.geojson())
+
+    def test_repr(self):
+        print(Tile(0, 0, 18, 'temperature', Image(b'x/1')))

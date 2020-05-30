@@ -1,37 +1,38 @@
-"""
-Programmatic interface to OWM Agro API endpoints
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from pyowm.constants import AGRO_API_VERSION
+from pyowm.agroapi10.enums import PresetEnum, PaletteEnum
+from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
+from pyowm.agroapi10.polygon import Polygon, GeoPolygon
+from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
+from pyowm.agroapi10.soil import Soil
+from pyowm.agroapi10.uris import ROOT_AGRO_API, POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
 from pyowm.commons.http_client import HttpClient
-from pyowm.commons.databoxes import ImageType
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
-from pyowm.agroapi10.uris import POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
-from pyowm.agroapi10.enums import PresetEnum, PaletteEnum
-from pyowm.agroapi10.polygon import Polygon, GeoPolygon
-from pyowm.agroapi10.soil import Soil
-from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, SatelliteImage
-from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
-from pyowm.utils import timeutils
+from pyowm.constants import AGRO_API_VERSION
+from pyowm.utils import timestamps
 
 
-class AgroManager(object):
+class AgroManager:
 
     """
     A manager objects that provides a full interface to OWM Agro API.
 
     :param API_key: the OWM Weather API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: an `AgroManager` instance
     :raises: `AssertionError` when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
-        assert API_key is not None, 'You must provide a valid API Key'
+    def __init__(self, API_key, config):
+        assert isinstance(API_key, str), 'You must provide a valid API Key'
         self.API_key = API_key
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_AGRO_API)
 
     def agro_api_version(self):
         return AGRO_API_VERSION
@@ -54,7 +55,7 @@ class AgroManager(object):
         data['geo_json'] = {
             "type": "Feature",
             "properties": {},
-            "geometry": geopolygon.as_dict()
+            "geometry": geopolygon.to_dict()
         }
         if name is not None:
             data['name'] = name
@@ -235,7 +236,7 @@ class AgroManager(object):
         # call API
         status, data = self.http_client.get_json(SATELLITE_IMAGERY_SEARCH_URI, params=params)
 
-        result_set = SatelliteImagerySearchResultSet(polygon_id, data, timeutils.now(timeformat='unix'))
+        result_set = SatelliteImagerySearchResultSet(polygon_id, data, timestamps.now(timeformat='unix'))
 
         # further filter by img_type and/or preset (if specified)
         if img_type is not None and preset is not None:
@@ -277,14 +278,14 @@ class AgroManager(object):
             status, data = self.http_client.get_png(
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
-            return SatelliteImage(metaimage, img, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
+            return SatelliteImage(metaimage, img, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         # GeoTIF
         elif isinstance(metaimage, MetaGeoTiffImage):
             prepared_url = metaimage.url
             status, data = self.http_client.get_geotiff(
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
-            return SatelliteImage(metaimage, img, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
+            return SatelliteImage(metaimage, img, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         # tile PNG
         elif isinstance(metaimage, MetaTile):
             assert x is not None
@@ -295,7 +296,7 @@ class AgroManager(object):
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
             tile = Tile(x, y, zoom, None, img)
-            return SatelliteImage(metaimage, tile, downloaded_on=timeutils.now(timeformat='unix'), palette=palette)
+            return SatelliteImage(metaimage, tile, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         else:
             raise ValueError("Cannot download: unsupported MetaImage subtype")
 

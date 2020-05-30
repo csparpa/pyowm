@@ -1,17 +1,21 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import unittest
-from pyowm.exceptions import parse_response_error, api_call_error
+
+import pyowm.commons.exceptions
 from pyowm.commons.http_client import HttpClient
+from pyowm.config import DEFAULT_CONFIG
 
 
 class TestHTTPClient(unittest.TestCase):
 
-    instance = HttpClient()
+    instance = HttpClient('fakeapikey', DEFAULT_CONFIG, 'httpbin.org', admits_subdomains=False)
 
     def test_get_json_against_httpbin_ok(self):
         # http://httpbin.org/ip
-        status, data = self.instance.get_json('http://httpbin.org/ip')
+        status, data = self.instance.get_json('/ip')
         self.assertEqual(200, status)
         self.assertIsInstance(data, dict)
 
@@ -19,22 +23,21 @@ class TestHTTPClient(unittest.TestCase):
         # http://httpbin.org/status/400
         expected_status = 400
 
-        self.assertRaises(api_call_error.APICallError, HttpClient.get_json,
-                          self.instance, 'http://httpbin.org/status/' +
-                                              str(expected_status))
+        self.assertRaises(pyowm.commons.exceptions.APIRequestError, HttpClient.get_json,
+                          self.instance, 'status/{}'.format(str(expected_status)))
 
     def test_get_json_against_httpbin_parse_error(self):
         # http://httpbin.org/xml
         try:
-            status, data = self.instance.get_json('http://httpbin.org/xml')
+            status, data = self.instance.get_json('xml')
             self.fail()
-        except parse_response_error.ParseResponseError:
+        except pyowm.commons.exceptions.ParseAPIResponseError:
             pass
 
     def test_put_against_httpbin(self):
         # http://httpbin.org/put
         formdata = dict(a=1, b=2, c=3)
-        status, data = self.instance.put('http://httpbin.org/put', data=formdata)
+        status, data = self.instance.put('put', data=formdata)
         self.assertEqual(200, status)
         self.assertIsInstance(data, dict)
         self.assertEqual(formdata, data['json'])
@@ -42,17 +45,33 @@ class TestHTTPClient(unittest.TestCase):
     def test_delete_against_httpbin(self):
         # http://httpbin.org/delete
         formdata = dict(a=1, b=2, c=3)
-        status, data = self.instance.delete('http://httpbin.org/delete', data=formdata)
+        status, data = self.instance.delete('delete', data=formdata)
         self.assertEqual(200, status)
         self.assertIsInstance(data, dict)
         self.assertEqual(formdata, data['json'])
 
     def test_ssl_certs_verification_failure(self):
         # https://wrong.host.badssl.com does not have a valid SSL cert
-        client = HttpClient(timeout=4, use_ssl=True, verify_ssl_certs=True)
-        self.assertRaises(api_call_error.APIInvalidSSLCertificateError,
-                          HttpClient.get_json,
-                          client, 'https://wrong.host.badssl.com')
+        config = DEFAULT_CONFIG.copy()
+        config['connection']['use_ssl'] = True
+        config['connection']['verify_ssl_certs'] = True
+        instance = HttpClient('fakeapikey', config, 'wrong.host.badssl.com', admits_subdomains=False)
+        self.assertRaises(pyowm.commons.exceptions.InvalidSSLCertificateError, HttpClient.get_json, instance, '')
+
+    def test_get_png(self):
+        # http://httpbin.org/image/png
+        status, data = self.instance.get_png('image/png')
+        self.assertIsNotNone(data)
+        self.assertIsInstance(data, bytes)
+
+    def test_get_geotiff(self):
+        # https://download.osgeo.org/geotiff/samples/made_up/bogota.tif
+        config = DEFAULT_CONFIG.copy()
+        config['connection']['use_ssl'] = True
+        instance = HttpClient('fakeapikey', config, 'download.osgeo.org', admits_subdomains=False)
+        status, data = instance.get_geotiff('geotiff/samples/made_up/bogota.tif')
+        self.assertIsNotNone(data)
+        self.assertIsInstance(data, bytes)
 
     def test_get_png(self):
         # http://httpbin.org/image/png

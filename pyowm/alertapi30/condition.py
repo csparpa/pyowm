@@ -1,4 +1,7 @@
-from pyowm.utils import stringutils
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from pyowm.commons import exceptions
 
 
 class Condition:
@@ -36,9 +39,25 @@ class Condition:
 
     @classmethod
     def from_dict(cls, the_dict):
-        assert isinstance(the_dict, dict)
-        weather_param = the_dict['name']
-        operator = the_dict['expression']
-        amount = the_dict['amount']
-        the_id = the_dict.get('_id', None)
-        return Condition(weather_param, operator, amount, id=the_id)
+        if the_dict is None:
+            raise exceptions.ParseAPIResponseError('Data is None')
+        try:
+            weather_param = the_dict['name']
+            operator = the_dict['expression']
+            amount = the_dict['amount']
+            the_id = the_dict.get('_id', None)
+            return Condition(weather_param, operator, amount, id=the_id)
+        except KeyError as e:
+            raise exceptions.ParseAPIResponseError('Impossible to parse data: %s' % e)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'weather_param': self.weather_param,
+            'operator': self.operator,
+            'amount': self.amount}
+
+    def __repr__(self):
+        return '<%s.%s - when %s %s %s>' % (__name__, self.__class__.__name__, self.weather_param,
+                                            self.operator, str(self.amount))
+

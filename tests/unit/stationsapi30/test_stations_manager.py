@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 import copy
+from pyowm.config import DEFAULT_CONFIG
 from pyowm.stationsapi30.station import Station
 from pyowm.stationsapi30.measurement import Measurement, AggregatedMeasurement
 from pyowm.stationsapi30.buffer import Buffer
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.parsers.station_parser import StationParser
 from pyowm.constants import STATIONS_API_VERSION
 
 
@@ -90,15 +93,16 @@ class MockHttpClientMeasurements(HttpClient):
 class TestStationManager(unittest.TestCase):
 
     def factory(self, _kls):
-        sm = StationsManager('APIKey')
-        sm.http_client = _kls()
+        sm = StationsManager('APIKey', DEFAULT_CONFIG)
+        sm.http_client = _kls('APIKey', DEFAULT_CONFIG, 'anyurl.com')
         return sm
 
-    def test_instantiation_fails_without_api_key(self):
-        self.assertRaises(AssertionError, StationsManager, None)
+    def test_instantiation_with_wrong_params(self):
+        self.assertRaises(AssertionError, StationsManager, None, dict())
+        self.assertRaises(AssertionError, StationsManager, 'apikey', None)
 
     def test_get_stations_api_version(self):
-        instance = StationsManager('APIKey')
+        instance = StationsManager('APIKey', DEFAULT_CONFIG)
         result = instance.stations_api_version()
         self.assertIsInstance(result, tuple)
         self.assertEqual(result, STATIONS_API_VERSION)
@@ -120,6 +124,14 @@ class TestStationManager(unittest.TestCase):
         result = instance.create_station("TEST2", "test2", 37.76, -122.43)
         self.assertIsInstance(result, Station)
 
+        result_zero_alt = instance.create_station("TEST2", "test2", 37.76, -122.43, alt=0.0)
+        self.assertIsInstance(result_zero_alt, Station)
+        self.assertEqual(result_zero_alt.alt, 150)
+
+        result_positive_alt = instance.create_station("TEST2", "test2", 37.76, -122.43, alt=1.0)
+        self.assertIsInstance(result_positive_alt, Station)
+        self.assertEqual(result_positive_alt.alt, 150)
+
     def test_create_stations_fails_with_wrong_inputs(self):
         instance = self.factory(MockHttpClient)
         with self.assertRaises(AssertionError):
@@ -139,31 +151,27 @@ class TestStationManager(unittest.TestCase):
 
     def test_update_station(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
+        modified_station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         modified_station.external_id = 'CHNG'
         result = instance.update_station(modified_station)
         self.assertIsNone(result)
 
     def test_update_station_fails_when_id_is_none(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        modified_station = parser.parse_JSON(MockHttpClient.test_station_json)
+        modified_station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         modified_station.id = None
         with self.assertRaises(AssertionError):
             instance.update_station(modified_station)
 
     def test_delete_station(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        station = parser.parse_JSON(MockHttpClient.test_station_json)
+        station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         result = instance.delete_station(station)
         self.assertIsNone(result)
 
     def test_delete_station_fails_when_id_is_none(self):
         instance = self.factory(MockHttpClient)
-        parser = StationParser()
-        station = parser.parse_JSON(MockHttpClient.test_station_json)
+        station = Station.from_dict(json.loads(MockHttpClient.test_station_json))
         station.id = None
         with self.assertRaises(AssertionError):
             instance.delete_station(station)
@@ -211,7 +219,7 @@ class TestStationManager(unittest.TestCase):
         self.assertEqual(3, len(results))
         for item in results:
             self.assertTrue(isinstance(item, AggregatedMeasurement))
-            self.assertEquals(item.station_id, station_id)
+            self.assertEqual(item.station_id, station_id)
             self.assertTrue(from_ts <= item.timestamp <= to_ts)
 
     def test_get_measurements_cut_time_windows(self):
@@ -223,7 +231,7 @@ class TestStationManager(unittest.TestCase):
         self.assertEqual(1, len(results))
         item = results[0]
         self.assertTrue(isinstance(item, AggregatedMeasurement))
-        self.assertEquals(item.station_id, station_id)
+        self.assertEqual(item.station_id, station_id)
         self.assertTrue(from_ts <= item.timestamp <= to_ts)
 
     def test_get_measurements_with_limits(self):
@@ -237,7 +245,7 @@ class TestStationManager(unittest.TestCase):
         self.assertEqual(2, len(results))
         for item in results:
             self.assertTrue(isinstance(item, AggregatedMeasurement))
-            self.assertEquals(item.station_id, station_id)
+            self.assertEqual(item.station_id, station_id)
             self.assertTrue(from_ts <= item.timestamp <= to_ts)
 
     def test_get_measurements_failing(self):
@@ -289,7 +297,7 @@ class TestStationManager(unittest.TestCase):
                 }
             ]
         }
-        instance = StationsManager('API-Key')
+        instance = StationsManager('API-Key', DEFAULT_CONFIG)
         result = instance._structure_dict(msmt)
         self.assertEqual(expected['station_id'], result['station_id'])
         self.assertEqual(expected['dt'], result['dt'])
@@ -304,3 +312,5 @@ class TestStationManager(unittest.TestCase):
                 return
         self.fail()
 
+    def test_repr(self):
+        print(StationsManager('APIKey', DEFAULT_CONFIG))

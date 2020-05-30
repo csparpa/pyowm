@@ -1,8 +1,12 @@
-from pyowm.constants import ALERT_API_VERSION
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from pyowm.alertapi30.alert import Alert
+from pyowm.alertapi30.trigger import Trigger
+from pyowm.alertapi30.uris import ROOT_ALERT_API_URL, TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
 from pyowm.commons.http_client import HttpClient
-from pyowm.alertapi30.parsers import TriggerParser, AlertParser
-from pyowm.alertapi30.uris import TRIGGERS_URI, NAMED_TRIGGER_URI, ALERTS_URI, NAMED_ALERT_URI
-from pyowm.utils import timeformatutils, timeutils
+from pyowm.constants import ALERT_API_VERSION
+from pyowm.utils import formatting, timestamps
 
 
 class AlertManager:
@@ -13,17 +17,18 @@ class AlertManager:
 
     :param API_key: the OWM Weather API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: an *AlertManager* instance
     :raises: *AssertionError* when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
+    def __init__(self, API_key, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.trigger_parser = TriggerParser()
-        self.alert_parser = AlertParser()
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_ALERT_API_URL)
 
     def alert_api_version(self):
         return ALERT_API_VERSION
@@ -52,13 +57,13 @@ class AlertManager:
         assert end is not None
 
         # prepare time period
-        unix_start = timeformatutils.to_UNIXtime(start)
-        unix_end = timeformatutils.to_UNIXtime(end)
-        unix_current = timeutils.now(timeformat='unix')
+        unix_start = formatting.to_UNIXtime(start)
+        unix_end = formatting.to_UNIXtime(end)
+        unix_current = timestamps.now(timeformat='unix')
         if unix_start >= unix_end:
             raise ValueError("The start timestamp must precede the end timestamp")
-        delta_millis_start = timeutils.millis_offset_between_epochs(unix_current, unix_start)
-        delta_millis_end = timeutils.millis_offset_between_epochs(unix_current, unix_end)
+        delta_millis_start = timestamps.millis_offset_between_epochs(unix_current, unix_start)
+        delta_millis_end = timestamps.millis_offset_between_epochs(unix_current, unix_end)
         the_time_period = {
             "start": {
                 "expression": "after",
@@ -78,7 +83,7 @@ class AlertManager:
         assert area is not None
         if len(area) == 0:
             raise ValueError('The area for a trigger must contain at least one geoJSON type: you provided none')
-        the_area = [a.as_dict() for a in area]
+        the_area = [a.to_dict() for a in area]
 
         # >>> for the moment, no specific handling for alert channels
 
@@ -87,7 +92,7 @@ class AlertManager:
             params={'appid': self.API_key},
             data=dict(time_period=the_time_period, conditions=the_conditions, area=the_area),
             headers={'Content-Type': 'application/json'})
-        return self.trigger_parser.parse_dict(payload)
+        return Trigger.from_dict(payload)
 
     def get_triggers(self):
         """
@@ -100,7 +105,7 @@ class AlertManager:
             TRIGGERS_URI,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return [self.trigger_parser.parse_dict(item) for item in data]
+        return [Trigger.from_dict(item) for item in data]
 
     def get_trigger(self, trigger_id):
         """
@@ -115,7 +120,7 @@ class AlertManager:
             NAMED_TRIGGER_URI % trigger_id,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return self.trigger_parser.parse_dict(data)
+        return Trigger.from_dict(data)
 
     def update_trigger(self, trigger):
         """
@@ -139,7 +144,7 @@ class AlertManager:
             }
         }
         the_conditions = [dict(name=c.weather_param, expression=c.operator, amount=c.amount) for c in trigger.conditions]
-        the_area = [a.as_dict() for a in trigger.area]
+        the_area = [a.to_dict() for a in trigger.area]
 
         status, _ = self.http_client.put(
             NAMED_TRIGGER_URI % trigger.id,
@@ -178,7 +183,7 @@ class AlertManager:
             ALERTS_URI % trigger.id,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return [self.alert_parser.parse_dict(item) for item in data]
+        return [Alert.from_dict(item) for item in data]
 
     def get_alert(self, alert_id, trigger):
         """
@@ -198,7 +203,7 @@ class AlertManager:
             NAMED_ALERT_URI % (trigger.id, alert_id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return self.alert_parser.parse_dict(data)
+        return Alert.from_dict(data)
 
     def delete_all_alerts_for(self, trigger):
         """
@@ -228,3 +233,6 @@ class AlertManager:
             NAMED_ALERT_URI % (alert.trigger_id, alert.id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)

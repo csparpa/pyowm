@@ -1,16 +1,14 @@
-"""
-Object that can read/write meteostations metadata and extract related
-measurements
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from pyowm.commons.http_client import HttpClient
-from pyowm.stationsapi30.parsers.station_parser import StationParser
-from pyowm.stationsapi30.parsers.aggregated_measurement_parser import AggregatedMeasurementParser
-from pyowm.stationsapi30.uris import STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 from pyowm.constants import STATIONS_API_VERSION
+from pyowm.stationsapi30.measurement import AggregatedMeasurement
+from pyowm.stationsapi30.station import Station
+from pyowm.stationsapi30.uris import ROOT_STATIONS_API_URL, STATIONS_URI, NAMED_STATION_URI, MEASUREMENTS_URI
 
 
-class StationsManager(object):
+class StationsManager:
 
     """
     A manager objects that provides a full interface to OWM Stations API. Mainly
@@ -19,17 +17,18 @@ class StationsManager(object):
 
     :param API_key: the OWM Weather API key
     :type API_key: str
+    :param config: the configuration dictionary
+    :type config: dict
     :returns: a *StationsManager* instance
     :raises: *AssertionError* when no API Key is provided
 
     """
 
-    def __init__(self, API_key):
+    def __init__(self, API_key, config):
         assert API_key is not None, 'You must provide a valid API Key'
         self.API_key = API_key
-        self.stations_parser = StationParser()
-        self.aggregated_measurements_parser = AggregatedMeasurementParser()
-        self.http_client = HttpClient()
+        assert isinstance(config, dict)
+        self.http_client = HttpClient(API_key, config, ROOT_STATIONS_API_URL)
 
     def stations_api_version(self):
         return STATIONS_API_VERSION
@@ -48,7 +47,7 @@ class StationsManager(object):
             STATIONS_URI,
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return [self.stations_parser.parse_dict(item) for item in data]
+        return [Station.from_dict(item) for item in data]
 
     def get_station(self, id):
         """
@@ -63,7 +62,7 @@ class StationsManager(object):
             NAMED_STATION_URI % str(id),
             params={'appid': self.API_key},
             headers={'Content-Type': 'application/json'})
-        return self.stations_parser.parse_dict(data)
+        return Station.from_dict(data)
 
     def create_station(self, external_id, name, lat, lon, alt=None):
         """
@@ -98,7 +97,7 @@ class StationsManager(object):
             data=dict(external_id=external_id, name=name, lat=lat,
                       lon=lon, alt=alt),
             headers={'Content-Type': 'application/json'})
-        return self.stations_parser.parse_dict(payload)
+        return Station.from_dict(payload)
 
     def update_station(self, station):
         """
@@ -214,7 +213,7 @@ class StationsManager(object):
             MEASUREMENTS_URI,
             params=query,
             headers={'Content-Type': 'application/json'})
-        return [self.aggregated_measurements_parser.parse_dict(item) for item in data]
+        return [AggregatedMeasurement.from_dict(item) for item in data]
 
     def send_buffer(self, buffer):
         """
@@ -267,3 +266,6 @@ class StationsManager(object):
             dict(obscuration=d['weather_obscuration']),
             dict(other=d['weather_other'])]
         return item
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)

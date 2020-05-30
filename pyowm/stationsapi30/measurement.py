@@ -1,5 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
-from pyowm.utils import timeformatutils
+from pyowm.commons import exceptions
+from pyowm.utils import formatting
 
 
 class AggregatedMeasurement:
@@ -59,7 +63,34 @@ class AggregatedMeasurement:
         """
         if self.timestamp is None:
             return None
-        return timeformatutils.timeformat(self.timestamp, timeformat)
+        return formatting.timeformat(self.timestamp, timeformat)
+
+    @classmethod
+    def from_dict(cls, the_dict):
+        """
+        Parses an *AggregatedMeasurement* instance out of a data dictionary. Only certain properties of the data dictionary
+        are used: if these properties are not found or cannot be parsed, an exception is issued.
+
+        :param the_dict: the input dictionary
+        :type the_dict: `dict`
+        :returns: an *AggregatedMeasurement* instance or ``None`` if no data is available
+        :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
+
+        """
+        if the_dict is None:
+            raise exceptions.ParseAPIResponseError('Data is None')
+        station_id = the_dict.get('station_id', None)
+        ts = the_dict.get('date', None)
+        if ts is not None:
+            ts = int(ts)
+        aggregated_on = the_dict.get('type', None)
+        temp = the_dict.get('temp', dict())
+        humidity = the_dict.get('humidity', dict())
+        wind = the_dict.get('wind', dict())
+        pressure = the_dict.get('pressure', dict())
+        precipitation = the_dict.get('precipitation', dict())
+        return AggregatedMeasurement(station_id, ts, aggregated_on, temp=temp, humidity=humidity, wind=wind,
+                                     pressure=pressure, precipitation=precipitation)
 
     def to_dict(self):
         """Dumps object fields into a dict
@@ -75,14 +106,6 @@ class AggregatedMeasurement:
                 'wind': self.wind,
                 'pressure': self.pressure,
                 'precipitation': self.precipitation}
-
-    def to_JSON(self):
-        """Dumps object fields into a JSON formatted string
-
-        :returns: the JSON string
-
-        """
-        return json.dumps(self.to_dict())
 
     def __repr__(self):
         return '<%s.%s - station_id=%s, created_at=%s>' \
@@ -147,7 +170,7 @@ class Measurement:
         """
         if self.timestamp is None:
             return None
-        return timeformatutils.timeformat(self.timestamp, timeformat)
+        return formatting.timeformat(self.timestamp, timeformat)
 
     @classmethod
     def from_dict(cls, the_dict):

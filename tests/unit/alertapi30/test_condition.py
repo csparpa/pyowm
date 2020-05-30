@@ -1,4 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
+
+import pyowm.commons.exceptions
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum
 
@@ -28,3 +33,21 @@ class TestCondition(unittest.TestCase):
         self.assertEqual(expected.operator, result.operator)
         self.assertEqual(expected.amount, result.amount)
         self.assertEqual(expected.id, result.id)
+
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
+            Condition.from_dict(None)
+
+        with self.assertRaises(pyowm.commons.exceptions.ParseAPIResponseError):
+            Condition.from_dict(dict(nonexistent='key'))
+
+    def test_to_dict(self):
+        instance = Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456')
+        result = instance.to_dict()
+        self.assertIsInstance(result, dict)
+        self.assertEqual('123456', result['id'])
+        self.assertEqual(WeatherParametersEnum.TEMPERATURE, result['weather_param'])
+        self.assertEqual(OperatorsEnum.GREATER_THAN, result['operator'])
+        self.assertEqual(78.6, result['amount'])
+
+    def test_repr(self):
+        print(Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456'))

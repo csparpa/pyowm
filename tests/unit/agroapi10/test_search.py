@@ -1,10 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from datetime import datetime
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
 from pyowm.agroapi10.enums import PresetEnum
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestSatelliteImagerySearchResultSet(unittest.TestCase):
@@ -47,9 +50,19 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertRaises(AssertionError, SatelliteImagerySearchResultSet, 'my_polygon', [], None)
 
     def test_instantiation(self):
-        self.assertEqual(12, len(self.test_instance.metaimages))
+        self.assertEqual(12, self.test_instance.__len__())
         self.assertTrue(all([mi.stats_url is not None for mi in self.test_instance.metaimages if mi.preset in
                              [PresetEnum.EVI, PresetEnum.NDVI]]))
+
+    def test_empty_metaimages_init(self):
+        test_data = self.test_data[0]
+        for dictionary in ['image', 'stats', 'tile', 'data']:
+            for key in test_data[dictionary].keys():
+                test_data[dictionary][key] = None
+
+        test_data = [test_data]
+        test_instance = SatelliteImagerySearchResultSet('my_polygon', test_data, self.test_issuing_time)
+        self.assertFalse(len(test_instance.metaimages))
 
     def test_issued_on_returning_different_formats(self):
         self.assertEqual(self.test_instance.issued_on(timeformat='unix'),
@@ -108,3 +121,8 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
         self.assertEqual(1, len(result))
         result = self.test_instance.with_img_type_and_preset(ImageTypeEnum.GEOTIFF, PresetEnum.FALSE_COLOR)
         self.assertEqual(1, len(result))
+
+    def test_repr(self):
+        self.assertEqual('<pyowm.agroapi10.search.SatelliteImagerySearchResultSet'
+                         ' - 12 results for query issued on polygon_id=my_polygon at 2013-09-06 09:20:00+00>',
+                         self.test_instance.__repr__())

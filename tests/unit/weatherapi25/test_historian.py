@@ -1,11 +1,10 @@
-"""
-Test case for historian.py module
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-e for historian.py module
 
 import unittest
 from pyowm.weatherapi25.stationhistory import StationHistory
 from pyowm.weatherapi25.historian import Historian
-from pyowm.utils import temputils
+from pyowm.utils import measurables
 
 
 class TestHistorian(unittest.TestCase):
@@ -142,8 +141,8 @@ class TestHistorian(unittest.TestCase):
     def test_average_temperature_with_different_temperature_units(self):
         avg = (266.85 + 266.25)/2.0
         expected_kelvin = avg
-        expected_celsius = temputils.kelvin_to_celsius(avg)
-        expected_fahrenheit = temputils.kelvin_to_fahrenheit(avg)
+        expected_celsius = measurables.kelvin_to_celsius(avg)
+        expected_fahrenheit = measurables.kelvin_to_fahrenheit(avg)
         self.assertEqual(expected_kelvin,
                          self.__instance.average_temperature(unit='kelvin'))
         self.assertEqual(expected_celsius,
@@ -236,8 +235,12 @@ class TestHistorian(unittest.TestCase):
         expected = [("a", 1), ("b", 2), ("e", 5)]
         self.assertEqual(set(expected),
                          set(self.__instance._purge_none_samples(input_list)))
+
     def test_average(self):
         input_list = [("a", 1.0), ("b", 2.0), ("c", 3.0), ("d", 4.0)]
         expected = 10.0/len(input_list)
         self.assertEqual(expected,
                          self.__instance._average(input_list))
+
+    def test__repr(self):
+        print(self.__instance)

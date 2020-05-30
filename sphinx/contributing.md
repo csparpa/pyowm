@@ -1,6 +1,6 @@
 # Contributing
 
-Contributing is easy anwd welcome"
+Contributing is easy anwd welcome
  
 You can contribute to PyOWM in a lot of ways:
 
@@ -8,12 +8,12 @@ You can contribute to PyOWM in a lot of ways:
   - make a wish for a reasonable new feature
   - increase the test coverage
   - refactor the code
-  - improve PyOWM reach on platforms (eg. bundle it for Linux distros, managers, oding, testing, packaging, reporting issues) are welcome!_.
+  - improve PyOWM reach on platforms (eg. bundle it for Linux distros, managers, oding, testing, packaging, reporting issues) are welcome!
   
-And last but not least... use it! Use PyOWM in your own projects, as [lots of people already do](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM)
+And last but not least... use it! Use PyOWM in your own projects, as [lots of people already do](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM).
 
 
-In order to get started, follow these simple steps
+In order to get started, follow these simple steps:
 
   1. First, meet the community and wave hello! You can join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [here](http://pyowm-slackin.herokuapp.com/)
   2. Depending on how you want to contribute, take a look at one of the following sections
@@ -32,11 +32,11 @@ Vague or succint bug reports are not useful and will very likely result in follo
 so bugs affecting the broader context are out of scope - unless they are caused in chain to PyOWM issues.
 
 Also, please do understand that we can only act on *reproducible bugs*: this means that a bug does not exist if it is
-not possible to reproduce it by two different persons. So please provide facts, not "smells" of a potential bug" 
+not possible to reproduce it by two different persons. So please provide facts, not "smells of a potential bug" 
 
 
 ## What a good bug report should contain
-These info are part of a good bug report
+These info are part of a good bug report:
   - brief description of the issue
   - *how to reproduce the issue*
   - what is the impacted PyOWM issue
@@ -74,17 +74,12 @@ just run:
 
 `pip install -r dev-requirements.txt`
 
-It is adviced that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/) or, if you prefer to spin up the 
-whole dev environment with just one command, you can run the PyOWM Docker image:
-
-`docker run -d --name pyowm csparpa/pyowm`
-
+It is adviced that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/).
 
 ## Guidelines for code branching
-The project adopts @nvie's branching model:
+Simple ones:
 
 - the "develop" branch contains work-in-progress code 
-- new "feature"/"bugfix" branches can be opened by any contributor from the "develop" branch. Each feature branch adds a new feature/enhancement or bugfix
 - the "master" branch will contain only stable code and the "develop" branch will be merged back into it only when a milestone is completed or hotfixes need to be applied. Merging of "develop" into "master" will be done by @csparpa when releasing - so please **never apply your modifications to the master branch!!!**
 
 
@@ -93,8 +88,6 @@ Main principles:
 
   - Each software functionality should have a related unit test
   - Each bug should have at least one regression test associated
-  
-[Here is how to run tests](https://github.com/csparpa/pyowm/wiki/Notes-on-testing)
 
 
 # Contributing on PyOWM bundling/distributing

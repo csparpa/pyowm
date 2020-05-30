@@ -1,6 +1,5 @@
-"""
-JSON test OWM API responses
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 OBSERVATION_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' \
     '"GB","sunrise":1378877413,"sunset":1378923812},"weather":[{"id":804,' \
@@ -9,22 +8,16 @@ OBSERVATION_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' 
     '"temp_max":289.82,"humidity":75},"wind":{"speed":1.54,"gust":2.57,"deg":' \
     '31},"clouds":{"all":92},"dt":1378895177,"id":2643743,"name":"London","cod":200}'
 
-STATION_OBSERVATION_JSON = '{"station":{"name":"KPPQ","type":1,"status":50,' \
-                           '"id":1000,"coord":{"lon":-90.47,"lat":39.38}},' \
-                           '"last":{"main":{"temp":276.15,"pressure":1031},' \
-                           '"wind":{"speed":3.1,"deg":140},"visibility":' \
-                           '{"distance":11265,"prefix":0},"calc":' \
-                           '{"dewpoint":273.15},"clouds":[{"distance":427,' \
-                           '"condition":"SCT"}],"dt":1417977300},' \
-                           '"params":["temp","pressure","wind","visibility"]}'
 
-WEATHER_AT_STATION_IN_BBOX_JSON = '{"cnt":29,"cod":"200","list":[{"clouds":'\
-    '[{"condition":"OVC","distance":305}],"coord":{"lat":56.2301,"lon":'\
-    '43.784},"dt":1419210000,"id":7334,"main":{"pressure":999,"temp":1},'\
-    '"name":"UWGG","rang":50,"type":1,"wind":{"deg":200,"speed":3}},{"clouds"'\
-    ':[{"condition":"VV","distance":91}],"coord":{"lat":51.565,"lon":46.0467}'\
-    ',"dt":1419210000,"id":7343,"main":{"pressure":1007,"temp":0},"name":'\
-    '"UWSS","rang":50,"type":1,"wind":{"deg":180,"speed":3}}]}' 
+WEATHER_AT_PLACES_IN_BBOX_JSON = '{"cod":"200","calctime":0.3107,"cnt":2,' \
+    '"list":[{"id":2208791,"name":"Yafran","coord":{"lon":12.52859,"lat":32.06329},"main":{"temp":9.68,"temp_min":9.681,' \
+    '"temp_max":9.681,"pressure":961.02,"sea_level":1036.82,"grnd_level":961.02,"humidity":85},"dt":1485784982,' \
+    '"wind":{"speed":3.96,"deg":356.5},"rain":{"3h":0.255},"clouds":{"all":88},"weather":[{"id":500,"main":"Rain",' \
+    '"description":"lightrain","icon":"10d"}]},{"id":2208425,"name":"Zuwarah","coord":{"lon":12.08199,"lat":32.931198},' \
+    '"main":{"temp":15.36,"temp_min":15.356,"temp_max":15.356,"pressure":1036.81,"sea_level":1037.79,' \
+    '"grnd_level":1036.81,"humidity":89},"dt":1485784982,"wind":{"speed":5.46,"deg":30.0002},"clouds":{"all":56},' \
+    '"weather":[{"id":803,"main":"Clouds","description":"brokenclouds","icon":"04d"}]}]}'
+
 
 WEATHER_AT_PLACES_IN_BBOX_JSON = '{"cod":"200","calctime":0.3107,"cnt":2,' \
     '"list":[{"id":2208791,"name":"Yafran","coord":{"lon":12.52859,"lat":32.06329},"main":{"temp":9.68,"temp_min":9.681,' \
@@ -124,7 +117,8 @@ OBSERVATION_NOT_FOUND_JSON = '{"message":"Error: Not found city","cod":"404"}'
 
 INTERNAL_SERVER_ERROR_JSON = '{"message":"Error: Internal server error","cod":"500"}'
 
-SEARCH_WITH_NO_RESULTS_JSON = '{"cod": "200", "count": 0, "list": []}'
+SEARCH_WITH_NO_RESULTS_1_JSON = '{"cod": "200", "count": 0, "list": []}'
+SEARCH_WITH_NO_RESULTS_2_JSON = '{"cod": "200", "cnt": 0, "list": []}'
 
 FORECAST_NOT_FOUND_JSON = '{"cod": "200","message": 0.0122,"city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
@@ -157,16 +151,6 @@ STATION_WEATHER_HISTORY_NOT_FOUND_JSON = '{"message":"","cod":"200","type":"tick
 
 STATION_HISTORY_NO_ITEMS_JSON = '{"cod": "200","message": "test", "cnt": 0}'
 
-STATION_AT_COORDS_JSON = '[{"station":{"name":"EGLC","type":1,"status":50,' \
-    '"id":5091,"coord":{"lon":0.0553,"lat":51.5053}},"distance":12.835,"last"' \
-    ':{"main":{"temp":286.15,"pressure":1019,"humidity":82},"wind":{"speed":' \
-    '8.2,"deg":250},"visibility":{"distance":10000,"prefix":1},"calc":{' \
-    '"dewpoint":283.15,"humidex":287.45},"dt":1419216600}},{"station":{"name":' \
-    '"BarnetEN5","type":5,"status":20,"user_id":150,"id":43279,"coord":{"lon":' \
-    '-0.1997,"lat":51.6444}},"distance":15.702,"last":{"main":{"temp":285.05,' \
-    '"humidity":91,"pressure":1024.7},"wind":{"speed":0,"gust":0,"deg":135},"' \
-    'rain":{"1h":0,"today":0},"calc":{"dewpoint":10.5},"dt":1419220652}}]'
-
 OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"country":' \
     '"GB","sunrise":1378877413,"sunset":1378923812},"weather":[{"test":"fake"}],"base":' \
     '"gdps stations","main":{"temp":288.44,"pressure":1022,"temp_min":287.59,' \
@@ -176,3 +160,21 @@ OBSERVATION_MALFORMED_JSON = '{"coord":{"lon":-0.12574,"lat":51.50853},"sys":{"c
 FORECAST_MALFORMED_JSON = '{ "city": {"id": 2643743,' \
     '"name": "London","coord": {"lon": -0.12574,"lat": 51.50853},"country": ' \
     '"GB","population": 1000000}, "list": [{"test": "fake"}]}'
+
+ONE_CALL_JSON = '''{"lat":60.99,"lon":30.9,"timezone":"America/Chicago","current":{"dt":1586001851,"sunrise":1586003020,
+"sunset":1586048382,"temp":280.15,"feels_like":277.75,"pressure":1017,"humidity":93,"uvi":9.63,"clouds":90,
+"visibility":6437,"wind_speed":2.1,"wind_deg":70,"weather":[{"id":501,"main":"Rain","description":"moderate rain",
+"icon":"10n"},{"id":701,"main":"Mist","description":"mist","icon":"50n"}],"rain":{"1h":1.02}},"hourly":[{"dt":1586001600,
+"temp":280.15,"feels_like":275.8,"pressure":1017,"humidity":93,"clouds":90,"wind_speed":4.88,"wind_deg":60,"weather":[
+{"id":501,"main":"Rain","description":"moderate rain","icon":"10n"}],"rain":{"1h":1.37}}],"daily":[{"dt":1586023200,
+"sunrise":1586003020,"sunset":1586048382,"temp":{"day":281.46,"min":279.92,"max":285.17,"night":283.74,"eve":285.17,
+"morn":280.15},"feels_like":{"day":276.63,"night":281.67,"eve":282.73,"morn":275.8},"pressure":1019,"humidity":69,
+"wind_speed":4.75,"wind_deg":54,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],
+"clouds":98,"rain":5.97,"uvi":9.63}]}'''
+
+ONE_CALL_HISTORY_JSON = '''{"lat":60.99,"lon":30.9,"timezone":"Europe/Moscow","current":{"dt":1586468027,"sunrise":1586487424,
+"sunset":1586538297,"temp":274.31,"feels_like":269.79,"pressure":1006,"humidity":72,"dew_point":270.21,"clouds":0,
+"visibility":10000,"wind_speed":3,"wind_deg":260,"weather":[{"id":800,"main":"Clear","description":"clear sky",
+"icon":"01n"}]},"hourly":[{"dt":1586390400,"temp":278.41,"feels_like":269.43,"pressure":1006,"humidity":65,
+"dew_point":272.46,"clouds":0,"wind_speed":9.83,"wind_deg":60,"wind_gust":15.65,"weather":[{"id":800,"main":"Clear",
+"description":"clear sky","icon":"01n"}]}]}'''

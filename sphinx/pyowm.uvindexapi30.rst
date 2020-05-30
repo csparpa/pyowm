@@ -19,10 +19,10 @@ pyowm.uvindexapi30.uvindex module
     :show-inheritance:
 
 
-pyowm.uvindexapi30.parsers module
----------------------------------
+pyowm.uvindexapi30.uvindex_manager module
+-----------------------------------------
 
-.. automodule:: pyowm.uvindexapi30.parsers
+.. automodule:: pyowm.uvindexapi30.uvindex_manager
     :members:
     :undoc-members:
     :show-inheritance:

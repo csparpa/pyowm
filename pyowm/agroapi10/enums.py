@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from pyowm.commons.databoxes import Satellite
 
 
@@ -25,6 +28,9 @@ class PresetEnum:
             cls.EVI
         ]
 
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)
+
 
 class SatelliteEnum:
     """
@@ -45,6 +51,9 @@ class SatelliteEnum:
             cls.LANDSAT_8,
             cls.SENTINEL_2
         ]
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)
 
 
 class PaletteEnum:
@@ -70,3 +79,6 @@ class PaletteEnum:
             cls.CONTRAST_SHIFTED,
             cls.CONTRAST_CONTINUOUS
         ]
+
+    def __repr__(self):
+        return '<%s.%s>' % (__name__, self.__class__.__name__)

@@ -6,28 +6,9 @@ Subpackages
 
 .. toctree::
 
-    pyowm.weatherapi25.cityids
-    pyowm.weatherapi25.parsers
-    pyowm.weatherapi25.xsd
 
 Submodules
 ----------
-
-pyowm.weatherapi25.cityidregistry module
-----------------------------------------
-
-.. automodule:: pyowm.weatherapi25.cityidregistry
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.weatherapi25.configuration25 module
------------------------------------------
-
-.. automodule:: pyowm.weatherapi25.configuration25
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 pyowm.weatherapi25.forecast module
 ----------------------------------
@@ -69,22 +50,6 @@ pyowm.weatherapi25.observation module
     :undoc-members:
     :show-inheritance:
 
-pyowm.weatherapi25.owm25 module
--------------------------------
-
-.. automodule:: pyowm.weatherapi25.owm25
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyowm.weatherapi25.station module
----------------------------------
-
-.. automodule:: pyowm.weatherapi25.station
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pyowm.weatherapi25.stationhistory module
 ----------------------------------------
 
@@ -97,6 +62,14 @@ pyowm.weatherapi25.weather module
 ---------------------------------
 
 .. automodule:: pyowm.weatherapi25.weather
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.weatherapi25.weather_manager module
+-----------------------------------------
+
+.. automodule:: pyowm.weatherapi25.weather_manager
     :members:
     :undoc-members:
     :show-inheritance:

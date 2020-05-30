@@ -1,9 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import os
 import copy
-from pyowm.constants import DEFAULT_API_KEY
-from pyowm.weatherapi25.configuration25 import parsers
-from pyowm.weatherapi25.owm25 import OWM25
+from pyowm import owm
 from pyowm.alertapi30.condition import Condition
 from pyowm.alertapi30.enums import WeatherParametersEnum, OperatorsEnum
 from pyowm.utils import geo
@@ -11,7 +12,7 @@ from pyowm.utils import geo
 
 class IntegrationTestsAlertAPI30(unittest.TestCase):
 
-    __owm = OWM25(parsers, os.getenv('OWM_API_KEY', DEFAULT_API_KEY))
+    __owm = owm.OWM(os.getenv('OWM_API_KEY', None))
 
     cond1 = Condition(WeatherParametersEnum.HUMIDITY, OperatorsEnum.LESS_THAN, 10)
     cond2 = Condition(WeatherParametersEnum.CLOUDS, OperatorsEnum.LESS_THAN, 90)

@@ -1,7 +1,10 @@
-import json
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import copy
+import json
 from pyowm.stationsapi30.measurement import Measurement
-from pyowm.utils import timeutils, timeformatutils
+from pyowm.utils import timestamps, formatting
 
 
 class Buffer:
@@ -13,7 +16,7 @@ class Buffer:
     def __init__(self, station_id):
         assert station_id is not None
         self.station_id = station_id
-        self.created_at = timeutils.now(timeformat='unix')
+        self.created_at = timestamps.now(timeformat='unix')
         self.measurements = list()
 
     def creation_time(self, timeformat='unix'):
@@ -30,7 +33,7 @@ class Buffer:
         """
         if self.created_at is None:
             return None
-        return timeformatutils.timeformat(self.created_at, timeformat)
+        return formatting.timeformat(self.created_at, timeformat)
 
     def append(self, measurement):
         """
@@ -82,8 +85,6 @@ class Buffer:
 
         """
         self.measurements.sort(key=lambda m: m.timestamp, reverse=True)
-
-    # Magic methods
 
     def __len__(self):
         return len(self.measurements)

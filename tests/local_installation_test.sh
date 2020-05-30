@@ -12,6 +12,7 @@ echo "*** PyOWM source package is in: $TRAVIS_BUILD_DIR"
 
 # Test PyOWM installation from local folder
 cd "$TRAVIS_BUILD_DIR"
+pip install -r requirements.txt
 pip install -e .
 if [ $? -ne 0 ]; then
     echo "*** Pip installation failed!"

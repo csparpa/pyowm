@@ -1,10 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 import json
 from copy import deepcopy
 from datetime import datetime as dt
 from pyowm.stationsapi30.measurement import Measurement
 from pyowm.stationsapi30.buffer import Buffer
-from pyowm.utils.timeformatutils import UTC, to_date, to_ISO8601
+from pyowm.utils.formatting import UTC, to_date, to_ISO8601
 
 
 class TestBuffer(unittest.TestCase):
@@ -35,6 +38,9 @@ class TestBuffer(unittest.TestCase):
         self.assertEqual(to_date(ts), date_result)
         with self.assertRaises(ValueError):
             buf.creation_time(timeformat='unknown')
+
+        buf.created_at = None
+        self.assertIsNone(buf.creation_time())
 
     def test_append(self):
         buf = Buffer(self.station_id)

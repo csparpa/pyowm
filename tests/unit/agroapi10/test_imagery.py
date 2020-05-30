@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import unittest
 from datetime import datetime
+from unittest.mock import patch
+
 from pyowm.commons.image import Image, ImageTypeEnum
 from pyowm.agroapi10.enums import PresetEnum, SatelliteEnum
 from pyowm.agroapi10.imagery import MetaImage, SatelliteImage
-from pyowm.utils.timeformatutils import UTC
+from pyowm.utils.formatting import UTC
 
 
 class TestMetaImage(unittest.TestCase):
@@ -93,3 +98,15 @@ class TestSatelliteImage(unittest.TestCase):
 
         def test_repr(self):
             repr(self.test_instance)
+
+        def test_init(self):
+            test_instance = SatelliteImage(TestMetaImage.test_instance, self.test_image)
+
+            self.assertFalse(hasattr(test_instance, '_downloaded_on'))
+
+        def test_persist(self):
+            with patch('builtins.open', unittest.mock.mock_open()) as mocked_open:
+                persists = self.test_instance.persist('filename')
+                assert persists is None
+
+            mocked_open.assert_called_once_with('filename', 'wb')
