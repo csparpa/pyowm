@@ -9,8 +9,8 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyowm.svg)](https://img.shields.io/pypi/pyversions/pyowm.svg)
 <br>
 [![Latest Release Documentation](https://readthedocs.org/projects/pyowm/badge/?version=latest)](https://pyowm.readthedocs.io/en/latest/)
-[![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=master)](https://travis-ci.org/csparpa/pyowm)
-[![Coverage Status](https://coveralls.io/repos/github/csparpa/pyowm/badge.svg?branch=master)](https://coveralls.io/github/csparpa/pyowm?branch=master)
+[![Build Status](https://travis-ci.org/csparpa/pyowm.png?branch=develop)](https://travis-ci.org/csparpa/pyowm)
+[![Coverage Status](https://coveralls.io/repos/github/csparpa/pyowm/badge.svg?branch=develop)](https://coveralls.io/github/csparpa/pyowm?branch=master)
 <br>
 <a href="https://www.buymeacoffee.com/LmAl1n9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa%40gmail.com)
@@ -18,6 +18,11 @@
 ##  What is it?
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs. It allows quick and easy consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
 
+PyOWM runs on Python 3.7+
+
+**Former Dark Sky API users**: you can can use PyOWM to get [OpenWeatherMap's OneCall API](https://openweathermap.org/api/one-call-api) data as an easy replacement to Dark Sky
+
+### What kind of data do I get with PyOWM ?
 With PyOWM you can integrate into your code any of the following OpenWeatherMap web APIs:
 
  - **Weather API v2.5** + **OneCall API**, providing current weather data, weather forecasts, weather history
@@ -28,11 +33,7 @@ With PyOWM you can integrate into your code any of the following OpenWeatherMap 
  - **Weather Alerts API v3.0**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
  - **Image tiles** for several map layers provided by OWM
 
-PyOWM runs on Python 3.7+
-
-**Former Dark Sky API users**: you can can use PyOWM to get [OpenWeatherMap's OneCall API](https://openweathermap.org/api/one-call-api) data as an easy replacement for Dark Sky 
-
-##  Get started
+ ##  Get started
 
 ### API key
 
@@ -45,12 +46,13 @@ Please notice that the free API subscription plan is subject to requests throttl
 With a free OWM API Key:
 
 ```python
-import pyowm
+from pyowm import OWM
 
-owm = pyowm.OWM('your-API-key')  # You MUST provide a valid API key
+owm = OWM('your-API-key')  # You MUST provide a valid API key
 
 # Search for current weather in London (Great Britain)
-observation = owm.weather_at_place('London,GB')
+mgr = owm.weather_manager()
+observation = mgr.weather_at_place('London,GB')
 w = observation.weather
 print(w)                  # <Weather - reference time=2013-12-18 09:20, status=Clouds>
 
@@ -61,20 +63,22 @@ w.temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
 
 # Search current weather observations in the surroundings of
 # lat=22.57W, lon=43.12S (Rio de Janeiro, BR)
-observation_list = owm.weather_around_coords(-22.57, -43.12)
+observation_list = mgr.weather_around_coords(-22.57, -43.12)
 ```
 
 With a paid OWM API key:
 
 ```python
-import pyowm
-
-paid_owm = pyowm.OWM(API_key='your-pro-API-key', subscription_type='pro')
+from pyowm.owm import OWM
+from pyowm.utils import config
+from pyowm.utils import timestamps
+config_dict = config.get_default_config_for_subscription_type('professional')
+owm = OWM('your-paid-api-key', config_dict)
 
 # Will it be clear tomorrow at this time in Milan (Italy) ?
-forecast = paid_owm.daily_forecast("Milan,IT")
-tomorrow = pyowm.timeutils.tomorrow()
-forecast.will_be_clear_at(tomorrow)  # The sun always shines on Italy, right? ;)
+mgr = owm.weather_manager()
+forecast = mgr.daily_forecast("Milan,IT")
+forecast.will_be_clear_at(timestamps.tomorrow())  # The sun always shines on Italy, right? ;)
 ```
 
 
@@ -85,9 +89,8 @@ Install with `pip` for your ease:
 $ pip install pyowm
 ```
 
-There is a lot of alternatives: [setuptools](https://github.com/csparpa/pyowm/wiki/Install#install-from-source-with-setuptools), 
-[Windows installers](https://github.com/csparpa/pyowm/wiki/Install#windows-exe) and common package managers such as
-[Yaourt (Arch Linux)](https://github.com/csparpa/pyowm/wiki/Install#on-archlinux-with-yaourt) and [YaST/Zypper (OpenSuse)](https://github.com/csparpa/pyowm/wiki/Install#on-opensuse-with-yastzypper)
+There are alternatives: _setuptools_, _Windows installers_ and common Linux package managers such as _Yaourt (Arch Linux)_
+_YaST/Zypper (OpenSuse)_ (please refer to the documentation for more detail)
 
 Eager to fetch the very latest updates to PyOWM? Install the development trunk (which might be unstable):
 
