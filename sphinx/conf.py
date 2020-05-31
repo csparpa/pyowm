@@ -15,6 +15,7 @@
 import sys
 import os
 import sphinx_readable_theme
+from recommonmark.parser import CommonMarkParser
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -32,6 +33,7 @@ sys.path.insert(0, os.path.abspath('..'))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
+    'recommonmark'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -48,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyowm'
-copyright = u'2018, Claudio Sparpaglione'
+copyright = u'2020, Claudio Sparpaglione'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -132,7 +134,7 @@ html_theme = 'readable'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = []
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -269,7 +271,7 @@ texinfo_documents = [
 epub_title = u'pyowm'
 epub_author = u'Claudio Sparpaglione'
 epub_publisher = u'Claudio Sparpaglione'
-epub_copyright = u'2018, Claudio Sparpaglione'
+epub_copyright = u'2020, Claudio Sparpaglione'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'pyowm'
@@ -334,5 +336,5 @@ epub_exclude_files = ['search.html']
 
 
 source_parsers = {
-   '.md': 'recommonmark.parser.CommonMarkParser',
+   '.md': CommonMarkParser,
 }
