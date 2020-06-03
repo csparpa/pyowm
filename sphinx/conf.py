@@ -336,5 +336,5 @@ epub_exclude_files = ['search.html']
 
 
 source_parsers = {
-   '.md': CommonMarkParser,
+   #'.md': CommonMarkParser,
 }
