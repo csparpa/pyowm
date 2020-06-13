@@ -164,7 +164,7 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
 list_of_locations = reg.locations_for('moscow', country='RU')
-moscow = list_of_locations[0][0]
+moscow = list_of_locations[0]
 lat = moscow.lat   # 55.75222
 lon = moscow.lon   # 37.615555
 ```
