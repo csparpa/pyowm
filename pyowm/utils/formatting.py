@@ -1,23 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from calendar import timegm
-from datetime import datetime, timedelta, timezone, tzinfo
-
-ZERO = timedelta(0)
-
-
-class UTC(tzinfo):
-    """UTC"""
-
-    def utcoffset(self, dt):
-        return ZERO
-
-    def tzname(self, dt):
-        return "UTC"
-
-    def dst(self, dt):
-        return ZERO
+from datetime import datetime, timedelta, timezone
 
 
 def timeformat(timeobject, timeformat):
@@ -65,10 +49,9 @@ def to_date(timeobject):
             raise ValueError("The time value is a negative number")
         return datetime.fromtimestamp(timeobject, tz=timezone.utc)
     elif isinstance(timeobject, datetime):
-        return timeobject.replace(tzinfo=UTC())
+        return timeobject.replace(microsecond=0)
     elif isinstance(timeobject, str):
-        return datetime.strptime(timeobject,
-                                 '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+        return datetime.fromisoformat(timeobject, "seconds")
     else:
         raise TypeError('The time value must be expressed either by an int ' \
                          'UNIX time, a datetime.datetime object or an ' \
@@ -93,9 +76,9 @@ def to_ISO8601(timeobject):
     if isinstance(timeobject, int):
         if timeobject < 0:
             raise ValueError("The time value is a negative number")
-        return datetime.fromtimestamp(timeobject, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S+00')
+        return datetime.fromtimestamp(timeobject, tz=timezone.utc).isoformat(' ', 'seconds')
     elif isinstance(timeobject, datetime):
-        return timeobject.strftime('%Y-%m-%d %H:%M:%S+00')
+        return timeobject.isoformat(' ', 'seconds')
     elif isinstance(timeobject, str):
         return timeobject
     else:
@@ -145,7 +128,7 @@ def ISO8601_to_UNIXtime(iso):
 
     """
     try:
-        d = datetime.strptime(iso, '%Y-%m-%d %H:%M:%S+00')
+        d = datetime.fromisoformat(iso)
     except ValueError:
         raise ValueError(__name__ + ": bad format for input ISO8601 string, ' \
             'should have been: YYYY-MM-DD HH:MM:SS+00")
@@ -161,4 +144,4 @@ def datetime_to_UNIXtime(date):
     :returns: an int UNIXtime
     :raises: *TypeError* when bad argument types are provided
     """
-    return timegm(date.timetuple())
+    return int(date.timestamp())
