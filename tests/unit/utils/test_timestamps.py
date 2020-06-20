@@ -135,12 +135,12 @@ class TestTimeUtils(unittest.TestCase):
     def test_now(self):
         expected = datetime.now(timezone.utc)
         result = timestamps.now()
-        self.assertEquals(result.year, expected.year)
-        self.assertEquals(result.month, expected.month)
-        self.assertEquals(result.day, expected.day)
-        self.assertEquals(result.hour, expected.hour)
-        self.assertEquals(result.minute, expected.minute)
-        self.assertEquals(result.second, expected.second)
+        self.assertEqual(result.year, expected.year)
+        self.assertEqual(result.month, expected.month)
+        self.assertEqual(result.day, expected.day)
+        self.assertEqual(result.hour, expected.hour)
+        self.assertEqual(result.minute, expected.minute)
+        self.assertEqual(result.second, expected.second)
 
     def test_last_month(self):
         result = timestamps.last_month()
