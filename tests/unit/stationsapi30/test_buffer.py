@@ -7,14 +7,14 @@ from copy import deepcopy
 from datetime import datetime as dt
 from pyowm.stationsapi30.measurement import Measurement
 from pyowm.stationsapi30.buffer import Buffer
-from pyowm.utils.formatting import UTC, to_date, to_ISO8601
+from pyowm.utils.formatting import to_date, to_ISO8601
 
 
 class TestBuffer(unittest.TestCase):
 
     ts = 1378459200
-    iso_ts = "2013-09-06 09:20:00+00"
-    date_ts = dt.strptime(iso_ts, '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    iso_ts = "2013-09-06 09:20:00+00:00"
+    date_ts = dt.fromisoformat(iso_ts)
 
     station_id = 'mytest'
 
@@ -134,7 +134,7 @@ class TestBuffer(unittest.TestCase):
         buf2.append(self.m2)
         buf2.append(self.m3)
         result = buf1 + buf2
-        self.assertEquals(3, len(result))
+        self.assertEqual(3, len(result))
 
     def test_repr(self):
         buf = Buffer(self.station_id)

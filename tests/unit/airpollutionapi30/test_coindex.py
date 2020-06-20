@@ -7,7 +7,7 @@ from datetime import datetime
 import pyowm.commons.exceptions
 from pyowm.weatherapi25.location import Location
 from pyowm.airpollutionapi30.coindex import COIndex
-from pyowm.utils.formatting import UTC, datetime_to_UNIXtime
+from pyowm.utils.formatting import datetime_to_UNIXtime
 
 
 COINDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},{  "precision":-4.999999987376214e-07,"pressure":681.2920532226562,"value":1.1352169337897067e-07},{  "precision":-4.999999987376214e-07,"pressure":464.15887451171875,"value":1.1864428017815953e-07}]}'
@@ -26,14 +26,12 @@ COINDEX_JSON_DUMP = '{"reference_time": 1234567, "co_samples": [{"pressure": ' \
 class TestCOIndex(unittest.TestCase):
 
     __test_reception_time = 1475283600
-    __test_iso_reception_time = "2016-10-01 01:00:00+00"
-    __test_date_reception_time = datetime.strptime(__test_iso_reception_time,
-                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_iso_reception_time = "2016-10-01 01:00:00+00:00"
+    __test_date_reception_time = datetime.fromisoformat(__test_iso_reception_time)
 
     __test_reference_time = 1234567
-    __test_iso_reference_time = "1970-01-15 06:56:07+00"
-    __test_date_reference_time = datetime.strptime(__test_iso_reference_time,
-                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_iso_reference_time = "1970-01-15 06:56:07+00:00"
+    __test_date_reference_time = datetime.fromisoformat(__test_iso_reference_time)
     __test_location = Location('test', 12.3, 43.7, 987, 'UK')
     __test_co_samples = [
         {

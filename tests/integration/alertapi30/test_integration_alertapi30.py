@@ -16,8 +16,8 @@ class IntegrationTestsAlertAPI30(unittest.TestCase):
 
     cond1 = Condition(WeatherParametersEnum.HUMIDITY, OperatorsEnum.LESS_THAN, 10)
     cond2 = Condition(WeatherParametersEnum.CLOUDS, OperatorsEnum.LESS_THAN, 90)
-    start = '2019-07-01 14:17:00+00'
-    end = '2019-07-02 14:17:00+00'
+    start = '2019-07-01 14:17:00+00:00'
+    end = '2019-07-02 14:17:00+00:00'
     # a rectangle around the city of Moscow
     area1 = geo.Polygon.from_dict({
         "type": "Polygon",

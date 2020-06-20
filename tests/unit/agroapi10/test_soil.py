@@ -10,8 +10,8 @@ from pyowm.utils.formatting import UTC
 class TestSoil(unittest.TestCase):
 
     test_reference_time = 1378459200
-    test_iso_reference_time = "2013-09-06 09:20:00+00"
-    test_date_reference_time = datetime.strptime(test_iso_reference_time, '%Y-%m-%d %H:%M:%S+00').replace(
+    test_iso_reference_time = "2013-09-06 09:20:00+00:00"
+    test_date_reference_time = datetime.strptime(test_iso_reference_time, '%Y-%m-%d %H:%M:%S+00:00').replace(
         tzinfo=UTC())
     test_temperature = 294.199
     test_celsius_temperature = 21.049

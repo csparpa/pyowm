@@ -272,7 +272,7 @@ pressure_dict['sea_level']
 ### Get today's sunrise and sunset times for a location
 You can get precise timestamps for sunrise and sunset times on a location.
 Sunrise can be `None` for locations in polar night, as well as sunset can be `None` in case of polar days
-Supported time units are: `unix` (default, UNIX time), `iso` (format `YYYY-MM-DD HH:MM:SS+00`) or `datetime` 
+Supported time units are: `unix` (default, UNIX time), `iso` (format `YYYY-MM-DD HH:MM:SS+00:00`) or `datetime` 
 (gives a plain Python `datetime.datetime` object)
 
 ```python
@@ -453,8 +453,8 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 forecaster = mgr.forecast_at_place('Berlin,DE', '3h')    # this gives you a Forecaster object
-forecaster.when_starts('iso')                            # 2020-03-10 14:00:00+00'
-forecaster.when_ends('iso')                              # 2020-03-16 14:00:00+00'
+forecaster.when_starts('iso')                            # 2020-03-10 14:00:00+00:00'
+forecaster.when_ends('iso')                              # 2020-03-16 14:00:00+00:00'
 ```
 
 ### Get forecasted weather for tomorrow

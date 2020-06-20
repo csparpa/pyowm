@@ -25,25 +25,25 @@ class TestStation(unittest.TestCase):
         input_string = "2016-11-22T12:15:25.967Z"
         expected = "2016-11-22T12:15:25.000967Z"
         result = self._test_instance._format_micros(input_string)
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
         # micros are present but too many digits
         input_string = "2017-08-25T18:16:16.487887736Z"
         expected = "2017-08-25T18:16:16.487887Z"
         result = self._test_instance._format_micros(input_string)
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
         # no micros at all
         input_string = "2016-11-22T12:15:25Z"
         expected = "2016-11-22T12:15:25.000000Z"
         result = self._test_instance._format_micros(input_string)
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
         # no micros at all n.2
         input_string = "2016-11-22T12:15:25"
         expected = "2016-11-22T12:15:25.000000Z"
         result = self._test_instance._format_micros(input_string)
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
     def test_failing_instantiations(self):
         with self.assertRaises(AssertionError):
@@ -136,13 +136,13 @@ class TestStation(unittest.TestCase):
         expected = {
             'id': '583436dd9643a9000196b8d6',
             'altitude': 150,
-            'created_at': '2016-11-22 12:15:25+00',
+            'created_at': '2016-11-22 12:15:25+00:00',
             'external_id': 'SF_TEST001',
             'latitude': 37.76,
             'longitude': -122.43,
             'name': 'San Francisco Test Station',
             'rank': 0,
-            'updated_at': '2016-11-22 12:15:25+00'}
+            'updated_at': '2016-11-22 12:15:25+00:00'}
         result = self._test_instance.to_dict()
         self.assertEqual(expected, result)
 

@@ -7,14 +7,13 @@ import unittest
 from datetime import datetime as dt
 import pyowm.commons.exceptions
 from pyowm.stationsapi30.measurement import AggregatedMeasurement, Measurement
-from pyowm.utils.formatting import UTC
 
 
 class TestAggregatedMeasurement(unittest.TestCase):
 
     ts = 1378459200
-    iso_ts = "2013-09-06 09:20:00+00"
-    date_ts = dt.strptime(iso_ts, '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    iso_ts = "2013-09-06 09:20:00+00:00"
+    date_ts = dt.fromisoformat(iso_ts)
 
     _test_instance = AggregatedMeasurement('mytest', ts, 'm',
                                            temp=dict(min=0, max=100),
@@ -120,8 +119,8 @@ class TestAggregatedMeasurement(unittest.TestCase):
 class TestMeasurement(unittest.TestCase):
 
     ts = 1378459200
-    iso_ts = "2013-09-06 09:20:00+00"
-    date_ts = dt.strptime(iso_ts, '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    iso_ts = "2013-09-06 09:20:00+00:00"
+    date_ts = dt.fromisoformat(iso_ts)
 
     _test_instance = Measurement('mytest', ts, temperature=dict(min=0, max=100),
         wind_speed=2.1, wind_gust=67, humidex=77, weather_other=dict(key='val'))

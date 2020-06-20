@@ -5,7 +5,6 @@ import json
 import unittest
 from datetime import datetime
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
-from pyowm.utils.formatting import UTC
 from pyowm.weatherapi25.stationhistory import StationHistory
 from tests.unit.weatherapi25.json_test_responses import (
      STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_NOT_FOUND_JSON,
@@ -17,9 +16,8 @@ class TestStationHistory(unittest.TestCase):
     __test_station_ID = 2865
     __test_interval = "tick"
     __test_reception_time = 1378684800
-    __test_reception_time_iso = '2013-09-09 00:00:00+00'
-    __test_date_reception_time = datetime.strptime(__test_reception_time_iso,
-                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_reception_time_iso = '2013-09-09 00:00:00+00:00'
+    __test_date_reception_time = datetime.fromisoformat(__test_reception_time_iso)
     __test_measurements = {
         '1362933983': {
              "temperature": 266.25,
