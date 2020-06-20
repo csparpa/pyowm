@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, timezone
 from pyowm.utils import formatting
 
 
@@ -18,7 +18,7 @@ def now(timeformat='date'):
     :raises: ValueError when unknown timeformat switches are provided or
         when negative time values are provided
     """
-    return formatting.timeformat(datetime.now(), timeformat)
+    return formatting.timeformat(datetime.now(timezone.utc), timeformat)
 
 
 def next_hour(date=None):
@@ -93,9 +93,9 @@ def tomorrow(hour=None, minute=None):
 
     """
     if hour is None:
-        hour = datetime.now().hour
+        hour = datetime.now(timezone.utc).hour
     if minute is None:
-        minute = datetime.now().minute
+        minute = datetime.now(timezone.utc).minute
     tomorrow_date = date.today() + timedelta(days=1)
     return datetime(tomorrow_date.year, tomorrow_date.month, tomorrow_date.day,
                     hour, minute, 0)
@@ -120,9 +120,9 @@ def yesterday(hour=None, minute=None):
     :raises: *ValueError* when hour or minute have bad values
     """
     if hour is None:
-        hour = datetime.now().hour
+        hour = datetime.now(timezone.utc).hour
     if minute is None:
-        minute = datetime.now().minute
+        minute = datetime.now(timezone.utc).minute
     yesterday_date = date.today() + timedelta(days=-1)
     return datetime(yesterday_date.year, yesterday_date.month,
                     yesterday_date.day, hour, minute, 0)
@@ -214,7 +214,7 @@ def next_year(date=None):
 
 def _timedelta_hours(offset, date=None):
     if date is None:
-        return datetime.now() + timedelta(hours=offset)
+        return datetime.now(timezone.utc) + timedelta(hours=offset)
     else:
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
@@ -223,7 +223,7 @@ def _timedelta_hours(offset, date=None):
 
 def _timedelta_days(offset, date=None):
     if date is None:
-        return datetime.now() + timedelta(days=offset)
+        return datetime.now(timezone.utc) + timedelta(days=offset)
     else:
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
@@ -232,7 +232,7 @@ def _timedelta_days(offset, date=None):
 
 def _timedelta_months(offset, date=None):
     if date is None:
-        return datetime.now() + timedelta(days=offset * 30)
+        return datetime.now(timezone.utc) + timedelta(days=offset * 30)
     else:
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
@@ -241,7 +241,7 @@ def _timedelta_months(offset, date=None):
 
 def _timedelta_years(offset, date=None):
     if date is None:
-        return datetime.now() + timedelta(days=offset * 365)
+        return datetime.now(timezone.utc) + timedelta(days=offset * 365)
     else:
         assert isinstance(date, datetime), __name__ + \
             ": 'date' must be a datetime.datetime object"
