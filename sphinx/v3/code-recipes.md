@@ -6,10 +6,11 @@ related to weather data.
 Table of contents:
   * [Library initialization](#library_init)
   * [Identifying cities and places via city IDs](#identifying_places)
+  * [OneCall data](#onecall)
   * [Weather data](#weather_data)
   * [Weather forecasts](#weather_forecasts)
   * [Meteostation historic measurements](#station_measurements)
-  * [OneCall data](#onecall)
+
 
 <div id="library_init"/>
 
@@ -150,7 +151,7 @@ list_of_tuples = london = reg.ids_for('LoNdoN', country='GB')                 # 
 and would get the very same results as above.
 
 
-### Get the IDs of cities whose name cointain a specific string
+### Get the IDs of cities whose name contain a specific string
 
 In order yo find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
 
@@ -192,6 +193,113 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
 list_of_geopoints = reg.geopoints_for('rome')
+```
+
+
+<div id="onecall"/>
+
+## OneCall data
+
+With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
+
+One Call objects can be thought of as datasets that "photograhp" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
+
+It is possible to get:
+  - current OneCall data: the "photo" given for today)
+  - historical OneCall data: "photos" given for past days, up to 5 
+
+### Current OneCall data
+
+#### What is the feels like temperature (°C) tomorrow morning?
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.forecast_daily[0].temperature('celsius').get('feels_like_morn', None) #Ex.: 7.7
+```
+
+#### What's the wind speed in three hours?
+
+__Attention: The first entry in forecast_hourly is the current hour.__
+If you send the request at 18:36 UTC then the first entry in forecast_hourly is from 18:00 UTC.
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.forecast_hourly[3].wind().get('speed', 0) # Eg.: 4.42
+```
+
+#### What's the current humidity?
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.current.humidity # Eg.: 81
+```
+
+### Historical OneCall data
+
+Remember the "photograph" metaphor for OneCall data. You can query for "photos" given for past days: when you do that,
+be aware that such a photo carries along weather forecasts (hourly and daily) that *might* refer to the past
+
+This is because - as said above - the One Call API returns hourly forecasts for a streak of 48 hours and daily forecast 
+for a streak of 7 days, both streaks beginning from the timestamp which the OneCall object refers to
+
+In case of doubt, anyway, you can always _check the reference timestamp_ for the `Weather` objects embedded into the
+OneCall object and check if it's in the past or not.
+
+
+#### What was the observed weather yesterday at this time?
+
+Always in Berlin: 
+
+```python
+from pyowm.owm import OWM
+from pyowm.utils import timestamps, formatting
+
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+
+# what is the epoch for yesterday at this time?
+yesterday_epoch = formatting.to_UNIXtime(timestamps.yesterday())
+
+one_call_yesterday = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=yesterday_epoch)
+
+observed_weather = one_call_yesterday.current
+```
+
+#### What was the weather forecasted 3 days ago for the subsequent 48 hours ?
+
+No way we move from Berlin:
+
+```python
+from pyowm.owm import OWM
+from pyowm.utils import timestamps
+from datetime import datetime, timedelta, timezone
+
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+
+# what is the epoch for 3 days ago at this time?
+three_days_ago_epoch = int((datetime.now() - timedelta(days=3)).replace(tzinfo=timezone.utc).timestamp())
+
+one_call_three_days_ago = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=three_days_ago_epoch)
+
+list_of_forecasted_weathers = one_call_three_days_ago.forecast_hourly
 ```
 
 <div id="weather_data"/>
@@ -672,109 +780,3 @@ The `raw_measurements_dict` contains multiple sub-dicts, each one being a a data
   # [...]
 }
 ``` 
-
-<div id="onecall"/>
-
-## OneCall data
-
-With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
-
-One Call objects can be thought of as datasets that "photograhp" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
-
-It is possible to get:
-  - current OneCall data: the "photo" given for today)
-  - historical OneCall data: "photos" given for past days, up to 5 
-
-### Current OneCall data
-
-#### What is the feels like temperature (°C) tomorrow morning?
-Always in Berlin:
-
-```python
-from pyowm.owm import OWM
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-one_call = mgr.one_call(lat=52.5244, lon=13.4105)
-
-one_call.forecast_daily[0].temperature('celsius').get('feels_like_morn', None) #Ex.: 7.7
-```
-
-#### What's the wind speed in three hours?
-
-__Attention: The first entry in forecast_hourly is the current hour.__
-If you send the request at 18:36 UTC then the first entry in forecast_hourly is from 18:00 UTC.
-
-Always in Berlin:
-
-```python
-from pyowm.owm import OWM
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-one_call = mgr.one_call(lat=52.5244, lon=13.4105)
-
-one_call.forecast_hourly[3].wind().get('speed', 0) # Eg.: 4.42
-```
-
-#### What's the current humidity?
-
-Always in Berlin:
-
-```python
-from pyowm.owm import OWM
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-one_call = mgr.one_call(lat=52.5244, lon=13.4105)
-
-one_call.current.humidity # Eg.: 81
-```
-
-### Historical OneCall data
-
-Remember the "photograph" metaphor for OneCall data. You can query for "photos" given for past days: when you do that,
-be aware that such a photo carries along weather forecasts (hourly and daily) that *might* refer to the past
-
-This is because - as said above - the One Call API returns hourly forecasts for a streak of 48 hours and daily forecast 
-for a streak of 7 days, both streaks beginning from the timestamp which the OneCall object refers to
-
-In case of doubt, anyway, you can always _check the reference timestamp_ for the `Weather` objects embedded into the
-OneCall object and check if it's in the past or not.
-
-
-#### What was the observed weather yesterday at this time?
-
-Always in Berlin: 
-
-```python
-from pyowm.owm import OWM
-from pyowm.utils import timestamps, formatting
-
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-
-# what is the epoch for yesterday at this time?
-yesterday_epoch = formatting.to_UNIXtime(timestamps.yesterday())
-
-one_call_yesterday = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=yesterday_epoch)
-
-observed_weather = one_call_yesterday.current
-```
-
-#### What was the weather forecasted 3 days ago for the subsequent 48 hours ?
-
-No way we move from Berlin:
-
-```python
-from pyowm.owm import OWM
-from pyowm.utils import timestamps
-from datetime import datetime, timedelta, timezone
-
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-
-# what is the epoch for 3 days ago at this time?
-three_days_ago_epoch = int((datetime.now() - timedelta(days=3)).replace(tzinfo=timezone.utc).timestamp())
-
-one_call_three_days_ago = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=three_days_ago_epoch)
-
-list_of_forecasted_weathers = one_call_three_days_ago.forecast_hourly
-```
