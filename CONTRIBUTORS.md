@@ -18,6 +18,7 @@ Code
   * [txemi](https://github.com/txemi)
   * [camponez](https://github.com/camponez)
   * [dev-iks](https://github.com/dev-iks)
+  * [eumiro](https://github.com/eumiro)
 
 Docs
 ----

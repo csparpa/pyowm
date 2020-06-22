@@ -11,9 +11,9 @@ from pyowm.commons.exceptions import NotFoundError
 class TestWeatherUtils(unittest.TestCase):
 
     __test_time_low = 1379090800
-    __test_time_low_iso = "2013-09-13 16:46:40+00"
+    __test_time_low_iso = "2013-09-13 16:46:40+00:00"
     __test_time_high = 1379361400
-    __test_time_high_iso = "2013-09-16 19:56:40+00"
+    __test_time_high_iso = "2013-09-16 19:56:40+00:00"
 
     __test_registry = WeatherCodeRegistry({
         "rain": [{

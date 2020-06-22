@@ -33,8 +33,8 @@ As easy as:
 ```python
 uvi_history_list = mgr.uvindex_history_around_coords(
     lat, lon,
-    datetime.datetime(2017, 8, 1, 0, 0),
-    end=datetime.datetime(2018, 2, 15, 0, 0))
+    datetime.datetime(2017, 8, 1, 0, 0, 0, timezone.utc),
+    end=datetime.datetime(2018, 2, 15, 0, 0, 0, timezone.utc))
 ```
 
 `start` and `end` can be ISO-8601 date strings, unix timestamps or Python datetime

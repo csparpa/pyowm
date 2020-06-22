@@ -26,7 +26,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         """
         Test feature: get ozone around geo-coordinates.
         """
-        u = self.__owm.ozone_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00')
+        u = self.__owm.ozone_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00:00')
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.du_value)
         self.assertIsNotNone(u.reception_time())
@@ -38,7 +38,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         """
         Test feature: get NO2 index around geo-coordinates.
         """
-        u = self.__owm.no2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00')
+        u = self.__owm.no2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00:00')
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.no2_samples)
         self.assertIsNotNone(u.reception_time())
@@ -50,7 +50,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         """
         Test feature: get SO2 index around geo-coordinates.
         """
-        u = self.__owm.so2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00')
+        u = self.__owm.so2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00:00')
         self.assertIsNotNone(u)
         self.assertIsNotNone(u.so2_samples)
         self.assertIsNotNone(u.reception_time())
