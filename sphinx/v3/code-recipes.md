@@ -14,9 +14,8 @@ Table of contents:
 
 <div id="library_init"/>
 
-**Very important disclaimer**
-It looks like the OpenWeatherMap API recently "blocked" calls towards a few legacy API endpoints whenever requested by
-clients using non-recent free API keys.
+**Very important news**
+OpenWeatherMap API recently "blocked" calls towards a few legacy API endpoints whenever requested by **clients using non-recent free API keys.**
 
 This means that if you use PyOWM methods such as the ones for getting observed or forecasted weather, PyOWM might return authorization errors
 This behaviour is not showing if you use API keys issued a long time ago. 

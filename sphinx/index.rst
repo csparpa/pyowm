@@ -46,6 +46,17 @@ The documentation of OWM APIs can be found on the OWM Website_
 .. _Website: https://openweathermap.org/api
 
 
+
+Very important news
+~~~~~~~~~~~~~~~~~~~
+OpenWeatherMap API recently "blocked" calls towards a few legacy API endpoints whenever requested by **clients using non-recent free API keys.**
+
+This means that if you use PyOWM methods such as the ones for getting observed or forecasted weather, PyOWM might return authorization errors
+This behaviour is not showing if you use API keys issued a long time ago.
+
+The *proper way to obtain such data is to call the "OneCall" methods using your API key*
+
+
 Used to work with PyOWM v2?
 ---------------------------
 

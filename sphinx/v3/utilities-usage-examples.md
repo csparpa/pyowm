@@ -225,6 +225,9 @@ beaufort_wind_dict = measurables.metric_wind_dict_to_beaufort(msec_wind_dict)
 
 
 ## `timestamps` module
+
+All `datetime.datetime` objects returned by PyOWM are UTC offset-aware
+
 ```python
 from pyowm.utils import timestamps
 
