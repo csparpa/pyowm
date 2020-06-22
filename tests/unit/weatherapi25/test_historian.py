@@ -12,7 +12,7 @@ class TestHistorian(unittest.TestCase):
     __test_station_ID = 2865
     __test_interval = "tick"
     __test_reception_time = 1378684800
-    __test_reception_time_iso = '2013-09-09 00:00:00+00'
+    __test_reception_time_iso = '2013-09-09 00:00:00+00:00'
     __test_measurements = {
         1362933983: {
              "temperature": 266.25,

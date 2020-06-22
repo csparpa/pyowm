@@ -48,7 +48,7 @@ class Ozone:
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
-            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00:00``
             '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str
@@ -64,7 +64,7 @@ class Ozone:
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
-            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00:00``
             '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str
@@ -98,7 +98,7 @@ class Ozone:
             raise exceptions.ParseAPIResponseError('Data is None')
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
-            ref_t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
+            ref_t = the_dict['time'].replace('Z', '+00:00').replace('T', ' ')
             reference_time = formatting.ISO8601_to_UNIXtime(ref_t)
 
             # -- reception time (now)

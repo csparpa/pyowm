@@ -2,32 +2,27 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.forecast import Forecast
 from pyowm.weatherapi25.forecaster import Forecaster
-from pyowm.utils.formatting import UTC
 
 
 class TestForecaster(unittest.TestCase):
 
     __test_time_1 = 1379090800
-    __test_start_coverage_iso = "2013-09-13 16:46:40+00"
-    __test_date_start_coverage = datetime.strptime(__test_start_coverage_iso,
-                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_start_coverage_iso = "2013-09-13 16:46:40+00:00"
+    __test_date_start_coverage = datetime.fromisoformat(__test_start_coverage_iso)
     __test_middle_1_coverage = 1379226100
-    __test_middle_1_coverage_iso = "2013-09-15 06:21:40+00"
-    __test_date_middle_1_coverage = datetime.strptime(__test_middle_1_coverage_iso,
-                              '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_middle_1_coverage_iso = "2013-09-15 06:21:40+00:00"
+    __test_date_middle_1_coverage = datetime.fromisoformat(__test_middle_1_coverage_iso)
     __test_time_2 = 1379361400
-    __test_middle_2_coverage_iso = "2013-09-16 19:56:40+00"
-    __test_date_middle_2_coverage = datetime.strptime(__test_middle_2_coverage_iso,
-                              '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_middle_2_coverage_iso = "2013-09-16 19:56:40+00:00"
+    __test_date_middle_2_coverage = datetime.fromisoformat(__test_middle_2_coverage_iso)
     __test_end_coverage = 1379902600
-    __test_end_coverage_iso = "2013-09-23 02:16:40+00"
-    __test_date_end_coverage = datetime.strptime(__test_end_coverage_iso,
-                                '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_end_coverage_iso = "2013-09-23 02:16:40+00:00"
+    __test_date_end_coverage = datetime.fromisoformat(__test_end_coverage_iso)
 
     __test_location = Location('test', 12.3, 43.7, 987, 'IT')
 
@@ -166,9 +161,9 @@ class TestForecaster(unittest.TestCase):
         self.assertTrue(self.__test_instance.when_hurricane())
 
     def test_will_be_rainy_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertTrue(self.__test_instance.will_be_rainy_at(time_1))
         self.assertFalse(self.__test_instance.will_be_rainy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_rainy_at(time_3))
@@ -178,9 +173,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_clear_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_clear_at(time_1))
         self.assertFalse(self.__test_instance.will_be_clear_at(time_2))
         self.assertTrue(self.__test_instance.will_be_clear_at(time_3))
@@ -190,9 +185,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_snowy_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_1))
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_snowy_at(time_3))
@@ -202,9 +197,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_cloudy_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_cloudy_at(time_1))
         self.assertTrue(self.__test_instance.will_be_cloudy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_cloudy_at(time_3))
@@ -214,9 +209,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_foggy_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_1))
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_foggy_at(time_3))
@@ -226,9 +221,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_stormy_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_stormy_at(time_1))
         self.assertFalse(self.__test_instance.will_be_stormy_at(time_2))
         self.assertFalse(self.__test_instance.will_be_stormy_at(time_3))
@@ -238,9 +233,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_tornado_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_tornado_at(time_1))
         self.assertFalse(self.__test_instance.will_be_tornado_at(time_2))
         self.assertFalse(self.__test_instance.will_be_tornado_at(time_3))
@@ -250,9 +245,9 @@ class TestForecaster(unittest.TestCase):
                           self.__test_instance, 45.7)
 
     def test_will_be_hurricane_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertFalse(self.__test_instance.will_be_hurricane_at(time_1))
         self.assertFalse(self.__test_instance.will_be_hurricane_at(time_2))
         self.assertFalse(self.__test_instance.will_be_hurricane_at(time_3))
@@ -261,14 +256,10 @@ class TestForecaster(unittest.TestCase):
         self.assertRaises(TypeError, Forecaster.will_be_hurricane_at,
                           self.__test_instance, 45.7)
 
-
-
-
-
     def test_get_weather_at(self):
-        time_1 = datetime(2013, 9, 13, 16, 47, 0)
+        time_1 = datetime(2013, 9, 13, 16, 47, 0, 0, timezone.utc)
         time_2 = 1379226110
-        time_3 = "2013-09-16 19:56:50+00"
+        time_3 = "2013-09-16 19:56:50+00:00"
         self.assertEqual(self.__test_instance.get_weather_at(time_1),
                          self.__test_weather_rainsnow)
         self.assertEqual(self.__test_instance.get_weather_at(time_2),

@@ -7,7 +7,6 @@ from datetime import datetime
 from pyowm.commons.enums import ImageTypeEnum
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
 from pyowm.agroapi10.enums import PresetEnum
-from pyowm.utils.formatting import UTC
 
 
 class TestSatelliteImagerySearchResultSet(unittest.TestCase):
@@ -39,8 +38,8 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
        "ndvi":"http://api.agromonitoring.com/data/1.0/02259768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7",
        "evi":"http://api.agromonitoring.com/data/1.0/03259768a00/5ac22f004b1ae4000b5b97cf?appid=bb0664ed43c153aa072c760594d775a7"}}]''')
     test_issuing_time = 1378459200
-    test_iso_issuing_time = "2013-09-06 09:20:00+00"
-    test_date_issuing_time = datetime.strptime(test_iso_issuing_time, '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    test_iso_issuing_time = "2013-09-06 09:20:00+00:00"
+    test_date_issuing_time = datetime.fromisoformat(test_iso_issuing_time)
 
     test_instance = SatelliteImagerySearchResultSet('my_polygon', test_data, test_issuing_time)
 
@@ -124,5 +123,5 @@ class TestSatelliteImagerySearchResultSet(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual('<pyowm.agroapi10.search.SatelliteImagerySearchResultSet'
-                         ' - 12 results for query issued on polygon_id=my_polygon at 2013-09-06 09:20:00+00>',
+                ' - 12 results for query issued on polygon_id=my_polygon at 2013-09-06 09:20:00+00:00>',
                          self.test_instance.__repr__())

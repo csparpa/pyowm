@@ -50,16 +50,12 @@ class Station:
         self.created_at = created_at
         if self.created_at is not None:
             padded_created_at = self._format_micros(created_at)
-            t = dt.strptime(padded_created_at,
-                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(
-                                tzinfo=formatting.UTC())
+            t = dt.fromisoformat(padded_created_at.replace("Z", "+00:00"))
             self.created_at = formatting.timeformat(t, 'unix')
         self.updated_at = updated_at
         if self.updated_at is not None:
             padded_updated_at = self._format_micros(updated_at)
-            t = dt.strptime(padded_updated_at,
-                            '%Y-%m-%dT%H:%M:%S.%fZ').replace(
-                                tzinfo=formatting.UTC())
+            t = dt.fromisoformat(padded_updated_at.replace("Z", "+00:00"))
             self.updated_at = formatting.timeformat(t, 'unix')
         self.external_id = external_id
         self.name = name

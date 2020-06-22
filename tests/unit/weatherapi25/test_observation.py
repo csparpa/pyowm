@@ -7,7 +7,6 @@ from datetime import datetime
 from pyowm.weatherapi25.location import Location
 from pyowm.weatherapi25.weather import Weather
 from pyowm.weatherapi25.observation import Observation
-from pyowm.utils.formatting import UTC
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 from tests.unit.weatherapi25.json_test_responses import (
      OBSERVATION_JSON, OBSERVATION_NOT_FOUND_JSON, OBSERVATION_MALFORMED_JSON)
@@ -19,9 +18,8 @@ from tests.unit.weatherapi25.json_test_responses import (
 class TestObservation(unittest.TestCase):
 
     __test_reception_time = 1234567
-    __test_iso_reception_time = "1970-01-15 06:56:07+00"
-    __test_date_reception_time = datetime.strptime(__test_iso_reception_time,
-                               '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_iso_reception_time = "1970-01-15 06:56:07+00:00"
+    __test_date_reception_time = datetime.fromisoformat(__test_iso_reception_time)
     __test_location = Location('test', 12.3, 43.7, 987, 'UK')
     __test_weather = Weather(1378459200, 1378496400, 1378449600, 67, {"all": 20},
             {"all": 0}, {"deg": 252.002, "speed": 1.100}, 57,
