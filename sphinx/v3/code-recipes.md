@@ -537,7 +537,7 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 daily_forecast = mgr.forecast_at_place('Berlin,DE', 'daily').forecast
-3h_forecast = mgr.forecast_at_place('Berlin,DE', '3h').forecast
+three_h_forecast = mgr.forecast_at_place('Berlin,DE', '3h').forecast
 ```
 Now that you got the `Forecast` object, you can either manipulate it directly or use PyOWM conveniences to quickly slice and dice the embedded `Weather` objects
 
@@ -599,9 +599,9 @@ from pyowm.utils import timestamps
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+three_h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
 tomorrow_at_five = timestamps.tomorrow(17, 0)                      # datetime object for tomorrow at 5 PM
-weather = 3h_forecaster.get_weather_at(tomorrow_at_five)           # the weather you're looking for
+weather = three_h_forecaster.get_weather_at(tomorrow_at_five)           # the weather you're looking for
 ```
 
 You are provided with the `Weather` object that lies closest to the time that you specified (5 PM)
@@ -611,14 +611,15 @@ You are provided with the `Weather` object that lies closest to the time that yo
 Say you want to know if you need to carry an umbrella around in Berlin tomorrow.
 
 ```python
+from pyowm.utils import timestamps
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+three_h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
 
 # Is it going to rain tomorrow?
 tomorrow = timestamps.tomorrow()                   # datetime object for tomorrow
-3h_forecaster.will_be_rainy_at(tomorrow)           # True
+three_h_forecaster.will_be_rainy_at(tomorrow)           # True
 ```
 
 ### Will it snow or be foggy in the next days?
@@ -629,13 +630,13 @@ In Berlin:
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+three_h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
 
 # Is it going to be snowy in the next 5 days ?
-3h_forecaster.will_have_snow()    # False
+three_h_forecaster.will_have_snow()    # False
 
 # Is it going to be foggy in the next 5 days ?
-3h_forecaster.will_have_fog()    # True
+three_h_forecaster.will_have_fog()    # True
 ```
 
 ### When will the weather be sunny in the next five days?
