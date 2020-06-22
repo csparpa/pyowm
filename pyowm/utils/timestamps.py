@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, date, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from pyowm.utils import formatting
 
 
