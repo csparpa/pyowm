@@ -167,7 +167,7 @@ class Weather:
         """Returns a dict containing wind info
 
         :param unit: the unit of measure for the wind values. May be:
-            '*meters_sec*' (default), '*miles_hour*, '*kilometers_hour*',
+            '*meters_sec*' (default), '*miles_hour*, '*km_hour*',
             '*knots*' or '*beaufort*'
         :type unit: str
         :returns: a dict containing wind info
