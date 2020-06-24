@@ -123,7 +123,7 @@ class Weather:
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
-            '*date* for ``datetime.datetime`` object instance
+            '*date*' for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str or a `datetime.datetime` object
         :raises: ValueError when negative values are provided
@@ -137,7 +137,7 @@ class Weather:
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
-            '*date* for ``datetime.datetime`` object instance
+            '*date*' for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: 'None`, an int, a str or a `datetime.datetime` object
         :raises: ValueError
@@ -153,7 +153,7 @@ class Weather:
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
-            '*date* for ``datetime.datetime`` object instance
+            '*date*' for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: 'None`, an int, a str or a `datetime.datetime` object
         :raises: ValueError
