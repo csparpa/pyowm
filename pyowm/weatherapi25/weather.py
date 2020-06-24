@@ -12,7 +12,7 @@ class Weather:
     """
     A class encapsulating raw weather data.
     A reference about OWM weather codes and icons can be found at:
-    http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
+    https://openweathermap.org/weather-conditions
 
     :param reference_time: GMT UNIX time of weather measurement
     :type reference_time: int
