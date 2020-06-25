@@ -10,6 +10,7 @@ Code
   * [dstmar](https://github.com/dstmar)
   * [edenhaus](https://github.com/edenhaus)
   * [ggstuart](https://github.com/ggstuart)
+  * [jwmelvin](https://github.com/jwmelvin)
   * [lardconcepts](https://github.com/lardconcepts)
   * [liato](https://github.com/liato)
   * [LukasBoersma](https://github.com/LukasBoersma)
@@ -23,6 +24,7 @@ Code
 Docs
 ----
   * [EJEP](https://github.com/EJEP)
+  * [Harmon758](https://github.com/Harmon758)
 
 Testing
 -------
