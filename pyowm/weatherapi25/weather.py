@@ -12,7 +12,7 @@ class Weather:
     """
     A class encapsulating raw weather data.
     A reference about OWM weather codes and icons can be found at:
-    http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
+    https://openweathermap.org/weather-conditions
 
     :param reference_time: GMT UNIX time of weather measurement
     :type reference_time: int
@@ -123,7 +123,7 @@ class Weather:
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
-            '*date* for ``datetime.datetime`` object instance
+            '*date*' for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str or a `datetime.datetime` object
         :raises: ValueError when negative values are provided
@@ -137,7 +137,7 @@ class Weather:
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
-            '*date* for ``datetime.datetime`` object instance
+            '*date*' for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: 'None`, an int, a str or a `datetime.datetime` object
         :raises: ValueError
@@ -153,7 +153,7 @@ class Weather:
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
             '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
-            '*date* for ``datetime.datetime`` object instance
+            '*date*' for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: 'None`, an int, a str or a `datetime.datetime` object
         :raises: ValueError
@@ -167,7 +167,7 @@ class Weather:
         """Returns a dict containing wind info
 
         :param unit: the unit of measure for the wind values. May be:
-            '*meters_sec*' (default), '*miles_hour*, '*kilometers_hour*',
+            '*meters_sec*' (default), '*miles_hour*, '*km_hour*',
             '*knots*' or '*beaufort*'
         :type unit: str
         :returns: a dict containing wind info
