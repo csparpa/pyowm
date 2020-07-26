@@ -94,6 +94,16 @@ Quick code recipes (work in progress)
 
    v3/code-recipes
 
+
+FAQ about common errors
+^^^^^^^^^^^^^^^^^^^^^^^
+.. toctree::
+   :maxdepth: 1
+
+   v3/faq
+
+
+
 PyOWM v3 software API documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This is the Python API documentation of PyOWM:

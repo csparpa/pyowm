@@ -103,7 +103,10 @@ The library software API documentation is available on [Read the Docs](https://p
 
 Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
 
+## Help - PyOWM is giving me errors!
+Please read the [FAQ](https://pyowm.readthedocs.io/en/latest/v3/faq.html) section of the documentation before filing a new issue on GitHub!
 
+There are many common issues, therefore a fix for your issue might come easier than you think
 
 ## Community & Contributing
 
