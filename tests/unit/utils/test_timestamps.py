@@ -8,6 +8,10 @@ from pyowm.utils import timestamps, formatting
 
 class TestTimeUtils(unittest.TestCase):
 
+    def is_timezone_aware(self, dt):
+        self.assertIsNotNone(dt.tzinfo)
+        self.assertIsNotNone(dt.tzinfo.utcoffset(dt))
+
     def test_tomorrow(self):
         now = datetime.now(timezone.utc)
         tomorrow = date.today() + timedelta(days=1)
@@ -15,6 +19,7 @@ class TestTimeUtils(unittest.TestCase):
         expected = datetime(tomorrow.year, tomorrow.month, tomorrow.day,
                             now.hour, now.minute, 0, 0, timezone.utc)
         self.assertEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_tomorrow_with_hour_and_minute(self):
         tomorrow = date.today() + timedelta(days=1)
@@ -22,6 +27,7 @@ class TestTimeUtils(unittest.TestCase):
         expected = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 18,
                             56, 0, 0, timezone.utc)
         self.assertEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_tomorrow_with_hour_only(self):
         now = datetime.now(timezone.utc)
@@ -30,6 +36,7 @@ class TestTimeUtils(unittest.TestCase):
         expected = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 6,
                             now.minute, 0, 0, timezone.utc)
         self.assertEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_yesterday(self):
         now = datetime.now(timezone.utc)
@@ -38,6 +45,7 @@ class TestTimeUtils(unittest.TestCase):
         expected = datetime(yesterday.year, yesterday.month, yesterday.day,
                             now.hour, now.minute, 0, 0, timezone.utc)
         self.assertEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_yesterday_with_hour_and_minute(self):
         yesterday = date.today() + timedelta(days=-1)
@@ -45,6 +53,7 @@ class TestTimeUtils(unittest.TestCase):
         expected = datetime(yesterday.year, yesterday.month, yesterday.day, 18,
                             56, 0, 0, timezone.utc)
         self.assertEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_yesterday_with_hour_only(self):
         now = datetime.now(timezone.utc)
@@ -53,6 +62,7 @@ class TestTimeUtils(unittest.TestCase):
         expected = datetime(yesterday.year, yesterday.month, yesterday.day, 6,
                             now.minute, 0, 0, timezone.utc)
         self.assertEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_next_three_hours(self):
         result = timestamps.next_three_hours()
@@ -60,12 +70,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
            float(formatting.to_UNIXtime(expected)),
            float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_next_three_hours_after_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(hours=3)
         result = timestamps.next_three_hours(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_last_three_hours(self):
         result = timestamps.last_three_hours()
@@ -73,12 +85,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
            float(formatting.to_UNIXtime(expected)),
            float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_last_three_hours_before_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(hours=-3)
         result = timestamps.last_three_hours(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_next_hour(self):
         result = timestamps.next_hour()
@@ -86,12 +100,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
            float(formatting.to_UNIXtime(expected)),
            float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_next_hour_after_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(hours=1)
         result = timestamps.next_hour(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_next_week(self):
         result = timestamps.next_week()
@@ -99,12 +115,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
            float(formatting.to_UNIXtime(expected)),
            float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_next_week_after_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(days=7)
         result = timestamps.next_week(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_last_week(self):
         result = timestamps.last_week()
@@ -112,12 +130,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
            float(formatting.to_UNIXtime(expected)),
            float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_last_week_after_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(days=-7)
         result = timestamps.last_week(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_last_hour(self):
         result = timestamps.last_hour()
@@ -125,12 +145,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
            float(formatting.to_UNIXtime(expected)),
            float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_last_hour_after_specified_time(self):
         d = datetime(2013, 12, 7, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(hours=-1)
         result = timestamps.last_hour(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
         
     def test_now(self):
         expected = datetime.now(timezone.utc)
@@ -141,6 +163,7 @@ class TestTimeUtils(unittest.TestCase):
         self.assertEqual(result.hour, expected.hour)
         self.assertEqual(result.minute, expected.minute)
         self.assertEqual(result.second, expected.second)
+        self.is_timezone_aware(result)
 
     def test_last_month(self):
         result = timestamps.last_month()
@@ -148,12 +171,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
             float(formatting.to_UNIXtime(expected)),
             float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_last_month_after_specified_time(self):
         d = datetime(2015, 10, 1, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(days=-30)
         result = timestamps.last_month(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_next_month(self):
         result = timestamps.next_month()
@@ -161,12 +186,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
             float(formatting.to_UNIXtime(expected)),
             float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_next_month_after_specified_time(self):
         d = datetime(2015, 10, 1, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(days=30)
         result = timestamps.next_month(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_last_year(self):
         result = timestamps.last_year()
@@ -174,12 +201,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
             float(formatting.to_UNIXtime(expected)),
             float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_last_year_after_specified_time(self):
         d = datetime(2015, 10, 1, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(days=-365)
         result = timestamps.last_year(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_next_year(self):
         result = timestamps.next_year()
@@ -187,12 +216,14 @@ class TestTimeUtils(unittest.TestCase):
         self.assertAlmostEqual(
             float(formatting.to_UNIXtime(expected)),
             float(formatting.to_UNIXtime(result)))
+        self.is_timezone_aware(result)
 
     def test_next_year_after_specified_time(self):
         d = datetime(2015, 10, 1, 15, 46, 12, 0, timezone.utc)
         expected = d + timedelta(days=365)
         result = timestamps.next_year(d)
         self.assertAlmostEqual(expected, result)
+        self.is_timezone_aware(result)
 
     def test_millis_offset_between_epochs(self):
         # test failures
