@@ -317,7 +317,7 @@ ________________ IntegrationTestsAlertAPI30.test_triggers_CRUD _________________
 self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
 conn = <urllib3.connection.HTTPSConnection object at 0x7f4c0945d6d0>
 method = 'DELETE'
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 timeout = Timeout(connect=5, read=5, total=None), chunked = False
 httplib_request_kw = {'body': None, 'headers': {'User-Agent': 'python-requests/2.24.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '0'}}
 timeout_obj = Timeout(connect=5, read=5, total=None), read_timeout = 5
@@ -407,7 +407,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
 conn = <urllib3.connection.HTTPSConnection object at 0x7f4c0945d6d0>
 method = 'DELETE'
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 timeout = Timeout(connect=5, read=5, total=None), chunked = False
 httplib_request_kw = {'body': None, 'headers': {'User-Agent': 'python-requests/2.24.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '0'}}
 timeout_obj = Timeout(connect=5, read=5, total=None), read_timeout = 5
@@ -683,7 +683,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
 method = 'DELETE'
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 body = None
 headers = {'User-Agent': 'python-requests/2.24.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '0'}
 retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
@@ -928,7 +928,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = Retry(total=0, connect=None, read=False, redirect=None, status=None)
 method = 'DELETE'
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 response = None
 error = ReadTimeoutError("HTTPSConnectionPool(host='api.openweathermap.org', port=443): Read timed out. (read timeout=5)")
 _pool = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
@@ -999,7 +999,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
 method = 'DELETE'
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 body = None
 headers = {'User-Agent': 'python-requests/2.24.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '0'}
 retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
@@ -1197,7 +1197,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
 conn = <urllib3.connection.HTTPSConnection object at 0x7f4c0945d6d0>
 method = 'DELETE'
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 timeout = Timeout(connect=5, read=5, total=None), chunked = False
 httplib_request_kw = {'body': None, 'headers': {'User-Agent': 'python-requests/2.24.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '0'}}
 timeout_obj = Timeout(connect=5, read=5, total=None), read_timeout = 5
@@ -1281,7 +1281,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f4c093d8940>
 err = timeout('The read operation timed out')
-url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=3cbb06ff60920fd136d1c0e1ba47acd6&lang=en&appid=3cbb06ff60920fd136d1c0e1ba47acd6'
+url = '/data/3.0/triggers/5f2d575d14930206c12b4030?APPID=***&lang=en&appid=***'
 timeout_value = 5
 
     def _raise_timeout(self, err, url, timeout_value):
@@ -1299,7 +1299,7 @@ During handling of the above exception, another exception occurred:
 
 self = <pyowm.commons.http_client.HttpClient - root: openweathermap.org/data/3.0>
 path = 'triggers/5f2d575d14930206c12b4030'
-params = {'APPID': '3cbb06ff60920fd136d1c0e1ba47acd6', 'appid': '3cbb06ff60920fd136d1c0e1ba47acd6', 'lang': 'en'}
+params = {'APPID': '***', 'appid': '***', 'lang': 'en'}
 data = None, headers = {'Content-Type': 'application/json'}
 
     def delete(self, path, params=None, data=None, headers=None):
@@ -1319,7 +1319,7 @@ data = None, headers = {'Content-Type': 'application/json'}
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 url = 'https://api.openweathermap.org/data/3.0/triggers/5f2d575d14930206c12b4030'
-kwargs = {'headers': {'Content-Type': 'application/json'}, 'json': None, 'params': {'APPID': '3cbb06ff60920fd136d1c0e1ba47acd6', 'appid': '3cbb06ff60920fd136d1c0e1ba47acd6', 'lang': 'en'}, 'proxies': {}, ...}
+kwargs = {'headers': {'Content-Type': 'application/json'}, 'json': None, 'params': {'APPID': '***', 'appid': '***', 'lang': 'en'}, 'proxies': {}, ...}
 
     def delete(url, **kwargs):
         r"""Sends a DELETE request.
@@ -1337,7 +1337,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 method = 'delete'
 url = 'https://api.openweathermap.org/data/3.0/triggers/5f2d575d14930206c12b4030'
-kwargs = {'headers': {'Content-Type': 'application/json'}, 'json': None, 'params': {'APPID': '3cbb06ff60920fd136d1c0e1ba47acd6', 'appid': '3cbb06ff60920fd136d1c0e1ba47acd6', 'lang': 'en'}, 'proxies': {}, ...}
+kwargs = {'headers': {'Content-Type': 'application/json'}, 'json': None, 'params': {'APPID': '***', 'appid': '***', 'lang': 'en'}, 'proxies': {}, ...}
 session = <requests.sessions.Session object at 0x7f4c093d87c0>
 
     def request(method, url, **kwargs):
@@ -1392,7 +1392,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = <requests.sessions.Session object at 0x7f4c093d87c0>, method = 'delete'
 url = 'https://api.openweathermap.org/data/3.0/triggers/5f2d575d14930206c12b4030'
-params = {'APPID': '3cbb06ff60920fd136d1c0e1ba47acd6', 'appid': '3cbb06ff60920fd136d1c0e1ba47acd6', 'lang': 'en'}
+params = {'APPID': '***', 'appid': '***', 'lang': 'en'}
 data = None, headers = {'Content-Type': 'application/json'}, cookies = None
 files = None, auth = None, timeout = 5, allow_redirects = True, proxies = {}
 hooks = None, stream = None, verify = True, cert = None, json = None
@@ -1717,7 +1717,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = <pyowm.commons.http_client.HttpClient - root: openweathermap.org/data/3.0>
 path = 'triggers/5f2d575d14930206c12b4030'
-params = {'APPID': '3cbb06ff60920fd136d1c0e1ba47acd6', 'appid': '3cbb06ff60920fd136d1c0e1ba47acd6', 'lang': 'en'}
+params = {'APPID': '***', 'appid': '***', 'lang': 'en'}
 data = None, headers = {'Content-Type': 'application/json'}
 
     def delete(self, path, params=None, data=None, headers=None):
