@@ -12,7 +12,8 @@ class OneCall:
                  lon: Union[int, float],
                  timezone: str,
                  current: Weather,
-                 forecast_hourly: [Weather],
+                 forecast_minutely:Optional[Weather] = None,
+                 forecast_hourly:Optional[Weather] = None,
                  forecast_daily: Optional[Weather] = None
                  ) -> None:
         geo.assert_is_lat(lat)
@@ -26,7 +27,7 @@ class OneCall:
         if current is None:
             raise ValueError("'current' must be set")
         self.current = current
-
+        self.forecast_minutely = forecast_minutely
         self.forecast_hourly = forecast_hourly
         self.forecast_daily = forecast_daily
 
@@ -78,7 +79,12 @@ class OneCall:
 
         try:
             current = Weather.from_dict(the_dict["current"])
-            hourly = [Weather.from_dict(item) for item in the_dict["hourly"]]
+            minutely = None
+            if "minutely" in the_dict:
+                minutely = [Weather.from_dict(item) for item in the_dict["minutely"]]
+            hourly = None
+            if "hourly" in the_dict:
+                hourly = [Weather.from_dict(item) for item in the_dict["hourly"]]
             daily = None
             if "daily" in the_dict:
                 daily = [Weather.from_dict(item) for item in the_dict["daily"]]
@@ -91,6 +97,7 @@ class OneCall:
             lon=the_dict.get("lon", None),
             timezone=the_dict.get("timezone", None),
             current=current,
+            forecast_minutely=minutely,
             forecast_hourly=hourly,
             forecast_daily=daily
         )

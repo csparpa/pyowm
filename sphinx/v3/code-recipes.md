@@ -250,6 +250,31 @@ one_call = mgr.one_call(lat=52.5244, lon=13.4105)
 one_call.current.humidity # Eg.: 81
 ```
 
+#### Requesting only part of the available OneCall data, in imperial units
+
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105, exclude='minutely,hourly', units='imperial')
+
+# in this exacmple, the data in the one_call object will be in imperial units
+# possible units are defined by the One Call API, here: https://openweathermap.org/api/one-call-api
+# as of 2020.08.07 available values are: 'metric' or 'imperial'
+# the various units for the different options are shown here: https://openweathermap.org/weather-data
+one_call.current.temperature() # Eg.: 74.07 (deg F)
+
+# the example above does not retrieve minutely or hourly data, so it will not be availabe in the one_call object
+# available exclude options are defined by the One Call API
+# BUT using 'current' will error, as the pyowm one_call requires it
+# as of 2020.08.07 available values are: 'minutely', 'hourly', 'daily'
+# multiple exclusions may be combined with a comma, as above
+one_call.forecast_hourly # empty because it was excluded from the request
+```
+
+
+
 ### Historical OneCall data
 
 Remember the "photograph" metaphor for OneCall data. You can query for "photos" given for past days: when you do that,
