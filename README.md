@@ -22,7 +22,7 @@ PyOWM runs on Python 3.7+
 
 **Former Dark Sky API users**: you can can use PyOWM to get [OpenWeatherMap's OneCall API](https://openweathermap.org/api/one-call-api) data as an easy replacement to Dark Sky
 
-### What kind of data do I get with PyOWM ?
+### What kind of data can I get with PyOWM ?
 With PyOWM you can integrate into your code any of the following OpenWeatherMap web APIs:
 
  - **Weather API v2.5** + **OneCall API**, providing current weather data, weather forecasts, weather history
@@ -47,38 +47,39 @@ With a free OWM API Key:
 
 ```python
 from pyowm import OWM
+from pyowm.utils import config
+from pyowm.utils import timestamps
 
-owm = OWM('your-API-key')  # You MUST provide a valid API key
+# ---------- FREE API KEY examples ---------------------
 
-# Search for current weather in London (Great Britain)
+owm = OWM('your free OWM API key')
 mgr = owm.weather_manager()
+
+
+# Search for current weather in London (Great Britain) and get details
 observation = mgr.weather_at_place('London,GB')
 w = observation.weather
-print(w)                  # <Weather - reference time=2013-12-18 09:20, status=Clouds>
 
-# Weather details
+w.detailed_status         # 'clouds'
 w.wind()                  # {'speed': 4.6, 'deg': 330}
 w.humidity                # 87
 w.temperature('celsius')  # {'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}
-
-# Search current weather observations in the surroundings of
-# lat=22.57W, lon=43.12S (Rio de Janeiro, BR)
-observation_list = mgr.weather_around_coords(-22.57, -43.12)
-```
-
-With a paid OWM API key:
-
-```python
-from pyowm.owm import OWM
-from pyowm.utils import config
-from pyowm.utils import timestamps
-config_dict = config.get_default_config_for_subscription_type('professional')
-owm = OWM('your-paid-api-key', config_dict)
+w.rain                    # {}
+w.heat_index              # None
+w.clouds                  # 75
 
 # Will it be clear tomorrow at this time in Milan (Italy) ?
-mgr = owm.weather_manager()
 forecast = mgr.forecast_at_place('Milan,IT', 'daily')
-forecast.will_be_clear_at(timestamps.tomorrow())  # The sun always shines on Italy, right? ;)
+answer = forecast.will_be_clear_at(timestamps.tomorrow())
+
+# ---------- PAID API KEY example ---------------------
+
+config_dict = config.get_default_config_for_subscription_type('professional')
+owm = OWM('your paid OWM API key', config_dict)
+
+# What's the current humidity in Berlin (Germany) ?
+one_call_object = mgr.one_call(lat=52.5244, lon=13.4105)
+one_call_object.current.humidity
 ```
 
 
@@ -101,7 +102,8 @@ $ pip install git+https://github.com/csparpa/pyowm.git@develop
 ## Documentation
 The library software API documentation is available on [Read the Docs](https://pyowm.readthedocs.io/en/latest/).
 
-Each release has its own [changelog](https://github.com/csparpa/pyowm/wiki/Changelog).
+The [Code recipes](https://pyowm.readthedocs.io/en/latest/v3/code-recipes.html) section comes in handy!
+
 
 ## Help - PyOWM is giving me errors!
 Please read the [FAQ](https://pyowm.readthedocs.io/en/latest/v3/faq.html) section of the documentation before filing a new issue on GitHub!
