@@ -28,6 +28,7 @@ Docs
 
 Testing
 -------
+  * [Ankur](https://github.com/Ankuraxz)
   * [Samuel Yap](https://github.com/samuelyap)
   * [Patrick Casbon](https://github.com/patcas)
   * [Tamas Magyar](https://github.com/tamasmagyar)
