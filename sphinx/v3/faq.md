@@ -35,3 +35,14 @@ This behaviour is not showing if you use API keys issued time ago - unfortunatel
 **The proper way to obtain the data you are looking for is to call the "OneCall" PyOWM methods using your API key**
 
 So please refer to the documentation for this
+
+
+## I cannot use PyOWM 3 so I need to use PyOWM version 2.10
+This may happen if you still use Python 2 or you use Python 3 but with a minor version that is not supported by PyOWM
+ 
+Please install PyOWM 2.10 with:
+```shell
+pip2 install pyowm==2.10 
+```
+
+And find the PyOWM 2.10 documentation [here](https://pyowm.readthedocs.io/en/2.10/)
