@@ -140,3 +140,13 @@ class TestMeasurablesUtils(unittest.TestCase):
         print(result)
         self.assertEqual(expected, result)
 
+    def test_visibility_dict_to(self):
+        input = {'Paris': 100, 'London': 200, 'Tokyo': None}
+        cmp_one = {'Paris': .1, 'London': .2}
+        cmp_two = {'Paris': .06, 'London': .12}
+        case_one = cmp_one and measurables.visibility_dict_to(input, "kms")
+        case_two = cmp_two and measurables.visibility_dict_to(input)
+        self.assertTrue(case_one and case_two)
+
+    def test_visibility_dict_to_value_error(self):
+        self.assertRaises(ValueError, measurables.visibility_dict_to, {}, "furlongs")

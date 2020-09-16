@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-"""
 
-# Temperature coneversion constants
+# Temperature conversion constants
 KELVIN_OFFSET = 273.15
 FAHRENHEIT_OFFSET = 32.0
 FAHRENHEIT_DEGREE_SCALE = 1.8
@@ -13,6 +13,13 @@ KNOTS_FOR_ONE_METER_PER_SEC = 1.94384
 
 # Barometric conversion constants
 HPA_FOR_ONE_INHG = 33.8639
+
+# Visibility distance conversion constants
+MILE_FOR_ONE_METER = 0.000621371
+KMS_FOR_ONE_METER = .001
+
+# Decimal precision
+ROUNDED_TO = 2
 
 
 def kelvin_dict_to(d, target_temperature_unit):
@@ -187,7 +194,7 @@ def metric_wind_dict_to_beaufort(d):
 
 def metric_pressure_dict_to_inhg(d):
     """
-    Converts all pressure values in a dict to inches of mercury.
+    Converts all barometric pressure values in a dict to "inches of mercury."
 
     :param d: the dictionary containing metric values
     :type d: dict
@@ -201,5 +208,31 @@ def metric_pressure_dict_to_inhg(d):
     for key, value in d.items():
         if value is None:
             continue
-        result[key] = round((value / HPA_FOR_ONE_INHG), 2)
+        result[key] = round((value / HPA_FOR_ONE_INHG), ROUNDED_TO)
     return result
+
+
+def visibility_dict_to(d, target_visibility_unit="miles"):
+    """
+    Converts all meter values in a dict to either miles or kms.
+
+    :param d: the dictionary containing metric values
+    :param target_visibility_unit: either miles or kms, ValueError if neither
+    :type d: dict
+    :type target_visibility_unit: str
+    :returns: a dict with converted values for visibility distance
+    """
+    result = dict()
+
+    if target_visibility_unit == "miles": const = MILE_FOR_ONE_METER
+    elif target_visibility_unit == "kms": const = KMS_FOR_ONE_METER
+    else:
+        e = "Invalid value for target visibility unit"
+        raise ValueError(e)
+
+    for key, value in d.items():
+        if value is None:
+            continue
+        result[key] = round(value * const, ROUNDED_TO)
+    return result
+
