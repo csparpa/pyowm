@@ -6,6 +6,7 @@ Contributors will be shown in alphabetical order
 Code
 ----
   * [alechewitt](https://github.com/alechewitt)
+  * [Darumin](https://github.com/Darumin)
   * [dphildebrandt](https://github.com/dphildebrandt)
   * [dstmar](https://github.com/dstmar)
   * [edenhaus](https://github.com/edenhaus)

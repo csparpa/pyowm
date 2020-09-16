@@ -132,3 +132,11 @@ class TestMeasurablesUtils(unittest.TestCase):
         expected = {'speed': 8, 'gust': 2, 'deg': 7.89}
         result = measurables.metric_wind_dict_to_beaufort(input)
         self.assertEqual(expected, result)
+
+    def test_metric_pressure_dict_to_inhg(self):
+        input = {'press': 1000, 'sea_level': 1, 'grnd_level': None}
+        expected = {'press': 29.53, 'sea_level': .03}
+        result = measurables.metric_pressure_dict_to_inhg(input)
+        print(result)
+        self.assertEqual(expected, result)
+

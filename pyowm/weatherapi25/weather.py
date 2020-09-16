@@ -506,3 +506,4 @@ class Weather:
                 'heat_index': self.heat_index,
                 'utc_offset': self.utc_offset,
                 'uvi': self.uvi}
+

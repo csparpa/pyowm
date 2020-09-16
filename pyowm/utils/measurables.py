@@ -11,6 +11,9 @@ MILES_PER_HOUR_FOR_ONE_METER_PER_SEC = 2.23694
 KM_PER_HOUR_FOR_ONE_METER_PER_SEC = 3.6
 KNOTS_FOR_ONE_METER_PER_SEC = 1.94384
 
+# Barometric conversion constants
+HPA_FOR_ONE_INHG = 33.8639
+
 
 def kelvin_dict_to(d, target_temperature_unit):
     """
@@ -179,4 +182,24 @@ def metric_wind_dict_to_beaufort(d):
             result[key] = bf
         else:
             result[key] = value
+    return result
+
+
+def metric_pressure_dict_to_inhg(d):
+    """
+    Converts all pressure values in a dict to inches of mercury.
+
+    :param d: the dictionary containing metric values
+    :type d: dict
+    :returns: a dict with the same keys as the input dict and values converted
+        to "Hg or inHg (inches of mercury)
+
+    Note what OWM says about pressure: "Atmospheric pressure [is given in hPa]
+    (on the sea level, if there is no sea_level or grnd_level data)"
+    """
+    result = dict()
+    for key, value in d.items():
+        if value is None:
+            continue
+        result[key] = round((value / HPA_FOR_ONE_INHG), 2)
     return result
