@@ -212,27 +212,25 @@ def metric_pressure_dict_to_inhg(d):
     return result
 
 
-def visibility_dict_to(d, target_visibility_unit='miles'):
+def visibility_distance_to(v, target_visibility_unit='kilometers'):
     """
-    Converts all meter values in a dict to either miles or kms.
+    Converts visibility distance (in meters) to kilometers or miles
+    Defaults to kilometer conversion
 
-    :param d: the dictionary containing metric values
-    :param target_visibility_unit: either miles or kms, ValueError if neither
-    :type d: dict
+    :param distance: the value of visibility_distance
+    :type distance: int
+    :param target_visibility_unit: the unit of conversion
     :type target_visibility_unit: str
-    :returns: a dict with converted values for visibility distance
+    :returns: a converted value for visibility_distance (float)
     """
-    result = dict()
+    if v is None:
+        return v
 
-    if target_visibility_unit == 'miles': const = MILE_FOR_ONE_METER
-    elif target_visibility_unit == 'kms': const = KMS_FOR_ONE_METER
+    if target_visibility_unit == 'kilometers':
+        const = KMS_FOR_ONE_METER
+    elif target_visibility_unit == 'miles':
+        const = MILE_FOR_ONE_METER
     else:
-        e = 'Invalid value for target visibility unit'
-        raise ValueError(e)
+        raise ValueError('Invalid value for target visibility distance unit')
 
-    for key, value in d.items():
-        if value is None:
-            continue
-        result[key] = round(value * const, ROUNDED_TO)
-    return result
-
+    return round(v * const, ROUNDED_TO)

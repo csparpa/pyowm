@@ -49,6 +49,8 @@ class TestWeather(unittest.TestCase):
     __test_weather_code = 804
     __test_weather_icon_name = "04d"
     __test_visibility_distance = 1000
+    __test_visibility_in_kms = 1
+    __test_visibility_in_miles = .62
     __test_dewpoint = 300.0
     __test_humidex = 298.0
     __test_heat_index = 40.0
@@ -535,11 +537,24 @@ class TestWeather(unittest.TestCase):
         result_imperial_inhg = self.__test_instance.pressure(unit='inHg')
         result_metric_hpa = self.__test_instance.pressure(unit='hPa')
         result_unspecified = self.__test_instance.pressure()
-        self.assertEqual(result_metric_hpa, result_unspecified)
-        self.assertEqual(result_imperial_inhg, self.__test_inhg_pressure)
+        a = result_metric_hpa == result_unspecified
+        b = result_imperial_inhg == self.__test_inhg_pressure
+        self.assertTrue(a and b)
 
     def test_pressure_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.pressure, self.__test_instance, 'xyz')
+
+    def test_returning_different_units_for_visibility(self):
+        result_metric_kms = self.__test_instance.visibility(unit='kilometers')
+        result_imperial_miles = self.__test_instance.visibility(unit='miles')
+        result_unspecified = self.__test_instance.visibility()
+        a = self.__test_visibility_distance == result_unspecified
+        b = self.__test_visibility_in_kms == result_metric_kms
+        c = self.__test_visibility_in_miles == result_imperial_miles
+        self.assertTrue(a and b and c)
+
+    def test_visibility_fails_with_unknown_units(self):
+        self.assertRaises(ValueError, Weather.visibility, self.__test_instance, 'xyz')
 
     def test_weather_icon_url(self):
         expected = ICONS_BASE_URI % self.__test_instance.weather_icon_name
