@@ -536,7 +536,7 @@ class TestWeather(unittest.TestCase):
         expected_4x = ICONS_BASE_URI % (self.__test_instance.weather_icon_name, "@4x")
         result_unspecified = self.__test_instance.weather_icon_url()
         result_2x = self.__test_instance.weather_icon_url(size="2x")
-        result_4x = self.__test_instance.weather_icon_url(size="2x")
+        result_4x = self.__test_instance.weather_icon_url(size="4x")
         self.assertEqual(expected_unspecified, result_unspecified)
         self.assertEqual(expected_2x, result_2x)
         self.assertEqual(expected_4x, result_4x)
