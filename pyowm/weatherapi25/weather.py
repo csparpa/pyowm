@@ -88,7 +88,7 @@ class Weather:
             raise ValueError("'humidity' must be greatear than 0")
         self.humidity = humidity
 
-        self.pressure = pressure
+        self.press = pressure
         self.temp = temperature
         self.status = status
         self.detailed_status = detailed_status
@@ -216,6 +216,15 @@ class Weather:
         converted = measurables.kelvin_dict_to(to_be_converted, unit)
         return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
+
+    ###
+    def pressure(self, unit='hPa'):
+        if unit == 'hPa':
+            return self.press
+        elif unit == 'inHg':
+            return measurables.metric_pressure_dict_to_inhg(self.press)
+        else:
+            raise ValueError('Invalid value for target pressure unit')
 
     def weather_icon_url(self):
         """Returns weather-related icon URL as a string.
@@ -494,7 +503,7 @@ class Weather:
                 'snow': self.snow,
                 'wind': self.wnd,
                 'humidity': self.humidity,
-                'pressure': self.pressure,
+                'pressure': self.press,
                 'temperature': self.temp,
                 'status': self.status,
                 'detailed_status': self.detailed_status,
@@ -506,4 +515,3 @@ class Weather:
                 'heat_index': self.heat_index,
                 'utc_offset': self.utc_offset,
                 'uvi': self.uvi}
-

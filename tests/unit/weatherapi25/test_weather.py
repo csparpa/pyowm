@@ -34,6 +34,7 @@ class TestWeather(unittest.TestCase):
     __test_kmh_wind = {'deg': 252.002, 'speed': 3.9600000000000004, 'gust': 7.524}
     __test_humidity = 57
     __test_pressure = {"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}
+    __test_inhg_pressure = {'press': 30.42, 'sea_level': 30.67, 'grnd_level': 30.67}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
                           "temp_max": 296.098, "temp_min": 294.199,
                           "feels_like": 298.0}
@@ -529,6 +530,16 @@ class TestWeather(unittest.TestCase):
 
     def test_get_wind_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.wind, self.__test_instance, 'xyz')
+
+    def test_returning_different_units_for_pressure_values(self):
+        result_imperial_inhg = self.__test_instance.pressure(unit='inHg')
+        result_metric_hpa = self.__test_instance.pressure(unit='hPa')
+        result_unspecified = self.__test_instance.pressure()
+        self.assertEqual(result_metric_hpa, result_unspecified)
+        self.assertEqual(result_imperial_inhg, self.__test_inhg_pressure)
+
+    def test_pressure_fails_with_unknown_units(self):
+        self.assertRaises(ValueError, Weather.pressure, self.__test_instance, 'xyz')
 
     def test_weather_icon_url(self):
         expected = ICONS_BASE_URI % self.__test_instance.weather_icon_name

@@ -212,7 +212,7 @@ def metric_pressure_dict_to_inhg(d):
     return result
 
 
-def visibility_dict_to(d, target_visibility_unit="miles"):
+def visibility_dict_to(d, target_visibility_unit='miles'):
     """
     Converts all meter values in a dict to either miles or kms.
 
@@ -224,10 +224,10 @@ def visibility_dict_to(d, target_visibility_unit="miles"):
     """
     result = dict()
 
-    if target_visibility_unit == "miles": const = MILE_FOR_ONE_METER
-    elif target_visibility_unit == "kms": const = KMS_FOR_ONE_METER
+    if target_visibility_unit == 'miles': const = MILE_FOR_ONE_METER
+    elif target_visibility_unit == 'kms': const = KMS_FOR_ONE_METER
     else:
-        e = "Invalid value for target visibility unit"
+        e = 'Invalid value for target visibility unit'
         raise ValueError(e)
 
     for key, value in d.items():
