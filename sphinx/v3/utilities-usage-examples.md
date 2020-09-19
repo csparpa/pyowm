@@ -223,6 +223,31 @@ knots_wind_dict = measurables.metric_wind_dict_to_knots(msec_wind_dict)
 beaufort_wind_dict = measurables.metric_wind_dict_to_beaufort(msec_wind_dict)
 ```
 
+### Pressure
+OWM gives barometric pressure in hPa values, in a 
+[dict of three pressure items](https://openweathermap.org/weather-data). You can convert these to inHg, which is a 
+common unit of measurement in the United States.
+
+```python
+from pyowm.utils import measurables
+
+hpa_pressure_dict = {'press': 1000, 'sea_level': 1000, 'grnd_level': 1000}
+inhg_pressure_dict = measurables.metric_pressure_dict_to_inhg(hpa_pressure_dict)
+```
+
+### Visibility
+A typical API response contains a single visibility distance value. This is described as the average visibility in
+meters. You can convert this value (from meters) using the function provided to either kms or miles.
+
+```python
+from pyowm.utils import measurables
+
+visibility = 1000
+
+# the default return value is in kilometers
+visibility_kms = measurables.visibility_distance_to(visibility)
+visibility_miles = measurables.visibility_distance_to(visibility, 'miles')
+```
 
 ## `timestamps` module
 

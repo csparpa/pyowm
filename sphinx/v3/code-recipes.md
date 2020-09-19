@@ -402,16 +402,53 @@ rain_dict['3h']
 ```
 
 ### Get current pressure on a location
-Pressure is similar to rain: you get a dict with keys: `press` (atmospheric pressure on the ground in hPa) and `sea_level` 
-(on the sea level, if location is on the sea)
+Pressure is similar to rain, you get a dict with hPa values and these keys: `press` (atmospheric pressure on the 
+ground, sea level if [no sea level or ground level data](https://openweathermap.org/weather-data)) `sea_level` 
+(on the sea level, if location is on the sea) and `grnd_level`. Note that `press` used below refers to the
+dict value in 
 
 ```python
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-pressure_dict = mgr.weather_at_place('Berlin,DE').observation.pressure
+pressure_dict = mgr.weather_at_place('Berlin,DE').observation.press
 pressure_dict['press']
 pressure_dict['sea_level']
+pressure_dict['grnd_level']
+```
+
+Pressure values are given in the metric hPa, or hectopascals (1 hPa is equivalent to 100 pascals). You can easily 
+convert these values to inches of mercury, or inHg, which is a unit commonly used in the United States. Similar to above,
+we can do:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+obs = mgr.weather_at_place('Berlin,DE')
+
+# the default unit is hPa
+pressure_dict_unspecified = obs.weather.pressure()
+pressure_dict_in_hg = obs.weather.pressure(unit='inHg')
+```
+
+### Get current visibility distance on a location
+You might want to know how clearly you can see objects in Berlin. This is the visibility distance, an average distance
+taken from an Observation object and given in meters. You can also convert this value to kilometers or miles.
+
+```python
+from pyowm.owm import OWM
+
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+obs = mgr.weather_at_place('Berlin,DE')
+
+# the default value provided by our call (in meters)
+visibility = obs.weather.visibility_distance
+
+# kilometers is the default conversion unit
+visibility_in_kms = obs.weather.visibility()
+visibility_in_miles = obs.weather.visibility(unit='miles')
 ```
 
 ### Get today's sunrise and sunset times for a location
