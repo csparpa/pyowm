@@ -53,6 +53,16 @@ class OWM:
         """
         return constants.PYOWM_VERSION
 
+    @property
+    def supported_languages(self):
+        """
+        Returns the languages that the OWM API supports
+
+        :return: `list` of `str`
+
+        """
+        return constants.LANGUAGES
+
     def agro_manager(self):
         """
         Gives a `pyowm.agro10.agro_manager.AgroManager` instance that can be used to read/write data from the

@@ -31,6 +31,10 @@ class TestOWM(unittest.TestCase):
         version = self.__test_instance.version
         self.assertIsInstance(version, tuple)
 
+        languages = self.__test_instance.supported_languages
+        self.assertIsInstance(languages, list)
+        self.assertTrue(all([isinstance(lang, str) for lang in languages]))
+
         config = self.__test_instance.configuration
         self.assertIsInstance(config, dict)
 

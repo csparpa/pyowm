@@ -87,14 +87,21 @@ owm = OWM('your-api-key', config_dict)
 ```
 
 ### Language setting
-English is the default - but you can change it
-Check out [https://openweathermap.org/current](https://openweathermap.org/current) for the complete list of supported languages
+The list of supported languages is given by:
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+owm.supported_languages
+```
+Check out [https://openweathermap.org/current](https://openweathermap.org/current) for reference on supported languages
+
+English is the default language on the OWM API - but you can change it:
 
 ```python
 from pyowm.owm import OWM
 from pyowm.utils.config import get_default_config
 config_dict = get_default_config()
-config_dict['language'] = 'pt'  # your language here
+config_dict['language'] = 'pt'  # your language here, eg. Portuguese
 owm = OWM('your-api-key', config_dict)
 ```
 
