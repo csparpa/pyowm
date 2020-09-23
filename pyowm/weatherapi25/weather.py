@@ -251,13 +251,17 @@ class Weather:
         else:
             raise ValueError('Invalid value for target visibility distance unit')
 
-    def weather_icon_url(self):
+    def weather_icon_url(self, size=""):
         """Returns weather-related icon URL as a string.
+
+        :param size: the size of the icon, normal (default, like the old ones), 2x or 4x
+        :type size: str
 
         :returns: the icon URL.
 
         """
-        return ICONS_BASE_URI % self.weather_icon_name
+        size = ("@" if size != "" else "") + size
+        return ICONS_BASE_URI % (self.weather_icon_name, size)
 
     def __repr__(self):
         return "<%s.%s - reference_time=%s, status=%s, detailed_status=%s>" % (
