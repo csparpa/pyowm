@@ -18,7 +18,7 @@ setup(
     install_requires=[
         'requests>=2.20.0,<3',
         'geojson>=2.3.0,<3',
-        'PySocks==1.7.1,<2',
+        'PySocks>=1.7.1,<2',
         'requests[socks]'
     ],
     python_requires='>=3.7',
