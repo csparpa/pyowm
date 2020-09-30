@@ -54,7 +54,7 @@ OpenWeatherMap API recently "blocked" calls towards a few legacy API endpoints w
 This means that if you use PyOWM methods such as the ones for getting observed or forecasted weather, PyOWM might return authorization errors
 This behaviour is not showing if you use API keys issued a long time ago.
 
-The *proper way to obtain such data is to call the "OneCall" methods using your API key*
+*The proper way to obtain such data is to call the "OneCall" methods using your API key*
 
 
 Used to work with PyOWM v2?
@@ -236,7 +236,10 @@ You can install the development trunk with _pip_:
 
 .. code::
 
-    $ pip install git+https://github.com/csparpa/pyowm.git@develop
+    git clone https://github.com/csparpa/pyowm.git
+    cd pyowm && git checkout develop
+    pip install -r requirements.txt  # install dependencies
+    python setup.py install          # install develop branch code
 
 
 but be aware that it might not be stable!

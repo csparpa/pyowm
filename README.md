@@ -93,10 +93,12 @@ $ pip install pyowm
 There are alternatives: _setuptools_, _Windows installers_ and common Linux package managers such as _Yaourt (Arch Linux)_
 _YaST/Zypper (OpenSuse)_ (please refer to the documentation for more detail)
 
-Eager to fetch the very latest updates to PyOWM? Install the development trunk (which might be unstable):
+Eager to fetch the very latest updates to PyOWM? Install the development trunk (which might be unstable). Eg on Linux:
 
 ```shell
-$ pip install git+https://github.com/csparpa/pyowm.git@develop
+git clone https://github.com/csparpa/pyowm.git
+cd pyowm && git checkout develop
+pip install -r requirements.txt && python setup.py install
 ```
 
 ## Documentation
