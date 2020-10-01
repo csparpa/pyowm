@@ -87,8 +87,8 @@ Usage and Technical Documentation
 PyOWM v3 documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Quick code recipes (work in progress)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Quick code recipes
+^^^^^^^^^^^^^^^^^^
 .. toctree::
    :maxdepth: 1
 

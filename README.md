@@ -96,9 +96,9 @@ _YaST/Zypper (OpenSuse)_ (please refer to the documentation for more detail)
 Eager to fetch the very latest updates to PyOWM? Install the development trunk (which might be unstable). Eg on Linux:
 
 ```shell
-git clone https://github.com/csparpa/pyowm.git
-cd pyowm && git checkout develop
-pip install -r requirements.txt && python setup.py install
+$ git clone https://github.com/csparpa/pyowm.git
+$ cd pyowm && git checkout develop
+$ pip install -r requirements.txt && python setup.py install
 ```
 
 ## Documentation
