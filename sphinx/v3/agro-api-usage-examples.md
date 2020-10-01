@@ -317,7 +317,7 @@ image metadata*. Furthermore, you can query for the download time of a satellite
 ```python
 
 # Get satellite image download time - you can as usual specify: 'iso', 'date' and 'unix' time formats
-bnw_sat_image.downloaded_on('iso')  #  '2017-07-18 14:08:23+00'
+bnw_sat_image.downloaded_on('iso')  #  '2017-07-18 14:08:23+00:00'
 
 # Get its palette
 bnw_sat_image.palette               #  '2'

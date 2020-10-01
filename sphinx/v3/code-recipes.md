@@ -6,12 +6,25 @@ related to weather data.
 Table of contents:
   * [Library initialization](#library_init)
   * [Identifying cities and places via city IDs](#identifying_places)
+  * [OneCall data](#onecall)
   * [Weather data](#weather_data)
   * [Weather forecasts](#weather_forecasts)
   * [Meteostation historic measurements](#station_measurements)
-  * [OneCall data](#onecall)
+
 
 <div id="library_init"/>
+
+**Very important news**
+OpenWeatherMap API recently "blocked" calls towards a few legacy API endpoints whenever requested by **clients using non-recent free API keys.**
+
+This means that if you use PyOWM methods such as the ones for getting observed or forecasted weather, PyOWM might return authorization errors
+This behaviour is not showing if you use API keys issued a long time ago. 
+
+The *proper way to obtain such data is to call the "OneCall" methods using your API key*
+
+
+
+
 
 ## Library initialization
 
@@ -74,14 +87,21 @@ owm = OWM('your-api-key', config_dict)
 ```
 
 ### Language setting
-English is the default - but you can change it
-Check out [https://openweathermap.org/current](https://openweathermap.org/current) for the complete list of supported languages
+The list of supported languages is given by:
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+owm.supported_languages
+```
+Check out [https://openweathermap.org/current](https://openweathermap.org/current) for reference on supported languages
+
+English is the default language on the OWM API - but you can change it:
 
 ```python
 from pyowm.owm import OWM
 from pyowm.utils.config import get_default_config
 config_dict = get_default_config()
-config_dict['language'] = 'pt'  # your language here
+config_dict['language'] = 'pt'  # your language here, eg. Portuguese
 owm = OWM('your-api-key', config_dict)
 ```
 
@@ -137,7 +157,7 @@ list_of_tuples = london = reg.ids_for('LoNdoN', country='GB')                 # 
 and would get the very same results as above.
 
 
-### Get the IDs of cities whose name cointain a specific string
+### Get the IDs of cities whose name contain a specific string
 
 In order yo find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
 
@@ -164,7 +184,7 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
 list_of_locations = reg.locations_for('moscow', country='RU')
-moscow = list_of_locations[0][0]
+moscow = list_of_locations[0]
 lat = moscow.lat   # 55.75222
 lon = moscow.lon   # 37.615555
 ```
@@ -179,6 +199,138 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
 list_of_geopoints = reg.geopoints_for('rome')
+```
+
+
+<div id="onecall"/>
+
+## OneCall data
+
+With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
+
+One Call objects can be thought of as datasets that "photograhp" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
+
+It is possible to get:
+  - current OneCall data: the "photo" given for today)
+  - historical OneCall data: "photos" given for past days, up to 5 
+
+### Current OneCall data
+
+#### What is the feels like temperature (°C) tomorrow morning?
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.forecast_daily[0].temperature('celsius').get('feels_like_morn', None) #Ex.: 7.7
+```
+
+#### What's the wind speed in three hours?
+
+__Attention: The first entry in forecast_hourly is the current hour.__
+If you send the request at 18:36 UTC then the first entry in forecast_hourly is from 18:00 UTC.
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.forecast_hourly[3].wind().get('speed', 0) # Eg.: 4.42
+```
+
+#### What's the current humidity?
+
+Always in Berlin:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+
+one_call.current.humidity # Eg.: 81
+```
+
+#### Requesting only part of the available OneCall data, in imperial units
+
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105, exclude='minutely,hourly', units='imperial')
+
+# in this exacmple, the data in the one_call object will be in imperial units
+# possible units are defined by the One Call API, here: https://openweathermap.org/api/one-call-api
+# as of 2020.08.07 available values are: 'metric' or 'imperial'
+# the various units for the different options are shown here: https://openweathermap.org/weather-data
+one_call.current.temperature() # Eg.: 74.07 (deg F)
+
+# the example above does not retrieve minutely or hourly data, so it will not be availabe in the one_call object
+# available exclude options are defined by the One Call API
+# BUT using 'current' will error, as the pyowm one_call requires it
+# as of 2020.08.07 available values are: 'minutely', 'hourly', 'daily'
+# multiple exclusions may be combined with a comma, as above
+one_call.forecast_hourly # empty because it was excluded from the request
+```
+
+
+
+### Historical OneCall data
+
+Remember the "photograph" metaphor for OneCall data. You can query for "photos" given for past days: when you do that,
+be aware that such a photo carries along weather forecasts (hourly and daily) that *might* refer to the past
+
+This is because - as said above - the One Call API returns hourly forecasts for a streak of 48 hours and daily forecast 
+for a streak of 7 days, both streaks beginning from the timestamp which the OneCall object refers to
+
+In case of doubt, anyway, you can always _check the reference timestamp_ for the `Weather` objects embedded into the
+OneCall object and check if it's in the past or not.
+
+
+#### What was the observed weather yesterday at this time?
+
+Always in Berlin: 
+
+```python
+from pyowm.owm import OWM
+from pyowm.utils import timestamps, formatting
+
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+
+# what is the epoch for yesterday at this time?
+yesterday_epoch = formatting.to_UNIXtime(timestamps.yesterday())
+
+one_call_yesterday = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=yesterday_epoch)
+
+observed_weather = one_call_yesterday.current
+```
+
+#### What was the weather forecasted 3 days ago for the subsequent 48 hours ?
+
+No way we move from Berlin:
+
+```python
+from pyowm.owm import OWM
+from pyowm.utils import timestamps
+from datetime import datetime, timedelta, timezone
+
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+
+# what is the epoch for 3 days ago at this time?
+three_days_ago_epoch = int((datetime.now() - timedelta(days=3)).replace(tzinfo=timezone.utc).timestamp())
+
+one_call_three_days_ago = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=three_days_ago_epoch)
+
+list_of_forecasted_weathers = one_call_three_days_ago.forecast_hourly
 ```
 
 <div id="weather_data"/>
@@ -272,7 +424,7 @@ pressure_dict['sea_level']
 ### Get today's sunrise and sunset times for a location
 You can get precise timestamps for sunrise and sunset times on a location.
 Sunrise can be `None` for locations in polar night, as well as sunset can be `None` in case of polar days
-Supported time units are: `unix` (default, UNIX time), `iso` (format `YYYY-MM-DD HH:MM:SS+00`) or `datetime` 
+Supported time units are: `unix` (default, UNIX time), `iso` (format `YYYY-MM-DD HH:MM:SS+00:00`) or `datetime` 
 (gives a plain Python `datetime.datetime` object)
 
 ```python
@@ -416,7 +568,7 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 daily_forecast = mgr.forecast_at_place('Berlin,DE', 'daily').forecast
-3h_forecast = mgr.forecast_at_place('Berlin,DE', '3h').forecast
+three_h_forecast = mgr.forecast_at_place('Berlin,DE', '3h').forecast
 ```
 Now that you got the `Forecast` object, you can either manipulate it directly or use PyOWM conveniences to quickly slice and dice the embedded `Weather` objects
 
@@ -453,8 +605,8 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
 forecaster = mgr.forecast_at_place('Berlin,DE', '3h')    # this gives you a Forecaster object
-forecaster.when_starts('iso')                            # 2020-03-10 14:00:00+00'
-forecaster.when_ends('iso')                              # 2020-03-16 14:00:00+00'
+forecaster.when_starts('iso')                            # 2020-03-10 14:00:00+00:00'
+forecaster.when_ends('iso')                              # 2020-03-16 14:00:00+00:00'
 ```
 
 ### Get forecasted weather for tomorrow
@@ -478,9 +630,9 @@ from pyowm.utils import timestamps
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+three_h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
 tomorrow_at_five = timestamps.tomorrow(17, 0)                      # datetime object for tomorrow at 5 PM
-weather = 3h_forecaster.get_weather_at(tomorrow_at_five)           # the weather you're looking for
+weather = three_h_forecaster.get_weather_at(tomorrow_at_five)           # the weather you're looking for
 ```
 
 You are provided with the `Weather` object that lies closest to the time that you specified (5 PM)
@@ -490,14 +642,15 @@ You are provided with the `Weather` object that lies closest to the time that yo
 Say you want to know if you need to carry an umbrella around in Berlin tomorrow.
 
 ```python
+from pyowm.utils import timestamps
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+three_h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
 
 # Is it going to rain tomorrow?
 tomorrow = timestamps.tomorrow()                   # datetime object for tomorrow
-3h_forecaster.will_be_rainy_at(tomorrow)           # True
+three_h_forecaster.will_be_rainy_at(tomorrow)           # True
 ```
 
 ### Will it snow or be foggy in the next days?
@@ -508,13 +661,13 @@ In Berlin:
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-3h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
+three_h_forecaster = mgr.forecast_at_place('Berlin,DE', '3h')
 
 # Is it going to be snowy in the next 5 days ?
-3h_forecaster.will_have_snow()    # False
+three_h_forecaster.will_have_snow()    # False
 
 # Is it going to be foggy in the next 5 days ?
-3h_forecaster.will_have_fog()    # True
+three_h_forecaster.will_have_fog()    # True
 ```
 
 ### When will the weather be sunny in the next five days?
@@ -659,109 +812,3 @@ The `raw_measurements_dict` contains multiple sub-dicts, each one being a a data
   # [...]
 }
 ``` 
-
-<div id="onecall"/>
-
-## OneCall data
-
-With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
-
-One Call objects can be thought of as datasets that "photograhp" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
-
-It is possible to get:
-  - current OneCall data: the "photo" given for today)
-  - historical OneCall data: "photos" given for past days, up to 5 
-
-### Current OneCall data
-
-#### What is the feels like temperature (°C) tomorrow morning?
-Always in Berlin:
-
-```python
-from pyowm.owm import OWM
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-one_call = mgr.one_call(lat=52.5244, lon=13.4105)
-
-one_call.forecast_daily[0].temperature('celsius').get('feels_like_morn', None) #Ex.: 7.7
-```
-
-#### What's the wind speed in three hours?
-
-__Attention: The first entry in forecast_hourly is the current hour.__
-If you send the request at 18:36 UTC then the first entry in forecast_hourly is from 18:00 UTC.
-
-Always in Berlin:
-
-```python
-from pyowm.owm import OWM
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-one_call = mgr.one_call(lat=52.5244, lon=13.4105)
-
-one_call.forecast_hourly[3].wind().get('speed', 0) # Eg.: 4.42
-```
-
-#### What's the current humidity?
-
-Always in Berlin:
-
-```python
-from pyowm.owm import OWM
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-one_call = mgr.one_call(lat=52.5244, lon=13.4105)
-
-one_call.current.humidity # Eg.: 81
-```
-
-### Historical OneCall data
-
-Remember the "photograph" metaphor for OneCall data. You can query for "photos" given for past days: when you do that,
-be aware that such a photo carries along weather forecasts (hourly and daily) that *might* refer to the past
-
-This is because - as said above - the One Call API returns hourly forecasts for a streak of 48 hours and daily forecast 
-for a streak of 7 days, both streaks beginning from the timestamp which the OneCall object refers to
-
-In case of doubt, anyway, you can always _check the reference timestamp_ for the `Weather` objects embedded into the
-OneCall object and check if it's in the past or not.
-
-
-#### What was the observed weather yesterday at this time?
-
-Always in Berlin: 
-
-```python
-from pyowm.owm import OWM
-from pyowm.utils import timestamps, formatting
-
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-
-# what is the epoch for yesterday at this time?
-yesterday_epoch = formatting.to_UNIXtime(timestamps.yesterday())
-
-one_call_yesterday = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=yesterday_epoch)
-
-observed_weather = one_call_yesterday.current
-```
-
-#### What was the weather forecasted 3 days ago for the subsequent 48 hours ?
-
-No way we move from Berlin:
-
-```python
-from pyowm.owm import OWM
-from pyowm.utils import timestamps
-from datetime import datetime, timedelta, timezone
-
-owm = OWM('your-api-key')
-mgr = owm.weather_manager()
-
-# what is the epoch for 3 days ago at this time?
-three_days_ago_epoch = int((datetime.now() - timedelta(days=3)).replace(tzinfo=timezone.utc).timestamp())
-
-one_call_three_days_ago = mgr.one_call_history(lat=52.5244, lon=13.4105, dt=three_days_ago_epoch)
-
-list_of_forecasted_weathers = one_call_three_days_ago.forecast_hourly
-```

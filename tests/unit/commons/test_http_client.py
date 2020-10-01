@@ -303,7 +303,7 @@ class TestHttpRequestBuilder(unittest.TestCase):
             },
             'proxies': proxies
         }
-        expected_url = 'https://pro.test.com/root/path-to-resource.json'
+        expected_url = 'https://api.test.com/root/path-to-resource.json'
         expected_params = {
             'q': 'my-query',
             'APPID': apikey,

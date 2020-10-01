@@ -2,7 +2,7 @@ coverage
 coveralls
 Jinja2
 pip>=18.0
-pproxy<3
+pproxy>=2.2.0,<3
 pytest
 recommonmark
 Sphinx

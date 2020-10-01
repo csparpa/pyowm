@@ -46,6 +46,17 @@ The documentation of OWM APIs can be found on the OWM Website_
 .. _Website: https://openweathermap.org/api
 
 
+
+Very important news
+~~~~~~~~~~~~~~~~~~~
+OpenWeatherMap API recently "blocked" calls towards a few legacy API endpoints whenever requested by **clients using non-recent free API keys.**
+
+This means that if you use PyOWM methods such as the ones for getting observed or forecasted weather, PyOWM might return authorization errors
+This behaviour is not showing if you use API keys issued a long time ago.
+
+*The proper way to obtain such data is to call the "OneCall" methods using your API key*
+
+
 Used to work with PyOWM v2?
 ---------------------------
 
@@ -76,12 +87,22 @@ Usage and Technical Documentation
 PyOWM v3 documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Quick code recipes (work in progress)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Quick code recipes
+^^^^^^^^^^^^^^^^^^
 .. toctree::
    :maxdepth: 1
 
    v3/code-recipes
+
+
+FAQ about common errors
+^^^^^^^^^^^^^^^^^^^^^^^
+.. toctree::
+   :maxdepth: 1
+
+   v3/faq
+
+
 
 PyOWM v3 software API documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -215,7 +236,10 @@ You can install the development trunk with _pip_:
 
 .. code::
 
-    $ pip install git+https://github.com/csparpa/pyowm.git@develop
+    git clone https://github.com/csparpa/pyowm.git
+    cd pyowm && git checkout develop
+    pip install -r requirements.txt  # install dependencies
+    python setup.py install          # install develop branch code
 
 
 but be aware that it might not be stable!

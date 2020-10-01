@@ -18,7 +18,7 @@ setup(
     install_requires=[
         'requests>=2.20.0,<3',
         'geojson>=2.3.0,<3',
-        'PySocks==1.7.1,<2',
+        'PySocks>=1.7.1,<2',
         'requests[socks]'
     ],
     python_requires='>=3.7',
@@ -27,6 +27,7 @@ setup(
       "Programming Language :: Python",
       "Programming Language :: Python :: 3.7",
       "Programming Language :: Python :: 3.8",
+      "Programming Language :: Python :: 3.9",
       "Natural Language :: English",
       "Operating System :: OS Independent",
       "Development Status :: 5 - Production/Stable",

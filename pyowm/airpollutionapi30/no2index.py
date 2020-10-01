@@ -50,7 +50,7 @@ class NO2Index:
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
-            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00:00``
             '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str
@@ -66,7 +66,7 @@ class NO2Index:
 
         :param timeformat: the format for the time value. May be:
             '*unix*' (default) for UNIX time
-            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00``
+            '*iso*' for ISO8601-formatted string in the format ``YYYY-MM-DD HH:MM:SS+00:00``
             '*date* for ``datetime.datetime`` object instance
         :type timeformat: str
         :returns: an int or a str
@@ -114,7 +114,7 @@ class NO2Index:
             raise exceptions.ParseAPIResponseError('Data is None')
         try:
             # -- reference time (strip away Z and T on ISO8601 format)
-            t = the_dict['time'].replace('Z', '+00').replace('T', ' ')
+            t = the_dict['time'].replace('Z', '+00:00').replace('T', ' ')
             reference_time = formatting.ISO8601_to_UNIXtime(t)
 
             # -- reception time (now)

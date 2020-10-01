@@ -81,7 +81,7 @@ class Alert:
             raise exceptions.ParseAPIResponseError('Data is None')
         try:
             alert_id = the_dict['_id']
-            t = the_dict['last_update'].split('.')[0].replace('T', ' ') + '+00'
+            t = the_dict['last_update'].split('.')[0].replace('T', ' ') + '+00:00'
             alert_last_update = formatting.ISO8601_to_UNIXtime(t)
             alert_trigger_id = the_dict['triggerId']
             alert_met_conds = [

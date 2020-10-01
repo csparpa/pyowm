@@ -22,17 +22,22 @@ Please be aware that also data forecasts can be returned, depending on the searc
 Getting the data is easy:
 ```
 from pyowm import OWM
+from pyowm.utils import timestamps
+
 owm = OWM('apikey')
 
+# get an air pollution manager object
+mgr = owm.airpollution_manager()
+
 # Get latest CO Index on geocoordinates
-coi = owm.coindex_around_coords(lat, lon)
+coi = mgr.coindex_around_coords(lat, lon)
 
 # Get available CO Index in the last 24 hours
-coi = owm.coindex_around_coords(lat, lon,
-    start=timeutils.yesterday(), interval='day')
+coi = mgr.coindex_around_coords(lat, lon,
+    start=timestamps.yesterday(), interval='day')
 
 # Get available CO Index in the last ...
-coi = owm.coindex_around_coords(
+coi = mgr.coindex_around_coords(
     lat, lon,
     start=start_datetime,  # iso-8601, unix or datetime
     interval=span)         # can be: 'minute', 'hour', 'day', 'month', 'year'
@@ -80,15 +85,23 @@ Please be aware that also data forecasts can be returned, depending on the searc
 
 Getting the data is easy:
 ```
+from pyowm import OWM
+from pyowm.utils import timestamps
+
+owm = OWM('apikey')
+
+# get an air pollution manager object
+mgr = owm.airpollution_manager()
+
 # Get latest O3 value on geocoordinates
-o3 = owm.ozone_around_coords(lat, lon)
+o3 = mgr.ozone_around_coords(lat, lon)
 
 # Get available O3 value in the last 24 hours
-oz = owm.ozone_around_coords(lat, lon,
-         start=timeutils.yesterday(), interval='day')
+oz = mgr.ozone_around_coords(lat, lon,
+         start=timestamps.yesterday(), interval='day')
 
 # Get available O3 value in the last ...
-oz = owm.ozone_around_coords(
+oz = mgr.ozone_around_coords(
        lat, lon,
         start=start_datetime,  # iso-8601, unix or datetime
         interval=span)         # can be: 'minute', 'hour', 'day', 'month', 'year'

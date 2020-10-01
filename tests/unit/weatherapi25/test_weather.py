@@ -6,7 +6,6 @@ import unittest
 from datetime import datetime
 
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
-from pyowm.utils.formatting import UTC
 from pyowm.weatherapi25.uris import ICONS_BASE_URI
 from pyowm.weatherapi25.weather import Weather
 from tests.unit.weatherapi25.json_test_responses import (CITY_WEATHER_HISTORY_JSON,
@@ -17,17 +16,14 @@ from tests.unit.weatherapi25.json_test_responses import (CITY_WEATHER_HISTORY_JS
 
 class TestWeather(unittest.TestCase):
     __test_reference_time = 1378459200
-    __test_iso_reference_time = "2013-09-06 09:20:00+00"
-    __test_date_reference_time = datetime.strptime(__test_iso_reference_time,
-                                                   '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_iso_reference_time = "2013-09-06 09:20:00+00:00"
+    __test_date_reference_time = datetime.fromisoformat(__test_iso_reference_time)
     __test_sunset_time = 1378496400
-    __test_iso_sunset_time = "2013-09-06 19:40:00+00"
-    __test_date_sunset_time = datetime.strptime(__test_iso_sunset_time,
-                                                '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_iso_sunset_time = "2013-09-06 19:40:00+00:00"
+    __test_date_sunset_time = datetime.fromisoformat(__test_iso_sunset_time)
     __test_sunrise_time = 1378449600
-    __test_iso_sunrise_time = "2013-09-06 06:40:00+00"
-    __test_date_sunrise_time = datetime.strptime(__test_iso_sunrise_time,
-                                                 '%Y-%m-%d %H:%M:%S+00').replace(tzinfo=UTC())
+    __test_iso_sunrise_time = "2013-09-06 06:40:00+00:00"
+    __test_date_sunrise_time = datetime.fromisoformat(__test_iso_sunrise_time)
     __test_clouds = 67
     __test_rain = {"all": 20}
     __test_snow = {"all": 0}
@@ -535,9 +531,15 @@ class TestWeather(unittest.TestCase):
         self.assertRaises(ValueError, Weather.wind, self.__test_instance, 'xyz')
 
     def test_weather_icon_url(self):
-        expected = ICONS_BASE_URI % self.__test_instance.weather_icon_name
-        result = self.__test_instance.weather_icon_url()
-        self.assertEqual(expected, result)
+        expected_unspecified = ICONS_BASE_URI % (self.__test_instance.weather_icon_name, "")
+        expected_2x = ICONS_BASE_URI % (self.__test_instance.weather_icon_name, "@2x")
+        expected_4x = ICONS_BASE_URI % (self.__test_instance.weather_icon_name, "@4x")
+        result_unspecified = self.__test_instance.weather_icon_url()
+        result_2x = self.__test_instance.weather_icon_url(size="2x")
+        result_4x = self.__test_instance.weather_icon_url(size="4x")
+        self.assertEqual(expected_unspecified, result_unspecified)
+        self.assertEqual(expected_2x, result_2x)
+        self.assertEqual(expected_4x, result_4x)
 
     def test_repr(self):
         print(self.__test_instance)

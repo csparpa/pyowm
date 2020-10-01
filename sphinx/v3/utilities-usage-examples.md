@@ -36,8 +36,8 @@ unix_value = formatting.timeformat(dt.today(), 'unix')        # from datetime to
 iso_str_value = formatting.timeformat(dt.today(), 'iso')      # from datetime to ISO-8601 string
 datetime_value = formatting.timeformat(1590100263, 'date')    # from UNIX to datetime
 iso_str_value = formatting.timeformat(1590100263, 'iso')      # from UNIX to ISO-8601 string
-datetime_value = formatting.timeformat('2020-05-21 22:31:03+00', 'date') # from ISO-8601 string to datetime
-unix_value = formatting.timeformat('2020-05-21 22:31:03+00', 'unix') # from ISO-8601 string to UNIX
+datetime_value = formatting.timeformat('2020-05-21 22:31:03+00:00', 'date') # from ISO-8601 string to datetime
+unix_value = formatting.timeformat('2020-05-21 22:31:03+00:00', 'unix') # from ISO-8601 string to UNIX
 ```
 
 ## `geo` module
@@ -225,12 +225,15 @@ beaufort_wind_dict = measurables.metric_wind_dict_to_beaufort(msec_wind_dict)
 
 
 ## `timestamps` module
+
+All `datetime.datetime` objects returned by PyOWM are UTC offset-aware
+
 ```python
 from pyowm.utils import timestamps
 
 timestamps.now()                                         # Current time in `datetime.datetime` object (default)
 timestamps.now('unix')                                   # epoch
-timestamps.now('iso')                                    # ISO8601-formatted str (YYYY-MM-DD HH:MM:SS+00)
+timestamps.now('iso')                                    # ISO8601-formatted str (YYYY-MM-DD HH:MM:SS+00:00)
 
 timestamps.tomorrow()                                    # Tomorrow at this time
 timestamps.tomorrow(18, 7)                               # Tomorrow at 6:07 PM

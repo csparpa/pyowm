@@ -8,15 +8,13 @@ from unittest.mock import patch
 from pyowm.commons.image import Image, ImageTypeEnum
 from pyowm.agroapi10.enums import PresetEnum, SatelliteEnum
 from pyowm.agroapi10.imagery import MetaImage, SatelliteImage
-from pyowm.utils.formatting import UTC
 
 
 class TestMetaImage(unittest.TestCase):
 
     test_acquisition_time = 1378459200
-    test_iso_acquisition_time = "2013-09-06 09:20:00+00"
-    test_date_acquisition_time = datetime.strptime(test_iso_acquisition_time, '%Y-%m-%d %H:%M:%S+00').replace(
-        tzinfo=UTC())
+    test_iso_acquisition_time = "2013-09-06 09:20:00+00:00"
+    test_date_acquisition_time = datetime.fromisoformat(test_iso_acquisition_time)
 
     test_instance = MetaImage('http://a.com', PresetEnum.FALSE_COLOR,
                               SatelliteEnum.SENTINEL_2.name, test_acquisition_time, 98.2, 0.3, 11.7, 7.89,

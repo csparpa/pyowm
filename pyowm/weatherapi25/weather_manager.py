@@ -499,7 +499,7 @@ class WeatherManager:
             sh.interval = interval
         return sh
 
-    def one_call(self, lat: Union[int, float], lon: Union[int, float]) -> one_call.OneCall:
+    def one_call(self, lat: Union[int, float], lon: Union[int, float], **kwargs) -> one_call.OneCall:
         """
         Queries the OWM Weather API with one call for current weather information and forecast for the
         specified geographic coordinates.
@@ -523,6 +523,9 @@ class WeatherManager:
         geo.assert_is_lon(lon)
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
+        for key , value in kwargs.items():
+            if key == 'exclude': params['exclude'] = value
+            if key == 'units': params['units'] = value
 
         _, json_data = self.http_client.get_json(ONE_CALL_URI, params=params)
         return one_call.OneCall.from_dict(json_data)
@@ -550,7 +553,7 @@ class WeatherManager:
         geo.assert_is_lon(lon)
         geo.assert_is_lat(lat)
         if dt is None:
-            dt = int((datetime.now() - timedelta(days=5)).replace(tzinfo=timezone.utc).timestamp())
+            dt = int((datetime.now(timezone.utc) - timedelta(days=5)).timestamp())
         else:
             if not isinstance(dt, int):
                 raise ValueError("dt must be of type int")
