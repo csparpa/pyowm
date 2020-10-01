@@ -438,17 +438,19 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
 
     def test_one_call_historical(self):
-        result = self.__owm.one_call_history(lat=46.49, lon=11.33)
+        result = self.__owm.one_call_history(lat=48.8576, lon=2.3377)
         self.assertTrue(isinstance(result, OneCall))
-        self.assertEqual(46.49, result.lat)
-        self.assertEqual(11.33, result.lon)
-        self.assertEqual("Europe/Rome", result.timezone)
+        self.assertEqual(48.86, result.lat)
+        self.assertEqual(2.34, result.lon)
+        self.assertEqual("Europe/Paris", result.timezone)
         self.assertTrue(isinstance(result.current, Weather))
-        for i, weather in enumerate(result.forecast_hourly):
-            self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
-        self.assertEqual(8, len(result.forecast_daily))
-        for i, weather in enumerate(result.forecast_daily):
-            self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
+        if result.forecast_hourly is not None:
+            for i, weather in enumerate(result.forecast_hourly):
+                self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
+        if result.forecast_daily is not None:
+            self.assertEqual(8, len(result.forecast_daily))
+            for i, weather in enumerate(result.forecast_daily):
+                self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
 
 
 if __name__ == "__main__":
