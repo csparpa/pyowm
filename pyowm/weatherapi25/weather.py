@@ -319,6 +319,10 @@ class Weather:
             elif 'all' in the_dict['clouds']:
                 clouds = the_dict['clouds']['all']
 
+        # -- precipitation workaround
+        if 'precipitation' in the_dict and 'rain' not in the_dict:
+            the_dict['rain'] = the_dict['precipitation']
+
         # -- rain
         rain = dict()
         if 'rain' in the_dict:
