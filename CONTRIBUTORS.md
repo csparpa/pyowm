@@ -20,8 +20,8 @@ Code
   * [Misiu](https://github.com/Misiu)
   * [Noid](https://github.com/n0id)
   * [titilambert](https://github.com/titilambert)
+  * [Tobiaqs](https://github.com/Tobiaqs)
   * [txemi](https://github.com/txemi)
-
   * [Wesley-Vos](https://github.com/Wesley-Vos)
 
 Docs
