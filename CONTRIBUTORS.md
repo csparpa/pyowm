@@ -27,6 +27,7 @@ Code
 Docs
 ----
   * [EJEP](https://github.com/EJEP)
+  * [Franzqat](https://github.com/franzqat)
   * [Harmon758](https://github.com/Harmon758)
 
 Testing
