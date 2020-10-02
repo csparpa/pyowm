@@ -22,6 +22,8 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(1587744158, result.current.reference_time())
         self.assertEqual(48, len(result.forecast_hourly))
         dt_hourly = 1587744000
+        for w in result.forecast_minutely:
+            self.assertIsInstance(w, Weather)
         for i, weather in enumerate(result.forecast_hourly):
             self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
             self.assertEqual(dt_hourly, weather.reference_time())
@@ -137,6 +139,47 @@ class TestWeather(unittest.TestCase):
                 }
             ]
         },
+        "minutely": [
+            {
+                "dt": 1587744000,
+                "temp": 295.34,
+                "feels_like": 291.77,
+                "pressure": 1008,
+                "humidity": 22,
+                "dew_point": 272.7,
+                "clouds": 20,
+                "wind_speed": 2.15,
+                "wind_deg": 217,
+                "weather": [
+                    {
+                        "id": 801,
+                        "main": "Clouds",
+                        "description": "few clouds",
+                        "icon": "02d"
+                    }
+                ]
+            },
+            {
+                "dt": 1587747600,
+                "temp": 292.9,
+                "feels_like": 290.43,
+                "pressure": 1009,
+                "humidity": 40,
+                "dew_point": 278.93,
+                "clouds": 59,
+                "wind_speed": 2.14,
+                "wind_deg": 210,
+                "weather": [
+                    {
+                        "id": 500,
+                        "main": "Rain",
+                        "description": "light rain",
+                        "icon": "10d"
+                    }
+                ],
+                "precipitation": 0.14
+            },
+        ],
         "hourly": [
             {
                 "dt": 1587744000,
