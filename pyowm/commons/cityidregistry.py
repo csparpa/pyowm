@@ -145,10 +145,9 @@ class CityIDRegistry:
         # the specified matching style
         for line in lines:
             tokens = line.split(",")
-            # sometimes city names have an inner comma...
-            if len(tokens) == 6:
-                tokens = [tokens[0]+','+tokens[1], tokens[2], tokens[3],
-                          tokens[4], tokens[5]]
+            # sometimes city names have one or more inner commas
+            if len(tokens) > 5:
+                tokens = [','.join(tokens[:-4]), *tokens[-4:]]
             # check country
             if country is not None:
                 if tokens[4] != country:
