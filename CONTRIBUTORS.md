@@ -5,6 +5,7 @@ Contributors will be shown in alphabetical order
 
 Code
 ----
+  * [ahertz](https://github.com/ahertz)
   * [alechewitt](https://github.com/alechewitt)
   * [camponez](https://github.com/camponez)
   * [dev-iks](https://github.com/dev-iks)
