@@ -51,6 +51,7 @@ class TestWeather(unittest.TestCase):
     __test_dewpoint = 300.0
     __test_humidex = 298.0
     __test_heat_index = 40.0
+    __test_precipitation_probability = 0.5
 
     __test_instance = Weather(__test_reference_time, __test_sunset_time,
                               __test_sunrise_time, __test_clouds, __test_rain,
@@ -59,7 +60,8 @@ class TestWeather(unittest.TestCase):
                               __test_status, __test_detailed_status,
                               __test_weather_code, __test_weather_icon_name,
                               __test_visibility_distance, __test_dewpoint,
-                              __test_humidex, __test_heat_index)
+                              __test_humidex, __test_heat_index,
+                              precipitation_probability=__test_precipitation_probability)
 
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __bad_json_2 = '{"list": [{"test":"fake"}] }'
@@ -75,7 +77,8 @@ class TestWeather(unittest.TestCase):
                         '{"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}, ' \
                         '"sunrise_time": 1378449600, "heat_index": 40.0, ' \
                         '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
-                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null, "uvi": null}'
+                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null, "uvi": null, ' \
+                        '"precipitation_probability": 0.5}'
 
     def test_init_fails_when_wrong_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
@@ -138,6 +141,26 @@ class TestWeather(unittest.TestCase):
                           self.__test_weather_code, self.__test_weather_icon_name,
                           self.__test_visibility_distance, self.__test_dewpoint,
                           self.__test_humidex, self.__test_heat_index, uvi=-1)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+                          self.__test_sunset_time, self.__test_sunrise_time,
+                          self.__test_clouds, self.__test_rain, self.__test_snow,
+                          self.__test_wind, self.__test_humidity,
+                          self.__test_pressure, self.__test_temperature,
+                          self.__test_status, self.__test_detailed_status,
+                          self.__test_weather_code, self.__test_weather_icon_name,
+                          self.__test_visibility_distance, self.__test_dewpoint,
+                          self.__test_humidex, self.__test_heat_index,
+                          precipitation_probability=-1.0)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+                          self.__test_sunset_time, self.__test_sunrise_time,
+                          self.__test_clouds, self.__test_rain, self.__test_snow,
+                          self.__test_wind, self.__test_humidity,
+                          self.__test_pressure, self.__test_temperature,
+                          self.__test_status, self.__test_detailed_status,
+                          self.__test_weather_code, self.__test_weather_icon_name,
+                          self.__test_visibility_distance, self.__test_dewpoint,
+                          self.__test_humidex, self.__test_heat_index,
+                          precipitation_probability=2.0)
 
     def test_init_when_wind_is_none(self):
         instance = Weather(self.__test_reference_time,
