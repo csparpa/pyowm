@@ -14,7 +14,8 @@ class CityIDRegistry:
     MATCHINGS = {
         'exact': lambda city_name, toponym: city_name == toponym,
         'nocase': lambda city_name, toponym: city_name.lower() == toponym.lower(),
-        'like': lambda city_name, toponym: city_name.lower() in toponym.lower()
+        'like': lambda city_name, toponym: city_name.lower() in toponym.lower(),
+        'startswith': lambda city_name, toponym: toponym.lower().startswith(city_name.lower())
     }
 
     def __init__(self, filepath_regex):
@@ -50,10 +51,13 @@ class CityIDRegistry:
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
+        :param matching: str. Default is `nocase`. Possible values:
+        `exact` - literal, case-sensitive matching,
+        `nocase` - literal, case-insensitive matching,
+        `like` - matches cities whose name contains, as a substring, the string
+        fed to the function, case-insensitive,
+        `startswith` - matches cities whose names start with the string fed
+        to the function, case-insensitive.
         :raises ValueError if the value for `matching` is unknown
         :return: list of tuples
         """
@@ -79,10 +83,13 @@ class CityIDRegistry:
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
+        :param matching: str. Default is `nocase`. Possible values:
+        `exact` - literal, case-sensitive matching,
+        `nocase` - literal, case-insensitive matching,
+        `like` - matches cities whose name contains, as a substring, the string
+        fed to the function, case-insensitive,
+        `startswith` - matches cities whose names start with the string fed
+        to the function, case-insensitive.
         :raises ValueError if the value for `matching` is unknown
         :return: list of `weatherapi25.location.Location` objects
         """
@@ -109,10 +116,13 @@ class CityIDRegistry:
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
+        :param matching: str. Default is `nocase`. Possible values:
+        `exact` - literal, case-sensitive matching,
+        `nocase` - literal, case-insensitive matching,
+        `like` - matches cities whose name contains, as a substring, the string
+        fed to the function, case-insensitive,
+        `startswith` - matches cities whose names start with the string fed
+        to the function, case-insensitive.
         :raises ValueError if the value for `matching` is unknown
         :return: list of `pyowm.utils.geo.Point` objects
         """
