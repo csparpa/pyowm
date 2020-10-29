@@ -35,6 +35,8 @@ jobs:
       script: bash tests/local_installation_test.sh
     - <<: *local_installation_test
       python: "3.8"
+    - <<: *local_installation_test
+      python: "3.9-dev"
 
     - &coverage
       stage: "Coverage"
@@ -42,6 +44,8 @@ jobs:
       script: coverage run --rcfile=.coveragerc setup.py test -s tests.unit
     - <<: *coverage
       python: "3.8"
+    - <<: *coverage
+      python: "3.9-dev"
 
     - stage: "Build docs"
       script: cd sphinx && make clean && make html
@@ -52,6 +56,8 @@ jobs:
       script: bash deploy/deploy_to_pypi.sh
     - <<: *deploy_to_pypi
       python: "3.8"
+    - <<: *deploy_to_pypi
+      python: "3.9-dev"
 
     - &pypi_installation_test
       stage: "PyPI Installation Test"
@@ -60,3 +66,5 @@ jobs:
       script: bash tests/pypi_installation_test.sh
     - <<: *pypi_installation_test
       python: "3.8"
+    - <<: *pypi_installation_test
+      python: "3.9-dev"
