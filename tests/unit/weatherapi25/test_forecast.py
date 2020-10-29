@@ -21,14 +21,16 @@ class TestForecast(unittest.TestCase):
                                {"temp": 294.199, "temp_kf": -1.899, "temp_max": 296.098,
                                 "temp_min": 294.199
                                 },
-                               "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0),
+                               "Clouds", "Overcast clouds", 804, "04d", 1000, 300.0, 298.0, 296.0,
+                               precipitation_probability=0.25),
                        Weather(1378459690, 1378496480, 1378449510, 23, {"all": 10},
                                {"all": 0}, {"deg": 103.4, "speed": 4.2}, 12,
                                {"press": 1070.119, "sea_level": 1078.589},
                                {"temp": 297.199, "temp_kf": -1.899, "temp_max": 299.0,
                                 "temp_min": 295.6
                                 },
-                               "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0)
+                               "Clear", "Sky is clear", 804, "02d", 1000, 300.0, 298.0, 296.0,
+                               precipitation_probability=0.0)
                        ]
     __test_n_weathers = len(__test_weathers)
     __test_instance = Forecast("daily", __test_reception_time, __test_location,
@@ -54,7 +56,8 @@ class TestForecast(unittest.TestCase):
                          '"sunset_time": 1378496400, "pressure": {"press": 1030.119,' \
                          ' "sea_level": 1038.589}, "sunrise_time": 1378449600, ' \
                          '"heat_index": 296.0, "weather_icon_name": "04d", "wind": ' \
-                         '{"speed": 1.1, "deg": 252.002}, "utc_offset": null, "uvi": null}, {"status": "Clear", ' \
+                         '{"speed": 1.1, "deg": 252.002}, "utc_offset": null, "uvi": null, ' \
+                         '"precipitation_probability": 0.25}, {"status": "Clear", ' \
                          '"visibility_distance": 1000, "humidity": 12, ' \
                          '"clouds": 23, "temperature": {"temp_kf": -1.899, ' \
                          '"temp_max": 299.0, "temp": 297.199, "temp_min": 295.6}, ' \
@@ -65,7 +68,7 @@ class TestForecast(unittest.TestCase):
                          '{"press": 1070.119, "sea_level": 1078.589}, ' \
                          '"sunrise_time": 1378449510, "heat_index": 296.0, ' \
                          '"weather_icon_name": "02d", "wind": {"speed": 4.2, ' \
-                         '"deg": 103.4}, "utc_offset": null, "uvi": null}]}'
+                         '"deg": 103.4}, "utc_offset": null, "uvi": null, "precipitation_probability": 0.0}]}'
 
     def test_actualize(self):
         weathers = [Weather(1378459200, 1378496400, 1378449600, 67,

@@ -54,6 +54,8 @@ class Weather:
     :type utc_offset: int or None
     :param uvi: UV index
     :type uvi: int, float or None
+    :param precipitation_probability: Probability of precipitation (forecast only)
+    :type precipitation_probability: float or None
     :returns:  a *Weather* instance
     :raises: *ValueError* when negative values are provided for non-negative quantities
 
@@ -63,7 +65,7 @@ class Weather:
                  snow, wind, humidity, pressure, temperature, status,
                  detailed_status, weather_code, weather_icon_name,
                  visibility_distance, dewpoint, humidex, heat_index,
-                 utc_offset=None, uvi=None):
+                 utc_offset=None, uvi=None, precipitation_probability=None):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self.ref_time = reference_time
@@ -117,6 +119,12 @@ class Weather:
             raise ValueError("'uvi' must be grater than or equal to 0")
         self.uvi = uvi
 
+        if precipitation_probability is not None and \
+           (precipitation_probability < 0.0 or precipitation_probability > 1.0):
+            raise ValueError("'precipitation_probability' must be between " \
+                             "0.0 and 1.0")
+        self.precipitation_probability = precipitation_probability
+        
     def reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
 
@@ -440,11 +448,15 @@ class Weather:
         # -- UV index
         uvi = the_dict.get('uvi', None)
 
+        # -- Precipitation probability
+        precipitation_probability = the_dict.get('pop', None)
+
         return Weather(reference_time, sunset_time, sunrise_time, clouds,
                        rain, snow, wind, humidity, pressure, temperature,
                        status, detailed_status, weather_code, weather_icon_name,
                        visibility_distance, dewpoint, humidex, heat_index,
-                       utc_offset=utc_offset, uvi=uvi)
+                       utc_offset=utc_offset, uvi=uvi,
+                       precipitation_probability=precipitation_probability)
 
     @classmethod
     def from_dict_of_lists(cls, the_dict):
@@ -513,4 +525,5 @@ class Weather:
                 'humidex': self.humidex,
                 'heat_index': self.heat_index,
                 'utc_offset': self.utc_offset,
-                'uvi': self.uvi}
+                'uvi': self.uvi,
+                'precipitation_probability': self.precipitation_probability}
