@@ -52,7 +52,7 @@ class TestObservation(unittest.TestCase):
                             '"sunrise_time": 1378449600, "heat_index": 296.0, ' \
                             '"weather_icon_name": "04d", "wind": ' \
                             '{"speed": 1.1, "deg": 252.002}, "utc_offset": null, ' \
-                            '"uvi": null}}'
+                            '"uvi": null, "precipitation_probability": null}}'
 
     def test_init_fails_when_reception_time_is_negative(self):
         self.assertRaises(ValueError, Observation, -1234567, \
