@@ -90,7 +90,7 @@ class Weather:
             raise ValueError("'humidity' must be greatear than 0")
         self.humidity = humidity
 
-        self.pressure = pressure
+        self.press = pressure
         self.temp = temperature
         self.status = status
         self.detailed_status = detailed_status
@@ -224,6 +224,40 @@ class Weather:
         converted = measurables.kelvin_dict_to(to_be_converted, unit)
         return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
+
+    def pressure(self, unit='hPa'):
+        """
+        Returns a dict with pressure info
+        :param unit: the unit of measure for the temperature values. May be:
+            '*hPa' (default), '*inHg*'
+        :type unit: str
+        :returns: a dict containing pressure values.
+        :raises: ValueError when unknown pressure units are provided
+        """
+        if unit == 'hPa':
+            return self.press
+        elif unit == 'inHg':
+            return measurables.metric_pressure_dict_to_inhg(self.press)
+        else:
+            raise ValueError('Invalid value for target pressure unit')
+
+    def visibility(self, unit='meters'):
+        """
+        Returns a new value for visibility distance with specified unit
+        :param unit: the unit of measure for the temperature values. May be:
+            '*meters' (default), '*kilometers*', or '*miles*'
+        :type unit: str
+        :returns: a converted visibility distance value (float)
+        :raises: ValueError when unknown visibility units are provided
+        """
+        if unit == 'meters':
+            return self.visibility_distance
+        elif unit == 'kilometers':
+            return measurables.visibility_distance_to(self.visibility_distance, 'kilometers')
+        elif unit == 'miles':
+            return measurables.visibility_distance_to(self.visibility_distance, 'miles')
+        else:
+            raise ValueError('Invalid value for target visibility distance unit')
 
     def weather_icon_url(self, size=""):
         """Returns weather-related icon URL as a string.
@@ -514,7 +548,7 @@ class Weather:
                 'snow': self.snow,
                 'wind': self.wnd,
                 'humidity': self.humidity,
-                'pressure': self.pressure,
+                'pressure': self.press,
                 'temperature': self.temp,
                 'status': self.status,
                 'detailed_status': self.detailed_status,

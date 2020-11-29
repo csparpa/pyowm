@@ -132,3 +132,23 @@ class TestMeasurablesUtils(unittest.TestCase):
         expected = {'speed': 8, 'gust': 2, 'deg': 7.89}
         result = measurables.metric_wind_dict_to_beaufort(input)
         self.assertEqual(expected, result)
+
+    def test_metric_pressure_dict_to_inhg(self):
+        input = {'press': 1000, 'sea_level': 1, 'grnd_level': None}
+        expected = {'press': 29.53, 'sea_level': .03}
+        result = measurables.metric_pressure_dict_to_inhg(input)
+        print(result)
+        self.assertEqual(expected, result)
+
+    def test_visibility_distance_to(self):
+        distances = (100, 200, None)
+        cmp_kms = (.1, .2, None)
+        cmp_miles = (.06, .12, None)
+        case_one, case_two = list(), list()
+        for distance in distances:
+            case_one.append(measurables.visibility_distance_to(distance))
+            case_two.append(measurables.visibility_distance_to(distance, 'miles'))
+        self.assertTrue(tuple(case_one) == cmp_kms and tuple(case_two) == cmp_miles)
+
+    def test_visibility_distance_to_fails_with_invalid_unit(self):
+        self.assertRaises(ValueError, measurables.visibility_distance_to, 10, 'xyz')
