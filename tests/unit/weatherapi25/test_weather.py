@@ -556,16 +556,16 @@ class TestWeather(unittest.TestCase):
     def test_get_wind_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.wind, self.__test_instance, 'xyz')
 
-    def test_returning_different_units_for_pressure_values(self):
-        result_imperial_inhg = self.__test_instance.pressure(unit='inHg')
-        result_metric_hpa = self.__test_instance.pressure(unit='hPa')
-        result_unspecified = self.__test_instance.pressure()
+    def test_barometric_pressure_returning_different_units_for_pressure_values(self):
+        result_imperial_inhg = self.__test_instance.barometric_pressure(unit='inHg')
+        result_metric_hpa = self.__test_instance.barometric_pressure(unit='hPa')
+        result_unspecified = self.__test_instance.barometric_pressure()
         a = result_metric_hpa == result_unspecified
         b = result_imperial_inhg == self.__test_inhg_pressure
         self.assertTrue(a and b)
 
-    def test_pressure_fails_with_unknown_units(self):
-        self.assertRaises(ValueError, Weather.pressure, self.__test_instance, 'xyz')
+    def test_barometric_pressure_fails_with_unknown_units(self):
+        self.assertRaises(ValueError, Weather.barometric_pressure, self.__test_instance, 'xyz')
 
     def test_returning_different_units_for_visibility(self):
         result_metric_kms = self.__test_instance.visibility(unit='kilometers')

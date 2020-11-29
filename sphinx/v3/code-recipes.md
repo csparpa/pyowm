@@ -418,7 +418,7 @@ dict value in
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-pressure_dict = mgr.weather_at_place('Berlin,DE').observation.press
+pressure_dict = mgr.weather_at_place('Berlin,DE').weather.barometric_pressure()
 pressure_dict['press']
 pressure_dict['sea_level']
 pressure_dict['grnd_level']
@@ -435,8 +435,8 @@ mgr = owm.weather_manager()
 obs = mgr.weather_at_place('Berlin,DE')
 
 # the default unit is hPa
-pressure_dict_unspecified = obs.weather.pressure()
-pressure_dict_in_hg = obs.weather.pressure(unit='inHg')
+pressure_dict_unspecified = obs.weather.barometric_pressure()
+pressure_dict_in_hg = obs.weather.barometric_pressure(unit='inHg')
 ```
 
 ### Get current visibility distance on a location
