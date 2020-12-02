@@ -13,6 +13,7 @@ Code
   * [edenhaus](https://github.com/edenhaus)
   * [eumiro](https://github.com/eumiro)
   * [ggstuart](https://github.com/ggstuart)
+  * [irahorecka](https://github.com/irahorecka)
   * [jwmelvin](https://github.com/jwmelvin)
   * [lardconcepts](https://github.com/lardconcepts)
   * [liato](https://github.com/liato)

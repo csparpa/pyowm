@@ -139,7 +139,7 @@ class Forecast:
         return len(self.weathers)
 
     def __iter__(self):
-        return (w for w in self.weathers)
+        return iter(self.weathers)
 
     def __repr__(self):
         return "<%s.%s - reception_time=%s, interval=%s>" % (__name__, \

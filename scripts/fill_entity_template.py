@@ -11,10 +11,7 @@ if __name__ == '__main__':
 
     try:
         param_2 = sys.argv[2]
-        if param_2 == '--iterable':
-            is_iterable = True
-        else:
-            is_iterable = False
+        is_iterable = param_2 == '--iterable'
     except:
         is_iterable = False
 

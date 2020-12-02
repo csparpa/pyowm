@@ -47,16 +47,16 @@ class MetaImage:
         assert isinstance(acquisition_time, int)
         assert acquisition_time >= 0, 'acquisition_time cannot be negative'
         self._acquisition_time = acquisition_time
-        assert isinstance(valid_data_percentage, float) or isinstance(valid_data_percentage, int)
+        assert isinstance(valid_data_percentage, (float, int))
         assert valid_data_percentage >= 0., 'valid_data_percentage cannot be negative'
         self.valid_data_percentage = valid_data_percentage
-        assert isinstance(cloud_coverage_percentage, float) or isinstance(cloud_coverage_percentage, int)
+        assert isinstance(cloud_coverage_percentage, (float, int))
         assert cloud_coverage_percentage >= 0., 'cloud_coverage_percentage cannot be negative'
         self.cloud_coverage_percentage = cloud_coverage_percentage
-        assert isinstance(sun_azimuth, float) or isinstance(sun_azimuth, int)
+        assert isinstance(sun_azimuth, (float, int))
         assert sun_azimuth >= 0. and sun_azimuth <= 360., 'sun_azimuth must be between 0 and 360 degrees'
         self.sun_azimuth  = sun_azimuth
-        assert isinstance(sun_elevation, float) or isinstance(sun_elevation, int)
+        assert isinstance(sun_elevation, (float, int))
         assert sun_elevation >= 0. and sun_elevation <= 90., 'sun_elevation must be between 0 and 90 degrees'
         self.sun_elevation = sun_elevation
         self.polygon_id = polygon_id
@@ -122,7 +122,7 @@ class SatelliteImage:
     def __init__(self, metadata, data, downloaded_on=None, palette=None):
         assert isinstance(metadata, MetaImage)
         self.metadata = metadata
-        assert isinstance(data, Image) or isinstance(data, Tile)
+        assert isinstance(data, (Image, Tile))
         self.data = data
         if downloaded_on is not None:
             assert isinstance(downloaded_on, int)

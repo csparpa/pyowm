@@ -56,7 +56,7 @@ class Trigger:
             raise ValueError('The area for a trigger must contain at least one geoJSON type: you provided none')
         self.area = area
         if alerts is None or len(alerts) == 0:
-            self.alerts = list()
+            self.alerts = []
         else:
             self.alerts = alerts
         if alert_channels is None or len(alert_channels) == 0:
@@ -91,11 +91,7 @@ class Trigger:
         :return: list of `Alert` instances
         """
         unix_timestamp = formatting.to_UNIXtime(timestamp)
-        result = []
-        for alert in self.alerts:
-            if alert.last_update >= unix_timestamp:
-                result.append(alert)
-        return result
+        return [alert for alert in self.alerts if alert.last_update >= unix_timestamp]
 
     def get_alerts_on(self, weather_param):
         """
@@ -145,7 +141,7 @@ class Trigger:
                 alert_id = key
                 alert_data = alerts_dict[alert_id]
                 alert_last_update = alert_data['last_update']
-                alert_met_conds = list()
+                alert_met_conds = []
                 for c in alert_data['conditions']:
                     if isinstance(c['current_value'], int):
                         cv = c['current_value']
@@ -165,9 +161,14 @@ class Trigger:
             alert_channels = None  # defaulting
 
         except ValueError as e:
-            raise pyowm.commons.exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
+            raise pyowm.commons.exceptions.ParseAPIResponseError(
+                'Impossible to parse JSON: %s' % e
+            )
+
         except KeyError as e:
-            raise pyowm.commons.exceptions.ParseAPIResponseError('Impossible to parse JSON: %s' % e)
+            raise pyowm.commons.exceptions.ParseAPIResponseError(
+                'Impossible to parse JSON: %s' % e
+            )
 
         return Trigger(start, end, conditions, area=area, alerts=alerts, alert_channels=alert_channels, id=trigger_id)
 

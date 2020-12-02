@@ -37,8 +37,7 @@ class Forecaster:
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        start_coverage = min([item.reference_time() \
-                              for item in self.forecast])
+        start_coverage = min(item.reference_time() for item in self.forecast)
         return formatting.timeformat(start_coverage, timeformat)
 
     def when_ends(self, timeformat='unix'):
@@ -55,8 +54,7 @@ class Forecaster:
         :raises: *ValueError* when invalid time format values are provided
 
         """
-        end_coverage = max([item.reference_time()
-                            for item in self.forecast])
+        end_coverage = max(item.reference_time() for item in self.forecast)
         return formatting.timeformat(end_coverage, timeformat)
 
     def will_have_rain(self):
@@ -382,10 +380,9 @@ class Forecaster:
         hottest = None
         for weather in self.forecast.weathers:
             d = weather.temperature()
-            if 'temp_max' in d:
-                if d['temp_max'] > maxtemp:
-                    maxtemp = d['temp_max']
-                    hottest = weather
+            if 'temp_max' in d and d['temp_max'] > maxtemp:
+                maxtemp = d['temp_max']
+                hottest = weather
         return hottest
 
     def most_cold(self):
@@ -401,10 +398,9 @@ class Forecaster:
         coldest = None
         for weather in self.forecast.weathers:
             d = weather.temperature()
-            if 'temp_min' in d:
-                if d['temp_min'] < mintemp:
-                    mintemp = d['temp_min']
-                    coldest = weather
+            if 'temp_min' in d and d['temp_min'] < mintemp:
+                mintemp = d['temp_min']
+                coldest = weather
         return coldest
 
     def most_humid(self):
@@ -437,10 +433,9 @@ class Forecaster:
         most_rainy = None
         for weather in self.forecast.weathers:
             d = weather.rain
-            if 'all' in d:
-                if d['all'] > max_rain:
-                    max_rain = d['all']
-                    most_rainy = weather
+            if 'all' in d and d['all'] > max_rain:
+                max_rain = d['all']
+                most_rainy = weather
         return most_rainy
 
     def most_snowy(self):
@@ -456,10 +451,9 @@ class Forecaster:
         most_snowy = None
         for weather in self.forecast.weathers:
             d = weather.snow
-            if 'all' in d:
-                if d['all'] > max_snow:
-                    max_snow = d['all']
-                    most_snowy = weather
+            if 'all' in d and d['all'] > max_snow:
+                max_snow = d['all']
+                most_snowy = weather
         return most_snowy
 
     def most_windy(self):
@@ -475,10 +469,9 @@ class Forecaster:
         most_windy = None
         for weather in self.forecast.weathers:
             d = weather.wind()
-            if 'speed' in d:
-                if d['speed'] > max_wind_speed:
-                    max_wind_speed = d['speed']
-                    most_windy = weather
+            if 'speed' in d and d['speed'] > max_wind_speed:
+                max_wind_speed = d['speed']
+                most_windy = weather
         return most_windy
 
     def __repr__(self):

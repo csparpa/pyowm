@@ -37,7 +37,7 @@ class SatelliteImagerySearchResultSet:
         self.query_timestamp = query_timestamp
 
         # parse raw data
-        result = list()
+        result = []
         for the_dict in list_of_dict:
             # common metadata
             acquisition_time = the_dict.get('dt', None)

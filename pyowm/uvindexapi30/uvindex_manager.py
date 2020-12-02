@@ -72,8 +72,7 @@ class UVIndexManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self.uv_client.get_uvi_forecast(params)
-        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json_data]
-        return uvindex_list
+        return [uvindex.UVIndex.from_dict(item) for item in json_data]
 
     def uvindex_history_around_coords(self, lat, lon, start, end=None):
         """
@@ -107,8 +106,7 @@ class UVIndexManager:
             end = formatting.timeformat(end, 'unix')
         params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
         json_data = self.uv_client.get_uvi_history(params)
-        uvindex_list = [uvindex.UVIndex.from_dict(item) for item in json_data]
-        return uvindex_list
+        return [uvindex.UVIndex.from_dict(item) for item in json_data]
 
     def __repr__(self):
         return '<%s.%s>' % (__name__, self.__class__.__name__)

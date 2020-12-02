@@ -43,9 +43,8 @@ class Station:
         self._lon = float(lon)
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        if alt is not None:
-            if alt < 0.0:
-                raise ValueError("'alt' value must not be negative")
+        if alt is not None and alt < 0.0:
+            raise ValueError("'alt' value must not be negative")
         self.id = id
         self.created_at = created_at
         if self.created_at is not None:
@@ -72,10 +71,7 @@ class Station:
             else:
                 return datestring + '.000000Z'
         else:
-            if len(parts[-1]) > 6:
-                micros = parts[-1][:6]
-            else:
-                micros = parts[-1]
+            micros = parts[-1][:6] if len(parts[-1]) > 6 else parts[-1]
             return '.'.join(
                 parts[:-1] + ['{:06d}'.format(int(micros))]) + 'Z'
 

@@ -39,10 +39,10 @@ def any_status_is(weather_list, status, weather_code_registry):
     :returns: ``True`` if the check is positive, ``False`` otherwise
     
     """
-    for weather in weather_list:
-        if status_is(weather, status, weather_code_registry):
-            return True
-    return False
+    return any(
+        status_is(weather, status, weather_code_registry)
+        for weather in weather_list
+    )
 
 
 def filter_by_status(weather_list, status, weather_code_registry):
@@ -60,11 +60,11 @@ def filter_by_status(weather_list, status, weather_code_registry):
     :returns: ``True`` if the check is positive, ``False`` otherwise
     
     """
-    result = []
-    for weather in weather_list:
-        if status_is(weather, status, weather_code_registry):
-            result.append(weather)
-    return result
+    return [
+        weather
+        for weather in weather_list
+        if status_is(weather, status, weather_code_registry)
+    ]
 
 
 def is_in_coverage(unixtime, weathers_list):
@@ -83,14 +83,10 @@ def is_in_coverage(unixtime, weathers_list):
     """
     if not weathers_list:
         return False
-    else:
-        min_of_coverage = min([weather.reference_time() \
-                               for weather in weathers_list])
-        max_of_coverage = max([weather.reference_time() \
-                               for weather in weathers_list])
-        if unixtime < min_of_coverage or unixtime > max_of_coverage:
-            return False
-        return True
+    min_of_coverage = min(weather.reference_time() for weather in weathers_list)
+    max_of_coverage = max([weather.reference_time() \
+                           for weather in weathers_list])
+    return unixtime >= min_of_coverage and unixtime <= max_of_coverage
 
 
 def find_closest_weather(weathers_list, unixtime):
