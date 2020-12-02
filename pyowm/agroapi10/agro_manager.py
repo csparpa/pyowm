@@ -51,12 +51,14 @@ class AgroManager:
         """
         assert geopolygon is not None
         assert isinstance(geopolygon, GeoPolygon)
-        data = dict()
-        data['geo_json'] = {
-            "type": "Feature",
-            "properties": {},
-            "geometry": geopolygon.to_dict()
+        data = {
+            'geo_json': {
+                "type": "Feature",
+                "properties": {},
+                "geometry": geopolygon.to_dict(),
+            }
         }
+
         if name is not None:
             data['name'] = name
         status, payload = self.http_client.post(
@@ -144,12 +146,14 @@ class AgroManager:
             params={'appid': self.API_key,
                     'polyid': polyd},
             headers={'Content-Type': 'application/json'})
-        the_dict = dict()
-        the_dict['reference_time'] = data['dt']
-        the_dict['surface_temp'] = data['t0']
-        the_dict['ten_cm_temp'] = data['t10']
-        the_dict['moisture'] = data['moisture']
-        the_dict['polygon_id'] = polyd
+        the_dict = {
+            'reference_time': data['dt'],
+            'surface_temp': data['t0'],
+            'ten_cm_temp': data['t10'],
+            'moisture': data['moisture'],
+            'polygon_id': polyd,
+        }
+
         return Soil.from_dict(the_dict)
 
     # Satellite Imagery subset methods
@@ -271,7 +275,7 @@ class AgroManager:
             params = dict(paletteid=palette)
         else:
             palette = PaletteEnum.GREEN
-            params = dict()
+            params = {}
         # polygon PNG
         if isinstance(metaimage, MetaPNGImage):
             prepared_url = metaimage.url
@@ -309,7 +313,7 @@ class AgroManager:
         :type metaimage: a `pyowm.agroapi10.imagery.MetaImage` subtype
         :return: dict
         """
-        if metaimage.preset != PresetEnum.EVI and metaimage.preset != PresetEnum.NDVI:
+        if metaimage.preset not in [PresetEnum.EVI, PresetEnum.NDVI]:
             raise ValueError("Unsupported image preset: should be EVI or NDVI")
         if metaimage.stats_url is None:
             raise ValueError("URL for image statistics is not defined")

@@ -141,7 +141,7 @@ class CityIDRegistry:
         :param matching: str
         :return: list of lists
         """
-        result = list()
+        result = []
 
         # find the right file to scan and extract its lines. Upon "like"
         # matchings, just read all files
@@ -159,9 +159,8 @@ class CityIDRegistry:
             if len(tokens) > 5:
                 tokens = [','.join(tokens[:-4]), *tokens[-4:]]
             # check country
-            if country is not None:
-                if tokens[4] != country:
-                    continue
+            if country is not None and tokens[4] != country:
+                continue
 
             # check city_name
             if self._city_name_matches(city_name, tokens[0], matching):
@@ -202,7 +201,7 @@ class CityIDRegistry:
             return lines
 
     def _get_all_lines(self):
-        all_lines = list()
+        all_lines = []
         for city_name in ['a', 'g', 'm', 's']:  # all available city ID files
             filename = self._assess_subfile_from(city_name)
             all_lines.extend(self._get_lines(filename))

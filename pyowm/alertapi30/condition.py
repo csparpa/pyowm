@@ -33,7 +33,7 @@ class Condition:
         self.operator = operator
 
         assert amount is not None
-        assert isinstance(amount, int) or isinstance(amount, float)
+        assert isinstance(amount, (int, float))
         self.amount = amount
         self.id = id
 

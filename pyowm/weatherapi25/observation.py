@@ -71,12 +71,11 @@ class Observation:
         # supposed to be deprecated as soon as the API fully adopts HTTP for
         # conveying errors to the clients
         if 'message' in the_dict and 'cod' in the_dict:
-            if the_dict['cod'] == "404":
-                print("OWM API: observation data not available")
-                return None
-            else:
+            if the_dict['cod'] != "404":
                 raise exceptions.APIResponseError(
                                       "OWM API: error - response payload", the_dict['cod'])
+            print("OWM API: observation data not available")
+            return None
         try:
             place = location.Location.from_dict(the_dict)
         except KeyError:

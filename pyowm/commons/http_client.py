@@ -29,18 +29,15 @@ class HttpRequestBuilder:
         self.subdomain = None
         self.proxies = None
         self.path = None
-        self.params = dict()
-        self.headers = dict()
+        self.params = {}
+        self.headers = {}
         self._set_schema()
         self._set_subdomain()
         self._set_proxies()
 
     def _set_schema(self):
         use_ssl = self.config['connection']['use_ssl']
-        if use_ssl:
-            self.schema = 'https'
-        else:
-            self.schema = 'http'
+        self.schema = 'https' if use_ssl else 'http'
 
     def _set_subdomain(self):
         if self.has_subdomains:
@@ -51,7 +48,7 @@ class HttpRequestBuilder:
         if self.config['connection']['use_proxy']:
             self.proxies = self.config['proxies']
         else:
-            self.proxies = dict()
+            self.proxies = {}
 
     def with_path(self, path_uri_token):
         assert isinstance(path_uri_token, str)
@@ -280,16 +277,14 @@ class HttpClient:
     def check_status_code(cls, status_code, payload):
         if status_code < 400:
             return
-        if status_code == 400:
+        if status_code == 400 or status_code not in [401, 404, 502]:
             raise exceptions.APIRequestError(payload)
         elif status_code == 401:
             raise exceptions.UnauthorizedError('Invalid API Key provided')
         elif status_code == 404:
             raise exceptions.NotFoundError('Unable to find the resource')
-        elif status_code == 502:
-            raise exceptions.BadGatewayError('Unable to contact the upstream server')
         else:
-            raise exceptions.APIRequestError(payload)
+            raise exceptions.BadGatewayError('Unable to contact the upstream server')
 
     def __repr__(self):
         return "<%s.%s - root: %s>" % (__name__, self.__class__.__name__, self.root_uri)

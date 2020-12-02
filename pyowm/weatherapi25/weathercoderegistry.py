@@ -87,7 +87,7 @@ class WeatherCodeRegistry:
         :type code: int
         :returns: the weather status str or ``None`` if the code is not mapped
         """
-        is_in = lambda start, end, n: True if start <= n <= end else False
+        is_in = lambda start, end, n: start <= n <= end
         for status in self._code_ranges_dict:
             for _range in self._code_ranges_dict[status]:
                 if is_in(_range['start'],_range['end'],code):
