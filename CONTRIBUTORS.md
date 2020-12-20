@@ -19,6 +19,7 @@ Code
   * [lardconcepts](https://github.com/lardconcepts)
   * [liato](https://github.com/liato)
   * [LukasBoersma](https://github.com/LukasBoersma)
+  * [MatthiasLohr](https://github.com/MatthiasLohr)  
   * [Misiu](https://github.com/Misiu)
   * [Noid](https://github.com/n0id)
   * [titilambert](https://github.com/titilambert)
