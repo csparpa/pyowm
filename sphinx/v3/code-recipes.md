@@ -87,6 +87,10 @@ owm = OWM('your-api-key', config_dict)
 ```
 
 ### Language setting
+The OWM API can be asked to return localized *detailed statuses* for weather data
+In PyOWM this means that you can specify a language and you'll retrieve `Weather` objects having the `detailed_status`
+field localized in that language. Localization is not provided for `status` field instead, so pay attention to that. 
+
 The list of supported languages is given by:
 ```python
 from pyowm.owm import OWM
@@ -101,8 +105,11 @@ English is the default language on the OWM API - but you can change it:
 from pyowm.owm import OWM
 from pyowm.utils.config import get_default_config
 config_dict = get_default_config()
-config_dict['language'] = 'pt'  # your language here, eg. Portuguese
+config_dict['language'] = 'fr'  # your language here, eg. French
 owm = OWM('your-api-key', config_dict)
+mgr = owm.weather_manager()
+observation = mgr.weather_at_place('Paris, FR')
+observation.weather.detailed_status  # Nuageux
 ```
 
 ### Get PyOWM configuration
