@@ -410,7 +410,7 @@ Also rain amount is a dict, with keys: `1h` an `3h`, containing the mms of rain 
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-rain_dict = mgr.weather_at_place('Berlin,DE').observation.rain
+rain_dict = mgr.weather_at_place('Berlin,DE').weather.rain
 rain_dict['1h']
 rain_dict['3h']
 ```
