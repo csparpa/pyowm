@@ -76,8 +76,6 @@ class JSONPersistenceBackend(PersistenceBackend):
             return result
 
     def persist_buffer(self, buffer):
-        data = list()
         with open(self._file_path, 'w') as f:
-            for msmt in buffer:
-                data.append(msmt.to_JSON())
+            data = [msmt.to_JSON() for msmt in buffer]
             f.write('[%s]' % ','.join(data))

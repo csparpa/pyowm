@@ -164,7 +164,7 @@ class WeatherManager:
         """
         assert isinstance(pattern, str), "'pattern' must be a str"
         assert isinstance(searchtype, str), "'searchtype' must be a str"
-        if searchtype != "accurate" and searchtype != "like":
+        if searchtype not in ["accurate", "like"]:
             raise ValueError("'searchtype' value must be 'accurate' or 'like'")
         if limit is not None:
             assert isinstance(limit, int), "'limit' must be an int or None"
@@ -524,9 +524,10 @@ class WeatherManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         for key , value in kwargs.items():
-            if key == 'exclude': params['exclude'] = value
-            if key == 'units': params['units'] = value
-
+            if key == 'exclude':
+                params['exclude'] = value
+            elif key == 'units':
+                params['units'] = value
         _, json_data = self.http_client.get_json(ONE_CALL_URI, params=params)
         return one_call.OneCall.from_dict(json_data)
 

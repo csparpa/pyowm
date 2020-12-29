@@ -103,7 +103,7 @@ class Point(Geometry):
          :type inscribed_circle_radius_km: int or float
          :return: a `pyowm.utils.geo.Polygon` instance
          """
-        assert isinstance(inscribed_circle_radius_km, int) or isinstance(inscribed_circle_radius_km, float)
+        assert isinstance(inscribed_circle_radius_km, (int, float))
         assert inscribed_circle_radius_km > 0., 'Radius must be greater than zero'
 
         # turn metric distance to radians on the approximated local sphere
@@ -248,7 +248,7 @@ class Polygon(Geometry):
         if not list_of_lists:
             raise ValueError("A Polygon cannot be empty")
         first, last = list_of_lists[0][0], list_of_lists[0][-1]
-        if not first == last:
+        if first != last:
             raise ValueError("The start and end point of Polygon must coincide")
         self._geom = geojson.Polygon(list_of_lists)
 
@@ -292,9 +292,7 @@ class Polygon(Geometry):
         """
         result = []
         for l in list_of_lists:
-            curve = []
-            for point in l:
-                curve.append((point.lon, point.lat))
+            curve = [(point.lon, point.lat) for point in l]
             result.append(curve)
         return Polygon(result)
 
