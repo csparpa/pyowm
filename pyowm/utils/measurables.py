@@ -95,7 +95,7 @@ def metric_wind_dict_to_imperial(d):
         to miles/hour
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             result[key] = value * MILES_PER_HOUR_FOR_ONE_METER_PER_SEC
@@ -115,7 +115,7 @@ def metric_wind_dict_to_km_h(d):
         to km/hour
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             result[key] = value * KM_PER_HOUR_FOR_ONE_METER_PER_SEC
@@ -135,7 +135,7 @@ def metric_wind_dict_to_knots(d):
         to km/hour
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             result[key] = value * KNOTS_FOR_ONE_METER_PER_SEC
@@ -157,7 +157,7 @@ def metric_wind_dict_to_beaufort(d):
         to Beaufort level
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             if value <= 0.2:

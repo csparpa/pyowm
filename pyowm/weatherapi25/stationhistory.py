@@ -74,10 +74,9 @@ class StationHistory:
         # are found for a station and when the station does not exist!
         measurements = {}
         try:
-            if 'cod' in d:
-                if d['cod'] != "200":
-                    raise exceptions.APIResponseError(
-                                              "OWM API: error - response payload: " + str(d), d['cod'])
+            if 'cod' in d and d['cod'] != "200":
+                raise exceptions.APIResponseError(
+                                          "OWM API: error - response payload: " + str(d), d['cod'])
             if str(d['cnt']) == "0":
                 return None
             else:

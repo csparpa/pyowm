@@ -41,5 +41,4 @@ def class_from_dotted_path(dotted_path):
     assert isinstance(dotted_path, str), 'A string must be provided'
     tokens = dotted_path.split('.')
     modpath, class_name = '.'.join(tokens[:-1]), tokens[-1]
-    klass = getattr(importlib.import_module(modpath), class_name)
-    return klass
+    return getattr(importlib.import_module(modpath), class_name)

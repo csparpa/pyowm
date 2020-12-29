@@ -214,8 +214,8 @@ class Weather:
         """
         # This is due to the fact that the OWM Weather API responses are mixing
         # absolute temperatures and temperature deltas together
-        to_be_converted = dict()
-        not_to_be_converted = dict()
+        to_be_converted = {}
+        not_to_be_converted = {}
         for label, temp in self.temp.items():
             if temp is None or temp < 0:
                 not_to_be_converted[label] = temp
@@ -352,7 +352,7 @@ class Weather:
             elif 'distance' in the_dict['visibility']:
                 visibility_distance = the_dict['visibility']['distance']
         elif 'last' in the_dict and 'visibility' in the_dict['last']:
-            if isinstance(the_dict['last']['visibility'], int) or isinstance(the_dict['last']['visibility'], float):
+            if isinstance(the_dict['last']['visibility'], (int, float)):
                 visibility_distance = the_dict['last']['visibility']
             elif 'distance' in the_dict['last']['visibility']:
                 visibility_distance = the_dict['last']['visibility']['distance']
@@ -360,7 +360,7 @@ class Weather:
         # -- clouds
         clouds = 0
         if 'clouds' in the_dict:
-            if isinstance(the_dict['clouds'], int) or isinstance(the_dict['clouds'], float):
+            if isinstance(the_dict['clouds'], (int, float)):
                 clouds = the_dict['clouds']
             elif 'all' in the_dict['clouds']:
                 clouds = the_dict['clouds']['all']
@@ -370,16 +370,16 @@ class Weather:
             the_dict['rain'] = the_dict['precipitation']
 
         # -- rain
-        rain = dict()
+        rain = {}
         if 'rain' in the_dict:
-            if isinstance(the_dict['rain'], int) or isinstance(the_dict['rain'], float):
+            if isinstance(the_dict['rain'], (int, float)):
                 rain = {'all': the_dict['rain']}
             else:
                 if the_dict['rain'] is not None:
                     rain = the_dict['rain'].copy()
 
         # -- wind
-        wind = dict()
+        wind = {}
         if 'wind' in the_dict and the_dict['wind'] is not None:
             wind = the_dict['wind'].copy()
         elif 'last' in the_dict:
@@ -410,9 +410,9 @@ class Weather:
             humidity = 0
 
         # -- snow
-        snow = dict()
+        snow = {}
         if 'snow' in the_dict:
-            if isinstance(the_dict['snow'], int) or isinstance(the_dict['snow'], float):
+            if isinstance(the_dict['snow'], (int, float)):
                 snow = {'all': the_dict['snow']}
             else:
                 if the_dict['snow'] is not None:
@@ -435,9 +435,9 @@ class Weather:
         pressure = {'press': atm_press, 'sea_level': sea_level_press}
 
         # -- temperature
-        temperature = dict()
+        temperature = {}
         if 'temp' in the_dict:
-            if isinstance(the_dict['temp'], int) or isinstance(the_dict['temp'], float):
+            if isinstance(the_dict['temp'], (int, float)):
                 temperature = {
                     'temp': the_dict.get('temp', None)
                 }
@@ -459,7 +459,7 @@ class Weather:
         # add feels_like to temperature if present
         if 'feels_like' in the_dict:
             feels_like = the_dict['feels_like']
-            if isinstance(feels_like, int) or isinstance(feels_like, float):
+            if isinstance(feels_like, (int, float)):
                 temperature['feels_like'] = the_dict.get('feels_like', None)
             elif isinstance(feels_like, dict):
                 for label, temp in feels_like.items():
@@ -478,11 +478,7 @@ class Weather:
             weather_icon_name = ''
 
         # -- timezone
-        if 'timezone' in the_dict:
-            utc_offset = the_dict['timezone']
-        else:
-            utc_offset = None
-
+        utc_offset = the_dict['timezone'] if 'timezone' in the_dict else None
         # -- UV index
         uvi = the_dict.get('uvi', None)
 

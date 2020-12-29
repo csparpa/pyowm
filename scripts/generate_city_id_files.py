@@ -27,7 +27,7 @@ def download_the_files():
 
 def read_all_cities_into_dict():
     print('Reading city data from files ...')
-    all_cities = dict()
+    all_cities = {}
 
     # All cities
     with gzip.open(city_list_gz, "rb", "utf-8") as i:
@@ -76,21 +76,16 @@ def split_keyset(cities_dict):
             continue
         c = ord(name[0])
         if c < 97: # not a letter
-            continue
+            pass
         elif c in range(97, 103):  # from a to f
             ss[0].append(city_to_string(city_id, cities_dict[city_id]))
-            continue
         elif c in range(103, 109): # from g to l
             ss[1].append(city_to_string(city_id, cities_dict[city_id]))
-            continue
         elif c in range(109, 115): # from m to r
             ss[2].append(city_to_string(city_id, cities_dict[city_id]))
-            continue
         elif c in range (115, 123): # from s to z
             ss[3].append(city_to_string(city_id, cities_dict[city_id]))
-            continue
-        else:
-            continue # not a letter
+        continue
     print('... done')
     return ss
 
