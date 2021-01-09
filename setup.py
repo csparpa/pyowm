@@ -11,7 +11,7 @@ setup(
     author=__author__,
     author_email=__author_email__,
     url=__url__,
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests','tests.*']),
     long_description="""PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy 
     consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
     include_package_data=True,
