@@ -10,53 +10,16 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
 
     __owm = owm.OWM(os.getenv('OWM_API_KEY', None)).airpollution_manager()
 
-    def test_coindex_around_coords(self):
+    def test_air_quality_at_coords(self):
         """
-        Test feature: get CO index around geo-coordinates.
+        Test feature: get all air quality data  around geo-coordinates.
         """
-        u = self.__owm.coindex_around_coords(45, 9)
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.co_samples)
-        self.assertIsNotNone(u.reception_time())
-        self.assertIsNotNone(u.reference_time())
-        self.assertIsNone(u.interval)
-        self.assertIsNotNone(u.location)
-
-    def test_ozone_around_coords(self):
-        """
-        Test feature: get ozone around geo-coordinates.
-        """
-        u = self.__owm.ozone_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00:00')
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.du_value)
-        self.assertIsNotNone(u.reception_time())
-        self.assertIsNotNone(u.reference_time())
-        self.assertIsNone(u.interval)
-        self.assertIsNotNone(u.location)
-
-    def test_no2index_around_coords(self):
-        """
-        Test feature: get NO2 index around geo-coordinates.
-        """
-        u = self.__owm.no2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00:00')
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.no2_samples)
-        self.assertIsNotNone(u.reception_time())
-        self.assertIsNotNone(u.reference_time())
-        self.assertIsNone(u.interval)
-        self.assertIsNotNone(u.location)
-
-    def test_so2index_around_coords(self):
-        """
-        Test feature: get SO2 index around geo-coordinates.
-        """
-        u = self.__owm.so2index_around_coords(0.0, 10.0, start='2016-12-31 12:55:55+00:00')
-        self.assertIsNotNone(u)
-        self.assertIsNotNone(u.so2_samples)
-        self.assertIsNotNone(u.reception_time())
-        self.assertIsNotNone(u.reference_time())
-        self.assertIsNone(u.interval)
-        self.assertIsNotNone(u.location)
+        airstatus = self.__owm.air_quality_at_coords(45, 9)
+        self.assertIsNotNone(airstatus)
+        self.assertIsNotNone(airstatus.air_quality_data)
+        self.assertIsNotNone(airstatus.reception_time())
+        self.assertIsNotNone(airstatus.reference_time())
+        self.assertIsNotNone(airstatus.location)
 
 
 if __name__ == "__main__":

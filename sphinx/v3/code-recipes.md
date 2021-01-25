@@ -8,6 +8,7 @@ Table of contents:
   * [Identifying cities and places via city IDs](#identifying_places)
   * [OneCall data](#onecall)
   * [Weather data](#weather_data)
+  * [Air pollution data](#airpollution_data)  
   * [Weather forecasts](#weather_forecasts)
   * [Meteostation historic measurements](#station_measurements)
 
@@ -752,6 +753,37 @@ TBD
 
 ### Get forecast on geographic coordinates
 TBD
+
+
+<div id="airpollution_data"/>
+
+## Air pollution data
+
+Instead of getting a `weather_manager`, get from the main OWM object a `airpollution_manager` and use it
+
+### Getting air polluting concentrations and Air Quality Index on geographic coords 
+Air polluting agents concentration can be queried in one shot:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.airpollution_manager()
+
+air_status = mgr.air_quality_at_coords(51.507351, -0.127758)  # London, GB
+
+# you can then get values for all of these air pollutants
+air_status.co
+air_status.no
+air_status.no2
+air_status.o3
+air_status.so2
+air_status.pm2_5
+air_status.pm10
+air_status.nh3
+
+# and for air quality index
+air_status.aqi 
+```
 
 
 
