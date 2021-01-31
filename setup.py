@@ -14,7 +14,7 @@ setup(
     author=__author__,
     author_email=__author_email__,
     url=__url__,
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['tests','tests.*']),
     long_description=long_description,
     long_description_content_type='text/markdown',
     include_package_data=True,
