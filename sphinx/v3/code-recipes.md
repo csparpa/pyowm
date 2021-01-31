@@ -216,7 +216,7 @@ list_of_geopoints = reg.geopoints_for('rome')
 
 With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
 
-One Call objects can be thought of as datasets that "photograhp" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
+One Call objects can be thought of as datasets that "photograph" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
 
 It is possible to get:
   - current OneCall data: the "photo" given for today)
