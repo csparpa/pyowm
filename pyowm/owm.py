@@ -5,6 +5,7 @@ from pyowm import constants
 from pyowm.agroapi10 import agro_manager
 from pyowm.airpollutionapi30 import airpollution_manager
 from pyowm.alertapi30 import alert_manager
+from pyowm.geocodingapi10 import geocoding_manager
 from pyowm.stationsapi30 import stations_manager
 from pyowm.tiles import tile_manager
 from pyowm.utils import strings
@@ -124,6 +125,14 @@ class OWM:
         :return: a `pyowm.weatherapi25.weather_manager.WeatherManager` instance
         """
         return weather_manager.WeatherManager(self.api_key, self.config)
+
+    def geocoding_manager(self):
+        """
+        Gives a `pyowm.geocoding10.geocoding_manager.GeocodingManager` instance that can be used to perform direct
+        and reverse geocoding
+        :return: a `pyowm.geocoding10.geocoding_manager.GeocodingManager` instance
+        """
+        return geocoding_manager.GeocodingManager(self.api_key, self.config)
 
     def __repr__(self):
         return "<%s.%s - API key=%s, subscription type=%s, PyOWM version=%s>" % \

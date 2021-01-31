@@ -83,6 +83,9 @@ class Location:
             else:
                 lon = 0.0
             lat = data['station']['coord'].get('lat', 0.0)
+        elif 'lat' in the_dict and 'lon' in the_dict:
+            lat = the_dict['lat']
+            lon = the_dict['lon']
         else:
             raise KeyError("Impossible to read geographical coordinates from JSON")
         if 'country' in data:

@@ -130,9 +130,16 @@ version_tuple = (major, minor, patch) = owm.version
 
 <div id="identifying_places"/>
 
-## Identifying cities and places via city IDs
+## Identifying cities and places
 
-### Obtain the city ID registry
+You can easily get the City ID of a known toponym, as well as its geographic coordinates
+Also you can leverage direct/reverse geocoding 
+
+### City IDs
+
+The following calls will not result in any OWM API call in the background, so they will only happen locally to your machine.
+
+#### Obtain the city ID registry
 Use the city ID registry to lookup the ID of a city given its name
 ```python
 from pyowm.owm import OWM
@@ -140,7 +147,7 @@ owm = OWM('your-api-key')
 city_id_registry = owm.city_id_registry()
 ```
 
-### Get the ID of a city given its name
+#### Get the ID of a city given its name
 Don't forget that there is a high probabilty that your city is not unique in the world, and multiple cities with the same name exist in other countries
 Therefore specify toponyms and country 2-letter names separated by comma. Eg: if you search for the British `London` you'll likely multiple results: 
 you then should also specify the country (`GB`) to narrow the search only to Great Britain.
@@ -165,9 +172,8 @@ list_of_tuples = london = reg.ids_for('LoNdoN', country='GB')                 # 
 and would get the very same results as above.
 
 
-### Get the IDs of cities whose name contain a specific string
-
-In order yo find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
+#### Get the IDs of cities whose name contain a specific string
+In order to find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
 
 In example, let's find IDs for all British cities having the string `london` in their names:
 
@@ -182,7 +188,7 @@ list_of_tuples = reg.ids_for('london', country='GB', matching='like')  # We'll g
                                                                        #            (2643734, 'Londonderry County Borough', 'GB')]
 ```
 
-### Get geographic coordinates of a city given its name
+#### Get geographic coordinates of a city given its name
 Just use call `locations_for` on the registry: this will give you a `Location` object containing lat & lon
 
 Let's find geocoords for Moscow (Russia):
@@ -197,7 +203,7 @@ lat = moscow.lat   # 55.75222
 lon = moscow.lon   # 37.615555
 ```
 
-### Get GeoJSON geometry (point) for a city given its name
+#### Get GeoJSON geometry (point) for a city given its name
 PyOWM encapsulates [GeoJSON](https://pypi.org/project/geojson/) geometry objects that are compliant with the GeoJSON specification.
 
 This means, for example, that you can get a `Point` geometry using the registry. Let's find the geometries for all `Rome` cities in the world:
@@ -207,6 +213,65 @@ from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
 list_of_geopoints = reg.geopoints_for('rome')
+```
+
+### Direct/reverse geocoding
+
+Simply put:
+  - DIRECT GEOCODING: from toponym to geocoords
+  - REVERSE GEOCODING: from geocoords to toponyms
+
+
+Both geocoding actions are performed via a `geocoding_manager` object and will require an actual call to be made to the
+OWM API: so please bear that in mind because that will count against your amount of allowed API calls
+
+#### Direct gecocoding of a toponym
+
+The call is very similar to `ids_for` and `locations_for`.
+
+You at least need to specify the toponym name and country ISO code (eg. `GB`, `IT`, `JP`, ...), while if the input 
+toponym is in the United States you should also specify the `state_code` parameter 
+
+The call returns a list of `Location` object instances (in case of no ambiguity, only one item in the list will be returned)
+You can then get the lat/lon from the object instances themselves
+
+Results can be limited with the `limit` parameter
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.geocoding_manager()
+
+# geocode London (no country specified) - we'll get many results
+list_of_locations = mgr.geocode('London')
+a_london = list_of_locations[0]  # taking the first London in the list
+a_london.lat
+a_london.lon 
+
+# geocode London (Great Britain) - we'll get up to three Londons that exist in GB
+list_of_locations = mgr.geocode('London', country='GB', limit=3)
+
+# geocode London (Ohio, United States of America): we'll get all the Londons in Ohio
+list_of_locations = mgr.geocode('London', country='US', state_code='OH')
+```
+
+#### Reverse gecocoding of geocoordinates
+With reverse geocoding you input a lat/lon float couple and retrieve a list all the `Location` objects associated with 
+these coordinates.
+
+Results can be limited with the `limit` parameter
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.geocoding_manager()
+
+# London
+lat = 51.5098
+lon = -0.1180
+
+# reverse geocode London
+list_of_locations = mgr.reverse_geocode(lat, lon)  # list contains: City of London, Islington, Lewisham, ...
 ```
 
 

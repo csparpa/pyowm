@@ -32,6 +32,7 @@ With PyOWM you can integrate into your code any of the following OpenWeatherMap 
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements
  - **Weather Alerts API v3.0**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
  - **Image tiles** for several map layers provided by OWM
+ - **Geocoding API v1.0** allowing to perform direct/reverse geocoding 
 
  ##  Get started
 
