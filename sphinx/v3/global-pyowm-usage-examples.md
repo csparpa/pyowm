@@ -18,7 +18,7 @@ weather = mgr.weather_at_place('London,GB').weather  # get the weather at London
 dump_dict = weather.to_dict()
 ```
 
-This is useful as you can save the dump dictionaries to files (eg. using Pyhon `json` or `pickle` modules)
+This is useful as you can save the dump dictionaries to files (eg. using Python `json` or `pickle` modules)
 
 ## Printing objects
 Most of PyOWM objects can be pretty-printed for a quick introspection:

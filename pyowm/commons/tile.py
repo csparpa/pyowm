@@ -92,7 +92,7 @@ class Tile:
     @classmethod
     def tile_coords_to_bbox(cls, x, y, zoom):
         """
-        Calculates the lon/lat estrema of the bounding box corresponding to specific tile coordinates. Output coodinates
+        Calculates the lon/lat estrema of the bounding box corresponding to specific tile coordinates. Output coordinates
         are in degrees and in the Mercator Projection (http://en.wikipedia.org/wiki/Mercator_projection)
 
         :param x: the x tile coordinates

@@ -148,7 +148,7 @@ city_id_registry = owm.city_id_registry()
 ```
 
 #### Get the ID of a city given its name
-Don't forget that there is a high probabilty that your city is not unique in the world, and multiple cities with the same name exist in other countries
+Don't forget that there is a high probability that your city is not unique in the world, and multiple cities with the same name exist in other countries
 Therefore specify toponyms and country 2-letter names separated by comma. Eg: if you search for the British `London` you'll likely multiple results: 
 you then should also specify the country (`GB`) to narrow the search only to Great Britain.
 
@@ -345,7 +345,7 @@ one_call = mgr.one_call(lat=52.5244, lon=13.4105, exclude='minutely,hourly', uni
 # the various units for the different options are shown here: https://openweathermap.org/weather-data
 one_call.current.temperature() # Eg.: 74.07 (deg F)
 
-# the example above does not retrieve minutely or hourly data, so it will not be availabe in the one_call object
+# the example above does not retrieve minutely or hourly data, so it will not be available in the one_call object
 # available exclude options are defined by the One Call API
 # BUT using 'current' will error, as the pyowm one_call requires it
 # as of 2020.08.07 available values are: 'minutely', 'hourly', 'daily'

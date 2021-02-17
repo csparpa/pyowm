@@ -26,7 +26,7 @@ That's simple: what you need to do is just open a new issue on GitHub.
 
 ## Bug reports - general principles
 In order to allow the community to understand what the bug is, *you should provide as much information as possible* on it.
-Vague or succint bug reports are not useful and will very likely result in follow ups needed.
+Vague or succinct bug reports are not useful and will very likely result in follow ups needed.
 
 *Only bugs related to PyOWM will be addressed*: it might be that you're using PyOWM in a broader context (eg. a webapplication)
 so bugs affecting the broader context are out of scope - unless they are caused in chain to PyOWM issues.
@@ -74,7 +74,7 @@ just run:
 
 `pip install -r dev-requirements.txt`
 
-It is adviced that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/).
+It is advised that you do it on a [virtualenv](https://virtualenv.pypa.io/en/stable/).
 
 ## Guidelines for code branching
 Simple ones:

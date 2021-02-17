@@ -283,8 +283,8 @@ A Trigger is the local proxy for the corresponding entry on the OWM API: Trigger
 `pyowm.alertapi30.alertmanager.AlertManager` instances.
 
 Each Trigger has these attributes:
-  - start_after_millis: _with resepect to the time when the trigger will be crated on the Alert API_, how many milliseconds after should it begin to be checked for conditions matching
-  - end_after_millis: _with resepect to the time when the trigger will be crated on the Alert API_, how many milliseconds after should it end to be checked for conditions matching
+  - start_after_millis: _with respect to the time when the trigger will be created on the Alert API_, how many milliseconds after should it begin to be checked for conditions matching
+  - end_after_millis: _with respect to the time when the trigger will be created on the Alert API_, how many milliseconds after should it end to be checked for conditions matching
   - alerts: a list of `pyowm.alertapi30.alert.Alert` instances, which are the alerts that the trigger has fired so far
   - conditions: a list of `pyowm.alertapi30.condition.Condition` instances
   - area: a list of `pyowm.utils.geo.Geometry` instances, representing the geographic area on which the trigger's conditions need to be checked

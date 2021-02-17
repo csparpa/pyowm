@@ -133,7 +133,7 @@ Soil data is updated twice a day.
 
 This is the real meat in Agro API: the possibility to obtain **satellite imagery** right upon your polygons!
 
-### Overwiew
+### Overview
 
 Satellite Imagery comes in 3 formats:
   - **PNG images**

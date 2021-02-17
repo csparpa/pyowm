@@ -59,7 +59,7 @@ max_sample = coi.get_co_sample_with_highest_vmr()
 min_sample = coi.get_co_sample_with_lowest_vmr()
 ```
 
-If you want to know if a COIndex refers to the future - aka: is a forecast - wth respect to the
+If you want to know if a COIndex refers to the future - aka: is a forecast - with respect to the
 current timestamp, then use the `is_forecast()` method
 
 
@@ -119,7 +119,7 @@ oz.get_reference_time()
 oz.get_reception_time()
 ```
 
-If you want to know if an Ozone measurement refers to the future - aka: is a forecast - wth respect to the
+If you want to know if an Ozone measurement refers to the future - aka: is a forecast - with respect to the
 current timestamp, then use the `is_forecast()` method
 
 
