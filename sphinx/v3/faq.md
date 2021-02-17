@@ -30,7 +30,7 @@ As stated in the documentation home page, OpenWeatherMap API recently "blocked" 
 
 This means that PyOWM might return authorization errors in that case.
 
-This behaviour is not showing if you use API keys issued time ago - unfortunately I have no wasy to be more precise as OWM never stated this officially.
+This behaviour is not showing if you use API keys issued time ago - unfortunately I have no way to be more precise as OWM never stated this officially.
 
 **The proper way to obtain the data you are looking for is to call the "OneCall" PyOWM methods using your API key**
 

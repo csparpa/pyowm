@@ -239,7 +239,7 @@ If you already have PyOWM 2.x installed and want to upgrade to safely update it 
     $ pip install --upgrade pyowm>=2.0,<3.0
 
 
-Get the lastest development version
+Get the latest development version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can install the development trunk with _pip_:

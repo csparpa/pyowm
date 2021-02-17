@@ -92,7 +92,7 @@ class Historian:
 
     def max_temperature(self,  unit='kelvin'):
         """Returns a tuple containing the max value in the temperature
-        series preceeded by its timestamp
+        series preceded by its timestamp
         
         :param unit: the unit of measure for the temperature values. May be
             among: '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
@@ -114,7 +114,7 @@ class Historian:
         
     def min_temperature(self, unit='kelvin'):
         """Returns a tuple containing the min value in the temperature
-        series preceeded by its timestamp
+        series preceded by its timestamp
         
         :param unit: the unit of measure for the temperature values. May be
             among: '*kelvin*' (default), '*celsius*' or '*fahrenheit*'
@@ -157,7 +157,7 @@ class Historian:
     
     def max_humidity(self):
         """Returns a tuple containing the max value in the humidity
-        series preceeded by its timestamp
+        series preceded by its timestamp
 
         :returns: a tuple
         :raises: ValueError when the measurement series is empty
@@ -167,7 +167,7 @@ class Historian:
         
     def min_humidity(self):
         """Returns a tuple containing the min value in the humidity
-        series preceeded by its timestamp
+        series preceded by its timestamp
 
         :returns: a tuple
         :raises: ValueError when the measurement series is empty
@@ -186,7 +186,7 @@ class Historian:
 
     def max_pressure(self):
         """Returns a tuple containing the max value in the pressure
-        series preceeded by its timestamp
+        series preceded by its timestamp
 
         :returns: a tuple
         :raises: ValueError when the measurement series is empty
@@ -196,7 +196,7 @@ class Historian:
         
     def min_pressure(self):
         """Returns a tuple containing the min value in the pressure
-        series preceeded by its timestamp
+        series preceded by its timestamp
 
         :returns: a tuple
         :raises: ValueError when the measurement series is empty
@@ -215,7 +215,7 @@ class Historian:
 
     def max_rain(self):
         """Returns a tuple containing the max value in the rain
-        series preceeded by its timestamp
+        series preceded by its timestamp
 
         :returns: a tuple
         :raises: ValueError when the measurement series is empty
@@ -225,7 +225,7 @@ class Historian:
         
     def min_rain(self):
         """Returns a tuple containing the min value in the rain
-        series preceeded by its timestamp
+        series preceded by its timestamp
 
         :returns: a tuple
         :raises: ValueError when the measurement series is empty
