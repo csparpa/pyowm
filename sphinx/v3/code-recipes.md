@@ -225,7 +225,7 @@ Simply put:
 Both geocoding actions are performed via a `geocoding_manager` object and will require an actual call to be made to the
 OWM API: so please bear that in mind because that will count against your amount of allowed API calls
 
-#### Direct gecocoding of a toponym
+#### Direct geocoding of a toponym
 
 The call is very similar to `ids_for` and `locations_for`.
 
@@ -255,7 +255,7 @@ list_of_locations = mgr.geocode('London', country='GB', limit=3)
 list_of_locations = mgr.geocode('London', country='US', state_code='OH')
 ```
 
-#### Reverse gecocoding of geocoordinates
+#### Reverse geocoding of geocoordinates
 With reverse geocoding you input a lat/lon float couple and retrieve a list all the `Location` objects associated with 
 these coordinates.
 

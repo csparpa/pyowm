@@ -89,7 +89,7 @@ am.delete_alert_for(trigger, alert)
 This is the Alert API object model:
 
   - *Trigger*: collection of alerts to be met over specified areas and within a specified time frame according to specified weather params conditions
-  - *Condition*: rule for matching a weather measuerment with a specified threshold
+  - *Condition*: rule for matching a weather measurement with a specified threshold
   - *Alert*: whenever a condition is met, an alert is created (or updated) and can be polled to verify when it has been met and what the actual weather param value was.
   - *Area*: geographic area over which the trigger is checked
   - *AlertChannel*: as OWM plans to add push-oriented alert channels (eg. push notifications), we need to encapsulate this into a specific class

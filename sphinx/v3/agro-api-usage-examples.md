@@ -32,7 +32,7 @@ Read on to discover what you can do with it.
 
 A polygon represents an area on a map upon which you can issue data queries. Each polygon has a unique ID, an optional
 name and links back to unique OWM ID of the User that owns that polygon. Each polygon has an area that is expressed 
-in hacres, but you can also get it in squared kilometers:
+in acres, but you can also get it in squared kilometers:
 
 ```python
 pol                  # this is a pyowm.agro10.polygon.Polygon instance
@@ -416,7 +416,7 @@ Currently only PNG and GEOTIFF imagery is available
 
 ### Supported color palettes
 Supported color palettes are provided by the `pyowm.agroapi10.enums.PaletteEnum` enumerator which returns strings,
-each one representing a color palette for NDVI imges:
+each one representing a color palette for NDVI images:
 
  ```python
 from pyowm.agroapi10.enums import PaletteEnum

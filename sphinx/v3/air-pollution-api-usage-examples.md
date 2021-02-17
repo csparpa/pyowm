@@ -124,4 +124,4 @@ current timestamp, then use the `is_forecast()` method
 
 
 ### Querying Nitrogen dioxide (NO2) and Sulfur Dioxide (SO2) data
-This works exactly as for O2 adata - please refer to that bit of the docs
+This works exactly as for O2 data - please refer to that bit of the docs
