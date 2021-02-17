@@ -662,6 +662,11 @@ obs_list = mgr.weather_at_places_in_bbox(lon_left, lat_bottom, lon_right, lat_to
 
 ## Weather forecasts
 
+**>>>IMPORTANT NOTE<<<**: OpenWeatherMap has deprecated legacy weather forecasts endpoints, therefore you could get
+errors if you invoke them
+The recommended way to get weather forecasts is now the [*OneCall* API]((#onecall))
+
+
 ### Get forecast on a location
 Just like for observed weather info, you can fetch weather forecast info on a specific toponym.
 As usual, provide toponym + country code for better results.
