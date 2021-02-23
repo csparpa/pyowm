@@ -831,7 +831,7 @@ TBD
 
 Instead of getting a `weather_manager`, get from the main OWM object a `airpollution_manager` and use it
 
-### Getting air polluting concentrations and Air Quality Index on geographic coords 
+### Getting air pollution concentrations and Air Quality Index on geographic coords 
 Air polluting agents concentration can be queried in one shot:
 
 ```python
@@ -855,6 +855,28 @@ air_status.nh3
 air_status.aqi 
 ```
 
+### Getting forecasts for air pollution on geographic coords 
+We can get also get forecasts for air pollution agents concentration and air quality index:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.airpollution_manager()
+
+list_of_forecasts = mgr.air_quality_forecast_at_coords(51.507351, -0.127758)  # London, GB
+
+# Each item in the list_of_forecasts is an AirStatus object 
+for air_status in list_of_forecasts:
+    air_status.co
+    air_status.no
+    air_status.no2
+    air_status.o3
+    air_status.so2
+    air_status.pm2_5
+    air_status.pm10
+    air_status.nh3
+    air_status.aqi  # air quality index
+```
 
 
 <div id="station_measurements"/>

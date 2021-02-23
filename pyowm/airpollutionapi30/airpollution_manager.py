@@ -197,7 +197,7 @@ class AirPollutionManager:
 
     def air_quality_at_coords(self, lat, lon):
         """
-        Queries the OWM AirPollution API for all available air quality indicators around the specified coordinates.
+        Queries the OWM AirPollution API for available air quality indicators around the specified coordinates.
 
         :param lat: the location's latitude, must be between -90.0 and 90.0
         :type lat: int/float
@@ -212,8 +212,32 @@ class AirPollutionManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self.new_ap_client.get_air_pollution(params)
-        air_status = airstatus.AirStatus.from_dict(json_data)
-        return air_status
+        try:
+            return airstatus.AirStatus.from_dict(json_data)
+        except:
+            return None
+
+    def air_quality_forecast_at_coords(self, lat, lon):
+        """
+        Queries the OWM AirPollution API for available forecasted air quality indicators around the specified coordinates.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :return: a `list` of *AirStatus* instances or an empty `list` if data is not available
+        :raises: *ParseResponseException* when OWM AirPollution API responses' data
+            cannot be parsed, *APICallException* when OWM AirPollution API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        params = {'lon': lon, 'lat': lat}
+        json_data = self.new_ap_client.get_forecast_air_pollution(params)
+        try:
+            return airstatus.AirStatus.from_dict(json_data)
+        except:
+            return []
 
     def __repr__(self):
         return '<%s.%s>' % (__name__, self.__class__.__name__)

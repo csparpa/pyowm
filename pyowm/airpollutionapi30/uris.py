@@ -12,3 +12,4 @@ SO2_INDEX_URL = 'so2'
 # current API endpoint
 NEW_ROOT_POLLUTION_API_URL = 'openweathermap.org/data/2.5'
 AIR_POLLUTION_URL = 'air_pollution'
+AIR_POLLUTION_FORECAST_URL = 'air_pollution/forecast'

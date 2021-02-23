@@ -76,40 +76,47 @@ class AirStatus:
     @classmethod
     def from_dict(cls, the_dict):
         """
-        Parses a *AirStatus* instance out of a data dictionary.
+        Parses an *AirStatus* instance or `list` of instances out of a data dictionary.
 
         :param the_dict: the input dictionary
         :type the_dict: `dict`
-        :returns: a *AirStatus* instance or ``None`` if no data is available
+        :returns: a *AirStatus* instance or ``list` of such instances
         :raises: *ParseAPIResponseError* if it is impossible to find or parse the data needed to build the result
 
         """
         if the_dict is None:
             raise exceptions.ParseAPIResponseError('Data is None')
         try:
-
-            item = the_dict['list'][0]
-
-            # -- reference time (strip away Z and T on ISO8601 format)
-            reference_time = item['dt']
-
-            # -- reception time (now)
-            reception_time = timestamps.now('unix')
-
             # -- location
             lon = float(the_dict['coord']['lat'])
             lat = float(the_dict['coord']['lon'])
             place = location.Location(None, lon, lat, None)
 
-            # -- air quality data
-            data = item['components']
-            data['aqi'] = item['main']['aqi']
+            # -- reception time (now)
+            rcp_time = timestamps.now('unix')
+
+            def build_air_status(item_dict, location, reception_time):
+                # -- reference time (strip away Z and T on ISO8601 format)
+                reference_time = item_dict['dt']
+
+                # -- air quality data
+                data = item_dict['components']
+                data['aqi'] = item_dict['main']['aqi']
+
+                return AirStatus(reference_time, location, data, reception_time)
+
+            items = the_dict['list']
+
+            # one datapoint
+            if len(items) == 1:
+                return build_air_status(items[0], place, rcp_time)
+            # multiple datapoints
+            else:
+                return [build_air_status(item, place, rcp_time) for item in items]
 
         except KeyError:
             raise exceptions.ParseAPIResponseError(
                       ''.join([__name__, ': impossible to parse AirStatus']))
-
-        return AirStatus(reference_time, place, data, reception_time)
 
     def to_dict(self):
         """Dumps object to a dictionary

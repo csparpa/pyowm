@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.airpollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL, AIR_POLLUTION_URL
+from pyowm.airpollutionapi30.uris import CO_INDEX_URL, OZONE_URL, NO2_INDEX_URL, SO2_INDEX_URL, AIR_POLLUTION_URL, \
+    AIR_POLLUTION_FORECAST_URL
 from pyowm.utils import formatting
 
 
@@ -162,6 +163,18 @@ class AirPollutionHttpClient:
 
         """
         _, json_data = self._client.get_json(AIR_POLLUTION_URL, params=params_dict)
+        return json_data
+
+    def get_forecast_air_pollution(self, params_dict):
+        """
+        Invokes the new AirPollution API forecast endpoint
+
+        :param params_dict: dict of parameters
+        :returns: a string containing raw JSON data
+        :raises: *ValueError*, *APIRequestError*
+
+        """
+        _, json_data = self._client.get_json(AIR_POLLUTION_FORECAST_URL, params=params_dict)
         return json_data
 
     def __repr__(self):
