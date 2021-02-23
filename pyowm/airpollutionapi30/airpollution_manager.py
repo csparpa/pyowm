@@ -5,7 +5,7 @@ from pyowm.airpollutionapi30 import airpollution_client, coindex, no2index, ozon
 from pyowm.airpollutionapi30.uris import ROOT_POLLUTION_API_URL, NEW_ROOT_POLLUTION_API_URL
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import AIRPOLLUTION_API_VERSION
-from pyowm.utils import geo, decorators
+from pyowm.utils import geo, decorators, formatting, timestamps
 
 
 class AirPollutionManager:
@@ -234,6 +234,43 @@ class AirPollutionManager:
         geo.assert_is_lat(lat)
         params = {'lon': lon, 'lat': lat}
         json_data = self.new_ap_client.get_forecast_air_pollution(params)
+        try:
+            return airstatus.AirStatus.from_dict(json_data)
+        except:
+            return []
+
+    def air_quality_history_at_coords(self, lat, lon, start, end=None):
+        """
+        Queries the OWM AirPollution API for available forecasted air quality indicators around the specified coordinates.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time window
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted string
+        :param end: the object conveying the end value of the search time window. Values in the future will be clipped
+           to the current timestamp. Defaults to the current UNIX timestamp.
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+        :return: a `list` of *AirStatus* instances or an empty `list` if data is not available
+        :raises: *ParseResponseException* when OWM AirPollution API responses' data
+            cannot be parsed, *APICallException* when OWM AirPollution API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        now = timestamps.now(timeformat='unix')
+        assert start is not None
+        start = formatting.timeformat(start, 'unix')
+        if end is None:
+            end = now
+        else:
+            end = formatting.timeformat(end, 'unix')
+            if end > now:
+                end = now
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
+        json_data = self.new_ap_client.get_historical_air_pollution(params)
         try:
             return airstatus.AirStatus.from_dict(json_data)
         except:

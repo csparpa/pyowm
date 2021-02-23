@@ -878,6 +878,36 @@ for air_status in list_of_forecasts:
     air_status.aqi  # air quality index
 ```
 
+### Getting historical air pollution data on geographic coords 
+We can get also get historical values for air pollution agents concentration and air quality index:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.airpollution_manager()
+
+# fetch history from a certain point in time up to now...
+start = 1606223802  # November 24, 2020
+list_of_historical_values = mgr.air_quality_history_at_coords(51.507351, -0.127758, start)  # London, GB
+
+# ...or fetch history on a closed timeframe in the past
+end = 1613864065  # February 20, 2021
+list_of_historical_values = mgr.air_quality_history_at_coords(51.507351, -0.127758, start, end=end)  # London, GB
+
+# Each item in the list_of_historical_values is an AirStatus object 
+for air_status in list_of_historical_values:
+    air_status.co
+    air_status.no
+    air_status.no2
+    air_status.o3
+    air_status.so2
+    air_status.pm2_5
+    air_status.pm10
+    air_status.nh3
+    air_status.aqi  # air quality index
+```
+
+
 
 <div id="station_measurements"/>
 

@@ -33,6 +33,20 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
             self.assertIsNotNone(airstatus.reference_time())
             self.assertIsNotNone(airstatus.location)
 
+    def test_air_quality_history_at_coords(self):
+        """
+        Test feature: get historical air quality data around geo-coordinates.
+        """
+        start = 1606223802  # Tuesday, November 24, 2020
+
+        list_of_airstatuses = self.__owm.air_quality_history_at_coords(45, 9, start)
+        self.assertIsInstance(list_of_airstatuses, list)
+        for airstatus in list_of_airstatuses:
+            self.assertIsNotNone(airstatus.air_quality_data)
+            self.assertIsNotNone(airstatus.reception_time())
+            self.assertIsNotNone(airstatus.reference_time())
+            self.assertIsNotNone(airstatus.location)
+
 
 if __name__ == "__main__":
     unittest.main()

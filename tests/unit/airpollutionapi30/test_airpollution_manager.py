@@ -6,6 +6,7 @@ import unittest
 from pyowm.airpollutionapi30 import airpollution_client, airpollution_manager, coindex, so2index, ozone, no2index, airstatus
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.constants import AIRPOLLUTION_API_VERSION
+from pyowm.utils import timestamps
 from tests.unit.airpollutionapi30.test_ozone import OZONE_JSON
 from tests.unit.airpollutionapi30.test_coindex import COINDEX_JSON
 from tests.unit.airpollutionapi30.test_no2index import NO2INDEX_JSON
@@ -30,6 +31,9 @@ class TestAirPollutionManager(unittest.TestCase):
         return json.loads(AIRSTATUS_JSON)
 
     def mock_get_forecast_air_pollution(self, params_dict):
+        return json.loads(AIRSTATUS_MULTIPLE_JSON)
+
+    def mock_get_historical_air_pollution(self, params_dict):
         return json.loads(AIRSTATUS_MULTIPLE_JSON)
 
     def mock_get_so2_returning_so2index_around_coords(self, params_dict):
@@ -228,6 +232,47 @@ class TestAirPollutionManager(unittest.TestCase):
                           self.__test_instance, -200, 2.5)
         self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_forecast_at_coords, \
                           self.__test_instance, 200, 2.5)
+
+    def test_air_quality_history_at_coords(self):
+        ref_to_original = airpollution_client.AirPollutionHttpClient.get_historical_air_pollution
+        airpollution_client.AirPollutionHttpClient.get_historical_air_pollution = \
+            self.mock_get_historical_air_pollution
+        result = self.__test_instance.air_quality_history_at_coords(45, 9, 12345678)
+        airpollution_client.AirPollutionHttpClient.get_historical_air_pollution = ref_to_original
+        self.assertTrue(isinstance(result, list))
+        for item in result:
+            self.assertIsInstance(item, airstatus.AirStatus)
+            self.assertIsNotNone(item.reference_time)
+            self.assertIsNotNone(item.reception_time())
+            loc = item.location
+            self.assertIsNotNone(loc)
+            self.assertIsNotNone(loc.lat)
+            self.assertIsNotNone(loc.lon)
+            self.assertIsNotNone(item.air_quality_data)
+
+    def test_air_quality_history_at_coords_fails_with_wrong_parameters(self):
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_history_at_coords, \
+                          self.__test_instance, 43.7, -200.0, 12345678, 12349999)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_history_at_coords, \
+                          self.__test_instance, 43.7, 200.0, 12345678, 12349999)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_history_at_coords, \
+                          self.__test_instance, -200, 2.5, 12345678, 12349999)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_history_at_coords, \
+                          self.__test_instance, 200, 2.5, 12345678, 12349999)
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_history_at_coords, \
+                          self.__test_instance, 200, 2.5, 'test')
+        self.assertRaises(ValueError, airpollution_manager.AirPollutionManager.air_quality_history_at_coords, \
+                          self.__test_instance, 200, 2.5, 'test', 'test2')
+
+    def test_air_quality_history_at_coords_clips_end_param_to_current_timestamp(self):
+        now = timestamps.now(timeformat='unix')
+        end = now + 99999999999
+
+        def assert_clipped(obj, params_dict):
+            self.assertEqual(params_dict['end'], now)
+
+        airpollution_client.AirPollutionHttpClient.get_historical_air_pollution = assert_clipped
+        _ = self.__test_instance.air_quality_history_at_coords(45, 9, 12345678, end=end)
 
     def test_repr(self):
         print(self.__test_instance)
