@@ -8,6 +8,7 @@ Table of contents:
   * [Identifying cities and places via city IDs](#identifying_places)
   * [OneCall data](#onecall)
   * [Weather data](#weather_data)
+  * [Air pollution data](#airpollution_data)  
   * [Weather forecasts](#weather_forecasts)
   * [Meteostation historic measurements](#station_measurements)
 
@@ -87,6 +88,10 @@ owm = OWM('your-api-key', config_dict)
 ```
 
 ### Language setting
+The OWM API can be asked to return localized *detailed statuses* for weather data
+In PyOWM this means that you can specify a language and you'll retrieve `Weather` objects having the `detailed_status`
+field localized in that language. Localization is not provided for `status` field instead, so pay attention to that. 
+
 The list of supported languages is given by:
 ```python
 from pyowm.owm import OWM
@@ -101,8 +106,11 @@ English is the default language on the OWM API - but you can change it:
 from pyowm.owm import OWM
 from pyowm.utils.config import get_default_config
 config_dict = get_default_config()
-config_dict['language'] = 'pt'  # your language here, eg. Portuguese
+config_dict['language'] = 'fr'  # your language here, eg. French
 owm = OWM('your-api-key', config_dict)
+mgr = owm.weather_manager()
+observation = mgr.weather_at_place('Paris, FR')
+observation.weather.detailed_status  # Nuageux
 ```
 
 ### Get PyOWM configuration
@@ -122,9 +130,16 @@ version_tuple = (major, minor, patch) = owm.version
 
 <div id="identifying_places"/>
 
-## Identifying cities and places via city IDs
+## Identifying cities and places
 
-### Obtain the city ID registry
+You can easily get the City ID of a known toponym, as well as its geographic coordinates
+Also you can leverage direct/reverse geocoding 
+
+### City IDs
+
+The following calls will not result in any OWM API call in the background, so they will only happen locally to your machine.
+
+#### Obtain the city ID registry
 Use the city ID registry to lookup the ID of a city given its name
 ```python
 from pyowm.owm import OWM
@@ -132,8 +147,8 @@ owm = OWM('your-api-key')
 city_id_registry = owm.city_id_registry()
 ```
 
-### Get the ID of a city given its name
-Don't forget that there is a high probabilty that your city is not unique in the world, and multiple cities with the same name exist in other countries
+#### Get the ID of a city given its name
+Don't forget that there is a high probability that your city is not unique in the world, and multiple cities with the same name exist in other countries
 Therefore specify toponyms and country 2-letter names separated by comma. Eg: if you search for the British `London` you'll likely multiple results: 
 you then should also specify the country (`GB`) to narrow the search only to Great Britain.
 
@@ -157,9 +172,8 @@ list_of_tuples = london = reg.ids_for('LoNdoN', country='GB')                 # 
 and would get the very same results as above.
 
 
-### Get the IDs of cities whose name contain a specific string
-
-In order yo find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
+#### Get the IDs of cities whose name contain a specific string
+In order to find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
 
 In example, let's find IDs for all British cities having the string `london` in their names:
 
@@ -174,7 +188,7 @@ list_of_tuples = reg.ids_for('london', country='GB', matching='like')  # We'll g
                                                                        #            (2643734, 'Londonderry County Borough', 'GB')]
 ```
 
-### Get geographic coordinates of a city given its name
+#### Get geographic coordinates of a city given its name
 Just use call `locations_for` on the registry: this will give you a `Location` object containing lat & lon
 
 Let's find geocoords for Moscow (Russia):
@@ -189,7 +203,7 @@ lat = moscow.lat   # 55.75222
 lon = moscow.lon   # 37.615555
 ```
 
-### Get GeoJSON geometry (point) for a city given its name
+#### Get GeoJSON geometry (point) for a city given its name
 PyOWM encapsulates [GeoJSON](https://pypi.org/project/geojson/) geometry objects that are compliant with the GeoJSON specification.
 
 This means, for example, that you can get a `Point` geometry using the registry. Let's find the geometries for all `Rome` cities in the world:
@@ -201,6 +215,65 @@ reg = owm.city_id_registry()
 list_of_geopoints = reg.geopoints_for('rome')
 ```
 
+### Direct/reverse geocoding
+
+Simply put:
+  - DIRECT GEOCODING: from toponym to geocoords
+  - REVERSE GEOCODING: from geocoords to toponyms
+
+
+Both geocoding actions are performed via a `geocoding_manager` object and will require an actual call to be made to the
+OWM API: so please bear that in mind because that will count against your amount of allowed API calls
+
+#### Direct geocoding of a toponym
+
+The call is very similar to `ids_for` and `locations_for`.
+
+You at least need to specify the toponym name and country ISO code (eg. `GB`, `IT`, `JP`, ...), while if the input 
+toponym is in the United States you should also specify the `state_code` parameter 
+
+The call returns a list of `Location` object instances (in case of no ambiguity, only one item in the list will be returned)
+You can then get the lat/lon from the object instances themselves
+
+Results can be limited with the `limit` parameter
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.geocoding_manager()
+
+# geocode London (no country specified) - we'll get many results
+list_of_locations = mgr.geocode('London')
+a_london = list_of_locations[0]  # taking the first London in the list
+a_london.lat
+a_london.lon 
+
+# geocode London (Great Britain) - we'll get up to three Londons that exist in GB
+list_of_locations = mgr.geocode('London', country='GB', limit=3)
+
+# geocode London (Ohio, United States of America): we'll get all the Londons in Ohio
+list_of_locations = mgr.geocode('London', country='US', state_code='OH')
+```
+
+#### Reverse geocoding of geocoordinates
+With reverse geocoding you input a lat/lon float couple and retrieve a list all the `Location` objects associated with 
+these coordinates.
+
+Results can be limited with the `limit` parameter
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.geocoding_manager()
+
+# London
+lat = 51.5098
+lon = -0.1180
+
+# reverse geocode London
+list_of_locations = mgr.reverse_geocode(lat, lon)  # list contains: City of London, Islington, Lewisham, ...
+```
+
 
 <div id="onecall"/>
 
@@ -208,7 +281,7 @@ list_of_geopoints = reg.geopoints_for('rome')
 
 With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
 
-One Call objects can be thought of as datasets that "photograhp" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
+One Call objects can be thought of as datasets that "photograph" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
 
 It is possible to get:
   - current OneCall data: the "photo" given for today)
@@ -272,7 +345,7 @@ one_call = mgr.one_call(lat=52.5244, lon=13.4105, exclude='minutely,hourly', uni
 # the various units for the different options are shown here: https://openweathermap.org/weather-data
 one_call.current.temperature() # Eg.: 74.07 (deg F)
 
-# the example above does not retrieve minutely or hourly data, so it will not be availabe in the one_call object
+# the example above does not retrieve minutely or hourly data, so it will not be available in the one_call object
 # available exclude options are defined by the One Call API
 # BUT using 'current' will error, as the pyowm one_call requires it
 # as of 2020.08.07 available values are: 'minutely', 'hourly', 'daily'
@@ -403,22 +476,59 @@ Also rain amount is a dict, with keys: `1h` an `3h`, containing the mms of rain 
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-rain_dict = mgr.weather_at_place('Berlin,DE').observation.rain
+rain_dict = mgr.weather_at_place('Berlin,DE').weather.rain
 rain_dict['1h']
 rain_dict['3h']
 ```
 
 ### Get current pressure on a location
-Pressure is similar to rain: you get a dict with keys: `press` (atmospheric pressure on the ground in hPa) and `sea_level` 
-(on the sea level, if location is on the sea)
+Pressure is similar to rain, you get a dict with hPa values and these keys: `press` (atmospheric pressure on the 
+ground, sea level if [no sea level or ground level data](https://openweathermap.org/weather-data)) `sea_level` 
+(on the sea level, if location is on the sea) and `grnd_level`. Note that `press` used below refers to the
+dict value in 
 
 ```python
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 mgr = owm.weather_manager()
-pressure_dict = mgr.weather_at_place('Berlin,DE').observation.pressure
+pressure_dict = mgr.weather_at_place('Berlin,DE').weather.barometric_pressure()
 pressure_dict['press']
 pressure_dict['sea_level']
+pressure_dict['grnd_level']
+```
+
+Pressure values are given in the metric hPa, or hectopascals (1 hPa is equivalent to 100 pascals). You can easily 
+convert these values to inches of mercury, or inHg, which is a unit commonly used in the United States. Similar to above,
+we can do:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+obs = mgr.weather_at_place('Berlin,DE')
+
+# the default unit is hPa
+pressure_dict_unspecified = obs.weather.barometric_pressure()
+pressure_dict_in_hg = obs.weather.barometric_pressure(unit='inHg')
+```
+
+### Get current visibility distance on a location
+You might want to know how clearly you can see objects in Berlin. This is the visibility distance, an average distance
+taken from an Observation object and given in meters. You can also convert this value to kilometers or miles.
+
+```python
+from pyowm.owm import OWM
+
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+obs = mgr.weather_at_place('Berlin,DE')
+
+# the default value provided by our call (in meters)
+visibility = obs.weather.visibility_distance
+
+# kilometers is the default conversion unit
+visibility_in_kms = obs.weather.visibility()
+visibility_in_miles = obs.weather.visibility(unit='miles')
 ```
 
 ### Get today's sunrise and sunset times for a location
@@ -551,6 +661,11 @@ obs_list = mgr.weather_at_places_in_bbox(lon_left, lat_bottom, lon_right, lat_to
 <div id="weather_forecasts"/>
 
 ## Weather forecasts
+
+**>>>IMPORTANT NOTE<<<**: OpenWeatherMap has deprecated legacy weather forecasts endpoints, therefore you could get
+errors if you invoke them
+The recommended way to get weather forecasts is now the [*OneCall* API]((#onecall))
+
 
 ### Get forecast on a location
 Just like for observed weather info, you can fetch weather forecast info on a specific toponym.
@@ -708,6 +823,89 @@ TBD
 
 ### Get forecast on geographic coordinates
 TBD
+
+
+<div id="airpollution_data"/>
+
+## Air pollution data
+
+Instead of getting a `weather_manager`, get from the main OWM object a `airpollution_manager` and use it
+
+### Getting air pollution concentrations and Air Quality Index on geographic coords 
+Air polluting agents concentration can be queried in one shot:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.airpollution_manager()
+
+air_status = mgr.air_quality_at_coords(51.507351, -0.127758)  # London, GB
+
+# you can then get values for all of these air pollutants
+air_status.co
+air_status.no
+air_status.no2
+air_status.o3
+air_status.so2
+air_status.pm2_5
+air_status.pm10
+air_status.nh3
+
+# and for air quality index
+air_status.aqi 
+```
+
+### Getting forecasts for air pollution on geographic coords 
+We can get also get forecasts for air pollution agents concentration and air quality index:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.airpollution_manager()
+
+list_of_forecasts = mgr.air_quality_forecast_at_coords(51.507351, -0.127758)  # London, GB
+
+# Each item in the list_of_forecasts is an AirStatus object 
+for air_status in list_of_forecasts:
+    air_status.co
+    air_status.no
+    air_status.no2
+    air_status.o3
+    air_status.so2
+    air_status.pm2_5
+    air_status.pm10
+    air_status.nh3
+    air_status.aqi  # air quality index
+```
+
+### Getting historical air pollution data on geographic coords 
+We can get also get historical values for air pollution agents concentration and air quality index:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.airpollution_manager()
+
+# fetch history from a certain point in time up to now...
+start = 1606223802  # November 24, 2020
+list_of_historical_values = mgr.air_quality_history_at_coords(51.507351, -0.127758, start)  # London, GB
+
+# ...or fetch history on a closed timeframe in the past
+end = 1613864065  # February 20, 2021
+list_of_historical_values = mgr.air_quality_history_at_coords(51.507351, -0.127758, start, end=end)  # London, GB
+
+# Each item in the list_of_historical_values is an AirStatus object 
+for air_status in list_of_historical_values:
+    air_status.co
+    air_status.no
+    air_status.no2
+    air_status.o3
+    air_status.so2
+    air_status.pm2_5
+    air_status.pm10
+    air_status.nh3
+    air_status.aqi  # air quality index
+```
 
 
 

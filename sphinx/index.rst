@@ -37,6 +37,7 @@ With PyOWM you can interact programmatically with the following OpenWeatherMap w
  - **UV Index API v3.0**, offering data about Ultraviolet exposition
  - **Stations API v3.0**, allowing to create and manage meteostation and publish local weather measurements
  - **Weather Alerts API v3.0**, allowing to set triggers on weather conditions and areas and poll for spawned alerts
+ - **Geocoding API v1.0** allowing to perform direct/reverse geocoding
 
 And you can also get **image tiles** for several map layers provided by OWM
 
@@ -183,6 +184,15 @@ Alerts API examples
 
    v3/alerts-api-usage-examples
 
+Geocoding API examples
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 1
+
+   v3/geocoding-api-usage-examples
+
+
 Map tiles client examples
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 .. toctree::
@@ -229,7 +239,7 @@ If you already have PyOWM 2.x installed and want to upgrade to safely update it 
     $ pip install --upgrade pyowm>=2.0,<3.0
 
 
-Get the lastest development version
+Get the latest development version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can install the development trunk with _pip_:

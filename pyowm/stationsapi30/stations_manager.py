@@ -88,9 +88,8 @@ class StationsManager:
             raise ValueError("'lon' value must be between -180 and 180")
         if lat < -90.0 or lat > 90.0:
             raise ValueError("'lat' value must be between -90 and 90")
-        if alt is not None:
-            if alt < 0.0:
-                raise ValueError("'alt' value must not be negative")
+        if alt is not None and alt < 0.0:
+            raise ValueError("'alt' value must not be negative")
         status, payload = self.http_client.post(
             STATIONS_URI,
             params={'appid': self.API_key},
@@ -163,7 +162,7 @@ class StationsManager:
         :returns: `None` if creation is successful, an exception otherwise
         """
         assert list_of_measurements is not None
-        assert all([m.station_id is not None for m in list_of_measurements])
+        assert all(m.station_id is not None for m in list_of_measurements)
         msmts = [self._structure_dict(m) for m in list_of_measurements]
         status, _ = self.http_client.post(
             MEASUREMENTS_URI,
@@ -235,37 +234,40 @@ class StationsManager:
 
     def _structure_dict(self, measurement):
         d = measurement.to_dict()
-        item = dict()
-        item['station_id'] = d['station_id']
-        item['dt'] = d['timestamp']
-        item['temperature'] = d['temperature']
-        item['wind_speed'] = d['wind_speed']
-        item['wind_gust'] = d['wind_gust']
-        item['wind_deg'] = d['wind_deg']
-        item['pressure'] = d['pressure']
-        item['humidity'] = d['humidity']
-        item['rain_1h'] = d['rain_1h']
-        item['rain_6h'] = d['rain_6h']
-        item['rain_24h'] = d['rain_24h']
-        item['snow_1h'] = d['snow_1h']
-        item['snow_6h'] = d['snow_6h']
-        item['snow_24h'] = d['snow_24h']
-        item['dew_point'] = d['dew_point']
-        item['humidex'] = d['humidex']
-        item['heat_index'] = d['heat_index']
-        item['visibility_distance'] = d['visibility_distance']
-        item['visibility_prefix'] = d['visibility_prefix']
-        item['clouds'] = [dict(distance=d['clouds_distance']),
-                          dict(condition=d['clouds_condition']),
-                          dict(cumulus=d['clouds_cumulus'])]
-        item['weather'] = [
-            dict(precipitation=d['weather_precipitation']),
-            dict(descriptor=d['weather_descriptor']),
-            dict(intensity=d['weather_intensity']),
-            dict(proximity=d['weather_proximity']),
-            dict(obscuration=d['weather_obscuration']),
-            dict(other=d['weather_other'])]
-        return item
+        return {
+            'station_id': d['station_id'],
+            'dt': d['timestamp'],
+            'temperature': d['temperature'],
+            'wind_speed': d['wind_speed'],
+            'wind_gust': d['wind_gust'],
+            'wind_deg': d['wind_deg'],
+            'pressure': d['pressure'],
+            'humidity': d['humidity'],
+            'rain_1h': d['rain_1h'],
+            'rain_6h': d['rain_6h'],
+            'rain_24h': d['rain_24h'],
+            'snow_1h': d['snow_1h'],
+            'snow_6h': d['snow_6h'],
+            'snow_24h': d['snow_24h'],
+            'dew_point': d['dew_point'],
+            'humidex': d['humidex'],
+            'heat_index': d['heat_index'],
+            'visibility_distance': d['visibility_distance'],
+            'visibility_prefix': d['visibility_prefix'],
+            'clouds': [
+                dict(distance=d['clouds_distance']),
+                dict(condition=d['clouds_condition']),
+                dict(cumulus=d['clouds_cumulus']),
+            ],
+            'weather': [
+                dict(precipitation=d['weather_precipitation']),
+                dict(descriptor=d['weather_descriptor']),
+                dict(intensity=d['weather_intensity']),
+                dict(proximity=d['weather_proximity']),
+                dict(obscuration=d['weather_obscuration']),
+                dict(other=d['weather_other']),
+            ],
+        }
 
     def __repr__(self):
         return '<%s.%s>' % (__name__, self.__class__.__name__)

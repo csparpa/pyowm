@@ -37,7 +37,7 @@ class SatelliteImagerySearchResultSet:
         self.query_timestamp = query_timestamp
 
         # parse raw data
-        result = list()
+        result = []
         for the_dict in list_of_dict:
             # common metadata
             acquisition_time = the_dict.get('dt', None)
@@ -180,7 +180,7 @@ class SatelliteImagerySearchResultSet:
 
     def with_preset(self, preset):
         """
-        Returns the seach results having the specified preset
+        Returns the search results having the specified preset
 
         :param preset: the desired image preset (valid values are provided by the
             `pyowm.agroapi10.enums.PresetEnum` enum)

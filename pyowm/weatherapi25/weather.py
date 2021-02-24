@@ -54,6 +54,8 @@ class Weather:
     :type utc_offset: int or None
     :param uvi: UV index
     :type uvi: int, float or None
+    :param precipitation_probability: Probability of precipitation (forecast only)
+    :type precipitation_probability: float or None
     :returns:  a *Weather* instance
     :raises: *ValueError* when negative values are provided for non-negative quantities
 
@@ -63,7 +65,7 @@ class Weather:
                  snow, wind, humidity, pressure, temperature, status,
                  detailed_status, weather_code, weather_icon_name,
                  visibility_distance, dewpoint, humidex, heat_index,
-                 utc_offset=None, uvi=None):
+                 utc_offset=None, uvi=None, precipitation_probability=None):
         if reference_time < 0:
             raise ValueError("'reference_time' must be greater than 0")
         self.ref_time = reference_time
@@ -117,6 +119,12 @@ class Weather:
             raise ValueError("'uvi' must be grater than or equal to 0")
         self.uvi = uvi
 
+        if precipitation_probability is not None and \
+           (precipitation_probability < 0.0 or precipitation_probability > 1.0):
+            raise ValueError("'precipitation_probability' must be between " \
+                             "0.0 and 1.0")
+        self.precipitation_probability = precipitation_probability
+        
     def reference_time(self, timeformat='unix'):
         """Returns the GMT time telling when the weather was measured
 
@@ -206,8 +214,8 @@ class Weather:
         """
         # This is due to the fact that the OWM Weather API responses are mixing
         # absolute temperatures and temperature deltas together
-        to_be_converted = dict()
-        not_to_be_converted = dict()
+        to_be_converted = {}
+        not_to_be_converted = {}
         for label, temp in self.temp.items():
             if temp is None or temp < 0:
                 not_to_be_converted[label] = temp
@@ -216,6 +224,44 @@ class Weather:
         converted = measurables.kelvin_dict_to(to_be_converted, unit)
         return dict(list(converted.items()) +
                     list(not_to_be_converted.items()))
+
+    def barometric_pressure(self, unit='hPa'):
+        """
+        Returns a dict with pressure info
+
+        :param unit: the unit of measure for the temperature values. May be:
+            '*hPa' (default), '*inHg*'
+        :type unit: str
+        :returns: a dict containing pressure values.
+        :raises: ValueError when unknown pressure units are provided
+
+        """
+        if unit == 'hPa':
+            return self.pressure
+        elif unit == 'inHg':
+            return measurables.metric_pressure_dict_to_inhg(self.pressure)
+        else:
+            raise ValueError('Invalid value for target pressure unit')
+
+    def visibility(self, unit='meters'):
+        """
+        Returns a new value for visibility distance with specified unit
+
+        :param unit: the unit of measure for the temperature values. May be:
+            '*meters' (default), '*kilometers*', or '*miles*'
+        :type unit: str
+        :returns: a converted visibility distance value (float)
+        :raises: ValueError when unknown visibility units are provided
+
+        """
+        if unit == 'meters':
+            return self.visibility_distance
+        elif unit == 'kilometers':
+            return measurables.visibility_distance_to(self.visibility_distance, 'kilometers')
+        elif unit == 'miles':
+            return measurables.visibility_distance_to(self.visibility_distance, 'miles')
+        else:
+            raise ValueError('Invalid value for target visibility distance unit')
 
     def weather_icon_url(self, size=""):
         """Returns weather-related icon URL as a string.
@@ -306,7 +352,7 @@ class Weather:
             elif 'distance' in the_dict['visibility']:
                 visibility_distance = the_dict['visibility']['distance']
         elif 'last' in the_dict and 'visibility' in the_dict['last']:
-            if isinstance(the_dict['last']['visibility'], int) or isinstance(the_dict['last']['visibility'], float):
+            if isinstance(the_dict['last']['visibility'], (int, float)):
                 visibility_distance = the_dict['last']['visibility']
             elif 'distance' in the_dict['last']['visibility']:
                 visibility_distance = the_dict['last']['visibility']['distance']
@@ -314,7 +360,7 @@ class Weather:
         # -- clouds
         clouds = 0
         if 'clouds' in the_dict:
-            if isinstance(the_dict['clouds'], int) or isinstance(the_dict['clouds'], float):
+            if isinstance(the_dict['clouds'], (int, float)):
                 clouds = the_dict['clouds']
             elif 'all' in the_dict['clouds']:
                 clouds = the_dict['clouds']['all']
@@ -324,16 +370,16 @@ class Weather:
             the_dict['rain'] = the_dict['precipitation']
 
         # -- rain
-        rain = dict()
+        rain = {}
         if 'rain' in the_dict:
-            if isinstance(the_dict['rain'], int) or isinstance(the_dict['rain'], float):
+            if isinstance(the_dict['rain'], (int, float)):
                 rain = {'all': the_dict['rain']}
             else:
                 if the_dict['rain'] is not None:
                     rain = the_dict['rain'].copy()
 
         # -- wind
-        wind = dict()
+        wind = {}
         if 'wind' in the_dict and the_dict['wind'] is not None:
             wind = the_dict['wind'].copy()
         elif 'last' in the_dict:
@@ -364,9 +410,9 @@ class Weather:
             humidity = 0
 
         # -- snow
-        snow = dict()
+        snow = {}
         if 'snow' in the_dict:
-            if isinstance(the_dict['snow'], int) or isinstance(the_dict['snow'], float):
+            if isinstance(the_dict['snow'], (int, float)):
                 snow = {'all': the_dict['snow']}
             else:
                 if the_dict['snow'] is not None:
@@ -389,9 +435,9 @@ class Weather:
         pressure = {'press': atm_press, 'sea_level': sea_level_press}
 
         # -- temperature
-        temperature = dict()
+        temperature = {}
         if 'temp' in the_dict:
-            if isinstance(the_dict['temp'], int) or isinstance(the_dict['temp'], float):
+            if isinstance(the_dict['temp'], (int, float)):
                 temperature = {
                     'temp': the_dict.get('temp', None)
                 }
@@ -413,7 +459,7 @@ class Weather:
         # add feels_like to temperature if present
         if 'feels_like' in the_dict:
             feels_like = the_dict['feels_like']
-            if isinstance(feels_like, int) or isinstance(feels_like, float):
+            if isinstance(feels_like, (int, float)):
                 temperature['feels_like'] = the_dict.get('feels_like', None)
             elif isinstance(feels_like, dict):
                 for label, temp in feels_like.items():
@@ -432,19 +478,19 @@ class Weather:
             weather_icon_name = ''
 
         # -- timezone
-        if 'timezone' in the_dict:
-            utc_offset = the_dict['timezone']
-        else:
-            utc_offset = None
-
+        utc_offset = the_dict['timezone'] if 'timezone' in the_dict else None
         # -- UV index
         uvi = the_dict.get('uvi', None)
+
+        # -- Precipitation probability
+        precipitation_probability = the_dict.get('pop', None)
 
         return Weather(reference_time, sunset_time, sunrise_time, clouds,
                        rain, snow, wind, humidity, pressure, temperature,
                        status, detailed_status, weather_code, weather_icon_name,
                        visibility_distance, dewpoint, humidex, heat_index,
-                       utc_offset=utc_offset, uvi=uvi)
+                       utc_offset=utc_offset, uvi=uvi,
+                       precipitation_probability=precipitation_probability)
 
     @classmethod
     def from_dict_of_lists(cls, the_dict):
@@ -513,4 +559,5 @@ class Weather:
                 'humidex': self.humidex,
                 'heat_index': self.heat_index,
                 'utc_offset': self.utc_offset,
-                'uvi': self.uvi}
+                'uvi': self.uvi,
+                'precipitation_probability': self.precipitation_probability}

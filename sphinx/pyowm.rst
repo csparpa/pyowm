@@ -10,6 +10,7 @@ Subpackages
     pyowm.alertapi30
     pyowm.commons
     pyowm.airpollutionapi30
+    pyowm.geocodingapi10
     pyowm.stationsapi30
     pyowm.tiles
     pyowm.utils

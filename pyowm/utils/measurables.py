@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-"""
 
-# Temperature coneversion constants
+# Temperature conversion constants
 KELVIN_OFFSET = 273.15
 FAHRENHEIT_OFFSET = 32.0
 FAHRENHEIT_DEGREE_SCALE = 1.8
@@ -10,6 +10,16 @@ FAHRENHEIT_DEGREE_SCALE = 1.8
 MILES_PER_HOUR_FOR_ONE_METER_PER_SEC = 2.23694
 KM_PER_HOUR_FOR_ONE_METER_PER_SEC = 3.6
 KNOTS_FOR_ONE_METER_PER_SEC = 1.94384
+
+# Barometric conversion constants
+HPA_FOR_ONE_INHG = 33.8639
+
+# Visibility distance conversion constants
+MILE_FOR_ONE_METER = 0.000621371
+KMS_FOR_ONE_METER = .001
+
+# Decimal precision
+ROUNDED_TO = 2
 
 
 def kelvin_dict_to(d, target_temperature_unit):
@@ -85,7 +95,7 @@ def metric_wind_dict_to_imperial(d):
         to miles/hour
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             result[key] = value * MILES_PER_HOUR_FOR_ONE_METER_PER_SEC
@@ -105,7 +115,7 @@ def metric_wind_dict_to_km_h(d):
         to km/hour
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             result[key] = value * KM_PER_HOUR_FOR_ONE_METER_PER_SEC
@@ -125,7 +135,7 @@ def metric_wind_dict_to_knots(d):
         to km/hour
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             result[key] = value * KNOTS_FOR_ONE_METER_PER_SEC
@@ -147,7 +157,7 @@ def metric_wind_dict_to_beaufort(d):
         to Beaufort level
 
     """
-    result = dict()
+    result = {}
     for key, value in d.items():
         if key != 'deg':  # do not convert wind degree
             if value <= 0.2:
@@ -180,3 +190,47 @@ def metric_wind_dict_to_beaufort(d):
         else:
             result[key] = value
     return result
+
+
+def metric_pressure_dict_to_inhg(d):
+    """
+    Converts all barometric pressure values in a dict to "inches of mercury."
+
+    :param d: the dictionary containing metric values
+    :type d: dict
+    :returns: a dict with the same keys as the input dict and values converted
+        to "Hg or inHg (inches of mercury)
+
+    Note what OWM says about pressure: "Atmospheric pressure [is given in hPa]
+    (on the sea level, if there is no sea_level or grnd_level data)"
+    """
+    result = dict()
+    for key, value in d.items():
+        if value is None:
+            continue
+        result[key] = round((value / HPA_FOR_ONE_INHG), ROUNDED_TO)
+    return result
+
+
+def visibility_distance_to(v, target_visibility_unit='kilometers'):
+    """
+    Converts visibility distance (in meters) to kilometers or miles
+    Defaults to kilometer conversion
+
+    :param distance: the value of visibility_distance
+    :type distance: int
+    :param target_visibility_unit: the unit of conversion
+    :type target_visibility_unit: str
+    :returns: a converted value for visibility_distance (float)
+    """
+    if v is None:
+        return v
+
+    if target_visibility_unit == 'kilometers':
+        const = KMS_FOR_ONE_METER
+    elif target_visibility_unit == 'miles':
+        const = MILE_FOR_ONE_METER
+    else:
+        raise ValueError('Invalid value for target visibility distance unit')
+
+    return round(v * const, ROUNDED_TO)

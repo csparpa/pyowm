@@ -4,6 +4,9 @@ from setuptools import setup, find_packages
 from pyowm.__version__ import __author__, __author_email__, __description__, __license__, __title__,\
     __url__, __version__
 
+with open('README.md', 'r') as readme:
+    long_description = readme.read()
+
 setup(
     name=__title__,
     version=__version__,
@@ -11,9 +14,9 @@ setup(
     author=__author__,
     author_email=__author_email__,
     url=__url__,
-    packages=find_packages(),
-    long_description="""PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy 
-    consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.""",
+    packages=find_packages(exclude=['tests','tests.*']),
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     include_package_data=True,
     install_requires=[
         'requests>=2.20.0,<3',

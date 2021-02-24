@@ -134,7 +134,7 @@ def to_UNIXtime(timeobject):
 def ISO8601_to_UNIXtime(iso):
     """
     Converts an ISO8601-formatted string in the format
-    ``YYYY-MM-DD HH:MM:SS+00:00`` to the correspondant UNIXtime
+    ``YYYY-MM-DD HH:MM:SS+00:00`` to the correspondent UNIXtime
 
     :param iso: the ISO8601-formatted string
     :type iso: string

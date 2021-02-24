@@ -14,7 +14,8 @@ class CityIDRegistry:
     MATCHINGS = {
         'exact': lambda city_name, toponym: city_name == toponym,
         'nocase': lambda city_name, toponym: city_name.lower() == toponym.lower(),
-        'like': lambda city_name, toponym: city_name.lower() in toponym.lower()
+        'like': lambda city_name, toponym: city_name.lower() in toponym.lower(),
+        'startswith': lambda city_name, toponym: toponym.lower().startswith(city_name.lower())
     }
 
     def __init__(self, filepath_regex):
@@ -50,10 +51,13 @@ class CityIDRegistry:
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
+        :param matching: str. Default is `nocase`. Possible values:
+        `exact` - literal, case-sensitive matching,
+        `nocase` - literal, case-insensitive matching,
+        `like` - matches cities whose name contains, as a substring, the string
+        fed to the function, case-insensitive,
+        `startswith` - matches cities whose names start with the string fed
+        to the function, case-insensitive.
         :raises ValueError if the value for `matching` is unknown
         :return: list of tuples
         """
@@ -79,10 +83,13 @@ class CityIDRegistry:
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
+        :param matching: str. Default is `nocase`. Possible values:
+        `exact` - literal, case-sensitive matching,
+        `nocase` - literal, case-insensitive matching,
+        `like` - matches cities whose name contains, as a substring, the string
+        fed to the function, case-insensitive,
+        `startswith` - matches cities whose names start with the string fed
+        to the function, case-insensitive.
         :raises ValueError if the value for `matching` is unknown
         :return: list of `weatherapi25.location.Location` objects
         """
@@ -109,10 +116,13 @@ class CityIDRegistry:
         :param country: two character str representing the country where to
         search for the city. Defaults to `None`, which means: search in all
         countries.
-        :param matching: str among `exact` (literal, case-sensitive matching),
-        `nocase` (literal, case-insensitive matching) and `like` (matches cities
-        whose name contains as a substring the string fed to the function, no
-        matter the case). Defaults to `nocase`.
+        :param matching: str. Default is `nocase`. Possible values:
+        `exact` - literal, case-sensitive matching,
+        `nocase` - literal, case-insensitive matching,
+        `like` - matches cities whose name contains, as a substring, the string
+        fed to the function, case-insensitive,
+        `startswith` - matches cities whose names start with the string fed
+        to the function, case-insensitive.
         :raises ValueError if the value for `matching` is unknown
         :return: list of `pyowm.utils.geo.Point` objects
         """
@@ -131,7 +141,7 @@ class CityIDRegistry:
         :param matching: str
         :return: list of lists
         """
-        result = list()
+        result = []
 
         # find the right file to scan and extract its lines. Upon "like"
         # matchings, just read all files
@@ -145,14 +155,12 @@ class CityIDRegistry:
         # the specified matching style
         for line in lines:
             tokens = line.split(",")
-            # sometimes city names have an inner comma...
-            if len(tokens) == 6:
-                tokens = [tokens[0]+','+tokens[1], tokens[2], tokens[3],
-                          tokens[4], tokens[5]]
+            # sometimes city names have one or more inner commas
+            if len(tokens) > 5:
+                tokens = [','.join(tokens[:-4]), *tokens[-4:]]
             # check country
-            if country is not None:
-                if tokens[4] != country:
-                    continue
+            if country is not None and tokens[4] != country:
+                continue
 
             # check city_name
             if self._city_name_matches(city_name, tokens[0], matching):
@@ -193,7 +201,7 @@ class CityIDRegistry:
             return lines
 
     def _get_all_lines(self):
-        all_lines = list()
+        all_lines = []
         for city_name in ['a', 'g', 'm', 's']:  # all available city ID files
             filename = self._assess_subfile_from(city_name)
             all_lines.extend(self._get_lines(filename))

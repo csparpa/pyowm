@@ -217,37 +217,33 @@ def next_year(date=None):
 def _timedelta_hours(offset, date=None):
     if date is None:
         return datetime.now(timezone.utc) + timedelta(hours=offset)
-    else:
-        assert isinstance(date, datetime), __name__ + \
-            ": 'date' must be a datetime.datetime object"
-        return date + timedelta(hours=offset)
+    assert isinstance(date, datetime), __name__ + \
+        ": 'date' must be a datetime.datetime object"
+    return date + timedelta(hours=offset)
 
 
 def _timedelta_days(offset, date=None):
     if date is None:
         return datetime.now(timezone.utc) + timedelta(days=offset)
-    else:
-        assert isinstance(date, datetime), __name__ + \
-            ": 'date' must be a datetime.datetime object"
-        return date + timedelta(days=offset)
+    assert isinstance(date, datetime), __name__ + \
+        ": 'date' must be a datetime.datetime object"
+    return date + timedelta(days=offset)
 
 
 def _timedelta_months(offset, date=None):
     if date is None:
         return datetime.now(timezone.utc) + timedelta(days=offset * 30)
-    else:
-        assert isinstance(date, datetime), __name__ + \
-            ": 'date' must be a datetime.datetime object"
-        return date + timedelta(days=offset * 30)
+    assert isinstance(date, datetime), __name__ + \
+        ": 'date' must be a datetime.datetime object"
+    return date + timedelta(days=offset * 30)
 
 
 def _timedelta_years(offset, date=None):
     if date is None:
         return datetime.now(timezone.utc) + timedelta(days=offset * 365)
-    else:
-        assert isinstance(date, datetime), __name__ + \
-            ": 'date' must be a datetime.datetime object"
-        return date + timedelta(days=offset * 365)
+    assert isinstance(date, datetime), __name__ + \
+        ": 'date' must be a datetime.datetime object"
+    return date + timedelta(days=offset * 365)
 
 
 def millis_offset_between_epochs(reference_epoch, target_epoch):

@@ -46,7 +46,7 @@ datapoints that you query against the API come in the form of:
  `stationsapi30.measurement.AggregatedMeasurement` objects.
 
 
-Each `stationsapi30.measurement.Measurement` cointains a reference to the
+Each `stationsapi30.measurement.Measurement` contains a reference to the
 `Station` it belongs to:
 
 ```python

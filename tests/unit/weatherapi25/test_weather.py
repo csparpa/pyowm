@@ -34,6 +34,7 @@ class TestWeather(unittest.TestCase):
     __test_kmh_wind = {'deg': 252.002, 'speed': 3.9600000000000004, 'gust': 7.524}
     __test_humidity = 57
     __test_pressure = {"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}
+    __test_inhg_pressure = {'press': 30.42, 'sea_level': 30.67, 'grnd_level': 30.67}
     __test_temperature = {"temp": 294.199, "temp_kf": -1.899,
                           "temp_max": 296.098, "temp_min": 294.199,
                           "feels_like": 298.0}
@@ -48,9 +49,12 @@ class TestWeather(unittest.TestCase):
     __test_weather_code = 804
     __test_weather_icon_name = "04d"
     __test_visibility_distance = 1000
+    __test_visibility_in_kms = 1
+    __test_visibility_in_miles = .62
     __test_dewpoint = 300.0
     __test_humidex = 298.0
     __test_heat_index = 40.0
+    __test_precipitation_probability = 0.5
 
     __test_instance = Weather(__test_reference_time, __test_sunset_time,
                               __test_sunrise_time, __test_clouds, __test_rain,
@@ -59,7 +63,8 @@ class TestWeather(unittest.TestCase):
                               __test_status, __test_detailed_status,
                               __test_weather_code, __test_weather_icon_name,
                               __test_visibility_distance, __test_dewpoint,
-                              __test_humidex, __test_heat_index)
+                              __test_humidex, __test_heat_index,
+                              precipitation_probability=__test_precipitation_probability)
 
     __bad_json = '{"a": "test", "b": 1.234, "c": [ "hello", "world"] }'
     __bad_json_2 = '{"list": [{"test":"fake"}] }'
@@ -75,7 +80,8 @@ class TestWeather(unittest.TestCase):
                         '{"press": 1030.119, "sea_level": 1038.589, "grnd_level": 1038.773}, ' \
                         '"sunrise_time": 1378449600, "heat_index": 40.0, ' \
                         '"weather_icon_name": "04d", "humidity": 57, "wind": ' \
-                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null, "uvi": null}'
+                        '{"speed": 1.1, "deg": 252.002, "gust": 2.09}, "utc_offset": null, "uvi": null, ' \
+                        '"precipitation_probability": 0.5}'
 
     def test_init_fails_when_wrong_data_provided(self):
         self.assertRaises(ValueError, Weather, -9876543210,
@@ -138,6 +144,26 @@ class TestWeather(unittest.TestCase):
                           self.__test_weather_code, self.__test_weather_icon_name,
                           self.__test_visibility_distance, self.__test_dewpoint,
                           self.__test_humidex, self.__test_heat_index, uvi=-1)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+                          self.__test_sunset_time, self.__test_sunrise_time,
+                          self.__test_clouds, self.__test_rain, self.__test_snow,
+                          self.__test_wind, self.__test_humidity,
+                          self.__test_pressure, self.__test_temperature,
+                          self.__test_status, self.__test_detailed_status,
+                          self.__test_weather_code, self.__test_weather_icon_name,
+                          self.__test_visibility_distance, self.__test_dewpoint,
+                          self.__test_humidex, self.__test_heat_index,
+                          precipitation_probability=-1.0)
+        self.assertRaises(ValueError, Weather, self.__test_reference_time,
+                          self.__test_sunset_time, self.__test_sunrise_time,
+                          self.__test_clouds, self.__test_rain, self.__test_snow,
+                          self.__test_wind, self.__test_humidity,
+                          self.__test_pressure, self.__test_temperature,
+                          self.__test_status, self.__test_detailed_status,
+                          self.__test_weather_code, self.__test_weather_icon_name,
+                          self.__test_visibility_distance, self.__test_dewpoint,
+                          self.__test_humidex, self.__test_heat_index,
+                          precipitation_probability=2.0)
 
     def test_init_when_wind_is_none(self):
         instance = Weather(self.__test_reference_time,
@@ -529,6 +555,29 @@ class TestWeather(unittest.TestCase):
 
     def test_get_wind_fails_with_unknown_units(self):
         self.assertRaises(ValueError, Weather.wind, self.__test_instance, 'xyz')
+
+    def test_barometric_pressure_returning_different_units_for_pressure_values(self):
+        result_imperial_inhg = self.__test_instance.barometric_pressure(unit='inHg')
+        result_metric_hpa = self.__test_instance.barometric_pressure(unit='hPa')
+        result_unspecified = self.__test_instance.barometric_pressure()
+        a = result_metric_hpa == result_unspecified
+        b = result_imperial_inhg == self.__test_inhg_pressure
+        self.assertTrue(a and b)
+
+    def test_barometric_pressure_fails_with_unknown_units(self):
+        self.assertRaises(ValueError, Weather.barometric_pressure, self.__test_instance, 'xyz')
+
+    def test_returning_different_units_for_visibility(self):
+        result_metric_kms = self.__test_instance.visibility(unit='kilometers')
+        result_imperial_miles = self.__test_instance.visibility(unit='miles')
+        result_unspecified = self.__test_instance.visibility()
+        a = self.__test_visibility_distance == result_unspecified
+        b = self.__test_visibility_in_kms == result_metric_kms
+        c = self.__test_visibility_in_miles == result_imperial_miles
+        self.assertTrue(a and b and c)
+
+    def test_visibility_fails_with_unknown_units(self):
+        self.assertRaises(ValueError, Weather.visibility, self.__test_instance, 'xyz')
 
     def test_weather_icon_url(self):
         expected_unspecified = ICONS_BASE_URI % (self.__test_instance.weather_icon_name, "")

@@ -17,7 +17,7 @@ class Buffer:
         assert station_id is not None
         self.station_id = station_id
         self.created_at = timestamps.now(timeformat='unix')
-        self.measurements = list()
+        self.measurements = []
 
     def creation_time(self, timeformat='unix'):
         """Returns the UTC time of creation of this aggregated measurement
@@ -70,7 +70,7 @@ class Buffer:
         Drops all measurements of this buffer instance
 
         """
-        self.measurements = list()
+        self.measurements = []
 
     def sort_chronologically(self):
         """
@@ -90,10 +90,10 @@ class Buffer:
         return len(self.measurements)
 
     def __iter__(self):
-        return (m for m in self.measurements)
+        return iter(self.measurements)
 
     def __add__(self, other):
-        assert all([i.station_id == self.station_id for i in other])
+        assert all(i.station_id == self.station_id for i in other)
         result = copy.deepcopy(self)
         for m in other.measurements:
             result.append(m)

@@ -30,7 +30,9 @@ Abbeville,4568985,34.178169,-82.379013,US
 Abbeville,4829449,31.57184,-85.250488,US
 Bologna,2829449,30.57184,-83.250488,IT"""
     _test_file_contents_with_commas_in_names = """Thalassery,1254780,11.75,75.533333,IN
-Thale, Stadt,6550950,51.7528,11.058,DE"""
+Thale, Stadt,6550950,51.7528,11.058,DE
+Pitcairn,5206361,40.403118,-79.778099,PA
+Pitcairn, Henderson, Ducie and Oeno Islands,4030699,-25.066669,-130.100006,PN"""
 
     test_filelines = [
         'Londinieres,2997784,49.831871,1.40232,FR\n',
@@ -111,6 +113,14 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
             'test', 'test me', 'like'))
         self.assertFalse(self._instance._city_name_matches(
             'foo', 'bar', 'like'))
+        self.assertTrue(self._instance._city_name_matches(
+            'Me', 'test me', 'like'))
+        self.assertTrue(self._instance._city_name_matches(
+            'Test', 'test me', 'startswith'))
+        self.assertFalse(self._instance._city_name_matches(
+            'me', 'test me', 'startswith'))
+        self.assertFalse(self._instance._city_name_matches(
+            'foo', 'bar', 'startswith'))
 
     # tests for IDs retrieval
 
@@ -220,6 +230,23 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
         self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
 
+        # startswith
+        result = self._instance.ids_for("abban", matching='startswith')
+        self.assertEqual(2, len(result))
+        self.assertTrue((3038800, 'Abbans-Dessus', 'FR') in result)
+        self.assertTrue((6452202, 'Abbans-Dessus', 'FR') in result)
+
+        result = self._instance.ids_for("dessus", matching='startswith')
+        self.assertEqual(0, len(result))
+
+        result = self._instance.ids_for("abbe", matching='startswith')
+        self.assertEqual(5, len(result))
+        self.assertTrue((3038789, 'Abbeville', 'FR') in result)
+        self.assertTrue((4568985, 'Abbeville', 'US') in result)
+
+        result = self._instance.ids_for("ville", matching='startswith')
+        self.assertEqual(0, len(result))
+
         CityIDRegistry._get_lines = original_get_lines
         CityIDRegistry._get_all_lines = original_get_all_lines
 
@@ -250,6 +277,54 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         result = self._instance.ids_for("Thale, Stadt")
         self.assertEqual(1, len(result))
         self.assertTrue((6550950, 'Thale, Stadt', 'DE') in result)
+
+        result = self._instance.ids_for("Pitcairn, Henderson, Ducie and Oeno Islands")
+        self.assertEqual(1, len(result))
+        self.assertTrue((4030699, 'Pitcairn, Henderson, Ducie and Oeno Islands', 'PN') in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_ids_for_with_commas_in_city_names_like(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.ids_for("Pitca", matching='like')
+        self.assertTrue((5206361, 'Pitcairn', 'PA') in result)
+        self.assertTrue((4030699, 'Pitcairn, Henderson, Ducie and Oeno Islands', 'PN') in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_ids_for_with_commas_in_city_names_like_country(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.ids_for("Pitc", country='PA',matching='like')
+        self.assertTrue((5206361, 'Pitcairn', 'PA') in result)
+
+        result = self._instance.ids_for("Ducie and Oeno", country='PN',matching='like')
+        self.assertTrue((4030699, 'Pitcairn, Henderson, Ducie and Oeno Islands', 'PN') in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+    
+    def test_ids_for_with_commas_in_city_names_startswith(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.ids_for("Pitc", matching='startswith')
+        self.assertEqual(2, len(result))
+        self.assertTrue((5206361, 'Pitcairn', 'PA') in result)
+        self.assertTrue((4030699, 'Pitcairn, Henderson, Ducie and Oeno Islands', 'PN') in result)
+
+        CityIDRegistry._get_lines = ref_to_original
+    
+    def test_ids_for_with_commas_in_city_names_startswith_country(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.ids_for("Pitc", country="PA", matching='startswith')
+        self.assertEqual(1, len(result))
+        self.assertTrue((5206361, 'Pitcairn', 'PA') in result)
+        self.assertFalse((4030699, 'Pitcairn, Henderson, Ducie and Oeno Islands', 'PN') in result)
 
         CityIDRegistry._get_lines = ref_to_original
 
@@ -330,6 +405,15 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self._assertLocationsEqual(expected1, result[0])
         self._assertLocationsEqual(expected2, result[1])
 
+        # startswith
+        result = self._instance.locations_for("abba", matching='startswith')
+        self.assertEqual(2, len(result))
+        self._assertLocationsEqual(expected1, result[0])
+        self._assertLocationsEqual(expected2, result[1])
+
+        result = self._instance.locations_for("bbans", matching='startswith')
+        self.assertEqual(0, len(result))
+
         CityIDRegistry._get_lines = original_get_lines
         CityIDRegistry._get_all_lines = original_get_all_lines
 
@@ -372,6 +456,60 @@ Thale, Stadt,6550950,51.7528,11.058,DE"""
         self._assertLocationsEqual(
             Location('Thale, Stadt', 11.058, 51.7528, 6550950, 'DE'),
             result[0])
+
+        result = self._instance.locations_for("Pitcairn, Henderson, Ducie and Oeno Islands")
+        self.assertEqual(1, len(result))
+        self._assertLocationsEqual(
+            Location('Pitcairn, Henderson, Ducie and Oeno Islands', -130.100006, -25.066669, 4030699, 'PN'),
+            result[0])
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_locations_for_with_commas_in_city_names_like(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.locations_for("Pitcai", matching="like")
+        self._assertLocationsEqual(result[0], Location('Pitcairn', -79.778099, 40.403118, 5206361, 'PA'))
+        self._assertLocationsEqual(result[1], Location('Pitcairn, Henderson, Ducie and Oeno Islands', -130.100006, -25.066669, 4030699, 'PN'))
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_locations_for_with_commas_in_city_names_like_country(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.locations_for("Pitca", country='PA', matching="like")
+        self._assertLocationsEqual(result[0], Location('Pitcairn', -79.778099, 40.403118, 5206361, 'PA'))
+
+        result = self._instance.locations_for("Ducie", country='PN', matching="like")
+        self._assertLocationsEqual(result[1], Location('Pitcairn, Henderson, Ducie and Oeno Islands', -130.100006, -25.066669, 4030699, 'PN'))
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_locations_for_with_commas_in_city_names_startswith(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.locations_for("Pitcai", matching="startswith")
+        self.assertEqual(2, len(result))
+        self._assertLocationsEqual(result[0], Location('Pitcairn', -79.778099, 40.403118, 5206361, 'PA'))
+        self._assertLocationsEqual(result[1], Location('Pitcairn, Henderson, Ducie and Oeno Islands', -130.100006, -25.066669, 4030699, 'PN'))
+
+        result = self._instance.locations_for("vil", matching="startswith")
+        self.assertEqual(0, len(result))
+
+        CityIDRegistry._get_lines = ref_to_original
+
+    def test_locations_for_with_commas_in_city_names_startswith_country(self):
+        ref_to_original = CityIDRegistry._get_lines
+        CityIDRegistry._get_lines = self._mock_test_file_contents_with_commas_in_names
+
+        result = self._instance.locations_for("Pit", country='PA', matching="startswith")
+        self._assertLocationsEqual(result[0], Location('Pitcairn', -79.778099, 40.403118, 5206361, 'PA'))
+
+        result = self._instance.locations_for("Ducie", country='PN', matching="startswith")
+        self.assertEqual(0, len(result))
 
         CityIDRegistry._get_lines = ref_to_original
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyowm.airpollutionapi30 import airpollution_client, coindex, no2index, ozone, so2index
-from pyowm.airpollutionapi30.uris import ROOT_POLLUTION_API_URL
+from pyowm.airpollutionapi30 import airpollution_client, coindex, no2index, ozone, so2index, airstatus
+from pyowm.airpollutionapi30.uris import ROOT_POLLUTION_API_URL, NEW_ROOT_POLLUTION_API_URL
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import AIRPOLLUTION_API_VERSION
-from pyowm.utils import geo
+from pyowm.utils import geo, decorators, formatting, timestamps
 
 
 class AirPollutionManager:
@@ -29,10 +29,14 @@ class AirPollutionManager:
         self.ap_client = airpollution_client.AirPollutionHttpClient(
             API_key,
             HttpClient(API_key, config, ROOT_POLLUTION_API_URL))
+        self.new_ap_client = airpollution_client.AirPollutionHttpClient(
+            API_key,
+            HttpClient(API_key, config, NEW_ROOT_POLLUTION_API_URL))
 
     def airpollution_api_version(self):
         return AIRPOLLUTION_API_VERSION
 
+    @decorators.deprecated('removed', '4', 'coindex_around_coords')
     def coindex_around_coords(self, lat, lon, start=None, interval=None):
         """
         Queries the OWM AirPollution API for Carbon Monoxide values sampled in the
@@ -72,6 +76,7 @@ class AirPollutionManager:
         coi.interval = interval
         return coi
 
+    @decorators.deprecated('removed', '4', 'ozone_around_coords')
     def ozone_around_coords(self, lat, lon, start=None, interval=None):
         """
         Queries the OWM AirPollution API for Ozone (O3) value in Dobson Units sampled in
@@ -110,6 +115,7 @@ class AirPollutionManager:
         oz.interval = interval
         return oz
 
+    @decorators.deprecated('removed', '4', 'no2index_around_coords')
     def no2index_around_coords(self, lat, lon, start=None, interval=None):
         """
         Queries the OWM AirPollution API for Nitrogen Dioxide values sampled in the
@@ -149,6 +155,7 @@ class AirPollutionManager:
         no2.interval = interval
         return no2
 
+    @decorators.deprecated('removed', '4', 'so2index_around_coords')
     def so2index_around_coords(self, lat, lon, start=None, interval=None):
         """
         Queries the OWM AirPollution API for Sulphur Dioxide values sampled in the
@@ -187,6 +194,87 @@ class AirPollutionManager:
             interval = 'year'
         so2.interval = interval
         return so2
+
+    def air_quality_at_coords(self, lat, lon):
+        """
+        Queries the OWM AirPollution API for available air quality indicators around the specified coordinates.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :return: a *AirStatus* instance or ``None`` if data is not available
+        :raises: *ParseResponseException* when OWM AirPollution API responses' data
+            cannot be parsed, *APICallException* when OWM AirPollution API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        params = {'lon': lon, 'lat': lat}
+        json_data = self.new_ap_client.get_air_pollution(params)
+        try:
+            return airstatus.AirStatus.from_dict(json_data)
+        except:
+            return None
+
+    def air_quality_forecast_at_coords(self, lat, lon):
+        """
+        Queries the OWM AirPollution API for available forecasted air quality indicators around the specified coordinates.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :return: a `list` of *AirStatus* instances or an empty `list` if data is not available
+        :raises: *ParseResponseException* when OWM AirPollution API responses' data
+            cannot be parsed, *APICallException* when OWM AirPollution API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        params = {'lon': lon, 'lat': lat}
+        json_data = self.new_ap_client.get_forecast_air_pollution(params)
+        try:
+            return airstatus.AirStatus.from_dict(json_data)
+        except:
+            return []
+
+    def air_quality_history_at_coords(self, lat, lon, start, end=None):
+        """
+        Queries the OWM AirPollution API for available forecasted air quality indicators around the specified coordinates.
+
+        :param lat: the location's latitude, must be between -90.0 and 90.0
+        :type lat: int/float
+        :param lon: the location's longitude, must be between -180.0 and 180.0
+        :type lon: int/float
+        :param start: the object conveying the start value of the search time window
+        :type start: int, ``datetime.datetime`` or ISO8601-formatted string
+        :param end: the object conveying the end value of the search time window. Values in the future will be clipped
+           to the current timestamp. Defaults to the current UNIX timestamp.
+        :type end: int, ``datetime.datetime`` or ISO8601-formatted string
+        :return: a `list` of *AirStatus* instances or an empty `list` if data is not available
+        :raises: *ParseResponseException* when OWM AirPollution API responses' data
+            cannot be parsed, *APICallException* when OWM AirPollution API can not be
+            reached, *ValueError* for wrong input values
+        """
+        geo.assert_is_lon(lon)
+        geo.assert_is_lat(lat)
+        now = timestamps.now(timeformat='unix')
+        assert start is not None
+        start = formatting.timeformat(start, 'unix')
+        if end is None:
+            end = now
+        else:
+            end = formatting.timeformat(end, 'unix')
+            if end > now:
+                end = now
+
+        params = {'lon': lon, 'lat': lat, 'start': start, 'end': end}
+        json_data = self.new_ap_client.get_historical_air_pollution(params)
+        try:
+            return airstatus.AirStatus.from_dict(json_data)
+        except:
+            return []
 
     def __repr__(self):
         return '<%s.%s>' % (__name__, self.__class__.__name__)

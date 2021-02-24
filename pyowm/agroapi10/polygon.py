@@ -35,7 +35,7 @@ class Polygon:
         if center is not None:
             assert isinstance(center, GeoPoint), 'Polygon center must be a valid geopoint type'
         if area is not None:
-            assert isinstance(area, float) or isinstance(area, int), 'Area must be a numeric type'
+            assert isinstance(area, (float, int)), 'Area must be a numeric type'
             assert area >= 0, 'Area must not be negative'
         self.id = id
         self.name = name

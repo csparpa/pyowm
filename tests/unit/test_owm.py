@@ -7,6 +7,7 @@ from pyowm.agroapi10.agro_manager import AgroManager
 from pyowm.airpollutionapi30.airpollution_manager import AirPollutionManager
 from pyowm.alertapi30.alert_manager import AlertManager
 from pyowm.commons.cityidregistry import CityIDRegistry
+from pyowm.geocodingapi10.geocoding_manager import GeocodingManager
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.tiles.tile_manager import TileManager
 from pyowm.uvindexapi30.uvindex_manager import UVIndexManager
@@ -80,3 +81,8 @@ class TestOWM(unittest.TestCase):
         result = self.__test_instance.tile_manager('test')
         self.assertIsNotNone(result)
         self.assertIsInstance(result, TileManager)
+
+    def test_geocoding_manager(self):
+        result = self.__test_instance.geocoding_manager()
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, GeocodingManager)
