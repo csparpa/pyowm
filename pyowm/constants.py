@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-PYOWM_VERSION = (3, 1, 1)
+PYOWM_VERSION = (3, 2, 0)
 AGRO_API_VERSION = (1, 0, 0)
 AIRPOLLUTION_API_VERSION = (3, 0, 0)
 ALERT_API_VERSION = (3, 0, 0)
