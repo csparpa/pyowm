@@ -89,8 +89,8 @@ owm = OWM('your-api-key', config_dict)
 
 ### Language setting
 The OWM API can be asked to return localized *detailed statuses* for weather data
-In PyOWM this means that you can specify a language and you'll retrieve `Weather` objects having the `detailed_status`
-field localized in that language. Localization is not provided for `status` field instead, so pay attention to that. 
+**In PyOWM this means that you can specify a language and you'll retrieve `Weather` objects having the `detailed_status`
+field localized in that language. Localization is not provided for `status` field instead, so pay attention to that.**
 
 The list of supported languages is given by:
 ```python
