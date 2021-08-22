@@ -15,7 +15,7 @@ pyowm.utils.config module
 pyowm.utils.decorators module
 -----------------------------
 
-.. automodule:: pyowm.utils.config
+.. automodule:: pyowm.utils.decorators
     :members:
     :undoc-members:
     :show-inheritance:

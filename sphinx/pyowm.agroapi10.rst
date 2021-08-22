@@ -64,7 +64,7 @@ pyowm.agroapi10.uris module
 Module contents
 ---------------
 
-.. automodule:: pyowm.alertapi30
+.. automodule:: pyowm.agroapi10
     :members:
     :undoc-members:
     :show-inheritance:

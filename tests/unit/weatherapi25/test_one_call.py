@@ -8,9 +8,10 @@ from pyowm.commons.exceptions import ParseAPIResponseError, APIResponseError
 from pyowm.utils import geo
 from pyowm.weatherapi25.one_call import OneCall
 from pyowm.weatherapi25.weather import Weather
+from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
 
 
-class TestWeather(unittest.TestCase):
+class TestOneCall(unittest.TestCase):
 
     def test_one_call_from_dict(self):
         result = OneCall.from_dict(self.__test_data_bozen)
@@ -34,6 +35,8 @@ class TestWeather(unittest.TestCase):
             self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
             self.assertEqual(dt_daily, weather.reference_time())
             dt_daily += 86400
+        self.assertEqual(1, len(result.national_weather_alerts))
+        self.assertTrue(isinstance(result.national_weather_alerts[0], NationalWeatherAlert))
 
     def test_one_call_historical_from_dict(self):
         result = OneCall.from_dict(self.__test_data_hostorical_bozen)
@@ -1440,6 +1443,18 @@ class TestWeather(unittest.TestCase):
                 "clouds": 31,
                 "rain": 1.92,
                 "uvi": 6.93
+            }
+        ],
+        "alerts": [
+            {
+              "sender_name": "Italian Air Force National Meteorological Service",
+              "event": "Yellow Thunderstorm Warning",
+              "start": 1629626400,
+              "end": 1629658740,
+              "description": 'No Special Awareness Required (DISCLAIMER: "Information provided on METEOALARM for Italy regard only the intensity and recurrence of the phenomena, further details can be found at www.meteoam.it. METEOALARM information do not provide the assessment of impact on the territory and they do not represent the Official Alerts messages that are issued by the National Civil Protection Service www.protezionecivile.it',
+              "tags": [
+                "Thunderstorm"
+                ]
             }
         ]
     }

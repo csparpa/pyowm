@@ -281,7 +281,7 @@ list_of_locations = mgr.reverse_geocode(lat, lon)  # list contains: City of Lond
 
 With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
 
-One Call objects can be thought of as datasets that "photograph" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
+One Call objects can be thought of as datasets that "photograph" observed and forecasted weather for a location: such photos are given for a specific timestamp.
 
 It is possible to get:
   - current OneCall data: the "photo" given for today)
@@ -353,6 +353,25 @@ one_call.current.temperature() # Eg.: 74.07 (deg F)
 one_call.forecast_hourly # empty because it was excluded from the request
 ```
 
+#### Checking available National Weather Alerts for a location
+Many countries have early warning systems in place to notify about upcoming severe weather events/conditions.
+Each alert has a title, a description, start/end timestamps and is tagged with labels.
+You can check if any national alert has been issued for a specific location this way:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+national_weather_alerts = one_call. national_weather_alerts
+
+for alert in national_weather_alerts:
+    alert.sender                      # issuing national authority
+    alert.title                       # brief description
+    alert.description                 # long description
+    alert.start_time()                # start time in UNIX epoch
+    alert.end_time(timeformat='ISO')  # end time in ISO format
+```
 
 
 ### Historical OneCall data
