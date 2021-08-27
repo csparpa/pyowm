@@ -62,7 +62,7 @@ def read_all_cities_into_lists():
                 state = city_dict['state']
             else:
                 state = None
-            t = [city_dict['name'], city_dict['country'], state, city_dict['coord']['lat'], city_dict['coord']['lon']]
+            t = [city_dict['id'], city_dict['name'], city_dict['country'], state, city_dict['coord']['lat'], city_dict['coord']['lon']]
             all_cities.append(t)
     print('... done')
     return all_cities
@@ -171,16 +171,18 @@ def create_db_sqlite(db_path):
     sql_schema_statement = '''
     CREATE TABLE IF NOT EXISTS city (
         id integer NOT NULL PRIMARY KEY,
+        city_id integer NOT NULL,
         name text NOT NULL,
         country text NOT NULL,
         state text,
         lat real NOT NULL,
         lon real NOT NULL
-    );
-    '''
+    );'''
+
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute(sql_schema_statement)
+    conn.commit()
     conn.close()
     print('Created SQLite empty database')
 
@@ -188,7 +190,7 @@ def create_db_sqlite(db_path):
 def populate_db_sqlite(db_path, cities_list):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    cur.executemany('INSERT INTO city (name, country, state, lat, lon) VALUES (?, ?, ?, ?, ?)', cities_list)
+    cur.executemany('INSERT INTO city (city_id, name, country, state, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', cities_list)
     conn.commit()
     conn.close()
     print('Populated SQLite database')
