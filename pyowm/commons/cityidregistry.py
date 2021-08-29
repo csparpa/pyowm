@@ -18,7 +18,6 @@ class CityIDRegistry:
     }
 
     def __init__(self, sqlite_db_path: str):
-        print(sqlite_db_path)
         self.connection = self.__decompress_db_to_memory(sqlite_db_path)
 
     @classmethod
