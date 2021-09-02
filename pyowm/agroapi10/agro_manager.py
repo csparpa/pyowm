@@ -6,7 +6,8 @@ from pyowm.agroapi10.imagery import MetaTile, MetaGeoTiffImage, MetaPNGImage, Sa
 from pyowm.agroapi10.polygon import Polygon, GeoPolygon
 from pyowm.agroapi10.search import SatelliteImagerySearchResultSet
 from pyowm.agroapi10.soil import Soil
-from pyowm.agroapi10.uris import ROOT_AGRO_API, POLYGONS_URI, NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
+from pyowm.agroapi10.uris import ROOT_AGRO_API, ROOT_DOWNLOAD_PNG_API, ROOT_DOWNLOAD_GEOTIFF_API, POLYGONS_URI, \
+    NAMED_POLYGON_URI, SOIL_URI, SATELLITE_IMAGERY_SEARCH_URI
 from pyowm.commons.http_client import HttpClient
 from pyowm.commons.image import Image
 from pyowm.commons.tile import Tile
@@ -33,6 +34,8 @@ class AgroManager:
         self.API_key = API_key
         assert isinstance(config, dict)
         self.http_client = HttpClient(API_key, config, ROOT_AGRO_API)
+        self.geotiff_downloader_http_client = HttpClient(self.API_key, config, ROOT_DOWNLOAD_GEOTIFF_API)
+        self.png_downloader_http_client = HttpClient(self.API_key, config, ROOT_DOWNLOAD_PNG_API)
 
     def agro_api_version(self):
         return AGRO_API_VERSION
@@ -279,14 +282,14 @@ class AgroManager:
         # polygon PNG
         if isinstance(metaimage, MetaPNGImage):
             prepared_url = metaimage.url
-            status, data = self.http_client.get_png(
+            status, data = self.png_downloader_http_client.get_png(
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
             return SatelliteImage(metaimage, img, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)
         # GeoTIF
         elif isinstance(metaimage, MetaGeoTiffImage):
             prepared_url = metaimage.url
-            status, data = self.http_client.get_geotiff(
+            status, data = self.geotiff_downloader_http_client.get_geotiff(
                 prepared_url, params=params)
             img = Image(data, metaimage.image_type)
             return SatelliteImage(metaimage, img, downloaded_on=timestamps.now(timeformat='unix'), palette=palette)

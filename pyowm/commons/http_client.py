@@ -144,8 +144,14 @@ class HttpClient:
             raise exceptions.ParseAPIResponseError('Impossible to parse API response data')
 
     def get_png(self, path, params=None, headers=None):
+        # check URL fromt the metaimage: if it looks like a complete URL, use that one (I know, it's a hack...)
+        try:
+            partial_path = path.split(self.root_uri)[1].lstrip('/')
+        except:
+            partial_path = ''  # fallback so that a 404 is issued
+
         builder = HttpRequestBuilder(self.root_uri, self.api_key, self.config, has_subdomains=self.admits_subdomains)\
-            .with_path(path)\
+            .with_path(partial_path)\
             .with_api_key()\
             .with_language()\
             .with_query_params(params if params is not None else dict())\
@@ -170,8 +176,14 @@ class HttpClient:
                                                           'API response data')
 
     def get_geotiff(self, path, params=None, headers=None):
+        # check URL fromt the metaimage: if it looks like a complete URL, use that one (I know, it's a hack...)
+        try:
+            partial_path = path.split(self.root_uri)[1].lstrip('/')
+        except:
+            partial_path = ''  # fallback so that a 404 is issued
+
         builder = HttpRequestBuilder(self.root_uri, self.api_key, self.config, has_subdomains=self.admits_subdomains)\
-            .with_path(path)\
+            .with_path(partial_path)\
             .with_api_key()\
             .with_language()\
             .with_query_params(params if params is not None else dict())\

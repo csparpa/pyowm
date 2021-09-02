@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 ROOT_AGRO_API = 'agromonitoring.com/agro/1.0'
+ROOT_DOWNLOAD_PNG_API = 'agromonitoring.com/image/1.0'
+ROOT_DOWNLOAD_GEOTIFF_API = 'agromonitoring.com/data/1.0'
 
 # Polygons API subset
 POLYGONS_URI = 'polygons'

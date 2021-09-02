@@ -156,6 +156,8 @@ class TestAgroManager(unittest.TestCase):
     def factory(self, _kls):
         sm = AgroManager('APIKey', DEFAULT_CONFIG)
         sm.http_client = _kls('APIKey', DEFAULT_CONFIG, 'fake-root.com')
+        sm.geotiff_downloader_http_client = _kls('APIKey', DEFAULT_CONFIG, 'fake-data-root.com')
+        sm.png_downloader_http_client = _kls('APIKey', DEFAULT_CONFIG, 'fake-image-root.com')
         return sm
 
     def test_instantiation_with_wrong_params(self):
