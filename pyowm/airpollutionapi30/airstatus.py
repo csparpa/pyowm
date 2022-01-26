@@ -88,8 +88,8 @@ class AirStatus:
             raise exceptions.ParseAPIResponseError('Data is None')
         try:
             # -- location
-            lon = float(the_dict['coord']['lat'])
-            lat = float(the_dict['coord']['lon'])
+            lon = float(the_dict['coord']['lon'])
+            lat = float(the_dict['coord']['lat'])
             place = location.Location(None, lon, lat, None)
 
             # -- reception time (now)
