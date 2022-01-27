@@ -9,6 +9,7 @@ Code
   * [alechewitt](https://github.com/alechewitt)
   * [camponez](https://github.com/camponez)
   * [Darumin](https://github.com/Darumin)
+  * [davidpirogov](https://github.com/davidpirogov)
   * [dev-iks](https://github.com/dev-iks)
   * [dphildebrandt](https://github.com/dphildebrandt)
   * [dstmar](https://github.com/dstmar)
