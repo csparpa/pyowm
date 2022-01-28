@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import requests, sys, os, codecs, json, gzip, bz2, collections, csv, sqlite3
+import requests, sys, os, codecs, json, gzip, bz2, collections, csv, sqlite3, re
 
 
 city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
@@ -52,16 +52,37 @@ def read_all_cities_into_dict():
     return all_cities
 
 
+URL_REGEX = re.compile("""(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])""")
+
+
 def read_all_cities_into_lists():
     print('Reading city data from files ...')
     all_cities = []
     with gzip.open(city_list_gz, "rb", "utf-8") as i:
         cities = json.loads(i.read())
         for city_dict in cities:
+            # check for URLs in city details (see https://github.com/csparpa/pyowm/pull/389)
+            for item in ('name', 'country', 'state'):
+                item_no_url = URL_REGEX.sub('', city_dict[item])
+                if city_dict[item] != item_no_url:
+                    # item contains URL so prompt user for a correction
+                    print(
+                        f'URL detected in entry [ID {city_dict["id"]!r}]'
+                        + f'\n\tKey: {item!r}'
+                        + f'\n\tValue: {city_dict[item]!r}'
+                        + f'\n\tSuggested correction: {item_no_url!r}'
+                    )
+                    prompt = input("Use suggested correction? (Yes, No, Edit) ").lower()
+                    if prompt.startswith('y'):
+                        city_dict[item] = item_no_url
+                    elif prompt.startswith('e'):
+                        city_dict[item] = input('Enter a correction: ')
+
             if city_dict['state'] != '':
                 state = city_dict['state']
             else:
                 state = None
+
             t = [city_dict['id'], city_dict['name'], city_dict['country'], state, city_dict['coord']['lat'], city_dict['coord']['lon']]
             all_cities.append(t)
     print('... done')
