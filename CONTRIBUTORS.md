@@ -45,6 +45,7 @@ Testing
 
 Packaging and Distribution
 --------------------------
+  * [Crozzers](https://github.com/Crozzers)
   * [Diapente](https://github.com/Diapente)
   * [onkelbeh](https://github.com/onkelbeh)
   * [Simone-Zabberoni](https://github.com/Simone-Zabberoni)
