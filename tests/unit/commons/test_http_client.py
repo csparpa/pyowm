@@ -132,6 +132,7 @@ class TestHTTPClient(unittest.TestCase):
         requests.get = monkey_patched_get_timeouting
         config = DEFAULT_CONFIG.copy()
         config['connection']['timeout_secs'] = timeout
+        config['connection']['max_retries'] = None
         try:
             status, data = HttpClient('apikey', config, 'anyurl.com').get_json('/resource')
             self.fail()

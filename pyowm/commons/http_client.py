@@ -3,6 +3,8 @@
 
 import json
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from pyowm.commons import exceptions
 from pyowm.commons.enums import ImageTypeEnum
@@ -119,6 +121,22 @@ class HttpClient:
         assert isinstance(admits_subdomains, bool)
         self.admits_subdomains = admits_subdomains
 
+        if self.config['connection']['max_retries'] is not None:
+            # this adapter tells how to perform retries
+            self.session_adapter = HTTPAdapter(
+                max_retries=Retry(
+                    total=self.config['connection']['max_retries'],
+                    status_forcelist=[429, 500, 502, 503, 504],
+                    method_whitelist=["HEAD", "GET", "PUT", "DELETE", "OPTIONS", "TRACE"]
+                )
+            )
+            # this is the adapted requests client
+            self.http = requests.Session()
+            self.http.mount("https://", self.session_adapter)
+            self.http.mount("http://", self.session_adapter)
+        else:
+            self.http = requests
+
     def get_json(self, path, params=None, headers=None):
         builder = HttpRequestBuilder(self.root_uri, self.api_key, self.config, has_subdomains=self.admits_subdomains)\
             .with_path(path)\
@@ -128,7 +146,7 @@ class HttpClient:
             .with_headers(headers if headers is not None else dict())
         url, params, headers, proxies = builder.build()
         try:
-            resp = requests.get(url, params=params, headers=headers, proxies=proxies,
+            resp = self.http.get(url, params=params, headers=headers, proxies=proxies,
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
@@ -144,8 +162,14 @@ class HttpClient:
             raise exceptions.ParseAPIResponseError('Impossible to parse API response data')
 
     def get_png(self, path, params=None, headers=None):
+        # check URL fromt the metaimage: if it looks like a complete URL, use that one (I know, it's a hack...)
+        try:
+            partial_path = path.split(self.root_uri)[1].lstrip('/')
+        except:
+            partial_path = ''  # fallback so that a 404 is issued
+
         builder = HttpRequestBuilder(self.root_uri, self.api_key, self.config, has_subdomains=self.admits_subdomains)\
-            .with_path(path)\
+            .with_path(partial_path)\
             .with_api_key()\
             .with_language()\
             .with_query_params(params if params is not None else dict())\
@@ -153,7 +177,7 @@ class HttpClient:
             .with_header('Accept', ImageTypeEnum.PNG.mime_type)
         url, params, headers, proxies = builder.build()
         try:
-            resp = requests.get(url, stream=True, params=params, headers=headers, proxies=proxies,
+            resp = self.http.get(url, stream=True, params=params, headers=headers, proxies=proxies,
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
@@ -170,8 +194,14 @@ class HttpClient:
                                                           'API response data')
 
     def get_geotiff(self, path, params=None, headers=None):
+        # check URL fromt the metaimage: if it looks like a complete URL, use that one (I know, it's a hack...)
+        try:
+            partial_path = path.split(self.root_uri)[1].lstrip('/')
+        except:
+            partial_path = ''  # fallback so that a 404 is issued
+
         builder = HttpRequestBuilder(self.root_uri, self.api_key, self.config, has_subdomains=self.admits_subdomains)\
-            .with_path(path)\
+            .with_path(partial_path)\
             .with_api_key()\
             .with_language()\
             .with_query_params(params if params is not None else dict())\
@@ -179,7 +209,7 @@ class HttpClient:
             .with_header('Accept', ImageTypeEnum.GEOTIFF.mime_type)
         url, params, headers, proxies = builder.build()
         try:
-            resp = requests.get(url, stream=True, params=params, headers=headers, proxies=proxies,
+            resp = self.http.get(url, stream=True, params=params, headers=headers, proxies=proxies,
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
@@ -204,7 +234,7 @@ class HttpClient:
             .with_headers(headers if headers is not None else dict())
         url, params, headers, proxies = builder.build()
         try:
-            resp = requests.post(url, params=params, json=data, headers=headers, proxies=proxies,
+            resp = self.http.post(url, params=params, json=data, headers=headers, proxies=proxies,
                                  timeout=self.config['connection']['timeout_secs'],
                                  verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
@@ -230,7 +260,7 @@ class HttpClient:
             .with_headers(headers if headers is not None else dict())
         url, params, headers, proxies = builder.build()
         try:
-            resp = requests.put(url, params=params, json=data, headers=headers, proxies=proxies,
+            resp = self.http.put(url, params=params, json=data, headers=headers, proxies=proxies,
                                 timeout=self.config['connection']['timeout_secs'],
                                 verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:
@@ -256,7 +286,7 @@ class HttpClient:
             .with_headers(headers if headers is not None else dict())
         url, params, headers, proxies = builder.build()
         try:
-            resp = requests.delete(url, params=params, json=data, headers=headers, proxies=proxies,
+            resp = self.http.delete(url, params=params, json=data, headers=headers, proxies=proxies,
                                    timeout=self.config['connection']['timeout_secs'],
                                    verify=self.config['connection']['verify_ssl_certs'])
         except requests.exceptions.SSLError as e:

@@ -8,6 +8,7 @@ import pyowm.commons.exceptions
 from pyowm import owm
 from pyowm.weatherapi25.one_call import OneCall
 from pyowm.weatherapi25.weather import Weather
+from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):
@@ -436,12 +437,16 @@ class IntegrationTestsWebAPI25(unittest.TestCase):
         self.assertEqual(8, len(result.forecast_daily))
         for i, weather in enumerate(result.forecast_daily):
             self.assertTrue(isinstance(weather, Weather), f"entry {i} of forecast_hourly is invalid")
+        if result.national_weather_alerts is not None:
+            self.assertTrue(isinstance(result.national_weather_alerts, list))
+            for alert in result.national_weather_alerts:
+                self.assertTrue(isinstance(alert, NationalWeatherAlert))
 
     def test_one_call_historical(self):
         result = self.__owm.one_call_history(lat=48.8576, lon=2.3377)
         self.assertTrue(isinstance(result, OneCall))
-        self.assertEqual(48.86, result.lat)
-        self.assertEqual(2.34, result.lon)
+        self.assertEqual(48.8576, result.lat)
+        self.assertEqual(2.3377, result.lon)
         self.assertEqual("Europe/Paris", result.timezone)
         self.assertTrue(isinstance(result.current, Weather))
         if result.forecast_hourly is not None:

@@ -35,6 +35,9 @@ class TesDefaultConfig(unittest.TestCase):
         self.assertTrue('timeout_secs' in connection)
         self.assertEqual(5, connection['timeout_secs'])
 
+        self.assertTrue('max_retries' in connection)
+        self.assertEqual(None, connection['max_retries'])
+
         # proxies is a sub-dict, check its keys
         self.assertTrue('proxies' in DEFAULT_CONFIG)
         proxies = DEFAULT_CONFIG['proxies']

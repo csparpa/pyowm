@@ -11,3 +11,11 @@ pyowm.geocodingapi10.geocoding_manager module
     :members:
     :undoc-members:
     :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyowm.geocodingapi10
+    :members:
+    :undoc-members:
+    :show-inheritance:

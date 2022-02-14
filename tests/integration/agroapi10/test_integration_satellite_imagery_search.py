@@ -97,7 +97,6 @@ class IntegrationTestsSatelliteImagerySearch(unittest.TestCase):
                                                   PresetEnum.TRUE_COLOR, None, None, SatelliteEnum.SENTINEL_2.symbol,
                                                   None, 5, 90, None)
         self.assertIsInstance(result_set, list)
-        self.assertEqual(len(result_set), 30)
         self.assertTrue(all([isinstance(i, MetaImage) and
                              i.preset == PresetEnum.TRUE_COLOR and
                              i.image_type == ImageTypeEnum.PNG and

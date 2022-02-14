@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import requests, sys, os, codecs, json, gzip, bz2, collections, csv
+import requests, sys, os, codecs, json, gzip, bz2, collections, csv, sqlite3, re
 
 
 city_list_url = 'http://bulk.openweathermap.org/sample/city.list.json.gz'
@@ -52,6 +52,43 @@ def read_all_cities_into_dict():
     return all_cities
 
 
+URL_REGEX = re.compile("""(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])""")
+
+
+def read_all_cities_into_lists():
+    print('Reading city data from files ...')
+    all_cities = []
+    with gzip.open(city_list_gz, "rb", "utf-8") as i:
+        cities = json.loads(i.read())
+        for city_dict in cities:
+            # check for URLs in city details (see https://github.com/csparpa/pyowm/pull/389)
+            for item in ('name', 'country', 'state'):
+                item_no_url = URL_REGEX.sub('', city_dict[item])
+                if city_dict[item] != item_no_url:
+                    # item contains URL so prompt user for a correction
+                    print(
+                        f'URL detected in entry [ID {city_dict["id"]!r}]'
+                        + f'\n\tKey: {item!r}'
+                        + f'\n\tValue: {city_dict[item]!r}'
+                        + f'\n\tSuggested correction: {item_no_url!r}'
+                    )
+                    prompt = input("Use suggested correction? (Yes, No, Edit) ").lower()
+                    if prompt.startswith('y'):
+                        city_dict[item] = item_no_url
+                    elif prompt.startswith('e'):
+                        city_dict[item] = input('Enter a correction: ')
+
+            if city_dict['state'] != '':
+                state = city_dict['state']
+            else:
+                state = None
+
+            t = [city_dict['id'], city_dict['name'], city_dict['country'], state, city_dict['coord']['lat'], city_dict['coord']['lon']]
+            all_cities.append(t)
+    print('... done')
+    return all_cities
+
+
 def order_dict_by_city_id(all_cities):
     print('Ordering city dict by city ID ...')
     all_cities_ordered = collections.OrderedDict(sorted(all_cities.items()))
@@ -62,6 +99,7 @@ def order_dict_by_city_id(all_cities):
 def city_to_string(city_id, city_dict):
     return ','.join([city_dict['name'], str(city_id), str(city_dict['lat']), str(city_dict['lon']),
                      city_dict['country']])
+
 
 def split_keyset(cities_dict):
     print('Splitting keyset of %d city names into 4 subsets based on the initial letter:' % (len(cities_dict),))
@@ -133,8 +171,8 @@ def bz2_all(outdir):
                       '%s%s115-122.txt.bz2' % (outdir, os.sep))
 
 
-if __name__ == '__main__':
-    target_folder = os.path.abspath(sys.argv[1])
+def generate_city_id_gz_files(target_path='.'):
+    target_folder = os.path.abspath(target_path)
     print('Will save output files to folder: %s' % (target_folder,))
     print('Job started')
     download_the_files()
@@ -144,4 +182,60 @@ if __name__ == '__main__':
     write_subsets_to_files(ssets, target_folder)
     bz2_all(target_folder)
     print('Job finished')
+
+
+# SQLite
+
+def create_db_sqlite(db_path):
+    with open(db_path, 'w') as _:
+        pass
+    sql_schema_statement = '''
+    CREATE TABLE IF NOT EXISTS city (
+        id integer NOT NULL PRIMARY KEY,
+        city_id integer NOT NULL,
+        name text NOT NULL,
+        country text NOT NULL,
+        state text,
+        lat real NOT NULL,
+        lon real NOT NULL
+    );'''
+
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(sql_schema_statement)
+    conn.commit()
+    conn.close()
+    print('Created SQLite empty database')
+
+
+def populate_db_sqlite(db_path, cities_list):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.executemany('INSERT INTO city (city_id, name, country, state, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', cities_list)
+    conn.commit()
+    conn.close()
+    print('Populated SQLite database')
+
+
+def generate_sqlite_db(target_path='.'):
+    DB_NAME = 'cities.db'
+    target_folder = os.path.abspath(target_path)
+    db_path = target_folder + os.path.sep + DB_NAME
+    print('Will save output SQLite DB to folder: %s' % (target_folder,))
+    print('Job started')
+    download_the_files()
+    cities = read_all_cities_into_lists()
+    create_db_sqlite(db_path)
+    populate_db_sqlite(db_path, cities)
+    print('Job finished')
+    print("********  DON'T FORGET TO MANUALLY BZ2 COMPRESS THE DB !!!  ******** ")
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        target_path = sys.argv[1]
+    else:
+        target_path = '.'
+    #generate_city_id_gz_files(target_path)
+    generate_sqlite_db()
 

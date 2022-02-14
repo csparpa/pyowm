@@ -42,10 +42,26 @@ pyowm.weatherapi25.location module
     :undoc-members:
     :show-inheritance:
 
+pyowm.weatherapi25.national_weather_alert module
+------------------------------------------------
+
+.. automodule:: pyowm.weatherapi25.national_weather_alert
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyowm.weatherapi25.observation module
 -------------------------------------
 
 .. automodule:: pyowm.weatherapi25.observation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyowm.weatherapi25.one_call module
+----------------------------------
+
+.. automodule:: pyowm.weatherapi25.one_call
     :members:
     :undoc-members:
     :show-inheritance:
@@ -57,6 +73,15 @@ pyowm.weatherapi25.stationhistory module
     :members:
     :undoc-members:
     :show-inheritance:
+
+pyowm.weatherapi25.uris module
+------------------------------
+
+.. automodule:: pyowm.weatherapi25.uris
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 pyowm.weatherapi25.weather module
 ---------------------------------

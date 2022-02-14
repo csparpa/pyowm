@@ -16,9 +16,10 @@ The config dict is formatted as follows:
     "language": <str>,
     "connection": {
         "use_ssl": <bool>
-        "verify_ssl_certs": <bool>>,
+        "verify_ssl_certs": <bool>,
         "use_proxy": <bool>,
-        "timeout_secs": <int>
+        "timeout_secs": <int>,
+        "max_retries": <int>|<None>
     },
     "proxies": {
         "http": <str>,
@@ -36,6 +37,7 @@ Here are the keys:
     * `verify_ssl_certs`: speaks by itself..
     * `use_proxy`: whether to use a proxy server or not (useful if you're eg. in a corporate network). HTTP and SOCKS5 proxies are allowed
     * `timeout_secs`: after how many seconds the API calls should be timeouted
+    * `max_retries`: how many times PyOWM should retry to call the API if it responds with an error or timeouts. Defaults to `None`, which means: call forever.
   * `proxies` (this sub-dict is ignored if `use_proxy == False`)
     * `http`: the HTTP URL of the proxy server
     * `https`: the HTTPS/SOCKS5 URL of the proxy server

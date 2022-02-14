@@ -11,3 +11,4 @@ tox
 tox-travis
 virtualenv
 twine
+urllib3>=1.26.5

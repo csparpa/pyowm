@@ -5,6 +5,7 @@
     "connection": {
         "use_ssl": true,
         "verify_ssl_certs": true,
-        "timeout_secs": 1
+        "timeout_secs": 1,
+        "max_retries": null
     }
 }

@@ -89,8 +89,8 @@ owm = OWM('your-api-key', config_dict)
 
 ### Language setting
 The OWM API can be asked to return localized *detailed statuses* for weather data
-In PyOWM this means that you can specify a language and you'll retrieve `Weather` objects having the `detailed_status`
-field localized in that language. Localization is not provided for `status` field instead, so pay attention to that. 
+**In PyOWM this means that you can specify a language and you'll retrieve `Weather` objects having the `detailed_status`
+field localized in that language. Localization is not provided for `status` field instead, so pay attention to that.**
 
 The list of supported languages is given by:
 ```python
@@ -140,17 +140,54 @@ Also you can leverage direct/reverse geocoding
 The following calls will not result in any OWM API call in the background, so they will only happen locally to your machine.
 
 #### Obtain the city ID registry
-Use the city ID registry to lookup the ID of a city given its name
+As easy as:
+
 ```python
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
-city_id_registry = owm.city_id_registry()
+reg = owm.city_id_registry()
 ```
 
 #### Get the ID of a city given its name
-Don't forget that there is a high probability that your city is not unique in the world, and multiple cities with the same name exist in other countries
-Therefore specify toponyms and country 2-letter names separated by comma. Eg: if you search for the British `London` you'll likely multiple results: 
-you then should also specify the country (`GB`) to narrow the search only to Great Britain.
+Once you've got it, use the city ID registry to lookup the ID of a city given its name:
+
+```python
+list_of_tuples = london = reg.ids_for('London', matching='like')
+print(list_of_tuples)     # This will give something like: 
+                          # [ (2643743, 'London', 'GB', None, 51.50853, -0.12574),  
+                          #   (1006984, 'East London', 'ZA', None, -33.015289, 27.911619),
+                          #   (1644003, 'Glondong', 'ID', None, -6.7924, 111.891602), 
+                          #   ... ]
+```
+
+**This call searches for all the places that contain the string `'London'` in their names, in any part of the world**. 
+This is because the search matching criterion we've used is `like` (this is the default one, if you don't specify it)
+
+The other available matching criterion is `exact`, which retrieves all places having exactly `'London'` as their name,
+in any part of the world (be careful that this operation is case-sensitive !)
+
+Let's try to search for the same city with an exact match:
+
+```python
+list_of_tuples = london = reg.ids_for('London', matching='exact')
+print(list_of_tuples)     # This will give something like: 
+                          # [ (2643743, 'London', 'GB', None, 51.50853, -0.12574),  
+                          #   (4119617, 'London', 'US', 'AR', 35.328972, -93.25296),
+                          #   (4298960, 'London', 'US', 'KY', 37.128979, -84.08326)
+                          #   ... ]
+```
+
+As you can see, all results are exactly named `'London'`. 
+
+All the above searches give you back a list of tuples: each tuple is in the format `(city_id, name, country, state, lat, lon)` (fields as
+self-explanatory).
+
+
+### City disambiguation
+As you might have guessed, there is a high probability that your city is not unique in the world, and multiple cities with the same name exist in other countries
+Therefore: whenever you search for a specific city in a specific country then also pass in the 2-letter country name and - even further - also specify a 2-letter state name if you're searching for places in the United States.
+
+Eg: if you search for the British `London` you'll get multiple results. You then should also specify the country (`GB`) in order to narrow the search only to Great Britain.
 
 Let's search for it:
 
@@ -158,49 +195,43 @@ Let's search for it:
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
-list_of_tuples = london = reg.ids_for('London')                               # lots of results
-list_of_tuples = london = reg.ids_for('London', country='GB')                 # only one: [ (2643743,, 'London, GB') ]
-id_of_london_city = list_of_tuples[0][0]
+list_of_tuples = reg.ids_for('London', matching='exact')                 # lots of results, spread all over the world
+list_of_tuples = reg.ids_for('London', country='GB', matching='exact')   # only one: [(2643743, 'London', 'GB', None, 51.50853, -0.12574)]
+london_gb = list_of_tuples[0]
+id_of_lonfon_gb = london_gb[0]                                           # ID of London, GB
 ```
 
-The search here was by default case insensitive: you could have tried
-
-```python
-list_of_tuples = london = reg.ids_for('london', country='GB')                 # notice the lowercase
-list_of_tuples = london = reg.ids_for('LoNdoN', country='GB')                 # notice the camelcase
-```
-and would get the very same results as above.
-
-
-#### Get the IDs of cities whose name contain a specific string
-In order to find all cities with names having your string as a substring you need to use the optional parameter `matching='like'`
-
-In example, let's find IDs for all British cities having the string `london` in their names:
+Whenever searching cities in the US, you'd better also specify the relevant US-state.
+For instance, `'Ontario'` is a city in Canada and multiple aliases exist in different US-states:
 
 ```python
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
-list_of_tuples = reg.ids_for('london', country='GB', matching='like')  # We'll get [(2643741, 'City of London', 'GB'), 
-                                                                       #            (2648110, 'Greater London', 'GB'), 
-                                                                       #            (7535661, 'London Borough of Harrow', 'GB'),
-                                                                       #            (2643743, 'London', 'GB'),
-                                                                       #            (2643734, 'Londonderry County Borough', 'GB')]
+
+# All Ontario cities in the uS
+ontarios_in_us = reg.ids_for('Ontario', country='US', matching='exact')  # five results
+
+# Ontario in Canade
+ontario_in_canada = reg.ids_for('Ontario', country='CA', matching='exact')  # one result: [(6093943, 'Ontario', 'CA', None, 49.250141, -84.499832)]
+
+# Ontario in the state of New York
+ontario_in_ny = reg.ids_for('Ontario', country='US', state='NY', matching='exact')  # one result: [(5129887, 'Ontario', 'US', 'NY', 43.220901, -77.283043)]
 ```
 
 #### Get geographic coordinates of a city given its name
 Just use call `locations_for` on the registry: this will give you a `Location` object containing lat & lon
 
-Let's find geocoords for Moscow (Russia):
+Let's find geocoords for Tokyo (Japan):
 
 ```python
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
-list_of_locations = reg.locations_for('moscow', country='RU')
-moscow = list_of_locations[0]
-lat = moscow.lat   # 55.75222
-lon = moscow.lon   # 37.615555
+list_of_locations = reg.locations_for('Tokyo', country='JP', matching='exact')
+tokyo = list_of_locations[0]
+lat = tokyo.lat   # 35.689499
+lon = tokyo.lon   # 139.691711
 ```
 
 #### Get GeoJSON geometry (point) for a city given its name
@@ -212,7 +243,7 @@ This means, for example, that you can get a `Point` geometry using the registry.
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
 reg = owm.city_id_registry()
-list_of_geopoints = reg.geopoints_for('rome')
+list_of_geopoints = reg.geopoints_for('Rome', matching='exact')
 ```
 
 ### Direct/reverse geocoding
@@ -281,7 +312,7 @@ list_of_locations = mgr.reverse_geocode(lat, lon)  # list contains: City of Lond
 
 With the OneCall Api you can get the current weather, hourly forecast for the next 48 hours and the daily forecast for the next seven days in one call.
 
-One Call objects can be thought of as datasets that "photograph" of observed and forecasted weather data for a location: such photos are given for a specific timestamp.
+One Call objects can be thought of as datasets that "photograph" observed and forecasted weather for a location: such photos are given for a specific timestamp.
 
 It is possible to get:
   - current OneCall data: the "photo" given for today)
@@ -353,6 +384,25 @@ one_call.current.temperature() # Eg.: 74.07 (deg F)
 one_call.forecast_hourly # empty because it was excluded from the request
 ```
 
+#### Checking available National Weather Alerts for a location
+Many countries have early warning systems in place to notify about upcoming severe weather events/conditions.
+Each alert has a title, a description, start/end timestamps and is tagged with labels.
+You can check if any national alert has been issued for a specific location this way:
+
+```python
+from pyowm.owm import OWM
+owm = OWM('your-api-key')
+mgr = owm.weather_manager()
+one_call = mgr.one_call(lat=52.5244, lon=13.4105)
+national_weather_alerts = one_call. national_weather_alerts
+
+for alert in national_weather_alerts:
+    alert.sender                      # issuing national authority
+    alert.title                       # brief description
+    alert.description                 # long description
+    alert.start_time()                # start time in UNIX epoch
+    alert.end_time(timeformat='ISO')  # end time in ISO format
+```
 
 
 ### Historical OneCall data

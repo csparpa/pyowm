@@ -3,6 +3,7 @@ from typing import Union, Optional
 from pyowm.commons import exceptions
 from pyowm.utils import geo
 from pyowm.weatherapi25.weather import Weather
+from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
 
 
 class OneCall:
@@ -12,9 +13,10 @@ class OneCall:
                  lon: Union[int, float],
                  timezone: str,
                  current: Weather,
-                 forecast_minutely:Optional[Weather] = None,
-                 forecast_hourly:Optional[Weather] = None,
-                 forecast_daily: Optional[Weather] = None
+                 forecast_minutely: Optional[Weather] = None,
+                 forecast_hourly: Optional[Weather] = None,
+                 forecast_daily: Optional[Weather] = None,
+                 national_weather_alerts: Optional[list] = None
                  ) -> None:
         geo.assert_is_lat(lat)
         self.lat = lat
@@ -30,6 +32,7 @@ class OneCall:
         self.forecast_minutely = forecast_minutely
         self.forecast_hourly = forecast_hourly
         self.forecast_daily = forecast_daily
+        self.national_weather_alerts = national_weather_alerts
 
     def __repr__(self):
         return "<%s.%s - lat=%s, lon=%s, retrieval_time=%s>" % (
@@ -92,6 +95,10 @@ class OneCall:
         except KeyError:
             raise exceptions.ParseAPIResponseError(f"{__name__}: impossible to read weather info from input data")
 
+        alerts = None
+        if 'alerts' in the_dict:
+            alerts = [NationalWeatherAlert.from_dict(item) for item in the_dict['alerts']]
+
         return OneCall(
             lat=the_dict.get("lat", None),
             lon=the_dict.get("lon", None),
@@ -99,5 +106,6 @@ class OneCall:
             current=current,
             forecast_minutely=minutely,
             forecast_hourly=hourly,
-            forecast_daily=daily
+            forecast_daily=daily,
+            national_weather_alerts=alerts
         )
