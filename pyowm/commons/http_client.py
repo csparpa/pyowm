@@ -154,7 +154,7 @@ class HttpClient:
         except requests.exceptions.ConnectionError as e:
             raise exceptions.InvalidSSLCertificateError(str(e))
         except requests.exceptions.Timeout:
-            raise exceptions.TimeoutError('API call timeouted')
+            raise exceptions.TimeoutError('API call timed out')
         HttpClient.check_status_code(resp.status_code, resp.text)
         try:
             return resp.status_code, resp.json()
