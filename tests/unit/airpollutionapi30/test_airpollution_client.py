@@ -26,7 +26,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
                           '2016Z')
         self.assertRaises(ValueError, self.__instance._trim_to,
                           ts, 'abcdef')
-
+    '''
     def test_get_coi(self):
 
         # case: current CO index
@@ -136,7 +136,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
 
         self.__instance._client.get_json = backup_f
 
-    '''
+
     def test_get_no2(self):
 
         # case: current NO2 index
