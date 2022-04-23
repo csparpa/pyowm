@@ -136,6 +136,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
 
         self.__instance._client.get_json = backup_f
 
+    '''
     def test_get_no2(self):
 
         # case: current NO2 index
@@ -245,6 +246,7 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         self.assertEqual(expected_url, result)
 
         self.__instance._client.get_json = backup_f
+    '''
 
     def test_repr(self):
         print(self.__instance)
