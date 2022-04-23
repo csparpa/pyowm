@@ -32,10 +32,11 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         # case: current CO index
         params = {'lon': 8.25, 'lat': 43.75, 'start': None, 'interval': None}
 
-        def mock_func(uri, params=None, headers=None):
+        def mocked_f(uri, params=None, headers=None):
             return 200, uri
 
-        self.__instance._client.get_json = mock_func
+        backup_f = self.__instance._client.get_json
+        self.__instance._client.get_json = mocked_f
 
         expected_url = 'co/43.75,8.25/current.json'
         result = self.__instance.get_coi(params)
@@ -79,14 +80,17 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_coi(params)
         self.assertEqual(expected_url, result)
 
+        self.__instance._client.get_json = backup_f
+
     def test_get_o3(self):
         # case: current O3 index
         params = {'lon': 8.25, 'lat': 43.75, 'start': None, 'interval': None}
 
-        def mock_func(uri, params=None, headers=None):
+        def mocked_f(uri, params=None, headers=None):
             return 200, uri
 
-        self.__instance._client.get_json = mock_func
+        backup_f = self.__instance._client.get_json
+        self.__instance._client.get_json = mocked_f
 
         expected_url = 'o3/43.75,8.25/current.json'
         result = self.__instance.get_o3(params)
@@ -130,15 +134,18 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_o3(params)
         self.assertEqual(expected_url, result)
 
+        self.__instance._client.get_json = backup_f
+
     def test_get_no2(self):
 
         # case: current NO2 index
         params = {'lon': 8.25, 'lat': 43.75, 'start': None, 'interval': None}
 
-        def mock_func(uri, params=None, headers=None):
+        def mocked_f(uri, params=None, headers=None):
             return 200, uri
 
-        self.__instance._client.get_json = mock_func
+        backup_f = self.__instance._client.get_json
+        self.__instance._client.get_json = mocked_f
 
         expected_url = 'no2/43.75,8.25/current.json'
         result = self.__instance.get_no2(params)
@@ -182,15 +189,18 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         result = self.__instance.get_no2(params)
         self.assertEqual(expected_url, result)
 
+        self.__instance._client.get_json = backup_f
+
     def test_get_so2(self):
 
         # case: current SO2 index
         params = {'lon': 8.25, 'lat': 43.75, 'start': None, 'interval': None}
 
-        def mock_func(uri, params=None, headers=None):
+        def mocked_f(uri, params=None, headers=None):
             return 200, uri
 
-        self.__instance._client.get_json = mock_func
+        backup_f = self.__instance._client.get_json
+        self.__instance._client.get_json = mocked_f
 
         expected_url = 'so2/43.75,8.25/current.json'
         result = self.__instance.get_so2(params)
@@ -233,6 +243,8 @@ class TestAirPollutionHttpClient(unittest.TestCase):
         expected_url = 'so2/43.75,8.25/2016Z.json'
         result = self.__instance.get_so2(params)
         self.assertEqual(expected_url, result)
+
+        self.__instance._client.get_json = backup_f
 
     def test_repr(self):
         print(self.__instance)
