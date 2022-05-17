@@ -28,11 +28,7 @@ class TestNationalWeatherAlert(unittest.TestCase):
                                        'for the development of very heavy / heavy persistent rain.", "tags": ["Rain"]}'
 
     def test_init_failures(self):
-        self.assertRaises(AssertionError, NationalWeatherAlert, None, self.__test_title, self.__test_description,
-                          self.__test_time_start, self.__test_time_end)
         self.assertRaises(AssertionError, NationalWeatherAlert, self.__test_sender, None, self.__test_description,
-                          self.__test_time_start, self.__test_time_end)
-        self.assertRaises(AssertionError, NationalWeatherAlert, self.__test_sender, self.__test_title, None,
                           self.__test_time_start, self.__test_time_end)
         self.assertRaises(AssertionError, NationalWeatherAlert, self.__test_sender, self.__test_title, self.__test_description,
                           None, self.__test_time_end)

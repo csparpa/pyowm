@@ -30,9 +30,7 @@ class NationalWeatherAlert:
     :raises: *ValueError* if any parameter has wrong type
     """
     def __init__(self, sender, title, description, start_time, end_time, tags=None):
-        assert sender, 'Event sender name must be specified'
         assert title, 'Event title must be specified'
-        assert description, 'Event description must be specified'
         assert start_time, 'Event start time must be specified'
         assert end_time, 'Event end time must be specified'
 
