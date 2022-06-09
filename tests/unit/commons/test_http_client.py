@@ -10,6 +10,10 @@ from pyowm.commons.enums import SubscriptionTypeEnum
 from pyowm.commons.http_client import HttpClient, HttpRequestBuilder
 
 
+class MyTestFailedException(Exception):
+    pass
+
+
 class MockResponse:
     def __init__(self, status, payload):
         self.status_code = status
@@ -151,6 +155,40 @@ class TestHTTPClient(unittest.TestCase):
         self.assertEqual(expected_data, data)
         requests.get = self.requests_original_get
 
+    def test_get_png_with_different_url_paths(self):
+
+        # first case: path equals the metaimage URL
+        root_url = 'anyurl.com'
+        path = 'xxx/yyy'
+        expected_full_url = 'https://api.' + root_url + '/' + path
+
+        def monkey_patched_get_1(uri, stream=True, params=None, headers=None, proxies=None, timeout=None, verify=False):
+            if uri == expected_full_url:
+                return MockResponse(200, b'\x89PNG\r\n')
+            raise MyTestFailedException
+
+        requests.get = monkey_patched_get_1
+        try:
+            status, data = HttpClient('apikey', DEFAULT_CONFIG, root_url).get_png(expected_full_url)
+        except MyTestFailedException:
+            self.fail()
+
+        # second case: path is simply a... path
+        root_url = 'anyurl.com'
+        path = 'xxx/yyy'
+        expected_full_url = 'https://api.' + root_url + '/' + path
+
+        def monkey_patched_get_2(uri, stream=True, params=None, headers=None, proxies=None, timeout=None, verify=False):
+            if uri == expected_full_url:
+                return MockResponse(200, b'\x89PNG\r\n')
+            raise MyTestFailedException
+
+        requests.get = monkey_patched_get_2
+        try:
+            status, data = HttpClient('apikey', DEFAULT_CONFIG, root_url).get_png(path)
+        except MyTestFailedException:
+            self.fail()
+
     def test_get_geotiff(self):
         expected_data = b'II*\x00\x08\x00\x04\x00k{\x84s\x84\x84\x8c\x84\x84\x84k\x84k\x84\x84k{s\x9c\x94k\x84'
 
@@ -162,6 +200,41 @@ class TestHTTPClient(unittest.TestCase):
         self.assertIsInstance(data, bytes)
         self.assertEqual(expected_data, data)
         requests.get = self.requests_original_get
+
+    def test_get_geotiff_with_different_url_paths(self):
+
+        # first case: path equals the metaimage URL
+        root_url = 'anyurl.com'
+        path = 'xxx/yyy'
+        expected_full_url = 'https://api.' + root_url + '/' + path
+
+        def monkey_patched_get_1(uri, stream=True, params=None, headers=None, proxies=None, timeout=None, verify=False):
+            if uri == expected_full_url:
+                return MockResponse(200, b'II*\x00\x08\x00')
+            raise MyTestFailedException
+
+        requests.get = monkey_patched_get_1
+        try:
+            status, data = HttpClient('apikey', DEFAULT_CONFIG, root_url).get_geotiff(expected_full_url)
+        except MyTestFailedException:
+            self.fail()
+
+        # second case: path is simply a... path
+        root_url = 'anyurl.com'
+        path = 'xxx/yyy'
+        expected_full_url = 'https://api.' + root_url + '/' + path
+
+        def monkey_patched_get_2(uri, stream=True, params=None, headers=None, proxies=None, timeout=None, verify=False):
+            if uri == expected_full_url:
+                return MockResponse(200, b'\x89PNG\r\n')
+            raise MyTestFailedException
+
+        requests.get = monkey_patched_get_2
+        try:
+            status, data = HttpClient('apikey', DEFAULT_CONFIG, root_url).get_geotiff(path)
+        except MyTestFailedException:
+            self.fail()
+
 
     def test_repr(self):
         print(HttpClient('apikey', DEFAULT_CONFIG, 'anyurl.com'))
