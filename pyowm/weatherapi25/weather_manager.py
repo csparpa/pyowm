@@ -8,7 +8,7 @@ from pyowm.constants import WEATHER_API_VERSION
 from pyowm.utils import geo
 from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory, one_call
 from pyowm.weatherapi25.uris import ROOT_WEATHER_API, OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, \
-    BBOX_CITY_URI, THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, STATION_WEATHER_HISTORY_URI, ONE_CALL_URI, \
+    BBOX_CITY_URI, THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, HOURLY_FORECAST_URI, STATION_WEATHER_HISTORY_URI, ONE_CALL_URI, \
     ONE_CALL_HISTORICAL_URI
 
 
@@ -286,6 +286,8 @@ class WeatherManager:
             uri = THREE_HOURS_FORECAST_URI
         elif interval == 'daily':
             uri = DAILY_FORECAST_URI
+        elif interval == 'hourly':
+            uri = HOURLY_FORECAST_URI
         else:
             raise ValueError("Unsupported time interval for forecast")
         _, json_data = self.http_client.get_json(uri, params=params)
@@ -332,6 +334,8 @@ class WeatherManager:
             uri = THREE_HOURS_FORECAST_URI
         elif interval == 'daily':
             uri = DAILY_FORECAST_URI
+        elif interval == 'hourly':
+            uri = HOURLY_FORECAST_URI
         else:
             raise ValueError("Unsupported time interval for forecast")
         _, json_data = self.http_client.get_json(uri, params=params)
@@ -377,6 +381,8 @@ class WeatherManager:
             uri = THREE_HOURS_FORECAST_URI
         elif interval == 'daily':
             uri = DAILY_FORECAST_URI
+        elif interval == 'hourly':
+            uri = HOURLY_FORECAST_URI
         else:
             raise ValueError("Unsupported time interval for forecast")
         _, json_data = self.http_client.get_json(uri, params=params)

@@ -11,9 +11,9 @@ class SubscriptionTypeEnum:
     """
     FREE = SubscriptionType('free', 'api', False)
     STARTUP = SubscriptionType('startup', 'api', True)
-    DEVELOPER = SubscriptionType('developer', 'api', True)
-    PROFESSIONAL = SubscriptionType('professional', 'api', True)
-    ENTERPRISE = SubscriptionType('enterprise', 'api', True)
+    DEVELOPER = SubscriptionType('developer', 'pro', True)
+    PROFESSIONAL = SubscriptionType('professional', 'pro', True)
+    ENTERPRISE = SubscriptionType('enterprise', 'pro', True)
 
     @classmethod
     def lookup_by_name(cls, name):
