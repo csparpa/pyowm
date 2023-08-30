@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import bz2
 import sqlite3
 import tempfile
@@ -44,16 +45,19 @@ class CityIDRegistry:
         decompressed_data = bz2_db.read()
 
         # dump decompressed data to a temp DB
-        with tempfile.NamedTemporaryFile(mode='wb') as tmpf:
-            tmpf.write(decompressed_data)
-            tmpf_name = tmpf.name
+        try:
+            with tempfile.NamedTemporaryFile(mode='wb', delete=False) as tmpf:
+                tmpf.write(decompressed_data)
+                tmpf_name = tmpf.name
 
-            # read temp DB to memory and return handle
-            src_conn = sqlite3.connect(tmpf_name)
-            dest_conn = sqlite3.connect(':memory:')
-            src_conn.backup(dest_conn)
-            src_conn.close()
-            return dest_conn
+                # read temp DB to memory and return handle
+                src_conn = sqlite3.connect(tmpf_name)
+                dest_conn = sqlite3.connect(':memory:')
+                src_conn.backup(dest_conn)
+                src_conn.close()
+                return dest_conn
+        finally:
+            os.remove(tmpf_name)
 
     def __query(self, sql_query: str, *args):
         """
