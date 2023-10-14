@@ -12,6 +12,7 @@ class OneCall:
                  lat: Union[int, float],
                  lon: Union[int, float],
                  timezone: str,
+                 timezone_offset: int,
                  current: Weather,
                  forecast_minutely: Optional[Weather] = None,
                  forecast_hourly: Optional[Weather] = None,
@@ -25,6 +26,7 @@ class OneCall:
         self.lon = lon
 
         self.timezone = timezone
+        self.timezone_offset = timezone_offset
 
         if current is None:
             raise ValueError("'current' must be set")
@@ -103,6 +105,7 @@ class OneCall:
             lat=the_dict.get("lat", None),
             lon=the_dict.get("lon", None),
             timezone=the_dict.get("timezone", None),
+            timezone_offset=the_dict.get("timezone_offset", None)
             current=current,
             forecast_minutely=minutely,
             forecast_hourly=hourly,
