@@ -601,11 +601,12 @@
         },
         "pip": {
             "hashes": [
-                "sha256:c146f331f0805c77017c6bb9740cec4a49a0d4582d0c3cc8244b057f83eca359",
-                "sha256:f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0"
+                "sha256:bb7d4f69f488432e4e96394612f43ab43dd478d073ef7422604a570f7157561e",
+                "sha256:bc38bb52bc286514f8f7cb3a1ba5ed100b76aaef29b521d48574329331c5ae7b"
             ],
             "index": "pypi",
-            "version": "==22.0.3"
+            "markers": "python_version >= '3.7'",
+            "version": "==23.3"
         },
         "pkginfo": {
             "hashes": [
