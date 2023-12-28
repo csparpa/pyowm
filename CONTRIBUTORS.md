@@ -8,6 +8,7 @@ Code
   * [ahertz](https://github.com/ahertz)
   * [alechewitt](https://github.com/alechewitt)
   * [camponez](https://github.com/camponez)
+  * [coreycoto](https://github.com/coreycoto)
   * [Darumin](https://github.com/Darumin)
   * [davidpirogov](https://github.com/davidpirogov)
   * [dev-iks](https://github.com/dev-iks)
