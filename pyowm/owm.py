@@ -12,7 +12,7 @@ from pyowm.utils import strings
 from pyowm.uvindexapi30 import uvindex_manager
 from pyowm.utils import config as cfg
 from pyowm.commons import cityidregistry
-from pyowm.weatherapi25 import weather_manager
+from pyowm.weatherapi30 import weather_manager
 
 
 class OWM:
@@ -120,9 +120,9 @@ class OWM:
 
     def weather_manager(self):
         """
-        Gives a `pyowm.weatherapi25.weather_manager.WeatherManager` instance that can be used to fetch air
+        Gives a `pyowm.weatherapi30.weather_manager.WeatherManager` instance that can be used to fetch air
         pollution data.
-        :return: a `pyowm.weatherapi25.weather_manager.WeatherManager` instance
+        :return: a `pyowm.weatherapi30.weather_manager.WeatherManager` instance
         """
         return weather_manager.WeatherManager(self.api_key, self.config)
 

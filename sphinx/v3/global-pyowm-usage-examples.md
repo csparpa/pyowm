@@ -26,6 +26,6 @@ Most of PyOWM objects can be pretty-printed for a quick introspection:
 ```python
 from pyowm.owm import OWM
 owm = OWM('your-api-key')
-print(owm)   # <pyowm.weatherapi25.owm25.OWM25 - API key=*******i-key, subscription type=free, PyOWM version=3.0.0>
+print(owm)   # <pyowm.weatherapi30.owm25.OWM25 - API key=*******i-key, subscription type=free, PyOWM version=3.0.0>
 ```
 

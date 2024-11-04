@@ -6,9 +6,9 @@ import unittest
 
 from pyowm.commons.exceptions import ParseAPIResponseError, APIResponseError
 from pyowm.utils import geo
-from pyowm.weatherapi25.one_call import OneCall
-from pyowm.weatherapi25.weather import Weather
-from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
+from pyowm.weatherapi30.one_call import OneCall
+from pyowm.weatherapi30.weather import Weather
+from pyowm.weatherapi30.national_weather_alert import NationalWeatherAlert
 
 
 class TestOneCall(unittest.TestCase):

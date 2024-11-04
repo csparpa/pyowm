@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyowm.commons import exceptions
-from pyowm.weatherapi25 import location
+from pyowm.weatherapi30 import location
 from pyowm.utils import formatting, timestamps
 
 

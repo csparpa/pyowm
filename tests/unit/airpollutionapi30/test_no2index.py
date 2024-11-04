@@ -4,7 +4,7 @@
 import unittest
 import json
 from datetime import datetime
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 from pyowm.commons.exceptions import ParseAPIResponseError
 from pyowm.airpollutionapi30.no2index import NO2Index
 from pyowm.utils.formatting import datetime_to_UNIXtime

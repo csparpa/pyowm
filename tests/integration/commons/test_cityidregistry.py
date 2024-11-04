@@ -3,7 +3,7 @@
 import unittest
 from pyowm.commons.cityidregistry import CityIDRegistry
 from pyowm.utils.geo import Point
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 
 
 class TestCityIDRegistryReadsFS(unittest.TestCase):

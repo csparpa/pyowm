@@ -5,7 +5,7 @@ import bz2
 import sqlite3
 import tempfile
 from pkg_resources import resource_filename
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 
 CITY_ID_DB_PATH = 'cityids/cities.db.bz2'
 

@@ -7,7 +7,7 @@ from pyowm.commons.http_client import HttpClient
 from pyowm.config import DEFAULT_CONFIG
 from pyowm.constants import GEOCODING_API_VERSION
 from pyowm.geocodingapi10.geocoding_manager import GeocodingManager
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 
 
 class TestGeocodingManager(unittest.TestCase):

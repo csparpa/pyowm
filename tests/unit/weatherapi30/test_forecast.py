@@ -1,11 +1,11 @@
 import unittest
 import json
 from datetime import datetime
-from pyowm.weatherapi25.location import Location
-from pyowm.weatherapi25.weather import Weather
-from pyowm.weatherapi25.forecast import Forecast
+from pyowm.weatherapi30.location import Location
+from pyowm.weatherapi30.weather import Weather
+from pyowm.weatherapi30.forecast import Forecast
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
-from tests.unit.weatherapi25.json_test_responses import (
+from tests.unit.weatherapi30.json_test_responses import (
     THREE_HOURS_FORECAST_JSON, FORECAST_NOT_FOUND_JSON,
     INTERNAL_SERVER_ERROR_JSON, FORECAST_MALFORMED_JSON)
 

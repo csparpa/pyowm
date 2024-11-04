@@ -4,7 +4,7 @@
 import unittest
 import json
 from pyowm.commons import exceptions
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 from pyowm.utils.geo import Point
 
 

@@ -6,7 +6,7 @@ import unittest
 from datetime import datetime
 import pyowm.commons.exceptions
 from pyowm.uvindexapi30 import uvindex
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 from unittest.mock import patch
 
 

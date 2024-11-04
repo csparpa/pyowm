@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pyowm.weatherapi25.weather import Weather
+from pyowm.weatherapi30.weather import Weather
 from pyowm.utils import weather
-from pyowm.weatherapi25.weathercoderegistry import WeatherCodeRegistry
+from pyowm.weatherapi30.weathercoderegistry import WeatherCodeRegistry
 from pyowm.commons.exceptions import NotFoundError
 
 

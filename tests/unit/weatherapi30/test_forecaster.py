@@ -3,10 +3,10 @@
 
 import unittest
 from datetime import datetime, timezone
-from pyowm.weatherapi25.location import Location
-from pyowm.weatherapi25.weather import Weather
-from pyowm.weatherapi25.forecast import Forecast
-from pyowm.weatherapi25.forecaster import Forecaster
+from pyowm.weatherapi30.location import Location
+from pyowm.weatherapi30.weather import Weather
+from pyowm.weatherapi30.forecast import Forecast
+from pyowm.weatherapi30.forecaster import Forecaster
 
 
 class TestForecaster(unittest.TestCase):
