@@ -6,9 +6,9 @@ import unittest
 
 import pyowm.commons.exceptions
 from pyowm import owm
-from pyowm.weatherapi25.one_call import OneCall
-from pyowm.weatherapi25.weather import Weather
-from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
+from pyowm.weatherapi30.one_call import OneCall
+from pyowm.weatherapi30.weather import Weather
+from pyowm.weatherapi30.national_weather_alert import NationalWeatherAlert
 
 
 class IntegrationTestsWebAPI25(unittest.TestCase):

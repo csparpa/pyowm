@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-e for historian.py module
 
 import unittest
-from pyowm.weatherapi25.stationhistory import StationHistory
-from pyowm.weatherapi25.historian import Historian
+from pyowm.weatherapi30.stationhistory import StationHistory
+from pyowm.weatherapi30.historian import Historian
 from pyowm.utils import measurables
 
 

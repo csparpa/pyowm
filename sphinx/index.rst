@@ -28,7 +28,7 @@ What APIs can I access with PyOWM?
 
 With PyOWM you can interact programmatically with the following OpenWeatherMap web APIs:
 
- - **Weather API v2.5** + **OneCall API**, offering
+ - **Weather API v3.0** + **OneCall API**, offering
     + current weather data
     + weather forecasts
     + weather history

@@ -3,7 +3,7 @@
 
 from pyowm.commons import exceptions
 from pyowm.utils import formatting, timestamps
-from pyowm.weatherapi25 import location
+from pyowm.weatherapi30 import location
 
 
 class COIndex:

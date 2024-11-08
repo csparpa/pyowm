@@ -6,8 +6,8 @@ from typing import Union
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import WEATHER_API_VERSION
 from pyowm.utils import geo
-from pyowm.weatherapi25 import forecaster, historian, observation, forecast, stationhistory, one_call
-from pyowm.weatherapi25.uris import ROOT_WEATHER_API, OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, \
+from pyowm.weatherapi30 import forecaster, historian, observation, forecast, stationhistory, one_call
+from pyowm.weatherapi30.uris import ROOT_WEATHER_API, OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, \
     BBOX_CITY_URI, THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, STATION_WEATHER_HISTORY_URI, ONE_CALL_URI, \
     ONE_CALL_HISTORICAL_URI
 
@@ -172,7 +172,7 @@ class WeatherManager:
                 raise ValueError("'limit' must be None or greater than zero")
         params = {'q': pattern, 'type': searchtype}
         if limit is not None:
-            # fix for OWM 2.5 API bug!
+            # fix for OWM 3.0 API bug!
             params['cnt'] = limit - 1
         _, json_data = self.http_client.get_json(FIND_OBSERVATIONS_URI, params=params)
         return observation.Observation.from_dict_of_lists(json_data)

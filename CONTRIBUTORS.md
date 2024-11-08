@@ -17,6 +17,7 @@ Code
   * [eumiro](https://github.com/eumiro)
   * [ggstuart](https://github.com/ggstuart)
   * [irahorecka](https://github.com/irahorecka)
+  * [JakeThomson](https://github.com/jakethomson)
   * [jwmelvin](https://github.com/jwmelvin)
   * [lardconcepts](https://github.com/lardconcepts)
   * [liato](https://github.com/liato)

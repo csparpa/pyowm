@@ -6,9 +6,9 @@ import unittest
 from datetime import datetime
 
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
-from pyowm.weatherapi25.uris import ICONS_BASE_URI
-from pyowm.weatherapi25.weather import Weather
-from tests.unit.weatherapi25.json_test_responses import (CITY_WEATHER_HISTORY_JSON,
+from pyowm.weatherapi30.uris import ICONS_BASE_URI
+from pyowm.weatherapi30.weather import Weather
+from tests.unit.weatherapi30.json_test_responses import (CITY_WEATHER_HISTORY_JSON,
                                                          CITY_WEATHER_HISTORY_NO_RESULTS_JSON,
                                                          CITY_WEATHER_HISTORY_NOT_FOUND_JSON,
                                                          INTERNAL_SERVER_ERROR_JSON)

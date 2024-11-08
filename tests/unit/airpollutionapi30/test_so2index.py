@@ -7,7 +7,7 @@ from datetime import datetime
 from pyowm.airpollutionapi30.so2index import SO2Index
 from pyowm.commons.exceptions import ParseAPIResponseError
 from pyowm.utils.formatting import datetime_to_UNIXtime
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 
 SO2INDEX_JSON = '{"time":"2016-10-01T13:07:01Z","location":{"latitude":0,"longitude":9.2359},' \
                 '"data":[{"precision":-4.999999987376214e-07,"pressure":1000,"value":8.609262636127823e-08},' \

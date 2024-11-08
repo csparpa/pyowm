@@ -5,7 +5,7 @@ import json
 
 from pyowm.commons import exceptions
 from pyowm.utils import formatting, measurables
-from pyowm.weatherapi25.uris import ICONS_BASE_URI
+from pyowm.weatherapi30.uris import ICONS_BASE_URI
 
 
 class Weather:
@@ -508,7 +508,7 @@ class Weather:
         if the_dict is None:
             raise exceptions.ParseAPIResponseError('Data is None')
         # Check if server returned errors: this check overcomes the lack of use
-        # of HTTP error status codes by the OWM API 2.5. This mechanism is
+        # of HTTP error status codes by the OWM API 3.0. This mechanism is
         # supposed to be deprecated as soon as the API fully adopts HTTP for
         # conveying errors to the clients
         if 'message' in the_dict and 'cod' in the_dict:

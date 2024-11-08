@@ -2,7 +2,7 @@ from pyowm.commons.http_client import HttpClient
 from pyowm.commons.uris import ROOT_GEOCODING_API_URL, DIRECT_GEOCODING_URI, REVERSE_GEOCODING_URI
 from pyowm.constants import GEOCODING_API_VERSION
 from pyowm.utils import geo
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 
 
 class GeocodingManager:

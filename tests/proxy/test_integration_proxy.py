@@ -5,7 +5,7 @@ import os
 import pathlib
 import unittest
 from pyowm import OWM
-from pyowm.weatherapi25.observation import Observation
+from pyowm.weatherapi30.observation import Observation
 from pyowm.utils import config
 
 

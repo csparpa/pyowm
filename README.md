@@ -25,7 +25,7 @@ PyOWM runs on Python 3.7+
 ### What kind of data can I get with PyOWM ?
 With PyOWM you can integrate into your code any of the following OpenWeatherMap web APIs:
 
- - **Weather API v2.5** + **OneCall API**, providing current weather data, weather forecasts, weather history
+ - **Weather API v3.0** + **OneCall API**, providing current weather data, weather forecasts, weather history
  - **Agro API v1.0**, providing soil data and satellite imagery search and download
  - **Air Pollution API v3.0**, providing data about CO, O3, NO2 and SO2
  - **UV Index API v3.0**, providing data about Ultraviolet exposition

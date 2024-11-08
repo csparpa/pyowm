@@ -11,7 +11,7 @@ from pyowm.geocodingapi10.geocoding_manager import GeocodingManager
 from pyowm.stationsapi30.stations_manager import StationsManager
 from pyowm.tiles.tile_manager import TileManager
 from pyowm.uvindexapi30.uvindex_manager import UVIndexManager
-from pyowm.weatherapi25.weather_manager import WeatherManager
+from pyowm.weatherapi30.weather_manager import WeatherManager
 
 
 class TestOWM(unittest.TestCase):

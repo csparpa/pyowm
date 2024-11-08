@@ -2,8 +2,8 @@ from typing import Union, Optional
 
 from pyowm.commons import exceptions
 from pyowm.utils import geo
-from pyowm.weatherapi25.weather import Weather
-from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
+from pyowm.weatherapi30.weather import Weather
+from pyowm.weatherapi30.national_weather_alert import NationalWeatherAlert
 
 
 class OneCall:
@@ -69,7 +69,7 @@ class OneCall:
             raise exceptions.ParseAPIResponseError('Data is None')
 
         # Check if server returned errors: this check overcomes the lack of use
-        # of HTTP error status codes by the OWM API 2.5. This mechanism is
+        # of HTTP error status codes by the OWM API 3.0. This mechanism is
         # supposed to be deprecated as soon as the API fully adopts HTTP for
         # conveying errors to the clients
         if 'message' in the_dict and 'cod' in the_dict:

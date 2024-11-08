@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pyowm.weatherapi25.weathercoderegistry import WeatherCodeRegistry
+from pyowm.weatherapi30.weathercoderegistry import WeatherCodeRegistry
 
 
 class TestWeatherCodeRegistry(unittest.TestCase):

@@ -3,19 +3,19 @@
 
 import json
 import unittest
-from pyowm.weatherapi25.weather_manager import WeatherManager
+from pyowm.weatherapi30.weather_manager import WeatherManager
 from pyowm.commons.http_client import HttpClient
 from pyowm.constants import WEATHER_API_VERSION
 from pyowm.config import DEFAULT_CONFIG
-from pyowm.weatherapi25.historian import Historian
-from pyowm.weatherapi25.forecast import Forecast
-from pyowm.weatherapi25.forecaster import Forecaster
-from pyowm.weatherapi25.location import Location
-from pyowm.weatherapi25.observation import Observation
-from pyowm.weatherapi25.one_call import OneCall
-from pyowm.weatherapi25.stationhistory import StationHistory
-from pyowm.weatherapi25.weather import Weather
-from tests.unit.weatherapi25.json_test_responses import (
+from pyowm.weatherapi30.historian import Historian
+from pyowm.weatherapi30.forecast import Forecast
+from pyowm.weatherapi30.forecaster import Forecaster
+from pyowm.weatherapi30.location import Location
+from pyowm.weatherapi30.observation import Observation
+from pyowm.weatherapi30.one_call import OneCall
+from pyowm.weatherapi30.stationhistory import StationHistory
+from pyowm.weatherapi30.weather import Weather
+from tests.unit.weatherapi30.json_test_responses import (
     OBSERVATION_JSON, SEARCH_RESULTS_JSON, THREE_HOURS_FORECAST_JSON, DAILY_FORECAST_JSON,
     THREE_HOURS_FORECAST_AT_COORDS_JSON, DAILY_FORECAST_AT_COORDS_JSON,
     THREE_HOURS_FORECAST_AT_ID_JSON, DAILY_FORECAST_AT_ID_JSON,

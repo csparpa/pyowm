@@ -3,7 +3,7 @@
 
 import unittest
 import json
-from pyowm.weatherapi25.national_weather_alert import NationalWeatherAlert
+from pyowm.weatherapi30.national_weather_alert import NationalWeatherAlert
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
 
 

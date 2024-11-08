@@ -4,7 +4,7 @@
 import unittest
 import os
 from pyowm import owm
-from pyowm.weatherapi25.location import Location
+from pyowm.weatherapi30.location import Location
 
 
 class IntegrationTestsGeocodingAPI(unittest.TestCase):

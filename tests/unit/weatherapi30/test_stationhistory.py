@@ -5,8 +5,8 @@ import json
 import unittest
 from datetime import datetime
 from pyowm.commons.exceptions import APIResponseError, ParseAPIResponseError
-from pyowm.weatherapi25.stationhistory import StationHistory
-from tests.unit.weatherapi25.json_test_responses import (
+from pyowm.weatherapi30.stationhistory import StationHistory
+from tests.unit.weatherapi30.json_test_responses import (
      STATION_TICK_WEATHER_HISTORY_JSON, STATION_WEATHER_HISTORY_NOT_FOUND_JSON,
      INTERNAL_SERVER_ERROR_JSON)
 

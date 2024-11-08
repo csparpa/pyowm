@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-ROOT_WEATHER_API = 'openweathermap.org/data/2.5'
+ROOT_WEATHER_API = 'openweathermap.org/data/3.0'
 OBSERVATION_URI = 'weather'
 GROUP_OBSERVATIONS_URI = 'group'
 STATION_URI = 'station'
