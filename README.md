@@ -15,6 +15,10 @@
 <a href="https://www.buymeacoffee.com/LmAl1n9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/csparpa%40gmail.com)
 
+## Maintainer wanted !!!
+*I am not able to maintain this project anymore :-( *
+Anyone who is able to replace me in this effort, please get in touch
+
 ##  What is it?
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs. It allows quick and easy consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
 
