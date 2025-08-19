@@ -299,7 +299,7 @@ There are multiple ways to contribute to the PyOWM project! Find the one that su
 
 PyOWM Community
 ---------------
-Discuss the library on GitHub Discussions:
+Discuss the library on `GitHub Discussions`_.
 
 .. _GitHub Discussions: https://github.com/csparpa/pyowm/discussions
 
