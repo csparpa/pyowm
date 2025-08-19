@@ -15,7 +15,6 @@ formats:
   - pdf
 
 python:
-  version: 3.7
   install:
     - requirements: dev-requirements.txt
     - requirements: requirements.txt
