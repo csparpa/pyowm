@@ -116,8 +116,6 @@ The [Code recipes](https://pyowm.readthedocs.io/en/latest/v3/code-recipes.html) 
 
 Here are [some cool projects](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM) that use PyOWM
 
-Join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [here](http://pyowm-slackin.herokuapp.com/)
-
 _Contributors (coding, testing, packaging, reporting issues) are welcome!_ See the [the official documentation website](https://pyowm.readthedocs.io/) for details or the [CONTRIBUTING.md](https://github.com/csparpa/pyowm/blob/master/CONTRIBUTING.md) file for a quick primer.
 
 

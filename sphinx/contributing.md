@@ -13,13 +13,6 @@ You can contribute to PyOWM in a lot of ways:
 And last but not least... use it! Use PyOWM in your own projects, as [lots of people already do](https://github.com/csparpa/pyowm/wiki/Community-Projects-using-PyOWM).
 
 
-In order to get started, follow these simple steps:
-
-  1. First, meet the community and wave hello! You can join the **[PyOWM public Slack team](https://pyowm.slack.com)** by signing up [here](http://pyowm-slackin.herokuapp.com/)
-  2. Depending on how you want to contribute, take a look at one of the following sections
-  3. Don't forget tell @csparpa or the community to add yourself to the `CONTRIBUTORS.md` file - or do it yourself if you're contributing on code 
-
-
 # Reporting a PyOWM bug
 That's simple: what you need to do is just open a new issue on GitHub.
 

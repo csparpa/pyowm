@@ -299,9 +299,9 @@ There are multiple ways to contribute to the PyOWM project! Find the one that su
 
 PyOWM Community
 ---------------
-Find us on Slack_ !
+Discuss the library on GitHub Discussions:
 
-.. _Slack: http://pyowm-slackin.herokuapp.com/
+.. _GitHub Discussions: https://github.com/csparpa/pyowm/discussions
 
 
 
