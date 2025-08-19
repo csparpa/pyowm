@@ -1,4 +1,0 @@
-python:
-   version: 3.7
-
-requirements_file: dev-requirements.txt
