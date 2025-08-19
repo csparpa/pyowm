@@ -20,7 +20,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'requests>=2.20.0,<3',
-        'geojson>=2.3.0,<3',
+        'geojson>=2.3.0,<4',
         'PySocks>=1.7.1,<2',
         'requests[socks]'
     ],
