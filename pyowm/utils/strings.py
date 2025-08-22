@@ -15,19 +15,6 @@ def obfuscate_API_key(API_key):
         return (len(API_key)-8)*'*'+API_key[-8:]
 
 
-def version_tuple_to_str(version_tuple, separator='.'):
-    """
-    Turns something like (X, Y, Z) into "X.Y.Z"
-    :param version_tuple: the tuple identifying a software Semantic version
-    :type version_tuple: tuple
-    :param separator: the character to be used as separator
-    :type separator: str, defaults to '.'
-    :return: str
-    """
-    str_version_tuple = [str(v) for v in version_tuple]
-    return separator.join(str_version_tuple)
-
-
 def class_from_dotted_path(dotted_path):
     """
     Loads a Python class from the supplied Python dot-separated class path.
