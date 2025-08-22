@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from importlib.metadata import version
+
 from pyowm import constants
 from pyowm.agroapi10 import agro_manager
 from pyowm.airpollutionapi30 import airpollution_manager
@@ -52,7 +54,7 @@ class OWM:
         :returns: `tuple`
 
         """
-        return constants.PYOWM_VERSION
+        return version('pyowm')
 
     @property
     def supported_languages(self):
