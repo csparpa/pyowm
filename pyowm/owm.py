@@ -54,7 +54,7 @@ class OWM:
         :returns: `tuple`
 
         """
-        return version('pyowm')
+        return tuple(version('pyowm').split('.'))
 
     @property
     def supported_languages(self):
