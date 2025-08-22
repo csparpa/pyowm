@@ -7,7 +7,7 @@ with open('README.md', 'r') as readme:
 
 setup(
     name='pyowm',
-    version='3.3.0',
+    version='3.4.0',
     description='A Python wrapper around OpenWeatherMap web APIs',
     author='Claudio Sparpaglione',
     author_email='csparpa@gmail.com',
