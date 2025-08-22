@@ -1,0 +1,51 @@
+name: Build and Publish PyOWM to TestPyPI
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install pypa/build
+        run: >-
+          python3 -m
+          pip install
+          build
+          --user
+      - name: Build a binary wheel and source tarball
+        run: python3 -m build
+      - name: Upload distribution as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyowm-package-distributions
+          path: dist/
+
+  publish-to-testpypi:
+    name: Publish distribution to TestPyPI
+    if: github.repository_owner == 'csparpa'
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/pyowm
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download distribution from artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: pyowm-package-distributions
+          path: dist/
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
