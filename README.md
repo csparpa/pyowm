@@ -18,7 +18,7 @@
 ##  What is it?
 PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs. It allows quick and easy consumption of OWM data from Python applications via a simple object model and in a human-friendly fashion.
 
-PyOWM runs on Python 3.7+
+PyOWM runs on Python 3.8+
 
 **Former Dark Sky API users**: you can can use PyOWM to get [OpenWeatherMap's OneCall API](https://openweathermap.org/api/one-call-api) data as an easy replacement to Dark Sky
 

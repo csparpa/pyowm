@@ -24,11 +24,10 @@ setup(
         'PySocks>=1.7.1,<2',
         'requests[socks]'
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     classifiers=[
       "License :: OSI Approved :: MIT License",
       "Programming Language :: Python",
-      "Programming Language :: Python :: 3.7",
       "Programming Language :: Python :: 3.8",
       "Programming Language :: Python :: 3.9",
       "Programming Language :: Python :: 3.10",
