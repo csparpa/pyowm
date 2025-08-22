@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
-from pyowm.__version__ import __author__, __author_email__, __description__, __license__, __title__,\
-    __url__, __version__
 
 with open('README.md', 'r') as readme:
     long_description = readme.read()
 
 setup(
-    name=__title__,
-    version=__version__,
-    description=__description__,
-    author=__author__,
-    author_email=__author_email__,
-    url=__url__,
+    name='pyowm',
+    version='3.3.0',
+    description='A Python wrapper around OpenWeatherMap web APIs',
+    author='Claudio Sparpaglione',
+    author_email='csparpa@gmail.com',
+    url='https://github.com/csparpa/pyowm',
     packages=find_packages(exclude=['tests','tests.*']),
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -43,5 +41,5 @@ setup(
         '': ['*.bz2', '*.md', '*.txt', '*.json']
     },
     keywords='openweathermap web api client weather forecast uv alerting owm pollution meteostation agro agriculture',
-    license=__license__
+    license='MIT'
 )
