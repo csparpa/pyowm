@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, List
 
 from pyowm.commons import exceptions
 from pyowm.utils import geo
@@ -13,9 +13,9 @@ class OneCall:
                  lon: Union[int, float],
                  timezone: str,
                  current: Weather,
-                 forecast_minutely: Optional[Weather] = None,
-                 forecast_hourly: Optional[Weather] = None,
-                 forecast_daily: Optional[Weather] = None,
+                 forecast_minutely: Optional[List[Weather]] = None,
+                 forecast_hourly: Optional[List[Weather]] = None,
+                 forecast_daily: Optional[List[Weather]] = None,
                  national_weather_alerts: Optional[list] = None
                  ) -> None:
         geo.assert_is_lat(lat)

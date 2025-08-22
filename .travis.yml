@@ -1,9 +1,10 @@
-dist: xenial
+dist: focal
 language: python
 python:
   - "3.7"
   - "3.8"
-  - "3.9-dev"
+  - "3.9"
+  - "3.10"
 script: tox
 after_success:
   - coveralls
@@ -16,7 +17,7 @@ env:
       - TEST_PYPI_URL=https://test.pypi.org/legacy/
       - PYPI_URL=https://upload.pypi.org/legacy/
 install:
-  - pip install --upgrade pip && pip install -r requirements.txt && pip install --upgrade -r dev-requirements.txt && pip install .
+  - pip install --upgrade pip && pip install -r requirements.txt && pip install --use-deprecated=legacy-resolver --upgrade -r dev-requirements.txt && pip install .
 cache: pip
 
 stages:
@@ -36,7 +37,9 @@ jobs:
     - <<: *local_installation_test
       python: "3.8"
     - <<: *local_installation_test
-      python: "3.9-dev"
+      python: "3.9"
+    - <<: *local_installation_test
+      python: "3.10"
 
     - &coverage
       stage: "Coverage"
@@ -45,7 +48,9 @@ jobs:
     - <<: *coverage
       python: "3.8"
     - <<: *coverage
-      python: "3.9-dev"
+      python: "3.9"
+    - <<: *coverage
+      python: "3.10"
 
     - stage: "Build docs"
       script: cd sphinx && make clean && make html
@@ -57,7 +62,9 @@ jobs:
     - <<: *deploy_to_pypi
       python: "3.8"
     - <<: *deploy_to_pypi
-      python: "3.9-dev"
+      python: "3.9"
+    - <<: *deploy_to_pypi
+      python: "3.10"
 
     - &pypi_installation_test
       stage: "PyPI Installation Test"
@@ -67,4 +74,6 @@ jobs:
     - <<: *pypi_installation_test
       python: "3.8"
     - <<: *pypi_installation_test
-      python: "3.9-dev"
+      python: "3.9"
+    - <<: *pypi_installation_test
+      python: "3.10"
