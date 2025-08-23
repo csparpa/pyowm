@@ -50,7 +50,6 @@ class Tile:
         :return: `pywom.utils.geo.Polygon` instance
         """
         lon_left, lat_bottom, lon_right, lat_top = Tile.tile_coords_to_bbox(self.x, self.y, self.zoom)
-        print(lon_left, lat_bottom, lon_right, lat_top)
         return Polygon([[[lon_left, lat_top],
                        [lon_right, lat_top],
                        [lon_right, lat_bottom],
