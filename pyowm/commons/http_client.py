@@ -127,7 +127,7 @@ class HttpClient:
                 max_retries=Retry(
                     total=self.config['connection']['max_retries'],
                     status_forcelist=[429, 500, 502, 503, 504],
-                    method_whitelist=["HEAD", "GET", "PUT", "DELETE", "OPTIONS", "TRACE"]
+                    allowed_methods =["HEAD", "GET", "PUT", "DELETE", "OPTIONS", "TRACE"]
                 )
             )
             # this is the adapted requests client
