@@ -37,7 +37,7 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         """
         Test feature: get historical air quality data around geo-coordinates.
         """
-        start = 1606223802  # November 24, 2020
+        start = 1606521600  # November 28, 2020
         end = 1609459200  # December 31, 2020
 
         list_of_airstatuses = self.__owm.air_quality_history_at_coords(45, 9, start, end)
