@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import datetime
 import unittest
 import os
 from pyowm import owm
@@ -37,8 +38,8 @@ class IntegrationTestsPollutionAPI30(unittest.TestCase):
         """
         Test feature: get historical air quality data around geo-coordinates.
         """
-        start = 1606521600  # November 28, 2020
-        end = 1609459200  # December 31, 2020
+        start = datetime.datetime(2020, 11, 28, tzinfo=datetime.timezone.utc)
+        end = datetime.datetime(2020, 12, 31, tzinfo=datetime.timezone.utc)
 
         list_of_airstatuses = self.__owm.air_quality_history_at_coords(45, 9, start, end)
         self.assertIsInstance(list_of_airstatuses, list)
