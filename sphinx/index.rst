@@ -79,7 +79,7 @@ Supported environments and Python versions
 ------------------------------------------
 
 PyOWM runs on Windows, Linux and MacOS.
-PyOWM runs on Python 3.8+
+PyOWM runs on Python 3.9+
 
 
 Usage and Technical Documentation
