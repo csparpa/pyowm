@@ -135,9 +135,8 @@ class TestMeasurablesUtils(unittest.TestCase):
 
     def test_metric_pressure_dict_to_inhg(self):
         input = {'press': 1000, 'sea_level': 1, 'grnd_level': None}
-        expected = {'press': 29.53, 'sea_level': .03}
+        expected = {'press': 29.53, 'sea_level': 0.03}
         result = measurables.metric_pressure_dict_to_inhg(input)
-        print(result)
         self.assertEqual(expected, result)
 
     def test_visibility_distance_to(self):

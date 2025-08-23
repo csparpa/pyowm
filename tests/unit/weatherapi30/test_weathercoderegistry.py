@@ -35,4 +35,4 @@ class TestWeatherCodeRegistry(unittest.TestCase):
         self.assertTrue(isinstance(result, WeatherCodeRegistry))
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

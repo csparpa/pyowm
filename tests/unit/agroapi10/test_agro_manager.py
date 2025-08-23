@@ -411,4 +411,4 @@ class TestAgroManager(unittest.TestCase):
         self.assertEqual(8, len(results))
 
     def test_repr(self):
-        print(AgroManager('APIKey', DEFAULT_CONFIG))
+        repr(AgroManager('APIKey', DEFAULT_CONFIG))

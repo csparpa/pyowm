@@ -235,9 +235,8 @@ class TestHTTPClient(unittest.TestCase):
         except MyTestFailedException:
             self.fail()
 
-
     def test_repr(self):
-        print(HttpClient('apikey', DEFAULT_CONFIG, 'anyurl.com'))
+        repr(HttpClient('apikey', DEFAULT_CONFIG, 'anyurl.com'))
 
 
 class TestHttpRequestBuilder(unittest.TestCase):
@@ -458,4 +457,4 @@ class TestHttpRequestBuilder(unittest.TestCase):
         self.assertTrue(isinstance(instance.with_language(), HttpRequestBuilder))
 
     def test_repr(self):
-        print(HttpRequestBuilder('/test', 'apikey', self.test_config))
+        repr(HttpRequestBuilder('/test', 'apikey', self.test_config))

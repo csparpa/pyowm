@@ -591,7 +591,7 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(expected_4x, result_4x)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)
 
     def test_one_call_current_from_dic(self):
         current1 = {

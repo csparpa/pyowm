@@ -22,4 +22,4 @@ class TestTile(unittest.TestCase):
         self.assertIsInstance(result, Polygon)
 
     def test_repr(self):
-        print(Tile(0, 0, 18, 'temperature', Image(b'x/1')))
+        repr(Tile(0, 0, 18, 'temperature', Image(b'x/1')))

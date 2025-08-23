@@ -275,4 +275,4 @@ class TestAirPollutionManager(unittest.TestCase):
         _ = self.__test_instance.air_quality_history_at_coords(45, 9, 12345678, end=end)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

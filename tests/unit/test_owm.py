@@ -40,7 +40,7 @@ class TestOWM(unittest.TestCase):
         self.assertIsInstance(config, dict)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)
 
     def test_city_id_registry(self):
         result = self.__test_instance.city_id_registry()

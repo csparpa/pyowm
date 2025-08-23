@@ -91,7 +91,7 @@ class TestAlert(unittest.TestCase):
          'last_update': '2016-12-16T11:19:46.352Z',
          'triggerId': '5852816a9aaacb00153134a3'}
         instance = Alert.from_dict(the_dict)
-        print(instance)
+        repr(instance)
 
 
 class TestAlertChannel(unittest.TestCase):
@@ -102,7 +102,7 @@ class TestAlertChannel(unittest.TestCase):
         self.assertEqual(dict(name=name), instance.to_dict())
 
     def test_repr(self):
-        print(AlertChannel('foobaz'))
+        repr(AlertChannel('foobaz'))
 
     def test_alert_last_updated_is_none(self):
         alert = Alert('alert1', 'trigger1', [{

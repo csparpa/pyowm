@@ -96,4 +96,4 @@ class TestStationHistory(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test__repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

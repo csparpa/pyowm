@@ -249,4 +249,4 @@ class TestAirPollutionHttpClient(unittest.TestCase):
     '''
 
     def test_repr(self):
-        print(self.__instance)
+        repr(self.__instance)

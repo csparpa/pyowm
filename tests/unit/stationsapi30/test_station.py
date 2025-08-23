@@ -104,7 +104,7 @@ class TestStation(unittest.TestCase):
         self.assertIsNone(self._test_instance_none_values.updated_at)
 
     def test_repr(self):
-        print(self._test_instance)
+        repr(self._test_instance)
 
     def test_from_dictionary(self):
         the_dict = {

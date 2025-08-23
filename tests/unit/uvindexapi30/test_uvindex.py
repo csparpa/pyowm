@@ -124,4 +124,4 @@ class TestUVIndex(unittest.TestCase):
         mock.assert_called_once_with(self.__test_uv_intensity)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

@@ -121,4 +121,4 @@ class TestUVIndexManager(unittest.TestCase):
         uv_client.UltraVioletHttpClient.get_uvi_history = ref_to_original
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

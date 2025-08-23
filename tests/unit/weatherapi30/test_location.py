@@ -115,4 +115,4 @@ class TestLocation(unittest.TestCase):
                          sorted(result.geojson()))
 
     def test__repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

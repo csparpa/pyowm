@@ -129,7 +129,7 @@ class TestCityIDRegistryReadsFS(unittest.TestCase):
         self._assertGeopointsEqual(expected3, result[2])
 
     def test_repr(self):
-        print(self._instance)
+        repr(self._instance)
 
 
 if __name__ == "__main__":

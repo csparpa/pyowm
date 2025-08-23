@@ -151,4 +151,4 @@ class TestObservation(unittest.TestCase):
             Observation.from_dict_of_lists(json.loads(INTERNAL_SERVER_ERROR_JSON))
 
     def test__repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

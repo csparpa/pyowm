@@ -241,4 +241,4 @@ class TestTrigger(unittest.TestCase):
     def test_repr(self):
         instance = Trigger(1526809375, 1527809375, [Condition('humidity', 'LESS_THAN', 10)],
                            [geo.Point(13.6, 46.9)], alerts=None, alert_channels=None)
-        print(instance)
+        repr(instance)

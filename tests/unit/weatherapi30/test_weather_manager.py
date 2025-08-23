@@ -102,7 +102,7 @@ class TestWeatherManager(unittest.TestCase):
         self.assertEqual(result, WEATHER_API_VERSION)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)
 
     def test_instantiation_with_wrong_params(self):
         with self.assertRaises(AssertionError):

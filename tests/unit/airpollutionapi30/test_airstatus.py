@@ -110,4 +110,4 @@ class TestAirStatus(unittest.TestCase):
         self.assertEqual(ordered_str_expected, ordered_str_result)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

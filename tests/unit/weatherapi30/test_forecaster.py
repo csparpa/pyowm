@@ -316,4 +316,4 @@ class TestForecaster(unittest.TestCase):
         self.assertFalse(fcstr.most_windy())
 
     def test__repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

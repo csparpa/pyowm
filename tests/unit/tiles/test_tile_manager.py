@@ -30,4 +30,4 @@ class TestTileManager(unittest.TestCase):
         self.assertEqual(mocked.d, result.image.data)
 
     def test_repr(self):
-        print(TileManager('apikey', 'a_layer', DEFAULT_CONFIG))
+        repr(TileManager('apikey', 'a_layer', DEFAULT_CONFIG))

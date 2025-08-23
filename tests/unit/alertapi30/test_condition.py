@@ -50,4 +50,4 @@ class TestCondition(unittest.TestCase):
         self.assertEqual(78.6, result['amount'])
 
     def test_repr(self):
-        print(Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456'))
+        repr(Condition(WeatherParametersEnum.TEMPERATURE, OperatorsEnum.GREATER_THAN, 78.6, id='123456'))

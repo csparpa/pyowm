@@ -136,4 +136,4 @@ class TestNO2Index(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_repr(self):
-        print(self.__test_instance)
+        repr(self.__test_instance)

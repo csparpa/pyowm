@@ -261,4 +261,4 @@ class TestAlertManager(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_repr(self):
-        print(AlertManager('APIKey', DEFAULT_CONFIG))
+        repr(AlertManager('APIKey', DEFAULT_CONFIG))

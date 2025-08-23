@@ -243,4 +243,4 @@ class TestHistorian(unittest.TestCase):
                          self.__instance._average(input_list))
 
     def test__repr(self):
-        print(self.__instance)
+        repr(self.__instance)
