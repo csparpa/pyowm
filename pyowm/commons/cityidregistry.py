@@ -5,7 +5,7 @@ import os
 import bz2
 import sqlite3
 import tempfile
-from pkg_resources import resource_filename
+from importlib.resources import as_file, files
 from pyowm.weatherapi30.location import Location
 
 CITY_ID_DB_PATH = 'cityids/cities.db.bz2'
@@ -40,8 +40,8 @@ class CityIDRegistry:
         # https://pymotw.com/2/bz2/
 
         # read and uncompress data from compressed DB
-        res_name = resource_filename(__name__, sqlite_db_path)
-        bz2_db = bz2.BZ2File(res_name)
+        with as_file(files(__name__) / sqlite_db_path) as res_name:
+            bz2_db = bz2.BZ2File(res_name)
         decompressed_data = bz2_db.read()
 
         # dump decompressed data to a temp DB
