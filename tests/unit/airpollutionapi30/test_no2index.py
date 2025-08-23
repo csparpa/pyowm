@@ -3,7 +3,7 @@
 
 import unittest
 import json
-from datetime import datetime
+import datetime
 from pyowm.weatherapi30.location import Location
 from pyowm.commons.exceptions import ParseAPIResponseError
 from pyowm.airpollutionapi30.no2index import NO2Index
@@ -26,11 +26,11 @@ class TestNO2Index(unittest.TestCase):
 
     __test_reception_time = 1475283600
     __test_iso_reception_time = "2016-10-01 01:00:00+00:00"
-    __test_date_reception_time = datetime.fromisoformat(__test_iso_reception_time)
+    __test_date_reception_time = datetime.datetime.fromisoformat(__test_iso_reception_time)
 
     __test_reference_time = 1234567
     __test_iso_reference_time = "1970-01-15 06:56:07+00:00"
-    __test_date_reference_time = datetime.fromisoformat(__test_iso_reference_time)
+    __test_date_reference_time = datetime.datetime.fromisoformat(__test_iso_reference_time)
     __test_location = Location('test', 12.3, 43.7, 987, 'UK')
     __test_no2_samples = [
         {
@@ -92,7 +92,7 @@ class TestNO2Index(unittest.TestCase):
 
     def test_is_forecast(self):
         self.assertFalse(self.__test_instance.is_forecast())
-        in_a_year = datetime_to_UNIXtime(datetime.utcnow()) + 31536000
+        in_a_year = datetime_to_UNIXtime(datetime.datetime.now(tz=datetime.timezone.utc)) + 31536000
         uvindex = NO2Index(in_a_year,
                            self.__test_location, self.__test_interval,
                            [], self.__test_reception_time)
