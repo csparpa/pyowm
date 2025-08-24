@@ -1,4 +1,4 @@
-[![logo](logos/180x180.png)](https://github.com/csparpa)
+[![logo](https://raw.githubusercontent.com/csparpa/pyowm/master/logos/180x180.png)](https://github.com/csparpa)
 
 #  PyOWM  
 **A Python wrapper around OpenWeatherMap web APIs**
