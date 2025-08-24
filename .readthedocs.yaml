@@ -10,7 +10,7 @@ build:
     python: latest
 
 sphinx:
-  configuration: sphinx/conf.py
+  configuration: docs/conf.py
 
 formats:
   - htmlzip
