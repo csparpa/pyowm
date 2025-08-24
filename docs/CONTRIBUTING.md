@@ -56,7 +56,7 @@ A few simple steps:
   1. Fork the PyOWM repository on GitHub
   2. Install the development dependencies on your local development setup
   3. On your fork, work on the **development branch** (_not the master branch!!!_) or on a **ad-hoc feature branch**. Don't forget to insert your name in the `CONTRIBUTORS.md` file!
-  4. TEST YOUR CODE please!
+  4. [TEST YOUR CODE](https://github.com/csparpa/pyowm/wiki/Notes-on-testing) please!
   5. DOCUMENT YOUR CODE - especially if new features/complex patches are introduced 
   6. Submit a [pull request](https://help.github.com/articles/about-pull-requests/)
 

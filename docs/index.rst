@@ -294,7 +294,7 @@ There are multiple ways to contribute to the PyOWM project! Find the one that su
 .. toctree::
    :maxdepth: 1
 
-   contributing
+   CONTRIBUTING
 
 
 PyOWM Community
