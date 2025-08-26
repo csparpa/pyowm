@@ -4,8 +4,14 @@
 import os
 import bz2
 import sqlite3
+import sys
 import tempfile
-from importlib.resources import as_file, files
+
+if sys.version_info >= (3, 12):
+    from importlib.resources import as_file, files
+else:
+    from importlib_resources import as_file, files
+
 from pyowm.weatherapi30.location import Location
 
 CITY_ID_DB_PATH = 'cityids/cities.db.bz2'
