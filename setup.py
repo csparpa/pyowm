@@ -17,10 +17,9 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     install_requires=[
-        'requests>=2.20.0,<3',
+        'requests[socks]>=2.20.0,<3',
         'geojson>=2.3.0,<4',
         'PySocks>=1.7.1,<2',
-        'requests[socks]'
     ],
     python_requires='>=3.9',
     classifiers=[
