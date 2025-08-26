@@ -46,7 +46,7 @@ class CityIDRegistry:
         # https://pymotw.com/2/bz2/
 
         # read and uncompress data from compressed DB
-        with as_file(files(__name__) / sqlite_db_path) as res_name:
+        with as_file(files() / sqlite_db_path) as res_name:
             bz2_db = bz2.BZ2File(res_name)
         decompressed_data = bz2_db.read()
 
