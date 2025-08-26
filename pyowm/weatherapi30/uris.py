@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-ROOT_WEATHER_API = 'openweathermap.org/data/3.0'
+ROOT_WEATHER_API = 'openweathermap.org/data/2.5'
 OBSERVATION_URI = 'weather'
 GROUP_OBSERVATIONS_URI = 'group'
 STATION_URI = 'station'
@@ -15,4 +15,5 @@ DAILY_FORECAST_URI = 'forecast/daily'
 STATION_WEATHER_HISTORY_URI = 'history/station'
 ONE_CALL_URI = 'onecall'
 ONE_CALL_HISTORICAL_URI = ONE_CALL_URI + '/timemachine'
+ONE_CALL_ROOT_URI = 'openweathermap.org/data/3.0'
 ICONS_BASE_URI = 'http://openweathermap.org/img/wn/%s%s.png'

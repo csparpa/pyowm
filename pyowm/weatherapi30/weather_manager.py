@@ -9,7 +9,7 @@ from pyowm.utils import geo
 from pyowm.weatherapi30 import forecaster, historian, observation, forecast, stationhistory, one_call
 from pyowm.weatherapi30.uris import ROOT_WEATHER_API, OBSERVATION_URI, GROUP_OBSERVATIONS_URI, FIND_OBSERVATIONS_URI, \
     BBOX_CITY_URI, THREE_HOURS_FORECAST_URI, DAILY_FORECAST_URI, STATION_WEATHER_HISTORY_URI, ONE_CALL_URI, \
-    ONE_CALL_HISTORICAL_URI
+    ONE_CALL_HISTORICAL_URI, ONE_CALL_ROOT_URI
 
 
 class WeatherManager:
@@ -30,6 +30,7 @@ class WeatherManager:
         self.API_key = API_key
         assert isinstance(config, dict)
         self.http_client = HttpClient(API_key, config, ROOT_WEATHER_API)
+        self.one_call_http_client = HttpClient(API_key, config, ONE_CALL_ROOT_URI)
 
     def weather_api_version(self):
         return WEATHER_API_VERSION
@@ -528,7 +529,7 @@ class WeatherManager:
                 params['exclude'] = value
             elif key == 'units':
                 params['units'] = value
-        _, json_data = self.http_client.get_json(ONE_CALL_URI, params=params)
+        _, json_data = self.one_call_http_client.get_json(ONE_CALL_URI, params=params)
         return one_call.OneCall.from_dict(json_data)
 
     def one_call_history(self, lat: Union[int, float], lon: Union[int, float], dt: int = None):
@@ -563,7 +564,7 @@ class WeatherManager:
 
         params = {'lon': lon, 'lat': lat, 'dt': dt}
 
-        _, json_data = self.http_client.get_json(ONE_CALL_HISTORICAL_URI, params=params)
+        _, json_data = self.one_call_http_client.get_json(ONE_CALL_HISTORICAL_URI, params=params)
         return one_call.OneCall.from_dict(json_data)
 
     def __repr__(self):
