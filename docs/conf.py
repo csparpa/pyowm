@@ -15,7 +15,6 @@
 import sys
 import os
 import sphinx_readable_theme
-from recommonmark.parser import CommonMarkParser
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -31,9 +30,9 @@ sys.path.insert(0, os.path.abspath('..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'recommonmark'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -333,8 +332,3 @@ epub_exclude_files = ['search.html']
 
 # If false, no index is generated.
 #epub_use_index = True
-
-
-source_parsers = {
-   #'.md': CommonMarkParser,
-}

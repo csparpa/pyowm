@@ -48,7 +48,7 @@ dev = [
     {include-group = "docs"},
 ]
 docs = [
-    "recommonmark",
+    "myst-parser",
     "Sphinx",
     "sphinx-readable-theme<2",
 ]
