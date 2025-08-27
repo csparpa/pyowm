@@ -48,7 +48,6 @@ dev = [
     "tox",
     "tox-travis",
     "virtualenv",
-    "urllib3>=1.26.5",
 ]
 
 [tool.setuptools.packages.find]
