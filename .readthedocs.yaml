@@ -8,6 +8,9 @@ build:
   os: ubuntu-lts-latest
   tools:
     python: latest
+  jobs:
+    install:
+      - pip install . --group dev
 
 sphinx:
   configuration: docs/conf.py
@@ -15,10 +18,3 @@ sphinx:
 formats:
   - htmlzip
   - pdf
-
-python:
-  install:
-    - requirements: dev-requirements.txt
-    - requirements: requirements.txt
-    - method: pip
-      path: .
