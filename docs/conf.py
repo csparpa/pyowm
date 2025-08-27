@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyowm'
-copyright = u'2020, Claudio Sparpaglione'
+copyright = u'2013-2025, Claudio Sparpaglione'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -270,7 +270,7 @@ texinfo_documents = [
 epub_title = u'pyowm'
 epub_author = u'Claudio Sparpaglione'
 epub_publisher = u'Claudio Sparpaglione'
-epub_copyright = u'2020, Claudio Sparpaglione'
+epub_copyright = u'2013-2025, Claudio Sparpaglione'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'pyowm'
