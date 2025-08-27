@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyowm"
+version = "3.5.0"
+description = "A Python wrapper around OpenWeatherMap web APIs"
+authors = [{name = "Claudio Sparpaglione", email = "csparpa@gmail.com"}]
+readme = "README.md"
+dependencies = [
+    "requests[socks]>=2.20.0,<3",
+    "geojson>=2.3.0,<4",
+    "PySocks>=1.7.1,<2",
+    "importlib_resources; python_version < '3.12'",
+]
+requires-python = ">=3.9"
+classifiers=[
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+]
+keywords = ["openweathermap", "web", "api", "client", "weather", "forecast", "uv", "alerting", "owm", "pollution", "meteostation", "agro", "agriculture"]
+license = "MIT"
+
+[project.urls]
+repository = "https://github.com/csparpa/pyowm"
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"*" = ["*.bz2", "*.md", "*.txt", "*.json"]
