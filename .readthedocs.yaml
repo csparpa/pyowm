@@ -10,6 +10,7 @@ build:
     python: latest
   jobs:
     install:
+      - python -m pip install --upgrade pip  # ensure pip >= 25.1 for dependency groups support
       - pip install . --group dev
 
 sphinx:
