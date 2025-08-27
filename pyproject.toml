@@ -34,6 +34,24 @@ license = "MIT"
 [project.urls]
 repository = "https://github.com/csparpa/pyowm"
 
+[dependency-groups]
+dev = [
+    "coverage",
+    "coveralls",
+    "Jinja2",
+    "pip>=18.0",
+    "pproxy>=2.2.0,<3",
+    "pytest",
+    "recommonmark",
+    "Sphinx",
+    "sphinx-readable-theme<2",
+    "tox",
+    "tox-travis",
+    "virtualenv",
+    "twine",
+    "urllib3>=1.26.5",
+]
+
 [tool.setuptools.packages.find]
 exclude = ["tests", "tests.*"]
 namespaces = false
