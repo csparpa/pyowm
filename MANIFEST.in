@@ -1,2 +1,0 @@
-include pyowm/requirements.txt
-include pyowm/commons/cityids/*.bz2
