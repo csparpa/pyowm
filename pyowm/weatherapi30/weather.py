@@ -343,6 +343,8 @@ class Weather:
 
         if 'dew_point' in the_dict and dewpoint is None:
             dewpoint = the_dict.get('dew_point', None)
+        elif 'main' in the_dict and 'dew_point' in the_dict['main'] and dewpoint is None:
+            dewpoint = the_dict['main'].get('dew_point', None)
 
         # -- visibility
         visibility_distance = None
